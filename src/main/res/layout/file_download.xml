@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/settings_bg"
+    android:orientation="vertical" >
+    
+    <LinearLayout 
+        android:gravity="center_vertical" 
+        android:id="@+id/navigation_bar"      	
+        android:padding="10.0dip" 
+        android:visibility="visible" 
+        android:background="@drawable/inside_search_bg"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content">
+        <LinearLayout android:gravity="center_vertical" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0">
+            <LinearLayout android:gravity="center_vertical" android:id="@+id/current_path_pane" android:background="@drawable/path_pane_bg" android:layout_width="fill_parent" android:layout_height="wrap_content" android:maxWidth="300.0dip" android:clickable="true">
+                <LinearLayout android:id="@+id/current_path_scroller" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_marginRight="5.0dip" android:layout_weight="1.0">
+                    <TextView android:ellipsize="start" android:layout_gravity="center_vertical" android:id="@+id/current_path_view" android:paddingLeft="10.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true"  android:textColor="@color/gray"/>
+                </LinearLayout>
+                <ImageView android:layout_gravity="center_vertical" android:id="@+id/path_pane_arrow" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@null" />
+            </LinearLayout>
+        </LinearLayout>
+        <ImageView android:layout_gravity="right|center" android:id="@+id/path_pane_up_level" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="5.0dip" android:src="@drawable/path_up_level" />
+    </LinearLayout>
+    
+    <FrameLayout android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0">
+	    <ListView
+	        android:id="@+id/filelist"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:cacheColorHint="@null"
+	        android:divider="@drawable/list_seperator"
+	        android:fastScrollEnabled="true" >
+	    </ListView>        
+        <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/empty_view" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent">
+    		<ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/empty_icon" />
+        	<TextView android:textSize="27.0px" android:textColor="#ffe2e2e2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/no_file" android:singleLine="true" />
+    	</LinearLayout>
+   	</FrameLayout>
+
+    <HorizontalScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        >
+	   	<LinearLayout android:id="@+id/operation_bar" android:background="@drawable/operation_bar_bg" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content"
+	   	    android:gravity="center_vertical">
+	        <TextView android:id="@+id/button_operation_delete" android:text="@string/operation_delete" android:drawableTop="@drawable/operation_button_delete" style="@style/FileViewOperationButtonStytle" />
+	        <TextView android:id="@+id/button_operation_copy" android:text="@string/operation_copy" android:drawableTop="@drawable/operation_button_copy" style="@style/FileViewOperationButtonStytle" />
+	        <TextView android:id="@+id/button_operation_move" android:text="@string/operation_move" android:drawableTop="@drawable/operation_button_move" style="@style/FileViewOperationButtonStytle" />
+	        <TextView android:id="@+id/button_operation_cancel" android:text="@string/operation_cancel" android:drawableTop="@drawable/operation_button_cancel" style="@style/FileViewOperationButtonStytle"/>
+	       	<TextView android:id="@+id/button_operation_send" android:text="@string/operation_send" android:drawableTop="@drawable/operation_button_send" style="@style/FileViewOperationButtonStytle" />
+	        <TextView android:id="@+id/button_operation_install" android:text="@string/operation_install" android:drawableTop="@drawable/operation_button_install" style="@style/FileViewOperationButtonStytle" />    
+	   	</LinearLayout>
+    </HorizontalScrollView>
+    
+    <LinearLayout
+        android:id="@+id/paste_layout"
+       	android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dip"
+        android:visibility="gone"
+        android:background="@color/gray"
+        >
+        <Button android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:id="@+id/paste"
+            android:text="@string/paste"
+            android:layout_weight="1.0"
+            />
+        <Button android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:id="@+id/paste_cancel"
+            android:text="@string/cancel"
+            android:layout_weight="1.0"
+            />
+    </LinearLayout>
+</LinearLayout>

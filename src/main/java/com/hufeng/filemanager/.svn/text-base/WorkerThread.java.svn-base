@@ -1,0 +1,80 @@
+package com.snda.youni.modules.selectfile;
+
+import android.os.Process;
+
+import com.snda.youni.utils.LogUtil;
+
+public class WorkerThread extends Thread {
+    private static final String TAG = WorkerThread.class.getSimpleName();
+    private boolean destroyed = false;
+    private boolean paused = false;
+    final private Object lock = new Object();
+
+    public WorkerThread() {
+        this("worker-thread");
+    }
+
+    public WorkerThread(String name) {
+        super(name);
+    }
+
+    public void destroySelf() {
+        synchronized (lock) {
+            this.destroyed = true;
+        }
+        resumeSelf();
+    }
+
+    public void pauseSelf() {
+        this.paused = true;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void resumeSelf() {
+        if (paused) {
+            synchronized (lock) {
+                lock.notify();
+                this.paused = false;
+            }
+        }
+    }
+
+    protected void doPauseSelfIfNeeded() throws InterruptedException {
+        synchronized (lock) {
+            while (paused && !destroyed) {
+                LogUtil.w(TAG, "======>going to pause!");
+                lock.wait();
+                LogUtil.w(TAG, "======>resumed!");
+            }
+        }
+    }
+
+    @Override
+    public void run() {
+        Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+        LogUtil.w(TAG, getName() + " thread running...");
+        try {
+            while (!destroyed) {
+                doJob();
+                doPauseSelfIfNeeded();
+            }
+        } catch (InterruptedException e) {
+            LogUtil.w(TAG, getName() + " thread interrupted.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        LogUtil.w(TAG, getName() + " thread stoped.");
+    }
+
+    public void doJob() {
+        // call pauseSelf() properly.
+    }
+
+}

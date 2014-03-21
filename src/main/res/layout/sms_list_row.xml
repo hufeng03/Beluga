@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:minHeight="52dip"
+    android:paddingLeft="8dip"
+    android:paddingRight="8dip">
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+	    <TextView
+	        android:id="@+id/sms_list_row_type_and_address"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1.0"
+	        android:textColor="@color/file_date_normal"
+	        />
+	    <TextView 
+	        android:id="@+id/sms_list_row_date"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0"
+	        android:textColor="@color/file_date_normal"
+	        />
+   	</LinearLayout> 
+   
+    <TextView
+        android:id="@+id/sms_list_row_body"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dip"
+        android:paddingBottom="5dip"
+        android:textColor="@color/file_name_normal"
+        />
+    
+
+</LinearLayout>

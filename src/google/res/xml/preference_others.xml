@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<PreferenceCategory 
+        android:key="others_about"  
+        android:title="@string/others_about_title" >  
+        <PreferenceScreen 
+             android:key="others_about_developer"
+             android:title="@string/others_about_developer">
+             <!--intent  
+            android:action="android.intent.action.MAIN"  
+            android:targetPackage="com.hufeng.filemanager"  
+            android:targetClass="com.hufeng.filemanager.AboutDeveloperActivity" /-->
+			<Preference
+	    		android:title="@string/developer_name"
+	    		android:summary="@string/hufeng_name" />  
+	    		
+			<Preference
+	    		android:title="@string/developer_email"
+	    		android:key="developer_email"
+	    		android:summary="@string/hufeng_email" /> 
+	    		
+            <Preference
+ 	   			android:title="@string/developer_website"
+ 	   			android:key="developer_website"
+    			android:summary="@string/hufeng_website" />
+          
+         </PreferenceScreen>
+         <PreferenceScreen 
+             android:key="others_about_market"
+             android:title="@string/others_about_market"
+             android:summary="@string/others_about_market_summary">
+             <intent  
+	            android:action="android.intent.action.VIEW"  
+	            android:data="market://details?id=com.hufeng.filemanager" />            
+         </PreferenceScreen> 
+    </PreferenceCategory> 
+    
+	<PreferenceCategory 
+        android:key="others_upgrade"  
+        android:title="@string/others_upgrade_title" >  
+            
+        
+        <Preference
+    		android:title="@string/current_version_title"
+    		android:summary="4.8"
+    		android:key="current_version" />
+
+		<Preference
+    		android:title="@string/new_version_title"
+    		android:summary="4.8"
+    		android:key="new_version" />
+        <!--intent  
+            android:action="android.intent.action.MAIN"  
+            android:targetPackage="com.hufeng.filemanager"  
+            android:targetClass="com.hufeng.filemanager.UpgradeActivity" /-->  
+    </PreferenceCategory> 
+    
+    <PreferenceCategory 
+        android:key="others_help"  
+        android:title="@string/others_help_title">  
+         <PreferenceScreen 
+             android:key="others_help_faq"
+             android:title="@string/others_help_faq">
+             <!--intent  
+            android:action="android.intent.action.MAIN"  
+            android:targetPackage="com.hufeng.filemanager"  
+            android:targetClass="com.hufeng.filemanager.FaqActivity" /-->
+            			<Preference
+	    		android:title="@string/faq_q_1"
+	    		android:summary="@string/faq_a_1" />  
+	    		
+			<Preference
+	    		android:title="@string/faq_q_2"
+	    		android:summary="@string/faq_a_2" />             
+         </PreferenceScreen>
+         <PreferenceScreen
+             android:key="others_help_feedback"
+             android:title="@string/others_help_feedback">
+         </PreferenceScreen>
+    </PreferenceCategory> 
+
+</PreferenceScreen>

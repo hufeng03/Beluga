@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/settings_bg"
+    android:orientation="vertical" >
+    
+    <!-- <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        >
+        <TextView
+            />
+    
+    </ScrollView> -->
+    
+        <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/top_tab"
+        android:background="@drawable/top_tab_bg">
+        <LinearLayout 
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:orientation="horizontal"
+            android:layout_centerInParent="true">
+			<TextView
+				android:id="@+id/settings_title"
+				android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textAppearance="@style/Large_Title"
+				android:text="@string/settings_title"/>
+        </LinearLayout>
+        <Button 
+        	android:id="@+id/back" 
+        	android:layout_centerVertical="true" 
+        	android:layout_alignParentLeft="true" 
+        	android:background="@drawable/btn_back_bg" 
+        	android:layout_width="80dip" 
+        	android:layout_height="wrap_content" 
+        	android:text="@string/btn_back_default" 
+        	android:textColor="@color/white"
+        	android:paddingLeft="15dip"/>
+    </RelativeLayout>
+
+	<ListView
+	    android:id="@+id/sms_backup_list"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:cacheColorHint="@null"
+	    android:divider="@drawable/list_seperator"
+	    android:listSelector="@drawable/list_selector_holo_light"
+	    android:fastScrollEnabled="true"
+		/>
+
+</LinearLayout>

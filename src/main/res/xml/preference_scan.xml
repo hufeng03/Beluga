@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/header_title_scan" >
+        <CheckBoxPreference
+            android:defaultValue="1"
+            android:key="Audio_Filter_Small"
+            android:summary="@string/settings_scan_small_audio_summray"
+            android:title="@string/settings_scan_small_audio" />
+        <CheckBoxPreference
+            android:defaultValue="1"
+            android:key="Image_Filter_Small"
+            android:summary="@string/settings_scan_small_image_summray"
+            android:title="@string/settings_scan_small_image" />
+        <CheckBoxPreference
+            android:defaultValue="0"
+            android:key="Scan_Hidden_Files"
+            android:summary="@string/settings_scan_hidden_summray"
+            android:title="@string/settings_scan_hidden" />
+        <CheckBoxPreference
+            android:defaultValue="0"
+            android:key="SCAN_GAME_FILES"
+            android:summary="@string/settings_scan_game_summray"
+            android:title="@string/settings_scan_game" />
+
+        <!--
+    EditTextPreference
+		android:dialogTitle="@string/dialogtitle"
+		android:key="text"
+		android:summary="@string/pref3summary"
+		android:title="@string/pref3title"/>
+
+	<ListPreference
+		android:dialogTitle="@string/listdialogtitle"
+		android:entries="@array/cities"
+		android:entryValues="@array/airport_codes"
+		android:key="list"
+		android:summary="@string/pref4summary"
+		android:title="@string/pref4title"/
+        -->
+    </PreferenceCategory>
+
+</PreferenceScreen>

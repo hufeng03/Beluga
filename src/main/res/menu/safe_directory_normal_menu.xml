@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_remove_safe" android:title="@string/menu_remove_safe" />
+    <item android:id="@+id/menu_view_detail" android:title="@string/menu_view_detail" />
+    <item android:id="@+id/menu_zip" android:title="@string/menu_zip"/>
+</menu>

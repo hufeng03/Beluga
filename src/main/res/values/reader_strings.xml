@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="SETTING_FILENAME">Settings</string>
+	<string name="SETTING_BOOKSPAGENUM">PagesNum</string>
+	<string name="SETTING_FILEPATH">File Path</string>
+	<string name="SETTING_TEXTSIZE">Setting_TextSize</string>
+	<string name="SETTING_TEXTCODE">Setting_TextCode</string>
+	<string name="SETTING_BG_COLOR">Setting_Bg_Color</string>
+	<string name="SETTING_TEXT_COLOR">Setting_Text_Color</string>
+	<integer name="SETTING_RETURN">1</integer >
+	<integer name="DefTextSize">25</integer >
+	<integer name="DefTextCode">0</integer >
+	<integer name="DefTextColor">0</integer >
+	<integer name="DefBgColor">1</integer >
+	<string-array name="EncodFormat" translatable="false">
+		<item>GBK</item>
+		<item>UNICODE</item>
+		<item>UTF-8</item>
+	</string-array>
+	<string-array name="TextColorType">
+		<item>White</item>
+		<item>Black</item>
+		<item>Yellow</item>
+		<item>Red</item>
+		<item>Green</item>
+	</string-array>
+	<string-array name="BackgroundColorType">
+		<item>White</item>
+		<item>Black</item>
+		<item>Yellow</item>
+		<item>Red</item>
+		<item>Green</item>
+	</string-array>
+</resources>

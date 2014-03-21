@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/tabhost"
+	android:background="@color/white"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<LinearLayout
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:gravity="center_horizontal"
+		android:orientation="vertical">
+		<RadioGroup android:id="@+id/tab_radiogroup"
+             android:orientation="horizontal"
+             android:background="@drawable/top_tab_bg"
+             android:layout_width="fill_parent" 
+             android:layout_height="wrap_content"
+             android:gravity="center">
+             <RadioButton android:id="@+id/radioButton0"
+                 android:text="@string/category"
+                 android:button="@null"
+                 android:checked="true"
+                 android:textSize="12sp"
+                 android:layout_width="0.0dip"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="1.0"
+                 android:layout_marginLeft="5dip"
+                 android:gravity="center"
+                 android:textColor="#ffffff"
+                 android:background="@drawable/top_tab_left"/>
+             <RadioButton android:id="@+id/radioButton1"
+                 android:text="@string/directory"
+                 android:button="@null"
+                 android:gravity="center"
+                 android:textSize="14sp"
+                 android:layout_width="0.0dip"
+                 android:layout_weight="1.0"
+                 android:textColor="#ffffff"
+                 android:background="@drawable/top_tab_middle"/>
+             <RadioButton android:id="@+id/radioButton2"
+                 android:text="@string/search"
+                 android:button="@null"
+                 android:gravity="center"
+                 android:textSize="14sp"
+                 android:layout_weight="1.0"
+                 android:layout_marginRight="5dip"
+                 android:textColor="#ffffff"
+                 android:layout_width="0.0dip"
+                 android:layout_height="wrap_content"
+                 android:background="@drawable/top_tab_right"/>
+         </RadioGroup>
+		<TabWidget android:id="@android:id/tabs"
+		                 android:visibility="gone"
+             android:layout_weight="0.0"
+			android:layout_width="fill_parent" android:layout_height="wrap_content" />
+		<FrameLayout android:id="@android:id/tabcontent"
+			android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0" />
+	</LinearLayout>
+</TabHost>

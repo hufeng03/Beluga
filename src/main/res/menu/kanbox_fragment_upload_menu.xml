@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_cloud_upload_confirm"
+          android:icon="@null"
+          android:title="@string/menu_cloud_upload_confirm"
+          android:showAsAction="always" />
+    <item android:id="@+id/menu_cloud_upload_cancel"
+          android:icon="@null"
+          android:title="@string/menu_cloud_upload_cancel"
+          android:showAsAction="always" />
+</menu>

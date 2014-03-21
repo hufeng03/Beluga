@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/file_items"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+        <com.hufeng.filemanager.view.SquareLazyLoadImageView
+            android:id="@+id/icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/file_icon_default_square"/>
+
+        	<!--CheckBox
+                android:id="@+id/fileCheckbox"
+                android:focusable="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkboxselector" />
+    
+            <ImageView
+                android:id="@+id/file_copy_indicator"
+                android:layout_width = "wrap_content"
+                android:layout_height = "wrap_content"
+                android:visibility="gone"
+                android:src="@drawable/file_copy_indicator"
+                />
+    
+            <ImageView
+                android:id="@+id/file_move_indicator"
+                android:layout_width = "wrap_content"
+                android:layout_height = "wrap_content"
+                android:visibility="gone"
+                android:src="@drawable/file_move_indicator"
+                /-->
+
+            <!--ImageView
+                android:id = "@+id/status_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/checkbox_normal"
+                /-->
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width= "wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/icon"
+                android:textSize="10sp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginLeft = "4dp"
+                android:visibility="visible"
+                android:textColor="@color/white"
+                android:text="@string/btn_txt_download"
+                android:background="@drawable/button_bg"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                />
+
+    <!--LinearLayout
+        android:id="@+id/filedetail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:duplicateParentState="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="left"
+        android:visibility="visible"
+        android:orientation="vertical"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="2dp"-->
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/icon"
+            android:layout_toLeftOf="@id/status"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="name of item"
+            android:textColor="@color/file_name_normal"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name"
+            android:layout_toLeftOf="@id/status"
+            android:singleLine="true"
+            android:visibility="visible"
+            android:textColor="@color/file_info_normal"
+            android:text="info of item"
+            android:textSize="10sp" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_below="@id/name"
+            android:layout_toLeftOf="@id/status"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:visibility="visible"
+            android:progress="50"
+            android:progressDrawable="@drawable/progress_bar_bg"
+            android:layout_marginTop="4dp"/>
+
+    <!--/LinearLayout-->
+
+</RelativeLayout>

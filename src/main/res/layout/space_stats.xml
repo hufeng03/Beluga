@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical" >
+    <TextView 
+        android:layout_marginLeft="5dip" 
+        android:id="@+id/space_volume_label" 
+        style="@style/InformationTextStyle"  
+        android:drawablePadding="5dip"
+        android:drawableLeft="@drawable/sd_card_icon"
+        />
+    <com.hufeng.filemanager.view.CategoryBar 
+        android:id="@+id/space_volume_stats"  
+        android:layout_gravity="center" 
+        android:layout_width="fill_parent" 
+        android:layout_height="9.0dip" 
+        android:layout_marginTop="2.0dip"
+        android:layout_marginBottom="2.0dip" 
+        android:layout_marginLeft="5.0dip" 
+        android:layout_marginRight="5.0dip"/>
+    <TextView 
+        android:layout_marginLeft="5dip" 
+        android:id="@+id/space_volume_description" 
+        style="@style/InformationTextStyle"  
+        />
+</LinearLayout>

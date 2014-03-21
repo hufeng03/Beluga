@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/file_operation_delete"
+        android:icon="@drawable/operation_button_delete"
+        android:title="@string/operation_delete"
+        android:showAsAction="always" />
+    <item android:id="@+id/file_operation_copy"
+        android:icon="@drawable/operation_button_copy"
+        android:title="@string/operation_copy"
+        android:showAsAction="always" />
+    <item android:id="@+id/file_operation_move"
+        android:icon="@drawable/operation_button_move"
+        android:title="@string/operation_move" />
+    <!--item android:id="@+id/file_operation_cancel"
+        android:icon="@drawable/operation_button_cancel"
+        android:title="@string/operation_cancel" /-->
+    <item android:id="@+id/file_operation_selectall"
+        android:icon="@drawable/operation_button_selectall"
+        android:title="@string/operation_selectall" />
+    <!--item android:id="@+id/file_operation_favorite"
+        android:icon="@drawable/operation_button_favorite"
+        android:title="@string/operation_favorite"
+        /-->
+    <item android:id="@+id/file_operation_addcloud2"
+        android:icon="@drawable/operation_button_addcloud"
+        android:title="@string/menu_add_cloud"/>
+    <item android:id="@+id/file_operation_send"
+        android:icon="@drawable/operation_button_send"
+        android:title="@string/operation_send"
+        />
+    <group android:id="@+id/file_operation_single">
+        <item android:id="@+id/file_operation_rename"
+            android:title="@string/menu_rename"
+            android:showAsAction="never"/>
+        <item android:id="@+id/file_operation_viewdetail"
+            android:title="@string/menu_view_detail"
+            android:showAsAction="never"/>
+        <item android:id="@+id/file_operation_addfavorite"
+            android:title="@string/menu_add_favorite"
+            android:showAsAction="never"/>
+        <item android:id="@+id/file_operation_removefavorite"
+            android:title="@string/menu_remove_favorite" />
+        <item android:id="@+id/file_operation_setasringtone"
+            android:title="@string/menu_ringtone"
+            android:menuCategory="secondary"
+            android:showAsAction="never"/>
+        <item android:id="@+id/file_operation_setaswallpaper"
+            android:title="@string/menu_wallpaper"
+            android:showAsAction="never"/>
+
+    </group>
+
+
+
+
+    <!--android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider" -->
+</menu>

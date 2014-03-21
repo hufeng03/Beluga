@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hufeng.filemanager"
+    android:versionCode="48"
+    android:versionName="4.8" >
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--uses-permission android:name="android.permission.INSTALL_PACKAGES" /-->
+    <!--uses-permission android:name="android.permission.DELETE_PACKAGES" /-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--uses-permission android:name="android.permission.READ_LOGS" /-->
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+   	<!--uses-permission android:name="android.permission.RECORD_AUDIO"/>
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/-->
+	<!--uses-permission android:name="android.permission.WRITE_CONTACTS"></uses-permission>
+    <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission-->
+    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"></uses-permission>
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.SUPER_USER" />
+    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" />
+
+    <uses-sdk android:minSdkVersion="11"
+              android:targetSdkVersion="17" /> <!--  4.4 -->
+    <application
+        android:name=".FileManager"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@style/MyTheme.CustomBackground" >
+        <activity
+            android:name=".FileManagerTabActivity"
+            android:launchMode="singleTop"
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:label="@string/app_name" >
+           	<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            
+            <!--intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <data android:mimeType="*/*" android:scheme="file" />
+                <data android:mimeType="image/*" android:scheme="content" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <data android:mimeType="image/*" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+            </intent-filter-->
+            <!--intent-filter>
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter-->
+            <!--intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <data android:mimeType="audio/*" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+            </intent-filter-->
+            <!--intent-filter>
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="audio/*" />
+            </intent-filter-->
+           	<!--intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <data android:mimeType="video/*" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter-->
+            <!--intent-filter>
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="video/*" />
+            </intent-filter-->
+          	<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+			</intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
+        </activity>
+        
+        <activity android:name=".FileManagerPreferenceActivity"
+                  android:label="@string/app_name">
+        </activity>
+
+        <activity android:name=".AboutDeveloperActivity"
+                  android:label="@string/about_developer_title">
+        </activity>
+         <activity android:name=".FaqActivity"
+                  android:label="@string/faq_title">
+        </activity>
+        <activity android:name=".HelpActivity"
+                  android:label="@string/app_name">
+        </activity>
+        <activity android:name=".SettingsScanActivity"
+                  android:label="@string/app_name">
+        </activity>
+        <activity android:name=".SafeFileActivity"
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:label="@string/app_name">
+        </activity>
+        <activity android:name=".ResourceActivity"
+            android:label="@string/app_name">
+        </activity>
+        <!--activity android:name="com.hufeng.playimage.PlayImageActivity"
+            android:theme="@android:style/Theme.Translucent"
+            /-->
+        <!--activity android:name="com.hufeng.playimage.PlayImageActivity"
+			android:icon="@drawable/icon_play_image"
+            android:label="@string/image_player_label">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.cooliris.media.action.REVIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" android:scheme="content" />
+                <data android:mimeType="image/*" android:scheme="file" />
+            </intent-filter>
+        </activity-->
+        
+        <!--activity android:name="com.hufeng.playdocument.PlayDocumentActivity"
+            android:label="@string/document_player_label">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity-->
+        
+        <!--activity android:name="com.hufeng.playmusic.PlayMusicActivity"
+            android:icon="@drawable/icon_play_music"
+            android:label="@string/music_player_label"
+			android:launchMode="singleTask">
+			<intent-filter>
+				<action android:name="com.hufeng.playmusic.PLAYBACK_VIEWER"/>
+
+				<category android:name="android.intent.category.DEFAULT"/>
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW"/>
+
+				<category android:name="android.intent.category.DEFAULT"/>
+
+				<data android:mimeType="audio/*"/>
+			</intent-filter>
+		</activity-->
+        
+        
+        <!--activity android:name="com.hufeng.playvideo.PlayVideoActivity"
+            android:icon="@drawable/icon_play_video"
+            android:label="@string/video_player_label" 
+            android:configChanges="orientation|keyboardHidden|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="rtsp" />
+             </intent-filter>
+             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:mimeType="video/mpeg4" />
+                <data android:mimeType="video/mp4" />
+                <data android:mimeType="video/3gp" />
+                <data android:mimeType="video/3gpp" />
+                <data android:mimeType="video/3gpp2" />
+                <data android:mimeType="video/webm" />
+                <data android:mimeType="video/avi" />
+                <data android:mimeType="application/sdp" />
+             </intent-filter>
+             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:mimeType="audio/x-mpegurl" />
+                <data android:mimeType="audio/mpegurl" />
+                <data android:mimeType="application/vnd.apple.mpegurl" />
+                <data android:mimeType="application/x-mpegurl" />
+             </intent-filter>
+        </activity!-->
+        
+        <!--activity
+            android:name="com.hufeng.filemanager.AdPlayActivity"
+            /-->
+
+
+		<service android:name=".services.FileManagerService" 
+		    android:process="com.hufeng.filemanager.scan"></service>
+		
+		<activity android:name="com.hufeng.nanohttpd.ServerControlActivity"/>
+		<service android:name="com.hufeng.nanohttpd.HTTPServerService" />
+		
+		<activity android:name="com.hufeng.swiftp.ServerControlActivity"/>
+        
+        <activity android:name="com.hufeng.swiftp.ConfigureActivity"/>
+        <service android:name="com.hufeng.swiftp.FTPServerService" />
+        <activity android:name=".SafeBoxActivity"/>
+        <activity android:name=".KanBoxActivity"/>
+        <activity android:name="com.hufeng.filemanager.SafeCategoryActivity" />
+        <!--service
+			android:name="com.hufeng.playmusic.MusicPlaybackService"
+			android:process="com.hufeng.filemanager.scan">
+			<intent-filter>
+				<action android:name="com.hufeng.playmusic.PLAYBACK_SERVICE"/>
+			</intent-filter>
+		</service-->
+
+        <activity android:name="com.hufeng.filemanager.SkinManagerActivity"
+		     android:label="@string/app_name">
+        </activity>
+        <activity android:name="com.hufeng.filemanager.PatternInputActivity"
+		     android:label="@string/app_name">
+        </activity>
+        <activity android:name="com.hufeng.filemanager.PatternPassActivity"
+		     android:label="@string/app_name">
+        </activity>
+
+        <activity android:name="com.hufeng.filemanager.KanboxWebActivity"
+            android:label="@string/app_name">
+        </activity>
+
+		<receiver android:name=".receiver.MountReceiver"
+		    android:process="com.hufeng.filemanager.scan"
+		    >
+            <intent-filter android:priority="2147483647">
+                <action
+                    android:name="android.intent.action.BOOT_COMPLETED" />
+                <category
+                    android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.sdcard.action.SDCARD_UPDATE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.sdcard.action.SDCARD_DELETE" />
+            </intent-filter>
+            <intent-filter
+                android:priority="2147483647"
+                >
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <data android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+                <data android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_EJECT" />
+                <action android:name="android.intent.action.MEDIA_REMOVED" />
+                <action android:name="android.intent.action.MEDIA_BAD_REMOVAL" />
+                <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED" />
+                <action android:name="android.intent.action.MEDIA_SCANNER_STARTED" />
+                <data android:scheme="file" />
+            </intent-filter>
+        </receiver>
+        <!--receiver
+            android:name=".receiver.BootReceiver"
+            android:process="com.hufeng.filemanager.scan"
+            >
+            <intent-filter>
+                <action
+                    android:name="android.intent.action.BOOT_COMPLETED" />
+                <category
+                    android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </receiver-->
+ 		<provider
+ 		    android:exported="false"
+            android:name=".data.FileManagerProvider"
+            android:process="com.hufeng.filemanager.scan"
+            android:authorities="com.hufeng.filemanager" />
+
+        <provider
+                android:exported="false"
+                android:name="com.hufeng.filemanager.safebox.SafeBoxDatabaseProvider"
+                android:process="com.hufeng.filemanager.scan"
+                android:authorities="com.hufeng.safemanager" />
+ 		
+ 		<uses-library android:name="android.test.runner" />
+
+    </application>
+        
+ 	<uses-permission android:name="android.permission.RUN_INSTRUMENTATION" />
+
+	<instrumentation android:name="android.test.InstrumentationTestRunner" 
+	    android:targetPackage="com.hufeng.filemanager"
+	    android:label="Test for FileManager"/>
+
+</manifest>

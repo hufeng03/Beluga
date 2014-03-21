@@ -1,0 +1,144 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.9.+'
+    }
+}
+apply plugin: 'android'
+
+repositories {
+  mavenCentral()
+}
+
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.0.1"
+
+    defaultConfig {
+        minSdkVersion 11
+        targetSdkVersion 17
+    }
+
+    signingConfigs {
+        googleConfig{
+           storeFile file(".keystore/filemanager.keystore")
+            storePassword "yhblsqt001"
+            keyAlias "filemanager"
+            keyPassword "yhblsqt001"
+        }
+        kanboxConfig{
+           storeFile file(".keystore/filemanager.kanbox")
+            storePassword "lghlmcl001"
+            keyAlias "filemanager.kanbox"
+            keyPassword "lghlmcl001"
+        }
+       	doovConfig{
+           storeFile file(".keystore/filemanager.doov")
+            storePassword "dycsr001"
+            keyAlias "filemanager.doov"
+            keyPassword "dycsr001"
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    buildTypes{
+        release {
+//            signingConfig signingConfigs.googleConfig
+    	    runProguard true
+     	    proguardFile 'proguard.cfg'
+    	}
+    }
+
+    productFlavors {
+        def googleSigning = signingConfigs.googleConfig
+        def kanboxSigning = signingConfigs.kanboxConfig
+    	google {
+            ukey = '4f7d5ca55270150f1a000105'
+            signingConfig googleSigning
+    	}
+    	kanbox {
+    	    packageName = 'com.kanbox.filemanager'
+            ukey = '52cf304456240bdbb705da99'
+            signingConfig kanboxSigning
+    	}
+    	fanzhuo {
+    		packageName = 'com.kanbox.filemanager'
+            ukey = '52cf304456240bdbb705da99'
+            signingConfig kanboxSigning
+    	}
+    	fanzhuo2 {
+    		packageName = 'com.kanbox.filemanager'
+            ukey = '52cf304456240bdbb705da99'
+            signingConfig kanboxSigning
+    	}
+    	haocheng {
+    		packageName = 'com.kanbox.filemanager'
+            ukey = '52cf304456240bdbb705da99'
+            signingConfig kanboxSigning
+    	}
+    	dingzhi {
+    		packageName = 'com.kanbox.filemanager'
+            ukey = '52cf304456240bdbb705da99'
+            signingConfig kanboxSigning
+    	}
+    	chenxiang {
+    		packageName = 'com.kanbox.filemanager'
+            ukey = '52cf304456240bdbb705da99'
+            signingConfig kanboxSigning
+    	}
+    	xunhu {
+    		packageName = 'com.kanbox.filemanager'
+            ukey = '52cf304456240bdbb705da99'
+            signingConfig kanboxSigning
+    	}
+    	yuxin {
+    		packageName = 'com.kanbox.filemanager'
+            ukey = '52cf304456240bdbb705da99'
+            signingConfig kanboxSigning
+    	}
+
+//    	OPPO {
+//            ukey = '4f7d5ca55270150f1a000105'
+//            signingConfig googleSigning
+//            ukey = '4f7d5ca55270150f1a000105'
+ //   	}
+    }
+
+    //替换AndroidManifest.xml的UMENG_CHANNEL_VALUE字符串为渠道名称
+	android.applicationVariants.all{ variant ->
+	        println "${variant.productFlavors[0].name}"
+	    variant.processManifest.doLast{
+	        copy{
+	            from("${buildDir}/manifests"){
+	                include "${variant.dirName}/AndroidManifest.xml"
+	            }
+	            into("${buildDir}/manifests/$variant.name")
+
+	            filter{
+	                String line -> line.replaceAll("UMENG_CHANNEL_VALUE", "${variant.productFlavors[0].name}")
+	            }
+
+                filter{
+                    String line -> line.replaceAll("UMENG_APPKEY_VALUE", "${variant.productFlavors[0].ukey}")
+                }
+
+	            variant.processResources.manifestFile = file("${buildDir}/manifests/${variant.name}/${variant.dirName}/AndroidManifest.xml")
+	        }
+	   }
+	}
+}
+
+dependencies {
+    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+    compile 'com.android.support:support-v4:18.0.+'
+    compile 'com.jakewharton:butterknife:4.0.1'
+    compile fileTree(dir: 'libs', include: '*.jar')
+    googleCompile fileTree(dir: 'libs', include: '*.jar')
+    googleCompile fileTree(dir: 'src/google/libs', include: '*.jar')
+}

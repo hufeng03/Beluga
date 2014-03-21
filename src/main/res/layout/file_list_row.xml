@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/file_items"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <!--the icon should be 32dp*32dp-->
+    <com.hufeng.playimage.MyLazyLoadImageView
+        android:id="@+id/icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
+        android:adjustViewBounds="true"
+        android:duplicateParentState="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/file_icon_file" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:minWidth="54dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:layout_marginLeft="4dp"
+        android:visibility="visible"
+        android:textColor="@color/white"
+        android:text="@string/btn_txt_download"
+        android:background="@drawable/button_bg"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/icon"
+        android:layout_toLeftOf="@id/status"
+        android:singleLine="true"
+        android:text="name of the item"
+        android:textColor="@color/file_name_normal"
+        android:textSize="16sp"
+        android:layout_marginBottom="0dp" />
+
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/icon"
+        android:layout_toLeftOf="@id/status"
+        android:layout_below="@id/name"
+        android:textColor="@color/file_info_normal"
+        android:text="info of the item"
+        android:textSize="12sp" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_toRightOf="@id/icon"
+        android:layout_toLeftOf="@id/status"
+        android:layout_below="@id/name"
+        android:progress="50"
+        android:visibility="visible"
+        android:progressDrawable="@drawable/progress_bar_bg"
+        android:layout_marginTop="4dp" />
+
+</RelativeLayout>

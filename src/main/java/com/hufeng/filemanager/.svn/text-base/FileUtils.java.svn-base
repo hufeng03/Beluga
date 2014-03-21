@@ -1,0 +1,333 @@
+package com.snda.youni.modules.selectfile;
+
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.List;
+
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
+import android.os.Process;
+import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
+
+import com.snda.youni.R;
+import com.snda.youni.utils.FileUtil;
+import com.snda.youni.utils.LogUtil;
+
+public class FileUtils {
+
+    private static final String TAG = FileUtils.class.getSimpleName();
+
+    public static final int FILE_TYPE_FILE = 0;
+    public static final int FILE_TYPE_AUDIO = 1;
+    public static final int FILE_TYPE_VIDEO = 2;
+    public static final int FILE_TYPE_IMAGE = 3;
+    public static final int FILE_TYPE_APK = 4;
+    public static final int FILE_TYPE_DOCUMENT = 5;
+    public static final int FILE_TYPE_MEDIA = 6;
+
+    public interface OnFileSelectedListener {
+        void onFileSelected(String path);
+    }
+
+    public static String getRootDir() {
+        String root = "/sdcard";
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)
+                || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            root = getSDCardDir();
+            if (root.startsWith("/mnt"))
+                root = root.substring(4);
+        }
+        return root;
+    }
+
+    public static String getSDCardDir() {
+        return Environment.getExternalStorageDirectory().getPath();
+    }
+
+    public static String getFileSize(File path) {
+        if (path == null)
+            return "";
+        String ret = "";
+        File f = path;
+        long v = f.length();
+        ret = normalize(v);
+        return ret;
+    }
+
+    private static final long K = 1024;
+    private static final long M = K * K;
+    private static final long G = M * K;
+
+    private static String normalize(long data) {
+        return FileUtil.normalize(data);
+    }
+
+    public static int getFileType(File file) {
+        String name = file.getName();
+        int dotIndex = name.lastIndexOf(".");
+        if (dotIndex < 0)
+            return FILE_TYPE_FILE;
+
+        String end = name.substring(dotIndex, name.length()).toLowerCase();
+        if (TextUtils.isEmpty(end))
+            return FILE_TYPE_FILE;
+
+        Integer t = sFileMap.get(end);
+        if (t != null)
+            return t;
+        return FILE_TYPE_FILE;
+    }
+
+    private static final HashMap<String, Integer> sFileMap;
+    static {
+        sFileMap = new HashMap<String, Integer>();
+        sFileMap.put(".3gp", FILE_TYPE_VIDEO);
+        sFileMap.put(".asf", FILE_TYPE_VIDEO);
+        sFileMap.put(".avi", FILE_TYPE_VIDEO);
+        sFileMap.put(".m4u", FILE_TYPE_VIDEO);
+        sFileMap.put(".m4v", FILE_TYPE_VIDEO);
+        sFileMap.put(".mov", FILE_TYPE_VIDEO);
+        sFileMap.put(".mp4", FILE_TYPE_VIDEO);
+        sFileMap.put(".mpe", FILE_TYPE_VIDEO);
+        sFileMap.put(".mpeg", FILE_TYPE_VIDEO);
+        sFileMap.put(".mpg", FILE_TYPE_VIDEO);
+        sFileMap.put(".mpg4", FILE_TYPE_VIDEO);
+        sFileMap.put(".rmvb", FILE_TYPE_VIDEO);
+        sFileMap.put(".wmv", FILE_TYPE_VIDEO);
+
+        sFileMap.put(".m3u", FILE_TYPE_AUDIO);
+        sFileMap.put(".m4a", FILE_TYPE_AUDIO);
+        sFileMap.put(".m4b", FILE_TYPE_AUDIO);
+        sFileMap.put(".m4p", FILE_TYPE_AUDIO);
+        sFileMap.put(".mp2", FILE_TYPE_AUDIO);
+        sFileMap.put(".mp3", FILE_TYPE_AUDIO);
+        sFileMap.put(".mpga", FILE_TYPE_AUDIO);
+        sFileMap.put(".ogg", FILE_TYPE_AUDIO);
+        sFileMap.put(".wav", FILE_TYPE_AUDIO);
+        sFileMap.put(".wma", FILE_TYPE_AUDIO);
+        sFileMap.put(".apk", FILE_TYPE_AUDIO);
+        sFileMap.put(".apk", FILE_TYPE_AUDIO);
+
+        sFileMap.put(".apk", FILE_TYPE_APK);
+
+        sFileMap.put(".bmp", FILE_TYPE_IMAGE);
+        sFileMap.put(".gif", FILE_TYPE_IMAGE);
+        sFileMap.put(".jpeg", FILE_TYPE_IMAGE);
+        sFileMap.put(".jpg", FILE_TYPE_IMAGE);
+        sFileMap.put(".png", FILE_TYPE_IMAGE);
+        sFileMap.put(".tif", FILE_TYPE_IMAGE);
+
+        sFileMap.put(".txt", FILE_TYPE_DOCUMENT);
+        sFileMap.put(".epub", FILE_TYPE_DOCUMENT);
+        sFileMap.put(".umd", FILE_TYPE_DOCUMENT);
+        sFileMap.put(".pdf", FILE_TYPE_DOCUMENT);
+        sFileMap.put(".ps", FILE_TYPE_DOCUMENT);
+        sFileMap.put(".doc", FILE_TYPE_DOCUMENT);
+        sFileMap.put(".ppt", FILE_TYPE_DOCUMENT);
+        sFileMap.put(".xls", FILE_TYPE_DOCUMENT);
+        sFileMap.put(".docx", FILE_TYPE_DOCUMENT);
+        sFileMap.put(".pptx", FILE_TYPE_DOCUMENT);
+        sFileMap.put(".xlsx", FILE_TYPE_DOCUMENT);
+        sFileMap.put(".zip", FILE_TYPE_DOCUMENT);
+        sFileMap.put(".rar", FILE_TYPE_DOCUMENT);
+        sFileMap.put(".tar", FILE_TYPE_DOCUMENT);
+        sFileMap.put(".z", FILE_TYPE_DOCUMENT);
+
+        sFileMap.put("", FILE_TYPE_FILE);
+    }
+
+    public static Bitmap getUninstallAPKIcon(Context context, String apkPath) {
+        String PATH_PackageParser = "android.content.pm.PackageParser";
+        String PATH_AssetManager = "android.content.res.AssetManager";
+        try {
+            Class pkgParserCls = Class.forName(PATH_PackageParser);
+            Class[] typeArgs = new Class[1];
+            typeArgs[0] = String.class;
+            Constructor pkgParserCt = pkgParserCls.getConstructor(typeArgs);
+            Object[] valueArgs = new Object[1];
+            valueArgs[0] = apkPath;
+            Object pkgParser = pkgParserCt.newInstance(valueArgs);
+            LogUtil.d("ANDROID_LAB", "pkgParser:" + pkgParser.toString());
+            DisplayMetrics metrics = new DisplayMetrics();
+            metrics.setToDefaults();
+            typeArgs = new Class[4];
+            typeArgs[0] = File.class;
+            typeArgs[1] = String.class;
+            typeArgs[2] = DisplayMetrics.class;
+            typeArgs[3] = Integer.TYPE;
+            Method pkgParser_parsePackageMtd = pkgParserCls.getDeclaredMethod(
+                    "parsePackage", typeArgs);
+            valueArgs = new Object[4];
+            valueArgs[0] = new File(apkPath);
+            valueArgs[1] = apkPath;
+            valueArgs[2] = metrics;
+            valueArgs[3] = 0;
+            Object pkgParserPkg = pkgParser_parsePackageMtd.invoke(pkgParser,
+                    valueArgs);
+            Field appInfoFld = pkgParserPkg.getClass().getDeclaredField(
+                    "applicationInfo");
+            ApplicationInfo info = (ApplicationInfo) appInfoFld
+                    .get(pkgParserPkg);
+            Class assetMagCls = Class.forName(PATH_AssetManager);
+            Constructor assetMagCt = assetMagCls.getConstructor((Class[]) null);
+            Object assetMag = assetMagCt.newInstance((Object[]) null);
+            typeArgs = new Class[1];
+            typeArgs[0] = String.class;
+            Method assetMag_addAssetPathMtd = assetMagCls.getDeclaredMethod(
+                    "addAssetPath", typeArgs);
+            valueArgs = new Object[1];
+            valueArgs[0] = apkPath;
+            assetMag_addAssetPathMtd.invoke(assetMag, valueArgs);
+            Resources res = context.getResources();// getResources();
+            typeArgs = new Class[3];
+            typeArgs[0] = assetMag.getClass();
+            typeArgs[1] = res.getDisplayMetrics().getClass();
+            typeArgs[2] = res.getConfiguration().getClass();
+            Constructor resCt = Resources.class.getConstructor(typeArgs);
+            valueArgs = new Object[3];
+            valueArgs[0] = assetMag;
+            valueArgs[1] = res.getDisplayMetrics();
+            valueArgs[2] = res.getConfiguration();
+            res = (Resources) resCt.newInstance(valueArgs);
+            CharSequence label = null;
+            if (info.labelRes != 0) {
+                label = res.getText(info.labelRes);
+            }
+            LogUtil.d("ANDROID_LAB", "label=" + label);
+            if (info.icon != 0) {
+                Bitmap icon = BitmapFactory.decodeResource(res, info.icon);
+                return icon;
+            }
+        } catch (Exception e) {
+            // e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static boolean isPackageExists(Context context, String packageName) {
+        PackageManager pm = context.getPackageManager();
+        ApplicationInfo appInfo = null;
+        boolean errFlag = false;
+        try {
+            appInfo = pm.getApplicationInfo(packageName,
+                    PackageManager.GET_UNINSTALLED_PACKAGES);
+        } catch (NameNotFoundException e) {
+            errFlag = true;
+        }
+        if (appInfo == null || errFlag) {
+            return false;
+        }
+        return true;
+    }
+
+    public static void selectFile(Activity context, int requestCode, boolean fromtop) {
+        try {
+            
+        Intent t = new Intent(Intent.ACTION_VIEW);
+        t.setClassName("com.sdo.star.filemanager",
+                "com.sdo.star.filemanager.gui.PickFileManagerActivity");
+        List<ResolveInfo> acts = context.getPackageManager().queryIntentActivities(
+                t, 0);
+        if (acts != null && acts.size() > 0) {
+            Intent intentGet = new Intent(Intent.ACTION_GET_CONTENT);
+
+            intentGet.setType("*/*");
+            // intentGet.setType("*/*");
+            intentGet.setClassName("com.sdo.star.filemanager",
+                    "com.sdo.star.filemanager.gui.PickFileManagerActivity");
+            context.startActivityForResult(intentGet, requestCode);
+
+//        final String PKG_XINGKONG = "com.sdo.star.filemanager";
+//        if (isPackageExists(context, PKG_XINGKONG)) {
+//            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//            // intent.setPackage(PKG_XINGKONG);
+//            intent.setClassName(PKG_XINGKONG,
+//                    "com.sdo.star.filemanager.gui.FilesBrowserActivity");
+//            intent.setType("*/*");
+//            context.startActivityForResult(intent, requestCode);
+//            if(fromtop)
+//            	context.overridePendingTransition(R.anim.slide_in_bottom,
+//                    R.anim.slide_out_top);
+//            else
+//            	context.overridePendingTransition(R.anim.slide_in_left,
+//                        R.anim.slide_out_right);
+//
+        } else {
+            Intent intent = new Intent(context, FileSelectActivity.class);
+            context.startActivityForResult(intent, requestCode);
+//            if(fromtop)
+//            	context.overridePendingTransition(R.anim.slide_in_bottom,
+//                    R.anim.slide_out_top);
+//            else
+//            	context.overridePendingTransition(R.anim.slide_in_left,
+//                        R.anim.slide_out_right);
+        }
+
+        } catch (Exception e) {
+            Intent intent = new Intent(context, FileSelectActivity.class);
+            context.startActivityForResult(intent, requestCode);
+//            if(fromtop)
+//                context.overridePendingTransition(R.anim.slide_in_bottom,
+//                    R.anim.slide_out_top);
+//            else
+//                context.overridePendingTransition(R.anim.slide_in_left,
+//                        R.anim.slide_out_right);
+        }
+    }
+
+    public static Uri getPathFromContent(Context context, Uri contentUri) {
+        ContentResolver resolver = context.getContentResolver();
+        Cursor cursor = null;
+        Uri retUri = null;
+        try {
+            String path = contentUri.getPath();
+            if (path.contains("images")) {
+                cursor = resolver.query(contentUri,
+                        new String[] { MediaStore.Images.ImageColumns.DATA },
+                        null, null, null);
+                cursor.moveToFirst();
+                retUri = Uri.fromFile(new File(cursor.getString(0)));
+            } else if (path.contains("video")) {
+                cursor = resolver.query(contentUri,
+                        new String[] { MediaStore.Video.VideoColumns.DATA },
+                        null, null, null);
+                cursor.moveToFirst();
+                retUri = Uri.fromFile(new File(cursor.getString(0)));
+            }	else if (path.contains("audio")) {
+                cursor = resolver.query(contentUri,
+                        new String[] { MediaStore.Audio.AudioColumns.DATA },
+                        null, null, null);
+                cursor.moveToFirst();
+                retUri = Uri.fromFile(new File(cursor.getString(0)));
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+        }
+        return retUri;
+    }
+    
+}

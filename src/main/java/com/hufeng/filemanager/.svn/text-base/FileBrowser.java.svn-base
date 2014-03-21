@@ -1,0 +1,196 @@
+package com.snda.youni.modules.selectfile;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Stack;
+
+import android.app.Activity;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.snda.youni.R;
+import com.snda.youni.modules.selectfile.FileUtils.OnFileSelectedListener;
+
+public class FileBrowser implements OnClickListener {
+
+    private Context mContext;
+    private String mCurrDir;
+    private static final String ROOT_PATH = FileUtils.getRootDir();
+    private TextView mTitle;
+    private View mView;
+    private ListView mList;
+    private FileAdapter mFileAdapter;
+    private OnFileSelectedListener mOnFileSelected;
+    private Stack<FileAdapter> mParentDirStack = new Stack<FileAdapter>();
+
+    public FileBrowser(Context context) {
+        this.mContext = context;
+        LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mView = inflater.inflate(R.layout.file_browser, null);
+
+        mTitle = (TextView) mView.findViewById(R.id.title);
+        Button back = (Button) mView.findViewById(R.id.back);
+        back.setOnClickListener(this);
+
+        mList = (ListView) mView.findViewById(R.id.filelist);
+        mList.setOnScrollListener(mOnScrollListener);
+
+        changeDir(ROOT_PATH);
+        mList.setOnItemClickListener(mOnItemClickListener);
+    }
+
+    public View getContentView() {
+        return mView;
+    }
+
+    private void changeDir(String dir) {
+        mTitle.setText(dir);
+        ArrayList<String> paths = new ArrayList<String>();
+        File f = new File(dir);
+        File[] files = f.listFiles();
+
+        mCurrDir = dir;
+        Arrays.sort(files);
+
+        if (!dir.equals(ROOT_PATH)) {
+        }
+
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            if (file.isDirectory()) {
+                paths.add(file.getPath());
+            }
+        }
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            if (!file.isDirectory()) {
+                paths.add(file.getPath());
+            }
+        }
+
+        mFileAdapter = new FileAdapter(mContext, paths);
+        mList.setAdapter(mFileAdapter);
+    }
+
+    private void changeDir(FileAdapter adapter) {
+        mFileAdapter = adapter;
+        mList.setAdapter(mFileAdapter);
+        mList.setSelection(mFileAdapter.getLastPosition());
+        mCurrDir = new File(mCurrDir).getParent();
+        mTitle.setText(mCurrDir);
+    }
+
+    private OnScrollListener mOnScrollListener = new OnScrollListener() {
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            if (scrollState == OnScrollListener.SCROLL_STATE_FLING) {
+                mFileAdapter.setIsScrolling(true);
+            } else {
+                mFileAdapter.setIsScrolling(false);
+            }
+            if (scrollState == OnScrollListener.SCROLL_STATE_IDLE)
+                mFileAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem,
+                int visibleItemCount, int totalItemCount) {
+        }
+    };
+
+    private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                long id) {
+
+            String path = (String) mFileAdapter.getItem(position);
+            File file = new File(path);
+            if (file.canRead()) {
+                if (file.isDirectory()) {
+                    mFileAdapter.setLastPosition(mList
+                            .getFirstVisiblePosition());
+                    mParentDirStack.push(mFileAdapter);
+                    changeDir(path);
+                } else {
+                    if (mOnFileSelected != null)
+                        mOnFileSelected.onFileSelected(path);
+                }
+            } else {
+                showTip();
+            }
+        }
+    };
+
+    private void showTip() {
+        LinearLayout lay = new LinearLayout(mContext);
+        lay.setOrientation(LinearLayout.HORIZONTAL);
+        ImageView image = new ImageView(mContext);
+        TextView text = new TextView(mContext);
+        // text.setTextColor(context.getResources().getColor(R.color.text_color));
+        text.setTextSize(16);
+        text.setText("很抱歉您的权限不足,无法读取文件内容!");
+        Toast toast = Toast.makeText(mContext, text.getText().toString(),
+                Toast.LENGTH_SHORT);
+        image.setImageResource(android.R.drawable.ic_lock_idle_alarm);
+        lay.addView(image);
+        lay.addView(text);
+        toast.setView(lay);
+        toast.show();
+    }
+
+    public boolean back() {
+        if (ROOT_PATH.equals(mCurrDir))
+            return false;
+        // File f = new File(mCurrPath);
+        // String parent = f.getParent();
+        // changeDir(parent);
+        changeDir(mParentDirStack.pop());
+        return true;
+    }
+
+    public void setOnFileSelectedListener(OnFileSelectedListener listener) {
+        mOnFileSelected = listener;
+    }
+
+    public void destroy() {
+        mList.setAdapter(null);
+        mFileAdapter.destroy();
+        for (FileAdapter a : mParentDirStack) {
+            a.destroy();
+        }
+        mParentDirStack.clear();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+        case R.id.back:
+            if (back())
+                break;
+            if (mContext instanceof Activity)
+            {
+            	((Activity) mContext).finish();
+            	((Activity) mContext).overridePendingTransition(R.anim.slide_in_top,
+                        R.anim.slide_out_bottom);
+            }
+            break;
+        }
+    }
+
+}

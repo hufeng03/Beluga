@@ -1,0 +1,13 @@
+K 10
+svn:ignore
+V 63
+.classpath
+.project
+.settings
+.git
+.gitignore
+bin
+gen
+proguard
+
+END

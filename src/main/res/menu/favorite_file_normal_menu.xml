@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+   	<item android:id="@+id/menu_send" android:menuCategory="secondary" android:title="@string/menu_send" />
+    <item android:id="@+id/menu_remove_favorite" android:menuCategory="secondary" android:title="@string/menu_remove_favorite" />
+    <item android:id="@+id/menu_view_detail" android:menuCategory="secondary" android:title="@string/menu_view_detail" />
+    <!--item android:id="@+id/menu_add_safe" android:title="@string/menu_add_safe"/-->
+</menu>

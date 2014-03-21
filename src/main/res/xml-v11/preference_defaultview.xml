@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:fm="http://schemas.android.com/apk/res-auto">
+	<com.hufeng.filemanager.ui.AppSelectPreference
+	    android:key="IMAGE_DEFAULT_VIEW"
+	    fm:category="image"
+	    android:widgetLayout="@layout/app_select_preference"
+	    />
+	<com.hufeng.filemanager.ui.AppSelectPreference
+	    android:key="AUDIO_DEFAULT_VIEW"
+	    fm:category="audio"
+	    android:widgetLayout="@layout/app_select_preference"
+	    />
+	<com.hufeng.filemanager.ui.AppSelectPreference
+	    android:key="VIDEO_DEFAULT_VIEW"
+	    fm:category="video"
+	    android:widgetLayout="@layout/app_select_preference"
+	    />
+</PreferenceScreen>

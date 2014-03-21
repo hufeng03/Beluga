@@ -1,0 +1,61 @@
+package com.snda.youni.modules.selectfile;
+
+import java.io.File;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.Window;
+
+import com.snda.youni.R;
+import com.snda.youni.modules.selectfile.FileUtils.OnFileSelectedListener;
+
+public class FileGrouperActivity extends Activity implements OnFileSelectedListener {
+    private FileGrouper mFileGrouper;
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        Intent intent = getIntent();
+        int type = intent.getIntExtra("type", FileUtils.FILE_TYPE_FILE);
+        mFileGrouper = new FileGrouper(this, type);
+        mFileGrouper.setOnFileSelectedListener(this);
+        setContentView(mFileGrouper.getContentView());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        mFileGrouper.destroy();
+    }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        mFileGrouper.resume();
+//    }
+//
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isFinishing())
+            mFileGrouper.destroy();
+    }
+
+    public void onFileSelected(String path) {
+        File f = new File(path);
+        int type = FileUtils.getFileType(f);
+        
+        Intent intent = new Intent();
+        intent.setData(Uri.fromFile(new File(path)));
+        intent.putExtra("type", type);
+        setResult(RESULT_OK, intent);
+        finish();
+//        overridePendingTransition(R.anim.slide_in_right,
+//                R.anim.slide_out_left);
+    }
+
+}

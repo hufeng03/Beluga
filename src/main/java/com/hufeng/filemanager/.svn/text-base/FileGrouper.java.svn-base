@@ -1,0 +1,259 @@
+package com.snda.youni.modules.selectfile;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import android.app.Activity;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.snda.youni.R;
+import com.snda.youni.modules.selectfile.FileUtils.OnFileSelectedListener;
+import com.snda.youni.utils.LogUtil;
+
+public class FileGrouper implements OnClickListener {
+    private static final String TAG = FileGrouper.class.getSimpleName();
+    private Context mContext;
+    private int mType;
+    private ArrayList<String> mFileList = new ArrayList<String>();
+    private static final String ROOT_PATH = FileUtils.getRootDir();
+    private ConcurrentLinkedQueue<String> mSearchQueue = new ConcurrentLinkedQueue<String>();
+    private LayoutInflater mInflater;
+    private View mView;
+    private View mLoading;
+    private ListView mList;
+    private FileAdapter mAdapter;
+    private OnFileSelectedListener mOnFileSelected;
+    private FileQueryThread mFileQueryThread;
+    private static final int DELTA = 10;
+    private int mCurrItemCount = 0;
+    private ProgressBar pb;
+    
+    public FileGrouper(Context context, int type) {
+        this.mContext = context;
+        this.mType = type;
+
+        mInflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mView = mInflater.inflate(R.layout.file_grouper, null);
+        mLoading = mInflater.inflate(R.layout.file_row_loading, null);
+        pb = (ProgressBar) mLoading.findViewById(R.id.progressBar1);
+        mView.findViewById(R.id.back).setOnClickListener(this);
+
+        TextView title = (TextView) mView.findViewById(R.id.title);
+        if (mType == FileUtils.FILE_TYPE_DOCUMENT)
+            title.setText(R.string.common_file_category_document);
+        else if (mType == FileUtils.FILE_TYPE_AUDIO)
+            title.setText(R.string.common_file_category_audio);
+        else if (mType == FileUtils.FILE_TYPE_APK)
+            title.setText(R.string.common_file_category_apk);
+
+        mAdapter = new FileAdapter(mContext, mFileList);
+        mList = (ListView) mView.findViewById(R.id.filelist);
+        mList.addFooterView(mLoading);
+        mList.setAdapter(mAdapter);
+        mList.setOnScrollListener(mOnScrollListener);
+        mList.setOnItemClickListener(mOnItemClickListener);
+
+        mSearchQueue.add(ROOT_PATH);
+        mFileQueryThread = new FileQueryThread();
+        mFileQueryThread.start();
+    }
+
+    public View getContentView() {
+        return mView;
+    }
+
+    public void destroy() {
+        if (mFileQueryThread != null) {
+            mFileQueryThread.destroySelf();
+            mFileQueryThread = null;
+        }
+        mList.removeFooterView(mLoading);
+        pb.setIndeterminate(false);
+        pb.setVisibility(View.GONE);
+        mLoading = null;
+        mList.setAdapter(null);
+        mAdapter.destroy();
+    }
+
+    public void pause() {
+        LogUtil.w(TAG, "=========>pause()");
+        if (mFileQueryThread != null)
+            mFileQueryThread.pauseSelf();
+    }
+
+    public void resume() {
+        LogUtil.w(TAG, "=========>resume()");
+        if (mFileQueryThread != null)
+            mFileQueryThread.resumeSelf();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+        case R.id.back:
+            if (mContext instanceof Activity)
+                ((Activity) mContext).finish();
+            break;
+        }
+    }
+
+    private OnScrollListener mOnScrollListener = new OnScrollListener() {
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            if (scrollState == OnScrollListener.SCROLL_STATE_FLING) {
+                mAdapter.setIsScrolling(true);
+            } else {
+                mAdapter.setIsScrolling(false);
+            }
+            if (scrollState == OnScrollListener.SCROLL_STATE_IDLE)
+                mAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem,
+                int visibleItemCount, int totalItemCount) {
+            mCurrItemCount = firstVisibleItem + visibleItemCount;
+            if (mCurrItemCount == totalItemCount && mFileQueryThread != null)
+                mHandler.sendEmptyMessageDelayed(MSG_LOAD_MORE, 1000);
+        }
+    };
+
+    private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                long id) {
+            if (view.getId() == R.id.file_loading)
+                return;
+
+            String path = mFileList.get(position);
+            File file = new File(path);
+            if (file.canRead()) {
+                if (mOnFileSelected != null)
+                    mOnFileSelected.onFileSelected(path);
+            } else {
+                showTip();
+            }
+        }
+    };
+
+    private void showTip() {
+        LinearLayout lay = new LinearLayout(mContext);
+        lay.setOrientation(LinearLayout.HORIZONTAL);
+        ImageView image = new ImageView(mContext);
+        TextView text = new TextView(mContext);
+        // text.setTextColor(context.getResources().getColor(R.color.text_color));
+        text.setTextSize(16);
+        text.setText("很抱歉您的权限不足,无法读取文件内容!");
+        Toast toast = Toast.makeText(mContext, text.getText().toString(),
+                Toast.LENGTH_SHORT);
+        image.setImageResource(android.R.drawable.ic_lock_idle_alarm);
+        lay.addView(image);
+        lay.addView(text);
+        toast.setView(lay);
+        toast.show();
+    }
+
+    // public boolean back() {
+    // if (ROOT_PATH.equals(mCurrPath))
+    // return false;
+    // File f = new File(mCurrPath);
+    // String parent = f.getParent();
+    // changeFileDir(parent);
+    // return true;
+    // }
+
+    public void setOnFileSelectedListener(OnFileSelectedListener listener) {
+        mOnFileSelected = listener;
+    }
+
+    private static final int MSG_GOT_FILES = 1;
+    private static final int MSG_END_SEARCH = 2;
+    private static final int MSG_LOAD_MORE = 3;
+
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (mFileQueryThread == null)
+                return;
+            
+            switch (msg.what) {
+            case MSG_GOT_FILES:
+                ArrayList<String> list = (ArrayList<String>) msg.obj;
+                mFileList.addAll(list);
+                mAdapter.notifyDataSetChanged();
+                break;
+            case MSG_END_SEARCH:
+                mList.removeFooterView(mLoading);
+                pb.setIndeterminate(false);
+                pb.setVisibility(View.GONE);
+                break;
+            case MSG_LOAD_MORE:
+                mFileQueryThread.resumeSelf();
+            }
+        }
+
+    };
+
+    private class FileQueryThread extends WorkerThread {
+
+        @Override
+        public void doJob() {
+            String dir = null;
+            try {
+                dir = mSearchQueue.remove();
+
+                File f = new File(dir);
+                if (!f.isDirectory())
+                    return;
+                File[] files = f.listFiles();
+                if (files == null)
+                    return;
+
+                ArrayList<String> list = new ArrayList<String>();
+                for (int i = 0; i < files.length; i++) {
+                    File curr = files[i];
+                    String path = curr.getPath();
+                    if (curr.isDirectory())
+                        mSearchQueue.add(path);
+                    else {
+                        int type = FileUtils.getFileType(curr);
+                        if (type == mType)
+                            list.add(path);
+                    }
+                }
+                Message msg = mHandler.obtainMessage(MSG_GOT_FILES, list);
+                msg.sendToTarget();
+
+                if (mFileList.size() - mCurrItemCount > DELTA)
+                    pauseSelf();
+
+            } catch (NoSuchElementException e) {
+                destroySelf();
+                mHandler.sendEmptyMessage(MSG_END_SEARCH);
+            }
+        }
+
+    }
+
+}

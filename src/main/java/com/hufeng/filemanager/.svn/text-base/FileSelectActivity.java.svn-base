@@ -1,0 +1,297 @@
+package com.snda.youni.modules.selectfile;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.preference.PreferenceManager;
+import android.provider.MediaStore;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.snda.youni.R;
+import com.snda.youni.modules.WarningTipView;
+import com.snda.youni.modules.contact.ContactBackupRestore;
+import com.snda.youni.utils.LogUtil;
+
+public class FileSelectActivity extends Activity implements OnClickListener {
+    @Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+    	switch (keyCode) {
+        case KeyEvent.KEYCODE_BACK:
+            	finish();
+//            	overridePendingTransition(R.anim.slide_in_top,
+//                        R.anim.slide_out_bottom);
+            	return true;
+    	}
+    return super.onKeyDown(keyCode, event);
+	}
+
+    private static final String TAG = FileSelectActivity.class.getSimpleName();
+	private ViewGroup mContainer, mTip;
+    private View mDoc, mOther, mImage, mVideo, mAudio, mApk;
+    private static final String PREF_XINGKONG_TIP = "xingkong_tip";
+//    private static final String PKG_GALLERY3D = "com.cooliris.media";
+//    private static final String PKG_GALLERY = "com.android.gallery";
+//    private static final String PKG_GALLERY_GOOGLE = "com.google.android.gallery3d";
+    private static final String PKG_XINGKONG = "com.sdo.star.filemanager";
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        setContentView(R.layout.file_select);
+        initViews();
+
+        mDoc.setOnClickListener(this);
+        mOther.setOnClickListener(this);
+        mImage.setOnClickListener(this);
+        mVideo.setOnClickListener(this);
+        mAudio.setOnClickListener(this);
+        mApk.setOnClickListener(this);
+
+        Button back = (Button) findViewById(R.id.back);
+        back.setOnClickListener(this);
+        
+        this.setResult(RESULT_CANCELED);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void initViews() {
+        mContainer = (ViewGroup) findViewById(R.id.container);
+        mTip = (ViewGroup) findViewById(R.id.tip);
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        View view = inflater.inflate(R.layout.file_row, mContainer, false);
+        view.setId(R.id.category_image);
+        view.setBackgroundResource(R.drawable.common_list_item);
+        ImageView icon = (ImageView) view.findViewById(R.id.fileicon);
+        TextView text = (TextView) view.findViewById(R.id.filetext);
+        view.findViewById(R.id.filesize).setVisibility(View.GONE);
+        icon.setImageResource(R.drawable.file_category_icon_image);
+        text.setText(R.string.common_file_category_image);
+        mImage = view;
+
+        view = inflater.inflate(R.layout.file_row, mContainer, false);
+        view.setId(R.id.category_video);
+        view.setBackgroundResource(R.drawable.common_list_item);
+        icon = (ImageView) view.findViewById(R.id.fileicon);
+        text = (TextView) view.findViewById(R.id.filetext);
+        view.findViewById(R.id.filesize).setVisibility(View.GONE);
+        icon.setImageResource(R.drawable.file_category_icon_video);
+        text.setText(R.string.common_file_category_video);
+        mVideo = view;
+
+        view = inflater.inflate(R.layout.file_row, null);
+        view.setId(R.id.category_document);
+        view.setBackgroundResource(R.drawable.common_list_item);
+        icon = (ImageView) view.findViewById(R.id.fileicon);
+        text = (TextView) view.findViewById(R.id.filetext);
+        view.findViewById(R.id.filesize).setVisibility(View.GONE);
+        icon.setImageResource(R.drawable.file_category_icon_document);
+        text.setText(R.string.common_file_category_document);
+        mDoc = view;
+
+        view = inflater.inflate(R.layout.file_row, null);
+        view.setId(R.id.category_audio);
+        view.setBackgroundResource(R.drawable.common_list_item);
+        icon = (ImageView) view.findViewById(R.id.fileicon);
+        text = (TextView) view.findViewById(R.id.filetext);
+        view.findViewById(R.id.filesize).setVisibility(View.GONE);
+        icon.setImageResource(R.drawable.file_category_icon_audio);
+        text.setText(R.string.common_file_category_audio);
+        mAudio = view;
+
+        view = inflater.inflate(R.layout.file_row, null);
+        view.setId(R.id.category_apk);
+        view.setBackgroundResource(R.drawable.common_list_item);
+        icon = (ImageView) view.findViewById(R.id.fileicon);
+        text = (TextView) view.findViewById(R.id.filetext);
+        view.findViewById(R.id.filesize).setVisibility(View.GONE);
+        icon.setImageResource(R.drawable.file_category_icon_apk);
+        text.setText(R.string.common_file_category_apk);
+        mApk = view;
+
+        view = inflater.inflate(R.layout.file_row, null);
+        view.setId(R.id.category_other);
+        view.setBackgroundResource(R.drawable.common_list_item);
+        icon = (ImageView) view.findViewById(R.id.fileicon);
+        text = (TextView) view.findViewById(R.id.filetext);
+        view.findViewById(R.id.filesize).setVisibility(View.GONE);
+        icon.setImageResource(R.drawable.file_category_icon_other);
+        text.setText(R.string.common_file_category_other);
+        mOther = view;
+
+        mContainer.addView(mImage);
+        View divider = new View(this);
+        divider.setBackgroundResource(R.drawable.list_seperator);
+        mContainer.addView(divider);
+
+        mContainer.addView(mVideo);
+        divider = new View(this);
+        divider.setBackgroundResource(R.drawable.list_seperator);
+        mContainer.addView(divider);
+
+        mContainer.addView(mDoc);
+        divider = new View(this);
+        divider.setBackgroundResource(R.drawable.list_seperator);
+        mContainer.addView(divider);
+
+        mContainer.addView(mAudio);
+        divider = new View(this);
+        divider.setBackgroundResource(R.drawable.list_seperator);
+        mContainer.addView(divider);
+        
+        mContainer.addView(mApk);
+        divider = new View(this);
+        divider.setBackgroundResource(R.drawable.list_seperator);
+        mContainer.addView(divider);
+        
+        mContainer.addView(mOther);
+        divider = new View(this);
+        divider.setBackgroundResource(R.drawable.list_seperator);
+        mContainer.addView(divider);
+
+//        if (!FileUtils.isPackageExists(this, PKG_XINGKONG)) {
+//            int c = ContactBackupRestore.getIntPref(this, PREF_XINGKONG_TIP, 0);
+//            if (c >= 3) {
+//                mTip.setVisibility(View.GONE);
+//            } else {
+//                mTip.findViewById(R.id.btn).setOnClickListener(this);
+//                mTip.setOnClickListener(this);
+//                mHandler.sendEmptyMessageDelayed(MSG_HIDE_TIP, 5000);
+//            }
+//        } else {
+//            mTip.setVisibility(View.GONE);
+//        }
+        
+        mTip.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+        case R.id.back:
+            finish();
+//        	overridePendingTransition(R.anim.slide_in_top,
+//                    R.anim.slide_out_bottom);
+            break;
+        case R.id.btn: {
+//            int c = ContactBackupRestore.getIntPref(this, PREF_XINGKONG_TIP, 0);
+//            ContactBackupRestore.setIntPref(this, PREF_XINGKONG_TIP, c + 1);
+            mHandler.sendEmptyMessage(MSG_HIDE_TIP);
+            break;
+        }
+        case R.id.tip: {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("http://wj.sdo.com/m/"));
+            startActivity(intent);
+            finish();
+            break;
+        }
+        case R.id.category_image: {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            startActivityForResult(intent, 0);
+            break;
+        }
+        case R.id.category_video: {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("video/*");
+            startActivityForResult(intent, 0);
+            break;
+        }
+        case R.id.category_document: {
+            Intent intent = new Intent(this, FileGrouperActivity.class);
+            intent.putExtra("type", FileUtils.FILE_TYPE_DOCUMENT);
+            startActivityForResult(intent, 0);
+            break;
+        }
+        case R.id.category_audio: {
+            Intent intent = new Intent(this, FileGrouperActivity.class);
+            intent.putExtra("type", FileUtils.FILE_TYPE_AUDIO);
+            startActivityForResult(intent, 0);
+            break;
+        }
+        case R.id.category_apk: {
+            Intent intent = new Intent(this, FileGrouperActivity.class);
+            intent.putExtra("type", FileUtils.FILE_TYPE_APK);
+            startActivityForResult(intent, 0);
+            break;
+        }
+        case R.id.category_other: {
+            Intent intent = new Intent(this, FileBrowserActivity.class);
+            startActivityForResult(intent, 0);
+            break;
+        }
+        }
+        LogUtil.d(TAG, "mem===>");
+    }
+
+    private static final int MSG_HIDE_TIP = 1;
+
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+            case MSG_HIDE_TIP:
+                Animation anim = AnimationUtils.loadAnimation(
+                        getApplicationContext(), R.anim.warning_tip);
+                anim.setAnimationListener(mAnimListener);
+                mTip.startAnimation(anim);
+                break;
+            }
+        }
+
+    };
+
+    private AnimationListener mAnimListener = new AnimationListener() {
+        
+        @Override
+        public void onAnimationStart(Animation animation) {
+        }
+        
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+        }
+        
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            mTip.setVisibility(View.GONE);
+        }
+    };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        LogUtil.d(TAG, "mem===>");
+        mTip.setVisibility(View.GONE);
+        if (data != null) {
+            setResult(RESULT_OK, data);
+            finish();
+//        	overridePendingTransition(R.anim.slide_in_right,
+//                    R.anim.slide_out_left);
+        }
+        System.gc();
+    }
+
+}

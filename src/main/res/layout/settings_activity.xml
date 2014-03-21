@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/windows"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:background="@color/settings_bg"
+    android:layout_height="fill_parent">
+    <!--RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/top_tab"
+        android:background="@drawable/top_tab_bg">
+        <LinearLayout 
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:orientation="horizontal"
+            android:layout_centerInParent="true">
+			<TextView
+				android:id="@+id/settings_title"
+				android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textAppearance="@style/Large_Title"
+				android:text="@string/settings_title"/>
+        </LinearLayout>
+        <Button 
+        	android:id="@+id/back" 
+        	android:layout_centerVertical="true" 
+        	android:layout_alignParentLeft="true" 
+        	android:background="@drawable/btn_back_bg" 
+        	android:layout_width="80dip" 
+        	android:layout_height="wrap_content" 
+        	android:text="@string/btn_back_default" 
+        	android:textColor="@color/white"
+        	android:paddingLeft="15dip"/>
+    </RelativeLayout-->
+    
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        >
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+			
+        <!--TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+          	android:layout_marginLeft="15.0dip" android:layout_marginTop="10.0dip"
+			android:layout_marginRight="15.0dip"
+            android:text="@string/file_category_match"
+            style="@style/PreferenceTitle" 
+            /-->
+       	<LinearLayout android:orientation="vertical"
+		android:paddingTop="5.0dip"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_marginLeft="15.0dip" android:layout_marginTop="10.0dip"
+		android:layout_marginRight="15.0dip">
+		<TextView android:gravity="center_vertical" android:id="@+id/file_category_match_music"
+			android:background="@drawable/preference_first_item"
+			android:paddingLeft="10.0dip" android:paddingTop="10.0dip"
+			android:paddingRight="20.0dip" android:paddingBottom="10.0dip"
+			android:clickable="true" android:layout_width="fill_parent"
+			android:layout_height="55.0dip"
+			android:text="@string/category_music_default_app"
+			android:drawableLeft="@drawable/category_icon_music"
+			android:drawableRight="@drawable/arrow_right" style="@style/PreferenceSmallText" />
+		<TextView android:gravity="center_vertical" android:id="@+id/file_category_match_video"
+			android:background="@drawable/preference_item"
+			android:paddingLeft="10.0dip" android:paddingTop="10.0dip"
+			android:paddingRight="20.0dip" android:paddingBottom="10.0dip"
+			android:clickable="true" android:layout_width="fill_parent"
+			android:layout_height="55.0dip"
+			android:drawableLeft="@drawable/category_icon_video"
+			android:text="@string/category_video_default_app"
+			android:drawableRight="@drawable/arrow_right" style="@style/PreferenceSmallText" />
+		<TextView android:gravity="center_vertical" android:id="@+id/file_category_match_picture"
+			android:background="@drawable/preference_last_item"
+			android:paddingLeft="10.0dip" android:paddingTop="10.0dip"
+			android:paddingRight="20.0dip" android:paddingBottom="10.0dip"
+			android:clickable="true" android:layout_width="fill_parent"
+			android:layout_height="55.0dip"
+			android:text="@string/category_picture_default_app"
+			android:drawableLeft="@drawable/category_icon_picture"
+			android:drawableRight="@drawable/arrow_right" style="@style/PreferenceSmallText" />
+		<TextView android:gravity="center_vertical" android:id="@+id/file_category_match_document"
+		    android:visibility="gone"
+			android:background="@drawable/preference_item"
+			android:paddingLeft="10.0dip" android:paddingTop="10.0dip"
+			android:paddingRight="20.0dip" android:paddingBottom="10.0dip"
+			android:clickable="true" android:layout_width="fill_parent"
+			android:layout_height="55.0dip"
+			android:text="@string/file_category_match_document"
+			android:drawableRight="@drawable/arrow_right" style="@style/PreferenceSmallText" />
+		<TextView android:gravity="center_vertical" android:id="@+id/file_category_match_zip"
+		    android:visibility="gone"
+			android:background="@drawable/preference_last_item"
+			android:paddingLeft="10.0dip" android:paddingTop="10.0dip"
+			android:paddingRight="20.0dip" android:paddingBottom="10.0dip"
+			android:clickable="true" android:layout_width="fill_parent"
+			android:layout_height="55.0dip"
+			android:text="@string/file_category_match_zip"
+			android:drawableRight="@drawable/arrow_right" style="@style/PreferenceSmallText" />
+	</LinearLayout>
+			
+			<LinearLayout android:orientation="vertical"
+		android:paddingTop="5.0dip"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_marginLeft="15.0dip" android:layout_marginTop="10.0dip"
+		android:layout_marginBottom="10dip"
+		android:layout_marginRight="15.0dip">
+		
+			    <TextView android:gravity="center_vertical" android:id="@+id/settings_ftp"
+			android:background="@drawable/preference_first_item"
+			android:paddingLeft="10.0dip" android:paddingTop="10.0dip"
+			android:paddingRight="20.0dip" android:paddingBottom="10.0dip"
+			android:clickable="true" android:layout_width="fill_parent"
+			android:layout_height="55.0dip" android:text="@string/settings_ftp"
+			android:drawableRight="@drawable/arrow_right" style="@style/PreferenceSmallText" />
+                   	       		    
+                   	       		    		
+       	       	<TextView android:gravity="center_vertical" android:id="@+id/settings_backup"
+			android:background="@drawable/preference_item"
+			android:paddingLeft="10.0dip" android:paddingTop="10.0dip"
+			android:paddingRight="20.0dip" android:paddingBottom="10.0dip"
+			android:clickable="true" android:layout_width="fill_parent"
+			android:layout_height="55.0dip" android:text="@string/settings_backup"
+			android:drawableRight="@drawable/arrow_right" style="@style/PreferenceSmallText" />
+			    
+					
+				<TextView android:gravity="center_vertical" android:id="@+id/settings_scan"
+			android:background="@drawable/preference_item"
+			android:paddingLeft="10.0dip" android:paddingTop="10.0dip"
+			android:paddingRight="20.0dip" android:paddingBottom="10.0dip"
+			android:clickable="true" android:layout_width="fill_parent"
+			android:layout_height="55.0dip" android:text="@string/settings_scan"
+			android:drawableRight="@drawable/arrow_right" style="@style/PreferenceSmallText" />
+				
+				<TextView android:gravity="center_vertical" android:id="@+id/settings_skin"
+			android:background="@drawable/preference_last_item"
+			android:paddingLeft="10.0dip" android:paddingTop="10.0dip"
+			android:paddingRight="20.0dip" android:paddingBottom="10.0dip"
+			android:clickable="true" android:layout_width="fill_parent"
+			android:layout_height="55.0dip" android:text="@string/settings_skin"
+			android:drawableRight="@drawable/arrow_right" style="@style/PreferenceSmallText" />
+		
+       	       		    	</LinearLayout>
+	
+       		<LinearLayout android:orientation="vertical"
+		android:paddingTop="5.0dip"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_marginLeft="15.0dip" android:layout_marginTop="10.0dip"
+		android:layout_marginBottom="10dip"
+		android:layout_marginRight="15.0dip">
+		<!--TextView android:gravity="center_vertical" android:id="@+id/settings_introduction"
+			android:background="@drawable/preference_first_item"
+			android:paddingLeft="10.0dip" android:paddingTop="10.0dip"
+			android:paddingRight="20.0dip" android:paddingBottom="10.0dip"
+			android:clickable="true" android:layout_width="fill_parent"
+			android:layout_height="55.0dip" android:text="@string/settings_introduction"
+			android:drawableRight="@drawable/arrow_right" style="@style/PreferenceSmallText" /-->
+		<TextView android:gravity="center_vertical" android:id="@+id/settings_upgrade"
+			android:background="@drawable/preference_first_item"
+			android:paddingLeft="10.0dip" android:paddingTop="10.0dip"
+			android:paddingRight="20.0dip" android:paddingBottom="10.0dip"
+			android:clickable="true" android:layout_width="fill_parent"
+			android:layout_height="55.0dip"  android:text="@string/settings_upgrade"
+			android:drawableRight="@drawable/has_new_version" style="@style/PreferenceSmallText" />
+		<TextView android:gravity="center_vertical" android:id="@+id/settings_about_one"
+			android:background="@drawable/preference_first_item"
+			android:paddingLeft="10.0dip" android:paddingTop="10.0dip"
+			android:paddingRight="20.0dip" android:paddingBottom="10.0dip"
+			android:clickable="true" android:layout_width="fill_parent"
+			android:layout_height="55.0dip" android:text="@string/settings_about"
+			android:drawableRight="@drawable/arrow_right" style="@style/PreferenceSmallText" />
+		<TextView android:gravity="center_vertical" android:id="@+id/settings_about_last"
+			android:background="@drawable/preference_item"
+			android:paddingLeft="10.0dip" android:paddingTop="10.0dip"
+			android:paddingRight="20.0dip" android:paddingBottom="10.0dip"
+			android:clickable="true" android:layout_width="fill_parent"
+			android:layout_height="55.0dip" android:text="@string/settings_about"
+			android:drawableRight="@drawable/arrow_right" style="@style/PreferenceSmallText" />
+		<TextView android:gravity="center_vertical" android:id="@+id/settings_feedback"
+			android:background="@drawable/preference_last_item"
+			android:paddingLeft="10.0dip" android:paddingTop="10.0dip"
+			android:paddingRight="20.0dip" android:paddingBottom="10.0dip"
+			android:clickable="true" android:layout_width="fill_parent"
+			android:layout_height="55.0dip"  android:text="@string/settings_feedback"
+			android:drawableRight="@drawable/arrow_right" style="@style/PreferenceSmallText" />
+	</LinearLayout>
+	</LinearLayout>
+        
+	</ScrollView>
+</LinearLayout>

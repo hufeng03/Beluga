@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string-array
+        name= "weekday">
+        <item>SUN</item>
+        <item>MON</item>
+        <item>TUE</item>
+        <item>WED</item>
+        <item>THUR</item>
+        <item>FRI</item>
+        <item>SAT</item>
+    </string-array>
+    <string-array
+        name= "month">
+        <item>JAN.</item>
+        <item>FEB.</item>
+        <item>MAR.</item>
+        <item>APR.</item>
+        <item>MAY.</item>
+        <item>JUNE.</item>
+        <item>JULY.</item>
+        <item>AUG.</item>
+        <item>SEPT.</item>
+        <item>OCT.</item>
+        <item>NOV.</item>
+        <item>DEC.</item>
+    </string-array>
+</resources>
