@@ -165,14 +165,20 @@ public class CategoryTabFragment extends FileTabFragment implements
         final FragmentTransaction ft = fm.beginTransaction();
         FileBrowserFragment fragment = (FileBrowserFragment) fm.findFragmentByTag(FileBrowserFragment.class.getSimpleName());
         if (fragment == null) {
-            fragment = new FileBrowserFragment();
-            Bundle data = new Bundle();
-            if (FileUtils.FILE_TYPE_FAVORITE ==  type) {
-                data.putInt(FileBrowserFragment.ARGUMENT_BROWSER_TYPE, FileBrowserFragment.BROWSER_TYPE.FAVORITE.ordinal());
-            } else if (FileUtils.FILE_TYPE_DOWNLOAD == type) {
-                data.putInt(FileBrowserFragment.ARGUMENT_BROWSER_TYPE, FileBrowserFragment.BROWSER_TYPE.DOWNLOAD.ordinal());
+//            fragment = new FileBrowserFragment();
+//            Bundle data = new Bundle();
+//            if (FileUtils.FILE_TYPE_FAVORITE ==  type) {
+//                data.putInt(FileBrowserFragment.ARGUMENT_BROWSER_TYPE, FileBrowserFragment.BROWSER_TYPE.FAVORITE.ordinal());
+//            } else if (FileUtils.FILE_TYPE_DOWNLOAD == type) {
+//                data.putInt(FileBrowserFragment.ARGUMENT_BROWSER_TYPE, FileBrowserFragment.BROWSER_TYPE.DOWNLOAD.ordinal());
+//            }
+//            fragment.setArguments(data);
+            if (FileUtils.FILE_TYPE_DOWNLOAD == type) {
+                fragment = FileBrowserFragment.newDownloadBrowser(null);
+            } else if (FileUtils.FILE_TYPE_FAVORITE == type) {
+                fragment = FileBrowserFragment.newFavoriteBrowser(null);
             }
-            fragment.setArguments(data);
+
             ft.replace(R.id.fragment_container, fragment, FileBrowserFragment.class.getSimpleName());
         } else {
             if (fragment.isDetached()) {

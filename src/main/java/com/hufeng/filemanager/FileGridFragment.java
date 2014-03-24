@@ -28,7 +28,6 @@ public abstract class FileGridFragment extends GridFragment{
     protected int mCategory;
 
     protected int mMenuId;
-    protected boolean mSelection = false;
 
     protected FileOperation mFileOperation = null;
 

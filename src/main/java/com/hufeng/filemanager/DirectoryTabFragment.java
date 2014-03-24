@@ -1,9 +1,14 @@
 package com.hufeng.filemanager;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.browser.FileUtils;
 
 import java.io.File;
 
@@ -26,6 +32,8 @@ public class DirectoryTabFragment extends FileTabFragment implements
     private FileTreeFragment mFileTreeFragment;
 
     private final String DEVICE_TAB_ROOT_DIR = "device_tab_root_dir";
+
+    BroadcastReceiver mReceiver;
 
 	
 	@Override
@@ -51,13 +59,27 @@ public class DirectoryTabFragment extends FileTabFragment implements
             dir = savedInstanceState.getString(DEVICE_TAB_ROOT_DIR);
         }
 
-        showFileBrowser(dir);
         if(Configuration.ORIENTATION_LANDSCAPE == orientation) {
             showFileTree(dir);
-            mFileBrowserFragment.workWithTree(true);
-        } else {
-            mFileBrowserFragment.workWithTree(false);
         }
+        showFileBrowser(dir);
+
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i(LOG_TAG, "mReceiver receive" + intent.getAction());
+                if (mFileBrowserFragment != null) {
+
+                    String[] files = FileUtils.getStorageDirs();
+
+                    mFileBrowserFragment.setInitDirs(files);
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("SHOW_ROOT_FILES_ACTION");
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, filter);
     }
 	
 
@@ -83,6 +105,14 @@ public class DirectoryTabFragment extends FileTabFragment implements
         super.onViewStateRestored(savedInstanceState);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mReceiver != null) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
+        }
+    }
+
     public void showFileTree(String dir) {
         Log.i(LOG_TAG, "showFileTree:"+((dir!=null)?dir:"null"));
         String parent_dir = null;
@@ -97,12 +127,13 @@ public class DirectoryTabFragment extends FileTabFragment implements
         mFileTreeFragment = (FileTreeFragment) fm.findFragmentByTag(FileTreeFragment.class.getSimpleName());
         if (mFileTreeFragment == null) {
             Log.i(LOG_TAG, "showFileTree: create new");
-            mFileTreeFragment = new FileTreeFragment();
-            Bundle data = new Bundle();
-            if (!TextUtils.isEmpty(dir)) {
-                data.putString(FileTreeFragment.ARGUMENT_INIT_ROOT_DIR, dir);
-            }
-            mFileTreeFragment.setArguments(data);
+//            mFileTreeFragment = new FileTreeFragment();
+//            Bundle data = new Bundle();
+//            if (!TextUtils.isEmpty(dir)) {
+//                data.putString(FileTreeFragment.ARGUMENT_INIT_ROOT_DIR, dir);
+//            }
+//            mFileTreeFragment.setArguments(data);
+            mFileTreeFragment = FileTreeFragment.newStorageBrowser(dir);
             ft.replace(R.id.fragment_container_tree, mFileTreeFragment, FileTreeFragment.class.getSimpleName());
         } else {
             if (mFileTreeFragment.isDetached()) {
@@ -125,13 +156,12 @@ public class DirectoryTabFragment extends FileTabFragment implements
         mFileBrowserFragment = (FileBrowserFragment) fm.findFragmentByTag(FileBrowserFragment.class.getSimpleName());
         if (mFileBrowserFragment == null) {
             Log.i(LOG_TAG, "showFileBrowser: create new");
-            mFileBrowserFragment = new FileBrowserFragment();
-            Bundle data = new Bundle();
-            data.putInt(FileBrowserFragment.ARGUMENT_BROWSER_TYPE, FileBrowserFragment.BROWSER_TYPE.DEVICE.ordinal());
-            if (!TextUtils.isEmpty(dir)) {
-                data.putString(FileBrowserFragment.ARGUMENT_INIT_ROOT_DIR, dir);
+            mFileBrowserFragment = FileBrowserFragment.newStorageBrowser(dir);
+            if (mFileTreeFragment != null) {
+                mFileBrowserFragment.workWithTree(true);
+            } else {
+                mFileBrowserFragment.workWithTree(false);
             }
-            mFileBrowserFragment.setArguments(data);
             ft.replace(R.id.fragment_container, mFileBrowserFragment, FileBrowserFragment.class.getSimpleName());
         } else {
             if (mFileBrowserFragment.isDetached()) {
@@ -143,7 +173,6 @@ public class DirectoryTabFragment extends FileTabFragment implements
             }
         }
         mFileBrowserFragment.setListener(this);
-//        transaction.addToBackStack(null);
         ft.commit();
         mCurrentChildFragment = mFileBrowserFragment;
     }
@@ -182,9 +211,17 @@ public class DirectoryTabFragment extends FileTabFragment implements
     }
 
     @Override
-    public void onFileTreeItemClick(FileEntry entry) {
+    public void onFileTreeItemClick(FileEntry entry, boolean close) {
         if (entry.isDirectory()) {
-            showFile(entry.path);
+            if (mFileBrowserFragment != null) {
+                if (!close) {
+                    mFileBrowserFragment.showDir(entry.path);
+                } else {
+                    String parent = new File(entry.path).getParent();
+                    if (TextUtils.isEmpty(parent)) parent = null;
+                    mFileBrowserFragment.showDir(parent);
+                }
+            }
         }
     }
 

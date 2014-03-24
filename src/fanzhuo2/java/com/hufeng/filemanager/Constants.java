@@ -7,7 +7,7 @@ public class Constants {
     public static final boolean ENABLE_LANDSCAPE = false;
     public static final boolean SHOW_KANBOX_UPLOAD_ACTION = true;
     public static final boolean APP_RATE = false;
-    public static final boolean SHOW_SELECTED_CATEGORY = false;
+    public static final boolean SHOW_SELECTED_CATEGORY = true;
     public static final boolean SHOW_KANBOX_CATEGORY = true;
     public static final String KANBOX_APK_URL="http://download.kanbox.com/kcn/android/kanbox_21021.apk"; //凡卓
     public static final String CLIENT_ID = "a13c9cae4565783db3a50b8e9e73bfd6";		//kanbox sdk client_id

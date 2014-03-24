@@ -10,5 +10,6 @@ public class PreferenceKeys {
     public static final String FILTER_IMAGE = "Image_Filter_Small";
     public static final String SCAN_HIDDEN = "Scan_Hidden_Files";
     public static final String SCAN_GAME = "SCAN_GAME_FILES";
+    public static final String SHOW_ROOT_DIR = "SHOW_ROOT_DIR";
 
 }

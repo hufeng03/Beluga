@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileSorter;
-import com.hufeng.filemanager.storage.StorageManager;
+import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.treeview.InMemoryTreeStateManager;
 import com.hufeng.filemanager.treeview.TreeBuilder;
 import com.hufeng.filemanager.treeview.TreeNodeInfo;
@@ -32,13 +32,14 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
     private static final int LOADER_ID_TREE_FILES = 201;
 
     public static final String ARGUMENT_INIT_ROOT_DIR = "root_dir";
+    public static final String ARGUMENT_INIT_DIR_LIST = "init_dir_list";
 
     private WeakReference<FileTreeFragmentListener> mWeakListener = null;
 
     private InMemoryTreeStateManager<String> mTreeManager;
 
     public static interface FileTreeFragmentListener {
-        public void onFileTreeItemClick(FileEntry entry);
+        public void onFileTreeItemClick(FileEntry entry, boolean close);
     }
 
     public void setListener(FileTreeFragmentListener listener) {
@@ -46,15 +47,28 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
     }
 
     String mRootDir = null;
+    String[] mInitDirs = null;
+
+    public static FileTreeFragment newStorageBrowser(String dir){
+        FileTreeFragment fragment = new FileTreeFragment();
+        Bundle data = new Bundle();
+        String[] files = FileUtils.getStorageDirs();
+        if (files != null && files.length > 0) {
+            data.putStringArray(ARGUMENT_INIT_DIR_LIST, files);
+        }
+        if (!TextUtils.isEmpty(dir)) {
+            data.putString(ARGUMENT_INIT_ROOT_DIR, dir);
+        }
+        fragment.setArguments(data);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            mRootDir = arguments.getString(ARGUMENT_INIT_ROOT_DIR);
-        }
+        mRootDir = getArguments().getString(ARGUMENT_INIT_ROOT_DIR);
+        mInitDirs = getArguments().getStringArray(ARGUMENT_INIT_DIR_LIST);
 
     }
 
@@ -68,17 +82,14 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if( getLoaderManager().getLoader(LOADER_ID_TREE_FILES)==null)	{
-            getLoaderManager().initLoader(LOADER_ID_TREE_FILES, null, this);
-        }else{
-            getLoaderManager().restartLoader(LOADER_ID_TREE_FILES, null, this);
-        }
+        getLoaderManager().initLoader(LOADER_ID_TREE_FILES, null, this);
     }
 
     @Override
     public void onTreeItemClick(TreeViewList parent, View view, int position, long id) {
         String path = (String)parent.getAdapter().getItem(position);
         FileEntry entry = new FileEntry(path);
+        boolean collasp = false;
         if (entry.isDirectory()) {
             final TreeNodeInfo<String> info = mTreeManager.getNodeInfo(path);
             if(info.isWithChildren()){
@@ -88,6 +99,7 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
                     addChildrenAndGrandchildren(info);
                 }else{
                     //collasp it
+                    collasp = true;
                 }
                 mAdapter.handleItemClick(view, path);
             }else{
@@ -102,7 +114,7 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
         if (mWeakListener != null) {
             FileTreeFragmentListener listener = mWeakListener.get();
             if (listener != null) {
-                listener.onFileTreeItemClick(entry);
+                listener.onFileTreeItemClick(entry, collasp);
             }
         }
     }
@@ -177,36 +189,23 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
                 final TreeNodeInfo<String> info = mTreeManager.getNodeInfo(path);
                 if(info==null || !info.isExpanded()){
                    // refresh(path);
-                    mAdapter.handleItemClick(null, path);
+                   // mAdapter.handleItemClick(null, path);
+                    showTreeDir(mTreeManager, path);
                 }else{
                     mTreeManager.collapseChildren(path);
                     mTreeManager.expandDirectChildren(path);
                 }
             }else{
-//				if(new File(path).getParent())
-//                String root = StorageManager.getInstance(mContext).getStoragePath(path);
-//                String parent = path;
-//                while(!parent.equals(root)){
-//                    if(mTreeManager.isInTree(parent)){
-//                        break;
-//                    }else{
-//                        parent = new File(parent).getAbsolutePath();
-//                    }
-//                }
-//                refresh(parent);
-//                if(mTreeManager.isInTree(path)){
-//                    mAdapter.handleItemClick(null, path);
-//                }
+                showTreeDir(mTreeManager, path);
             }
-//            int pos = mFileTreeAdapter.getFilePosition(path);
-//            if(pos!=-1)
-//                mList.setSelection(pos);
+            int position = mAdapter.getTreePosition(path);
+            getTreeViewList().setSelection(position);
         }
     }
 
     @Override
     public Loader<InMemoryTreeStateManager<String>> onCreateLoader(int i, Bundle bundle) {
-        return new FileTreeLoader(getActivity(), mRootDir);
+        return new FileTreeLoader(getActivity(), mInitDirs, mRootDir);
     }
 
     @Override
@@ -222,6 +221,109 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
         //mAdapter.setData(null);
     }
 
+    public static void showTreeDir(InMemoryTreeStateManager<String> manager, String dir) {
+        if(!TextUtils.isEmpty(dir) && new File(dir).exists()) {
+            if (!manager.isInTree(dir)) {
+                String id = dir;
+                do {
+                    id = new File(id).getParent();
+                } while (!manager.isInTree(id));
+
+                addRecursively(manager, id, dir);
+            }
+            final int level = manager.getLevel(dir);
+            Log.i(TAG, "Root Dir level is :" + level);
+            final String[] hierarchy = new String[level+1];
+
+            int currentLevel = level;
+            String current = dir;
+            String parent = manager.getParent(current);
+            while (currentLevel >= 0) {
+                hierarchy[currentLevel--] = current;
+                current = parent;
+                parent = manager.getParent(parent);
+            }
+
+            while(currentLevel<level) {
+                current = hierarchy[++currentLevel];
+                manager.expandDirectChildren(current);
+                Log.i(TAG, "expand direct children:" + current);
+            }
+        }
+    }
+
+    public static void addChildrenAndGrandChildren(ArrayList<String> treeFiles, ArrayList<Integer> treeDepth, String file, int depth){
+        File[] child_files = new File(file).listFiles();
+        if(child_files == null)
+            return;
+        Arrays.sort(child_files, FileSorter.getFileComparator(FileSorter.SORT_FIELD.NAME, FileSorter.SORT_ORDER.ASC));
+        int flag_child = -1;
+        for(File child_file : child_files){
+            if(!child_file.isDirectory()){
+                continue;
+            }
+            if(flag_child == -1){
+                if(treeFiles.contains(child_file))
+                    flag_child = 1;
+                else
+                    flag_child = 0;
+            }
+            if(flag_child == 0){
+                treeFiles.add(child_file.getAbsolutePath());
+                treeDepth.add(depth+1);
+            }
+            if(child_file.isDirectory()){
+                File[] grand_files = child_file.listFiles();
+                if(grand_files == null) {
+                    continue;
+                }
+                boolean flag_grand = true;
+                for(File grand_file:grand_files) {
+                    if(!grand_file.isDirectory()){
+                        continue;
+                    }
+                    if(flag_grand){
+                        if(treeFiles.contains(grand_file))
+                            break;
+                        flag_grand = false;
+                    }
+                    treeFiles.add(grand_file.getAbsolutePath());
+                    treeDepth.add(depth+2);
+                }
+            }
+        }
+    }
+
+    public static void addRecursively(InMemoryTreeStateManager<String> manager, String start, String end) {
+        File[] file_children = new File(start).listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                if (pathname.isDirectory()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+
+        if (file_children != null) {
+            Arrays.sort(file_children, new Comparator<File>() {
+                @Override
+                public int compare(File lhs, File rhs) {
+                    return lhs.getName().compareTo(rhs.getName());
+                }
+            });
+
+            for(File child:file_children) {
+                String child_id = child.getAbsolutePath();
+                manager.addAfterChild(start, child_id, null);
+                if (end.startsWith(child_id)) {
+                    addRecursively(manager, child.getAbsolutePath(), end);
+                }
+            }
+        }
+    }
+
 
     /**
      * A custom Loader that loads all of the installed applications.
@@ -230,19 +332,37 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
 
         InMemoryTreeStateManager<String> mTreeManager;
         String mRoot;
+        String[] mDirs;
 
-        public FileTreeLoader(Context context, String root) {
+        public FileTreeLoader(Context context, String[] dirs, String root) {
             super(context);
             mRoot = root;
+            mDirs = dirs;
         }
 
         @Override
         public InMemoryTreeStateManager<String> loadInBackground() {
             ArrayList<String> treeFiles = new ArrayList<String>();
             ArrayList<Integer> treeDepth = new ArrayList<Integer>();
-            String[] files = StorageManager.getInstance(getContext()).getMountedStorages();
-            if(files!=null && files.length!=0){
-                for(String file:files) {
+//            String[] files = StorageManager.getInstance(getContext()).getMountedStorages();
+//            String[] files = FileUtils.getStorageDirs();
+//            android.os.Debug.waitForDebugger();
+            ArrayList<String> root_files = new ArrayList<String>();
+            for (int i=0; i<mDirs.length; i++) {
+                boolean flag = false;
+                for (int j=0; j<mDirs.length; j++) {
+                    if (i != j) {
+                        if (mDirs[i].startsWith(mDirs[j])) {
+                            flag = true;
+                        }
+                    }
+                }
+                if (!flag) {
+                    root_files.add(mDirs[i]);
+                }
+            }
+            if(root_files!=null && root_files.size()!=0){
+                for(String file:root_files) {
                     File f = new File(file);
                     int depth = 0;
                     if(f.exists()) {
@@ -266,34 +386,9 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
             treeDepth.clear();
 
             Log.i(TAG, "Root Dir is :" + mRoot);
-            if(!TextUtils.isEmpty(mRoot) && new File(mRoot).exists()) {
-                if (!manager.isInTree(mRoot)) {
-                    String id = mRoot;
-                    do {
-                        id = new File(id).getParent();
-                    } while (!manager.isInTree(id));
+            showTreeDir(mTreeManager, mRoot);
 
-                    addTillRootRecursively(id, mRoot);
-                }
-                final int level = manager.getLevel(mRoot);
-                Log.i(TAG, "Root Dir level is :" + level);
-                final String[] hierarchy = new String[level+1];
 
-                int currentLevel = level;
-                String current = mRoot;
-                String parent = manager.getParent(current);
-                while (currentLevel >= 0) {
-                    hierarchy[currentLevel--] = current;
-                    current = parent;
-                    parent = manager.getParent(parent);
-                }
-
-                while(currentLevel<level) {
-                    current = hierarchy[++currentLevel];
-                    manager.expandDirectChildren(current);
-                    Log.i(TAG, "expand direct children:" + current);
-                }
-            }
 
             return manager;
         }
@@ -361,79 +456,6 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
                 data.clear();
             }
         }
-
-        private void addChildrenAndGrandChildren(ArrayList<String> treeFiles, ArrayList<Integer> treeDepth, String file, int depth){
-            File[] child_files = new File(file).listFiles();
-            if(child_files == null)
-                return;
-            Arrays.sort(child_files, FileSorter.getFileComparator(FileSorter.SORT_FIELD.NAME, FileSorter.SORT_ORDER.ASC));
-            int flag_child = -1;
-            for(File child_file : child_files){
-                if(!child_file.isDirectory()){
-                    continue;
-                }
-                if(flag_child == -1){
-                    if(treeFiles.contains(child_file))
-                        flag_child = 1;
-                    else
-                        flag_child = 0;
-                }
-                if(flag_child == 0){
-                    treeFiles.add(child_file.getAbsolutePath());
-                    treeDepth.add(depth+1);
-                }
-                if(child_file.isDirectory()){
-                    File[] grand_files = child_file.listFiles();
-                    if(grand_files == null) {
-                        continue;
-                    }
-                    boolean flag_grand = true;
-                    for(File grand_file:grand_files) {
-                        if(!grand_file.isDirectory()){
-                            continue;
-                        }
-                        if(flag_grand){
-                            if(treeFiles.contains(grand_file))
-                                break;
-                            flag_grand = false;
-                        }
-                        treeFiles.add(grand_file.getAbsolutePath());
-                        treeDepth.add(depth+2);
-                    }
-                }
-            }
-        }
-
-        private void addTillRootRecursively(String id, String root) {
-            File[] file_children = new File(id).listFiles(new FileFilter() {
-                @Override
-                public boolean accept(File pathname) {
-                    if (pathname.isDirectory()) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            });
-
-            if (file_children != null) {
-                Arrays.sort(file_children, new Comparator<File>() {
-                    @Override
-                    public int compare(File lhs, File rhs) {
-                        return lhs.getName().compareTo(rhs.getName());
-                    }
-                });
-
-                for(File child:file_children) {
-                    String child_id = child.getAbsolutePath();
-                    mTreeManager.addAfterChild(id, child_id, null);
-                    if (mRoot.startsWith(child.getAbsolutePath())) {
-                       addTillRootRecursively(child.getAbsolutePath(), root);
-                    }
-                }
-            }
-        }
-
 
     }
 

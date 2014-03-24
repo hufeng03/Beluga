@@ -95,7 +95,7 @@ public class StorageManager {
 	public String[] getMountedStorages() {
 		List<String> stors = new ArrayList<String>();
 		for (StorageUnit unit : mStorageUnits) {
-			if( Environment.MEDIA_MOUNTED.equals(unit.state) ){
+			if( Environment.MEDIA_MOUNTED.equals(unit.state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(unit.state)){
 				stors.add(unit.path);
 			}
 		}

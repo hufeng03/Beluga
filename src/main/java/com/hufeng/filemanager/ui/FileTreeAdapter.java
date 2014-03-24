@@ -51,8 +51,12 @@ public class FileTreeAdapter extends AbstractTreeViewAdapter<String>{
        // final Integer[] hierarchy = getManager().getHierarchyDescription(id);
        // return "Node " + id + Arrays.asList(hierarchy);
        // String path = mFilePaths[(int)id];
-        String name = path.substring(path.lastIndexOf("/")+1);
-        return name;
+        if ("/".equals(path)) {
+            return "/";
+        } else {
+            String name = path.substring(path.lastIndexOf("/") + 1);
+            return name;
+        }
     }
 
     @Override
@@ -105,13 +109,14 @@ public class FileTreeAdapter extends AbstractTreeViewAdapter<String>{
         }
     }
     
-    public int getFilePosition(String path){
-    	return getTreePosition(path);
-    }
+//    public int getFilePosition(String path){
+//    	return getTreePosition(path);
+ //   }
 
     @Override
     public long getItemId(final int position) {
        // return getTreeId(position);
     	return 0;
+
     }
 }

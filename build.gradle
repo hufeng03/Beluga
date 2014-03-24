@@ -17,9 +17,12 @@ android {
     compileSdkVersion 19
     buildToolsVersion "19.0.1"
 
+
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 17
+        versionCode 49
+        versionName "4.9"
     }
 
     signingConfigs {
@@ -102,6 +105,11 @@ android {
             ukey = '52cf304456240bdbb705da99'
             signingConfig kanboxSigning
     	}
+        bodao {
+            packageName = 'com.kanbox.filemanager'
+            ukey = '52cf304456240bdbb705da99'
+            signingConfig kanboxSigning
+        }
 
 //    	OPPO {
 //            ukey = '4f7d5ca55270150f1a000105'

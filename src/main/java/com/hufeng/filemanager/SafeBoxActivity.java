@@ -2,7 +2,6 @@ package com.hufeng.filemanager;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -22,7 +21,7 @@ public class SafeBoxActivity extends FileOperationActivity implements LockPatter
         FileGrouperFragment.FileGrouperFragmentListener,
         FmDialogFragment.OnDialogDoneListener{
 
-    private Fragment mCurrentFragment;
+    private FileGridFragment mCurrentFragment;
     private View mAdView;
 	
 	@Override
@@ -81,7 +80,7 @@ public class SafeBoxActivity extends FileOperationActivity implements LockPatter
             }
         }
         lockPatternFragment.setLockPatternListener(this);
-        mCurrentFragment = lockPatternFragment;
+        mCurrentFragment = null;
 //        transaction.addToBackStack(null);
         ft.commit();
     }
@@ -99,7 +98,7 @@ public class SafeBoxActivity extends FileOperationActivity implements LockPatter
             }
         }
         safeBoxCategoryFragment.setSafeBoxCategoryListener(this);
-        mCurrentFragment = safeBoxCategoryFragment;
+        mCurrentFragment = null;
         ft.commit();
     }
 
@@ -120,7 +119,7 @@ public class SafeBoxActivity extends FileOperationActivity implements LockPatter
             }
         }
         safeBoxGrouperFragment.setSafeBoxDetailListener(this);
-        mCurrentFragment = safeBoxGrouperFragment;
+        mCurrentFragment = null;
         ft.addToBackStack(null);
         ft.commit();
     }
@@ -243,8 +242,8 @@ public class SafeBoxActivity extends FileOperationActivity implements LockPatter
 
     @Override
     public void refreshFiles() {
-        if(mCurrentFragment instanceof FileGridFragment) {
-            ((FileGridFragment) mCurrentFragment).refreshUI();
+        if(mCurrentFragment != null && mCurrentFragment instanceof FileGridFragment) {
+            mCurrentFragment.refreshUI();
         }
         invalidateOptionsMenu();
     }
@@ -257,5 +256,15 @@ public class SafeBoxActivity extends FileOperationActivity implements LockPatter
     @Override
     public String[] getAllFiles() {
         return null;
+    }
+
+
+    @Override
+    protected FileOperation getFileOperation() {
+        if (mCurrentFragment != null) {
+            return mCurrentFragment.getFileOperation();
+        } else {
+            return super.getFileOperation();
+        }
     }
 }

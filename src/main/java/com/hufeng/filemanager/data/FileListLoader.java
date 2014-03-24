@@ -5,17 +5,13 @@ package com.hufeng.filemanager.data;
  */
 
 import android.content.Context;
-import android.preference.PreferenceManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.hufeng.filemanager.FileBrowserFragment;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileSorter;
 import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.root.RootHelper;
-import com.hufeng.filemanager.storage.StorageManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,68 +25,69 @@ public class FileListLoader extends AsyncTaskLoader<List<FileEntry>> {
 
     private static final String LOG_TAG = FileListLoader.class.getSimpleName();
 
-    private FileBrowserFragment.BROWSER_TYPE mType;
     private String mRoot;
-    private List<String> mDirs;
+    private String[] mDirs;
     private List<FileEntry> mFiles;
     private String mSearch;
+    private boolean mNoDirectory;
 
 //    private ImportDirectoryObserver mFileObserver;
 
-    public FileListLoader(Context context, FileBrowserFragment.BROWSER_TYPE type, String root, List<String> dirs, String search) {
+    public FileListLoader(Context context, String root, String[] dirs, String search, boolean no_directory) {
         super(context);
-        mType = type;
         mRoot = root;
         mDirs = dirs;
         mSearch = search;
+        mNoDirectory = no_directory;
     }
 
     @Override
     public List<FileEntry> loadInBackground() {
+//        android.os.Debug.waitForDebugger();
         Log.i(LOG_TAG, this.hashCode()+" FileListLoader loadinbackground()");
         List<FileEntry> entries = new ArrayList<FileEntry>();
-        String[] files = null;
-        boolean has_root_path;
-        if (mRoot!=null && new File(mRoot).isDirectory()) {
-            files = new File(mRoot).list();
-            has_root_path = false;
-        } else if (mDirs != null) {
-            has_root_path = true;
-            if (mDirs.size() > 0) {
-                files = mDirs.toArray(new String[mDirs.size()]);
-            }
-        } else {
-            has_root_path = true;
-            if (mType == FileBrowserFragment.BROWSER_TYPE.DEVICE) {
-                files = StorageManager.getInstance(getContext()).getMountedStorages();
-            } else if (mType == FileBrowserFragment.BROWSER_TYPE.FAVORITE) {
-                files = FileUtils.getFavoriteFiles();
-            } else if (mType == FileBrowserFragment.BROWSER_TYPE.DOWNLOAD) {
-                files = FileUtils.getDownloadDirs();
-            }
-        }
-
-        if( files != null ) {
-            for (String file : files) {
+        if (!TextUtils.isEmpty(mRoot) && new File(mRoot).isDirectory()) {
+            String[] files = new File(mRoot).list();
+            if (files != null) {
                 FileEntry entry = null;
-                if (has_root_path) {
-                    entry = new FileEntry(file);
-                } else {
+                for (String file : files) {
                     entry = new FileEntry(mRoot, file);
-                }
-                if (entry != null && (TextUtils.isEmpty(mSearch) || entry.getName().contains(mSearch))) {
-                    entries.add(entry);
+                    if (!entry.isDirectory() || !mNoDirectory) {
+                        if (TextUtils.isEmpty(mSearch) || entry.getName().contains(mSearch)) {
+                            entries.add(entry);
+                        }
+                    }
                 }
             }
+        } else if (mDirs != null && mDirs.length > 0) {
+                FileEntry entry = null;
+                for (String file : mDirs) {
+                    entry = new FileEntry(file);
+                    if (!entry.isDirectory() || !mNoDirectory) {
+                        if (TextUtils.isEmpty(mSearch) || entry.getName().contains(mSearch)) {
+                            entries.add(entry);
+                        }
+                    }
+                }
         }
+//        else {
+//            has_root_path = true;
+//            if (mType == FileBrowserFragment.BROWSER_TYPE.DEVICE) {
+//                files = StorageManager.getInstance(getContext()).getMountedStorages();
+//            } else if (mType == FileBrowserFragment.BROWSER_TYPE.FAVORITE) {
+//                files = FileUtils.getFavoriteFiles();
+//            } else if (mType == FileBrowserFragment.BROWSER_TYPE.DOWNLOAD) {
+//                files = FileUtils.getDownloadDirs();
+//            }
+//        }
 
-        if (has_root_path == true && mType == FileBrowserFragment.BROWSER_TYPE.DEVICE) {
-            boolean show_root_dir = PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("SHOW_ROOT_DIR",true);
-            if (RootHelper.isRootedPhone() && show_root_dir) {
-                FileEntry entry = new FileEntry("/");
-                entries.add(entry);
-            }
-        }
+//        if (has_root_path == true && mType == FileBrowserFragment.BROWSER_TYPE.DEVICE) {
+//            boolean show_root_dir = PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("SHOW_ROOT_DIR",true);
+//            if (RootHelper.isRootedPhone() && show_root_dir) {
+//                FileEntry entry = new FileEntry("/");
+//                entries.add(entry);
+//            }
+//        }
 
         // Sort the list.
         FileSorter.SORTER sorter = FileSorter.getFileSorter(getContext(), FileUtils.FILE_TYPE_FILE);
@@ -129,28 +126,28 @@ public class FileListLoader extends AsyncTaskLoader<List<FileEntry>> {
         if (mFiles != null ) {
             deliverResult(mFiles);
         }
-        String[] files = null;
+//        String[] files = null;
         //if (mFileObserver == null) {
-            if (mRoot!=null && new File(mRoot).isDirectory()) {
-                files = new String[]{mRoot};
-            } else if (mDirs != null) {
-                files = mDirs.toArray(new String[mDirs.size()]);
-            } else {
-                if (mType == FileBrowserFragment.BROWSER_TYPE.DEVICE) {
-//                    files = StorageManager.getInstance(getContext()).getMountedStorages();
-                } else if (mType == FileBrowserFragment.BROWSER_TYPE.FAVORITE) {
-                    files = FileUtils.getFavoriteFiles();
-                } else if (mType == FileBrowserFragment.BROWSER_TYPE.DOWNLOAD) {
-                    files = FileUtils.getDownloadDirs();
-                }
-            }
-            if (files != null && files.length>0) {
-//                mFileObserver = new ImportDirectoryObserver(this, files);
-//                mFileObserver.startWatching();
-                for (String file:files) {
-//                    UiServiceHelper.getInstance().addMonitor(file);
-                }
-            }
+//            if (mRoot!=null && new File(mRoot).isDirectory()) {
+//                files = new String[]{mRoot};
+//            } else if (mDirs != null) {
+//                files = mDirs.toArray(new String[mDirs.size()]);
+//            } else {
+//                if (mType == FileBrowserFragment.BROWSER_TYPE.DEVICE) {
+////                    files = StorageManager.getInstance(getContext()).getMountedStorages();
+//                } else if (mType == FileBrowserFragment.BROWSER_TYPE.FAVORITE) {
+//                    files = FileUtils.getFavoriteFiles();
+//                } else if (mType == FileBrowserFragment.BROWSER_TYPE.DOWNLOAD) {
+//                    files = FileUtils.getDownloadDirs();
+//                }
+//            }
+//            if (files != null && files.length>0) {
+////                mFileObserver = new ImportDirectoryObserver(this, files);
+////                mFileObserver.startWatching();
+//                for (String file:files) {
+////                    UiServiceHelper.getInstance().addMonitor(file);
+//                }
+//            }
         //}
 
         if(takeContentChanged() || mFiles == null) {

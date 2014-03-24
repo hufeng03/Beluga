@@ -37,5 +37,5 @@
     <string name="header_title_root">Rooted Device</string>
     <string name="header_summary_root">Rooted Device</string>
     <string name="settings_show_root_dir">Display All</string>
-    <string name="settings_show_root_dir_summary">Display all files in Directory tab on rooted device</string>
+    <string name="settings_show_root_dir_summary">Display "/" in Directory tab on rooted device</string>
 </resources>

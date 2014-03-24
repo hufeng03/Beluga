@@ -1,9 +1,5 @@
 package com.hufeng.filemanager.treeview;
 
-import java.util.List;
-
-import com.hufeng.filemanager.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -11,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
@@ -21,6 +16,10 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
+
+import com.hufeng.filemanager.R;
+
+import java.util.List;
 
 /**
  * Adapter used to feed the table view.
@@ -123,7 +122,7 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
     public T getTreeId(final int position) {
         return treeStateManager.getVisibleList().get(position);
     }
-    
+
     public int getTreePosition(final T t){
     	List<T> list = treeStateManager.getVisibleList();
     	int i=-1;
@@ -135,12 +134,6 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
     	}
     	return i;
     }
-    
-//    public long getTreeItemId(final int position){
-//    	T t = treeStateManager.getVisibleList().get(position);
-//    	TreeNodeInfo<T> info = treeStateManager.getNodeInfo(t);
-//    	//info.
-//    }
 
     public TreeNodeInfo<T> getTreeNodeInfo(final int position) {
         return treeStateManager.getNodeInfo(getTreeId(position));

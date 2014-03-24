@@ -21,13 +21,11 @@ import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.data.FileListLoader;
 import com.hufeng.filemanager.services.IUiImpl;
 import com.hufeng.filemanager.services.UiServiceHelper;
-import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.ui.FileArrayAdapter;
 import com.hufeng.filemanager.ui.FileGridAdapterListener;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,38 +37,67 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
     private FileArrayAdapter mAdapter;
 
-    private BROWSER_TYPE mBrowserType = BROWSER_TYPE.DEVICE;
+//    private BROWSER_TYPE mBrowserType = BROWSER_TYPE.DEVICE;
     private String mRootDir; //if mBrowserType == BROWSER_TYPE.DEVICE
-    private List<String> mInitDirList;
     private boolean mWorkWithTree;
     private String mSelectedDir = null;
     private int mSelectedPostion = -1;
 
     private static final int LOADER_ID_BROWSER_FILES = 201;
 
-    public static final String ARGUMENT_BROWSER_TYPE = "browser_type";
     public static final String ARGUMENT_INIT_ROOT_DIR = "root_dir";
     public static final String ARGUMENT_INIT_DIR_LIST = "init_dir_list";
 
-    public enum BROWSER_TYPE {
-        DEVICE, FAVORITE, DOWNLOAD;
 
-        public static BROWSER_TYPE valueOf(int value) {
-            switch (value) {
-                case 0:
-                    return DEVICE;
-                case 1:
-                    return FAVORITE;
-                case 2:
-                    return DOWNLOAD;
-                default:
-                    return null;
-            }
+    public static FileBrowserFragment newDownloadBrowser(String root) {
+        FileBrowserFragment fragement = new FileBrowserFragment();
+        Bundle data = new Bundle();
+        String[] files = FileUtils.getDownloadDirs();
+        if (files != null && files.length > 0) {
+            data.putStringArray(ARGUMENT_INIT_DIR_LIST, files);
         }
+        if (!TextUtils.isEmpty(root)) {
+            data.putString(ARGUMENT_INIT_ROOT_DIR, root);
+        }
+        fragement.setArguments(data);
+        return fragement;
     }
 
+    public static FileBrowserFragment newFavoriteBrowser(String root) {
+        FileBrowserFragment fragement = new FileBrowserFragment();
+        Bundle data = new Bundle();
+        String[] files = FileUtils.getFavoriteFiles();
+        if (files != null && files.length > 0) {
+            data.putStringArray(ARGUMENT_INIT_DIR_LIST, files);
+        }
+        if (!TextUtils.isEmpty(root)) {
+            data.putString(ARGUMENT_INIT_ROOT_DIR, root);
+        }
+        fragement.setArguments(data);
+        return fragement;
+    }
+
+    public static FileBrowserFragment newStorageBrowser(String root) {
+        FileBrowserFragment fragment = new FileBrowserFragment();
+        Bundle data = new Bundle();
+        String[] files = FileUtils.getStorageDirs();
+        if (files != null && files.length > 0) {
+            data.putStringArray(ARGUMENT_INIT_DIR_LIST, files);
+        }
+        if (!TextUtils.isEmpty(root)) {
+            data.putString(ARGUMENT_INIT_ROOT_DIR, root);
+        }
+        fragment.setArguments(data);
+        return fragment;
+    }
+
+    public void setInitDirs(String[] dirs) {
+        getArguments().putStringArray(ARGUMENT_INIT_DIR_LIST, dirs);
+        reloadFiles();
+    }
+
+
     public FileBrowserFragment(){
-        super();
         mMenuId = R.menu.file_browser_fragment_menu;
         mCategory = FileUtils.FILE_TYPE_FILE;
     }
@@ -98,9 +125,8 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         Log.i(LOG_TAG, "FileBrowserFragment onCreate  with menuId = "+mMenuId);
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mBrowserType = BROWSER_TYPE.valueOf(arguments.getInt(ARGUMENT_BROWSER_TYPE));
+//            mBrowserType = BROWSER_TYPE.valueOf(arguments.getInt(ARGUMENT_BROWSER_TYPE));
             mRootDir = arguments.getString(ARGUMENT_INIT_ROOT_DIR);
-            mInitDirList = arguments.getStringArrayList(ARGUMENT_INIT_DIR_LIST);
         }
     }
 
@@ -109,18 +135,18 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
         Log.i(LOG_TAG, "FileBrowserFragment onViewCreated");
-        String empty_text = "";
-        switch (mBrowserType) {
-            case FAVORITE:
-                empty_text = getResources().getString(R.string.empty_favorite);
-                break;
-            case DOWNLOAD:
-                empty_text = getResources().getString(R.string.empty_download);
-                break;
-            case DEVICE:
-                empty_text = getResources().getString(R.string.empty_device);
-                break;
-        }
+        String empty_text = getResources().getString(R.string.empty_file);
+//        switch (mBrowserType) {
+//            case FAVORITE:
+//                empty_text = getResources().getString(R.string.empty_favorite);
+//                break;
+//            case DOWNLOAD:
+//                empty_text = getResources().getString(R.string.empty_download);
+//                break;
+//            case DEVICE:
+//                empty_text = getResources().getString(R.string.empty_device);
+//                break;
+//        }
         setEmptyText(empty_text);
         mAdapter = new FileArrayAdapter(getSherlockActivity(), getFileOperation());
         mAdapter.setFileGridAdapterListener(this);
@@ -163,37 +189,34 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
     public boolean onBackPressed() {
         if (mRootDir != null) {
-            if (mRootDir.equals("/")) {
-                mInitDirList = null;
-                mRootDir = null;
-                showDir(null);
-                return true;
-            }
-            String parent = new File(mRootDir).getParent();
-            if(parent==null || parent.equals(mRootDir) || !new File(parent).canRead()) {
-                return false;
-            }
             if (mWeakListener != null) {
                 FileBrowserFragmentListener listener = mWeakListener.get();
                 if (listener != null) {
                     listener.onFileBrowserItemClose(new FileEntry(mRootDir));
                 }
             }
-            if( (BROWSER_TYPE.DEVICE == mBrowserType && StorageManager.getInstance(getActivity()).isStorage(mRootDir))
-                || (mInitDirList != null && mInitDirList.contains(mRootDir)) ) {
-                    mInitDirList = null;
-                showDir(null);
-            } else {
-                showDir(parent);
+            String[] initDirs = getArguments().getStringArray(ARGUMENT_INIT_DIR_LIST);
+            if (initDirs != null) {
+                for (String dir: initDirs) {
+                    if (dir.equals(mRootDir)) {
+                        showDir(null);
+                        return true;
+                    }
+                }
             }
-            return true;
+
+            String parent = new File(mRootDir).getParent();
+            if (parent != null && new File(parent).canRead()) {
+                showDir(parent);
+                return true;
+            }
         } else {
             if(getFileOperation().isMovingOrCopying()) {
                 Toast.makeText(getActivity(), R.string.please_select_copy_or_cancel, Toast.LENGTH_SHORT).show();
                 return true;
             }
-            return false;
         }
+        return false;
     }
 
     @Override
@@ -207,7 +230,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
             MenuItem item_back = menu.findItem(R.id.menu_back);
             MenuItem item_create = menu.findItem(R.id.menu_create);
 
-            if(mRootDir == null && BROWSER_TYPE.DEVICE == mBrowserType) {
+            if(mRootDir == null) {
                 item_back.setVisible(false);
             } else {
                 item_back.setVisible(true);
@@ -299,7 +322,8 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 	public Loader<List<FileEntry>> onCreateLoader(int arg0, Bundle arg1) {
         Log.i(LOG_TAG, "FileBrowserFragment onCreateLoader " + arg0);
         if(arg0 ==  LOADER_ID_BROWSER_FILES) {
-            return new FileListLoader(getActivity(), mBrowserType, mRootDir, mInitDirList, mSearchString);
+            String[] initDirs = getArguments().getStringArray(ARGUMENT_INIT_DIR_LIST);
+            return new FileListLoader(getActivity(), mRootDir, initDirs, mSearchString, mWorkWithTree);
         } else {
             return null;
         }
@@ -312,20 +336,12 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
         UiServiceHelper.getInstance().clearMonitor();
 
-        boolean flag_init = false;
-        if (mInitDirList == null) {
-            mInitDirList = new ArrayList<String>();
-            flag_init = true;
-        }
 
         Iterator<FileEntry> iterator =  arg1.iterator();
         int pos = 0;
         while (iterator.hasNext()) {
             FileEntry entry = iterator.next();
             UiServiceHelper.getInstance().addMonitor(entry.path);
-            if (flag_init) {
-                mInitDirList.add(entry.path);
-            }
             if (mSelectedPostion == -1 && mSelectedDir != null && entry.path.equals(mSelectedDir)) {
                 mSelectedPostion = pos;
             }
@@ -337,6 +353,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         }
 
 //        mAdapter.setData(arg1);
+        mAdapter.clear();
         mAdapter.addAll(arg1);
         if ( mSelectedPostion >5 ) {
             getGridView().setSelection(mSelectedPostion);
@@ -345,7 +362,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         mSelectedDir = null;
         mSelectedPostion = -1;
         setGridShown(true);
-        if (mWorkWithTree && BROWSER_TYPE.DEVICE == mBrowserType && mRootDir == null) {
+        if (mWorkWithTree && mRootDir == null) {
             setRootShown(false);
         } else {
             setRootShown(true);

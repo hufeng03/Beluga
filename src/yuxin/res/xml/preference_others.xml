@@ -38,12 +38,12 @@
         
         <Preference
     		android:title="@string/current_version_title"
-    		android:summary="4.8"
+    		android:summary="4.9"
     		android:key="current_version" />
 
 		<Preference
     		android:title="@string/new_version_title"
-    		android:summary="4.8"
+    		android:summary="4.9"
     		android:key="new_version" />
         <!--intent  
             android:action="android.intent.action.MAIN"  

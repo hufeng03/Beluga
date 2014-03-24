@@ -1,5 +1,7 @@
 package com.hufeng.filemanager.root;
 
+import com.hufeng.filemanager.Constants;
+
 import java.io.DataOutputStream;
 import java.io.File;
 
@@ -14,6 +16,9 @@ public class RootHelper {
     private static int systemRootState= sSystemRootStateUnknow;
 
     public static boolean isRootedPhone() {
+        if (Constants.SHOW_KANBOX_CATEGORY) {
+            return false;
+        }
         if(systemRootState== sSystemRootStateEnable) {
             return true;
         }

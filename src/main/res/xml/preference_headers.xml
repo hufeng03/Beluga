@@ -23,7 +23,7 @@
                 android:title="@string/header_summary_others">
                 <extra
                         android:name="resource"
-                        android:value="preference_others_kanbox"/>
+                        android:value="preference_others"/>
         </header>
 
 </preference-headers>

@@ -2,6 +2,7 @@ package com.hufeng.filemanager.browser;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -21,6 +23,7 @@ import android.util.Log;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.data.DataStructures;
 import com.hufeng.filemanager.data.DataStructures.MatchColumns;
+import com.hufeng.filemanager.root.RootHelper;
 import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.utils.FileUtil;
 import com.hufeng.filemanager.utils.LogUtil;
@@ -349,51 +352,20 @@ public class FileUtils {
         }
     }
     
-    public static String[] getStorageDirs() {  	
-    	ArrayList<String> dirs = new ArrayList<String>(0);
-    	
-    	String dir1 = getPhoneDataDir();
-        if (dir1.startsWith("/mnt"))
-        	dir1 = dir1.substring(4);
-        File file1 = new File(dir1);
-        if(file1.isDirectory() && file1.canRead())
-        {
-        	dirs.add(dir1);
+    public static String[] getStorageDirs() {
+        String[] files = StorageManager.getInstance(FileManager.getAppContext()).getMountedStorages();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
+        boolean show_root = preferences.getBoolean("SHOW_ROOT_DIR",true);
+        if (RootHelper.isRootedPhone() && show_root) {
+            int len = (files == null ? 0: files.length) + 1;
+            String[] new_files = new String[len];
+            for (int i = 0; i < len-1; i++) {
+                new_files[i] = files[i];
+            }
+            new_files[len-1] = "/";
+            files = new_files;
         }
-        String dir2 = getSDCardDir();
-        if (dir2.startsWith("/mnt"))
-        	dir2 = dir2.substring(4);
-        File file2 = new File(dir2);
-        if(file2.isDirectory() && file2.canRead())
-        {
-        	dirs.add(dir2);
-        }
-        
-        String dir3 = getSDCard2Dir();
-        if (dir3.startsWith("/mnt"))
-        	dir3 = dir3.substring(4);
-        File file3 = new File(dir3);
-        if(file3.exists() && file3.isDirectory() && file3.canRead())
-        {
-        	dirs.add(dir3);
-        }
-        
-        String dir4 = getExtSDCardDir();
-        if (dir4.startsWith("/mnt"))
-        	dir4 = dir4.substring(4);
-        File file4 = new File(dir4);
-        if(file4.exists() && file4.isDirectory() && file4.canRead())
-        {
-        	dirs.add(dir4);
-        }
-
-        if(dirs.size()==0)
-        	return null;
-        else
-        {
-        	String [] storage = new String[dirs.size()];
-        	return (String[])dirs.toArray(storage);
-        }
+        return files;
     }
 
     public static String getSDCardDir() {

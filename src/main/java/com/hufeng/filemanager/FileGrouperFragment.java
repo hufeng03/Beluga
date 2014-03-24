@@ -29,7 +29,9 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
     private static final String TAG = FileGrouperFragment.class.getSimpleName();
 
     public static final String FILE_GROUPER_ARGUMENT_CATEGORY = "file_grouper_argument_category";
-    public static final String FILE_GROUPER_ARGUMENT_SELECTION = "file_grouper_argument_selection";
+//    public static final String FILE_GROUPER_ARGUMENT_SELECTION = "file_grouper_argument_selection";
+    public static final String FILE_GROUPER_ARGUMENT_SAFE = "file_grouper_argument_safe";
+    public static final String FILE_GROUPER_ARGUMENT_CLOUD = "file_grouper_argumnet_cloud";
     public static final String FILE_GROUPER_ARGUMENT_CLOUD_UPLOAD_PARENT = "file_grouper_argument_cloud_upload_parent";
 
     private FileCursorAdapter mAdapter;
@@ -62,7 +64,7 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
         FileGrouperFragment fragment = new FileGrouperFragment();
         Bundle data = new Bundle();
         data.putInt(FileGrouperFragment.FILE_GROUPER_ARGUMENT_CATEGORY, category);
-        data.putBoolean(FILE_GROUPER_ARGUMENT_SELECTION, true);
+        data.putBoolean(FILE_GROUPER_ARGUMENT_SAFE, true);
         fragment.setArguments(data);
 //        FileOperation fileOperation = new FileOperation();
 //        fileOperation.setOperationMode(FileOperation.OPERATION_MODE.ADD_SAFE);
@@ -75,7 +77,7 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
         FileGrouperFragment fragment = new FileGrouperFragment();
         Bundle data = new Bundle();
         data.putInt(FileGrouperFragment.FILE_GROUPER_ARGUMENT_CATEGORY, category);
-        data.putBoolean(FILE_GROUPER_ARGUMENT_SELECTION, true);
+        data.putBoolean(FILE_GROUPER_ARGUMENT_CLOUD, true);
         data.putString(FILE_GROUPER_ARGUMENT_CLOUD_UPLOAD_PARENT, root);
         fragment.setArguments(data);
 //        FileOperation fileOperation = new FileOperation();
@@ -89,13 +91,17 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (getArguments().getBoolean(FILE_GROUPER_ARGUMENT_SELECTION)) {
+        if (getArguments().getBoolean(FILE_GROUPER_ARGUMENT_CLOUD) || getArguments().getBoolean(FILE_GROUPER_ARGUMENT_SAFE)) {
 //            FileOperation fileOperation = new FileOperation();
 //            fileOperation.setOperationMode(FileOperation.OPERATION_MODE.ADD_CLOUD);
 
             FileOperation fileOperation = (FileOperation) getChildFragmentManager().findFragmentByTag("FileGrouper-FileOperation");
             if (fileOperation == null) {
-                fileOperation = FileOperation.newInstance(FileOperation.OPERATION_MODE.ADD_CLOUD.ordinal());
+                if (getArguments().getBoolean(FILE_GROUPER_ARGUMENT_SAFE)) {
+                    fileOperation = FileOperation.newInstance(FileOperation.OPERATION_MODE.ADD_SAFE.ordinal());
+                } else {
+                    fileOperation = FileOperation.newInstance(FileOperation.OPERATION_MODE.ADD_CLOUD.ordinal());
+                }
                 getChildFragmentManager().beginTransaction().add(fileOperation, "FileGrouper-FileOperation").commit();
             }
             setFileOperation(fileOperation);
@@ -114,12 +120,10 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
         Bundle data = getArguments();
         if (data == null) {
             mCategory = FileUtils.FILE_TYPE_IMAGE;
-            mSelection = false;
         } else {
             mCategory = data.getInt(FILE_GROUPER_ARGUMENT_CATEGORY);
-            mSelection = data.getBoolean(FILE_GROUPER_ARGUMENT_SELECTION, false);
         }
-        if(mSelection) {
+        if(getArguments().getBoolean(FILE_GROUPER_ARGUMENT_SAFE) || getArguments().getBoolean(FILE_GROUPER_ARGUMENT_CLOUD)) {
             mMenuId = R.menu.file_grouper_fragment_search_menu;
         }
 	}

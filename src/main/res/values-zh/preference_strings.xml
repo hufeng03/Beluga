@@ -37,5 +37,5 @@
     <string name="header_title_root">Root设备设置</string>
     <string name="header_summary_root">Root设置</string>
     <string name="settings_show_root_dir">显示所有文件</string>
-    <string name="settings_show_root_dir_summary">ROOT的设备中，"设备"页卡显示根目录</string>
+    <string name="settings_show_root_dir_summary">ROOT的设备中，"手机"页卡显示"/"</string>
 </resources>
