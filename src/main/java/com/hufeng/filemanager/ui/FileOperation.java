@@ -241,6 +241,7 @@ public class FileOperation extends BaseFragment {
 	public void onOperationPasteCancel(Context context){
 		mCopyPaths.clear();
     	mMovePaths.clear();
+        mOperationPaths.clear();
         refresh();
 	}
 	

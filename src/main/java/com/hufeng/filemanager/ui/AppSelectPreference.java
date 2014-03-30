@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.R;
+import com.hufeng.filemanager.settings.AppImageView;
 import com.hufeng.filemanager.utils.IconUtil;
 
 import java.io.File;
@@ -41,6 +42,8 @@ import java.util.Map;
 
 public class AppSelectPreference extends DialogPreference{
 
+    private static final String TAG  = "AppSelectPreference";
+
 //	private static final String filemanager_ns = "http://schemas.android.com/apk/res/com.hufeng.filemanager";
     private static final String filemanager_ns = "http://schemas.android.com/apk/res-auto";
 
@@ -52,7 +55,7 @@ public class AppSelectPreference extends DialogPreference{
 	private String mCategoryString;
 	private int mCategory;
 	private ResolveInfo[] mAvailableApps;
-	private ImageView mAppIcon;
+	private AppImageView mAppIcon;
 	
 	public AppSelectPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -152,7 +155,7 @@ public class AppSelectPreference extends DialogPreference{
 		// TODO Auto-generated method stub
 		super.onBindView(view);
 		
-		mAppIcon = (ImageView)view.findViewById(R.id.image);
+		mAppIcon = (AppImageView)view.findViewById(R.id.image);
 		TextView text = (TextView)view.findViewById(R.id.text);
 		
 		switch(mCategory){
@@ -194,10 +197,11 @@ public class AppSelectPreference extends DialogPreference{
 			break;
 		}
 	}
+//    static int count = 0;
 	
 	private void bindPreferenceAppView(String pkg, String cls, int width, int height){
 		PackageManager pm = getContext().getPackageManager();	
-		
+
 
 		Drawable image_app = null;
 		if(!TextUtils.isEmpty(pkg))
@@ -237,7 +241,13 @@ public class AppSelectPreference extends DialogPreference{
 
 //		mCategoryMatchPicture.setCompoundDrawables(drawable_image, null, image_app, null);
 		mAppIcon.setImageDrawable(image_app);
-        mAppIcon.invalidateDrawable(image_app);
+
+//        Log.i(TAG, "bindPreferenceAppView " + this.hashCode() + "," + (pkg==null?"null_pkg":pkg) + "," + (cls==null?"null_cls":cls+","+mAppIcon.hashCode()));
+//        count++;
+//        if (count>5) {
+//            mAppIcon.setVisibility(View.GONE);
+//        }
+//        mAppIcon.invalidateDrawable(image_app);
 //		mImage.invalidateDrawable(image_app);
 	}
 	
@@ -416,32 +426,32 @@ public class AppSelectPreference extends DialogPreference{
 		
 		if (callChangeListener(toString())) {
             persistString(toString());
-    		switch(mCategory){
-    		case CATEGORY_IMAGE:
-    			Drawable drawable_image = getContext().getResources().getDrawable(R.drawable.file_category_icon_image);
-    			int width = drawable_image.getIntrinsicWidth();
-    			int height = drawable_image.getIntrinsicHeight();
-    			String image_app_pkg = getSharedPreferences().getString("IMAGE_DEFAULT_VIEW_APP", "");
-    			String image_app_cls = getSharedPreferences().getString("IMAGE_DEFAULT_VIEW_ACTIVITY", "");
-    			bindPreferenceAppView(image_app_pkg, image_app_cls, width*3/4, height*3/4);
-    			break;
-    		case CATEGORY_AUDIO:
-    			Drawable drawable_music = getContext().getResources().getDrawable(R.drawable.file_category_icon_audio);
-    			width = drawable_music.getIntrinsicWidth();
-    			height = drawable_music.getIntrinsicHeight();
-    			String audio_app_pkg = getSharedPreferences().getString("AUDIO_DEFAULT_VIEW_APP", "");
-    			String audio_app_cls = getSharedPreferences().getString("AUDIO_DEFAULT_VIEW_ACTIVITY", "");
-    			bindPreferenceAppView(audio_app_pkg, audio_app_cls, width*3/4, height*3/4);
-    			break;
-    		case CATEGORY_VIDEO:
-    			Drawable drawable_video = getContext().getResources().getDrawable(R.drawable.file_category_icon_video);
-    			width = drawable_video.getIntrinsicWidth();
-    			height = drawable_video.getIntrinsicHeight();
-    			String video_app_pkg = getSharedPreferences().getString("VIDEO_DEFAULT_VIEW_APP", "");
-    			String video_app_cls = getSharedPreferences().getString("VIDEO_DEFAULT_VIEW_ACTIVITY", "");
-    			bindPreferenceAppView(video_app_pkg, video_app_cls, width*3/4, height*3/4);
-    			break;
-    		}
+//    		switch(mCategory){
+//    		case CATEGORY_IMAGE:
+//    			Drawable drawable_image = getContext().getResources().getDrawable(R.drawable.file_category_icon_image);
+//    			int width = drawable_image.getIntrinsicWidth();
+//    			int height = drawable_image.getIntrinsicHeight();
+//    			String image_app_pkg = getSharedPreferences().getString("IMAGE_DEFAULT_VIEW_APP", "");
+//    			String image_app_cls = getSharedPreferences().getString("IMAGE_DEFAULT_VIEW_ACTIVITY", "");
+//    			bindPreferenceAppView(image_app_pkg, image_app_cls, width*3/4, height*3/4);
+//    			break;
+//    		case CATEGORY_AUDIO:
+//    			Drawable drawable_music = getContext().getResources().getDrawable(R.drawable.file_category_icon_audio);
+//    			width = drawable_music.getIntrinsicWidth();
+//    			height = drawable_music.getIntrinsicHeight();
+//    			String audio_app_pkg = getSharedPreferences().getString("AUDIO_DEFAULT_VIEW_APP", "");
+//    			String audio_app_cls = getSharedPreferences().getString("AUDIO_DEFAULT_VIEW_ACTIVITY", "");
+//    			bindPreferenceAppView(audio_app_pkg, audio_app_cls, width*3/4, height*3/4);
+//    			break;
+//    		case CATEGORY_VIDEO:
+//    			Drawable drawable_video = getContext().getResources().getDrawable(R.drawable.file_category_icon_video);
+//    			width = drawable_video.getIntrinsicWidth();
+//    			height = drawable_video.getIntrinsicHeight();
+//    			String video_app_pkg = getSharedPreferences().getString("VIDEO_DEFAULT_VIEW_APP", "");
+//    			String video_app_cls = getSharedPreferences().getString("VIDEO_DEFAULT_VIEW_ACTIVITY", "");
+//    			bindPreferenceAppView(video_app_pkg, video_app_cls, width*3/4, height*3/4);
+//    			break;
+//    		}
         }
 	}
 

@@ -63,6 +63,13 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
         return fragment;
     }
 
+    public void setInitDirs(String[] dirs) {
+        getArguments().putStringArray(ARGUMENT_INIT_DIR_LIST, dirs);
+        mInitDirs = getArguments().getStringArray(ARGUMENT_INIT_DIR_LIST);
+
+        getLoaderManager().restartLoader(LOADER_ID_TREE_FILES, null, this);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -222,6 +229,8 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
     }
 
     public static void showTreeDir(InMemoryTreeStateManager<String> manager, String dir) {
+        if (manager == null)
+            return;
         if(!TextUtils.isEmpty(dir) && new File(dir).exists()) {
             if (!manager.isInTree(dir)) {
                 String id = dir;
@@ -325,9 +334,6 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
     }
 
 
-    /**
-     * A custom Loader that loads all of the installed applications.
-     */
     public static class FileTreeLoader extends AsyncTaskLoader<InMemoryTreeStateManager<String>> {
 
         InMemoryTreeStateManager<String> mTreeManager;

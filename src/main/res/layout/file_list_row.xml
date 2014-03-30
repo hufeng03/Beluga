@@ -36,7 +36,7 @@
         android:layout_marginLeft="4dp"
         android:visibility="visible"
         android:textColor="@color/white"
-        android:text="@string/btn_txt_download"
+        android:text=""
         android:background="@drawable/button_bg"
         android:gravity="center" />
 

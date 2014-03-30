@@ -68,11 +68,12 @@ public class DirectoryTabFragment extends FileTabFragment implements
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i(LOG_TAG, "mReceiver receive" + intent.getAction());
+                String[] files = FileUtils.getStorageDirs();
                 if (mFileBrowserFragment != null) {
-
-                    String[] files = FileUtils.getStorageDirs();
-
                     mFileBrowserFragment.setInitDirs(files);
+                }
+                if (mFileTreeFragment != null) {
+                    mFileTreeFragment.setInitDirs(files);
                 }
             }
         };

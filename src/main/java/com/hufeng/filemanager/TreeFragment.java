@@ -1,6 +1,8 @@
 package com.hufeng.filemanager;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -115,6 +117,8 @@ public class TreeFragment extends BaseFragment {
 
         root.setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        lv.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
         return root;
     }

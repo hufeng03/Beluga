@@ -211,6 +211,14 @@
             android:name="com.hufeng.filemanager.AdPlayActivity"
             /-->
 
+        <activity android:name="com.hufeng.playzip.PlayZipActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/zip" />
+            </intent-filter>
+        </activity>
+
 
 		<service android:name=".services.FileManagerService" 
 		    android:process="com.hufeng.filemanager.scan"></service>

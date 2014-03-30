@@ -2,10 +2,6 @@ package com.hufeng.filemanager.utils;
 
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.telephony.TelephonyManager;
-import android.text.TextUtils;
-
-import java.util.Locale;
 
 public class PackageUtil {
 	
@@ -15,7 +11,7 @@ public class PackageUtil {
 	{
 		int verCode = -1;
 		try{
-			String name = getApplicationName(context);
+			String name = getPackageName(context);
 			verCode = context.getPackageManager().getPackageInfo(name, 0).versionCode;
 		}catch(NameNotFoundException e)
 		{
@@ -28,7 +24,7 @@ public class PackageUtil {
 	{
 		String verName ="";
 		try{
-			String name = getApplicationName(context);
+			String name = getPackageName(context);
 			verName = context.getPackageManager().getPackageInfo(name, 0).versionName;
 		}catch(NameNotFoundException e)
 		{
@@ -37,7 +33,7 @@ public class PackageUtil {
 		return verName;
 	}
 	
-	public static String getApplicationName(Context context)
+	public static String getPackageName(Context context)
 	{
 		return context.getPackageName();
 	}

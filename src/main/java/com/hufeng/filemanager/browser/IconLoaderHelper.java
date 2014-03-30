@@ -97,7 +97,7 @@ public class IconLoaderHelper {
     }
 
     public static int getFileIcon(Context context, String path, boolean with_square) {
-        if (new File(path).isDirectory()) {
+        if (path.endsWith("/") || new File(path).isDirectory()) {
             if (path.equals("/")) {
                 return with_square?R.drawable.file_icon_phone_square:R.drawable.phone;
             } else if (StorageManager.getInstance(context).isStorage(path)) {

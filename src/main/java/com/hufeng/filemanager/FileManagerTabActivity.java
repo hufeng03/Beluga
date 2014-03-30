@@ -228,6 +228,16 @@ public class FileManagerTabActivity extends FileOperationActivity{
         });
     }
 
+
+    public void refreshTabWithDelay() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshFiles();
+            }
+        });
+    }
+
     /**
      * This is a helper class that implements the management of tabs and all
      * details of connecting a ViewPager with associated TabHost.  It relies on a
@@ -391,6 +401,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
         	if(mViewPager.getCurrentItem() != tab.getPosition()) {
                 if(mViewPager.getPagingEnabled()) {
         		    mViewPager.setCurrentItem(tab.getPosition());
+                    mActivity.get().refreshTabWithDelay();
                 } else {
                     int position = mViewPager.getCurrentItem();
                     mActivity.get().selectTabWithDelay(position);

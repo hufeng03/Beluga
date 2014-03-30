@@ -46,6 +46,7 @@ import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.utils.FileUtil;
 import com.hufeng.filemanager.utils.ImageUtil;
 import com.hufeng.filemanager.utils.LogUtil;
+import com.hufeng.filemanager.utils.PackageUtil;
 import com.hufeng.filemanager.utils.TimeUtil;
 import com.kanbox.api.Token;
 
@@ -1634,10 +1635,11 @@ public class FileAction {
 	    			if(viewDocumentFile(context, f))
 	    				return;
 	    		}
-//	    		case FileUtils.FILE_TYPE_ZIP:
-//	    		{
-//	    			
-//	    		}
+	    		case FileUtils.FILE_TYPE_ZIP:
+	    		{
+                    myIntent.setAction(Intent.ACTION_VIEW);
+                    myIntent.setPackage(PackageUtil.getPackageName(context));
+	    		}
 	    		case FileUtils.FILE_TYPE_AUDIO:
 	    		{
 	    	    	myIntent.setAction(android.content.Intent.ACTION_VIEW);
@@ -1646,34 +1648,15 @@ public class FileAction {
 
 		    		if(!TextUtils.isEmpty(music_app_pkg))	
 		    		{
-			    		if(!music_app_pkg.equals("com.hufeng.filemanager") || (f.getPath().endsWith(".mp3") || f.getPath().endsWith(".amr")))
-			    		{
 			    	       PackageInfo packageInfo = null;
 			    	       try {
 			    	           packageInfo = FileManager.getAppContext().getPackageManager().getPackageInfo(music_app_pkg, 0);
-			    	       } catch (NameNotFoundException ex) 
-			    	       {
-			    	    	   ex.printStackTrace();
+			    	       } catch (NameNotFoundException ex) {
 			    	       }
 			   		       if (packageInfo != null) {
 			    		       	myIntent.setPackage(music_app_pkg);
-//			    		       	if(music_app_pkg.equals("com.hufeng.filemanager"))
-//			    		       	{
-//			    		       		flag_anim = true;
-//			    		       	}
-			   		        }
-			    		}
-
+			   		       }
 		    		}
-//		    		else
-//		    		{
-//		    			if(f.getPath().endsWith(".mp3") || f.getPath().endsWith(".amr"))
-//		    			{
-////		    				myIntent.setPackage("com.hufeng.filemanager");
-////		    				flag_anim = true;
-//		    			}
-//		    		}
-	    			
 	    			break;
 	    		}
 	    		case FileUtils.FILE_TYPE_IMAGE:
@@ -1691,49 +1674,16 @@ public class FileAction {
 	    		        if (packageInfo != null) {
 	    		        	myIntent.setPackage(image_app_pkg);
 	    		        }
-//	    		        else
-//	    		        {
-//	    		        	myIntent.setPackage("com.hufeng.filemanager");
-//	    		        }
 	    			}
-//	    			else
-//	    			{
-//	    				myIntent.setPackage("com.hufeng.filemanager");
-//	    			}
 	    			break;
 	    		}
 	    		case FileUtils.FILE_TYPE_VIDEO:
 	    		{
+                    myIntent.setAction(android.content.Intent.ACTION_VIEW);
 	    			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());    		    			
 	    			String video_app_pkg = sp.getString("VIDEO_DEFAULT_VIEW_APP", "");
 	    			if(!TextUtils.isEmpty(video_app_pkg))
 	    			{
-	    				Intent intent2 = new Intent(Intent.ACTION_VIEW/*"com.cooliris.media.action.REVIEW"*/); 
-	    				Uri uri2 = Uri.fromFile(new File("/sdcard/test.mp4")); 
-	    				intent2.setDataAndType(uri, "video/*"); 
-//	    				intent.setType("video/*");
-	    				
-//	    				List<ResolveInfo> resolveInfos2= FileManager.getAppContext().getPackageManager().queryIntentActivities (intent2, 0); 
-//	    				flag_content = false;
-//						for(ResolveInfo app:resolveInfos2)
-//						{
-//							String pkg = app.activityInfo.applicationInfo.packageName;
-//							if(pkg.equals(video_app_pkg))
-//							{
-//								flag_content = true;
-//							}
-//						}
-//						if(!flag_content)
-//						{
-//							myIntent.setAction("com.cooliris.media.action.REVIEW");
-//						}
-//						else
-//						{
-//							myIntent.setAction(android.content.Intent.ACTION_VIEW);
-//						}
-	    				
-	    				myIntent.setAction(android.content.Intent.ACTION_VIEW);
-	    				
 	    				PackageInfo packageInfo = null;
 	    		        try {
 	    		            packageInfo = FileManager.getAppContext().getPackageManager().getPackageInfo(video_app_pkg, 0);
@@ -1742,10 +1692,6 @@ public class FileAction {
 	    		        if (packageInfo != null) {
 	    		        	myIntent.setPackage(video_app_pkg);
 	    		        }
-	    			}
-	    			else
-	    			{
-	    		    	myIntent.setAction(android.content.Intent.ACTION_VIEW);
 	    			}
 	    			break;
 	    		}
@@ -1769,63 +1715,25 @@ public class FileAction {
 	    			return;
 	    		}
 	    	}
-//	    		if(flag_content)
-//	    		{
-//					long id = getIdInMediaDb(f.getAbsolutePath());
-//					if(id!=-1)
-//					{
-//						myIntent.setDataAndType(ContentUris.withAppendedId(Video.Media.getContentUri("external"),id),type);
-//					}
-//					else
-//					{
-//						myIntent.setDataAndType(Uri.fromFile(f),type);
-//					}
-//	    		}
-//	    		else
-//	    		{
-	    			myIntent.setDataAndType(Uri.fromFile(f),type);
-//	    		}
-		    	try{
-	//	    		if(flag_anim)
-	//	    		{
-	//	    			Intent intent = new Intent(context, PlayMusicActivity.class);
-	//	    			intent.setData(Uri.fromFile(f));
-	//	    			((Activity)context).startActivity(intent);
-	//	    			((Activity)context).overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
-	//	    		}
-	//	    		else
-	//	    		{
-		    			context.startActivity(myIntent);
-	//	    			if(flag_anim)
-	//	    			{
-	//	    				((Activity)context).overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
-	//	    			}
-	//	    		}
-		    	}catch(Exception e)
-		    	{    		
-		    		if(myIntent.getPackage()!=null && myIntent.getType()!=null)
-		    		{
-//		    			Intent myIntent2 = new Intent(myIntent.getAction());
-//		    			myIntent2.setData(/*myIntent.getData()*/Uri.fromFile(f));
-//		    			myIntent2.setType(myIntent.getType());
-//		    			myIntent2.
-		    			myIntent.setPackage(null);
-		    			try{
-		    				context.startActivity(myIntent);
-		    			}catch(Exception e2)
-		    			{
-				    		Toast.makeText(FileManager.getAppContext(), R.string.no_activity_found, Toast.LENGTH_SHORT).show();
-		    				e2.printStackTrace();
-		    			}
-		    		}
-		    		else
-		    		{	
-			    		Toast.makeText(FileManager.getAppContext(), R.string.no_activity_found, Toast.LENGTH_SHORT).show();
-		    			e.printStackTrace();
-		    		}
-		    	}
-	    	
-		}
+            myIntent.setDataAndType(Uri.fromFile(f), type);
+            try {
+                context.startActivity(myIntent);
+            } catch (Exception e) {
+                if (myIntent.getPackage() != null && myIntent.getType() != null) {
+                    myIntent.setPackage(null);
+                    try {
+                        context.startActivity(myIntent);
+                    } catch (Exception e2) {
+                        Toast.makeText(FileManager.getAppContext(), R.string.no_activity_found, Toast.LENGTH_SHORT).show();
+                        e2.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(FileManager.getAppContext(), R.string.no_activity_found, Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+
+        }
     }
     
     private static boolean viewDocumentFile(Context context, File f)

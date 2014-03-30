@@ -51,11 +51,15 @@ public class FileTreeAdapter extends AbstractTreeViewAdapter<String>{
        // final Integer[] hierarchy = getManager().getHierarchyDescription(id);
        // return "Node " + id + Arrays.asList(hierarchy);
        // String path = mFilePaths[(int)id];
-        if ("/".equals(path)) {
-            return "/";
+        if (path.endsWith("/")) {
+            if (path.length() == 1)
+                return "/";
+            else {
+                String name = path.substring(0, path.length()-1);
+                return name.substring(name.lastIndexOf("/") + 1);
+            }
         } else {
-            String name = path.substring(path.lastIndexOf("/") + 1);
-            return name;
+           return path.substring(path.lastIndexOf("/") + 1);
         }
     }
 
@@ -63,6 +67,7 @@ public class FileTreeAdapter extends AbstractTreeViewAdapter<String>{
     public View getNewChildView(final TreeNodeInfo<String> treeNodeInfo) {
         final LinearLayout viewLayout = (LinearLayout) getActivity()
                 .getLayoutInflater().inflate(R.layout.file_tree_item, null);
+        viewLayout.setBackgroundResource(R.drawable.list_selector_normal);
         return updateView(viewLayout, treeNodeInfo);
     }
 

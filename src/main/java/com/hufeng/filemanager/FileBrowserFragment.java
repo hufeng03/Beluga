@@ -197,11 +197,19 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
             }
             String[] initDirs = getArguments().getStringArray(ARGUMENT_INIT_DIR_LIST);
             if (initDirs != null) {
+                boolean flag_child = false, flag_equal = false;
                 for (String dir: initDirs) {
-                    if (dir.equals(mRootDir)) {
-                        showDir(null);
-                        return true;
+                    if (mRootDir.startsWith(dir)) {
+                        if (mRootDir.equals(dir)) {
+                            flag_equal = true;
+                        } else {
+                            flag_child = true;
+                        }
                     }
+                }
+                if (flag_equal && !flag_child) {
+                    showDir(null);
+                    return true;
                 }
             }
 
@@ -306,6 +314,17 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 //    }
 
     public void showDir(String path) {
+        String[] initDirs = getArguments().getStringArray(ARGUMENT_INIT_DIR_LIST);
+        if (path != null && initDirs != null) {
+            boolean flag = false;
+            for (String dir : initDirs) {
+                if (path.startsWith(dir)) {
+                    flag = true;
+                }
+            }
+            if (!flag)
+                path = null;
+        }
         if (mRootDir != null && (path == null || mRootDir.startsWith(path))) {
             // if we are backing from child directory,
             // I have to scroll list view to correct place
