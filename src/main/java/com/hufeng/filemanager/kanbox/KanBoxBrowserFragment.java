@@ -36,7 +36,7 @@ import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileSorter;
 import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.dialog.FmDialogFragment;
 import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.ui.FileOperation;

@@ -15,7 +15,7 @@ import com.hufeng.filemanager.GridFragment;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.IconLoader;
 import com.hufeng.filemanager.browser.IconLoaderHelper;
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.ui.FileViewHolder;
 import com.hufeng.filemanager.utils.TimeUtil;
 

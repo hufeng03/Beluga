@@ -1,4 +1,4 @@
-package com.hufeng.filemanager.safebox;
+package com.hufeng.safebox;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -14,7 +14,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
-import com.hufeng.filemanager.safebox.SafeDataStructs.SafeColumns;
+import com.hufeng.safebox.SafeDataStructs.SafeColumns;
 
 import java.io.File;
 import java.util.HashMap;

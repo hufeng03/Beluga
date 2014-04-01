@@ -55,8 +55,7 @@ public abstract class FileOperationTask extends AsyncTask<String, Integer, Boole
         if(wakeLock!=null)
             wakeLock.acquire();
 
-        ProgressDialog dialog = null;
-        dialog = new ProgressDialog(act);
+        ProgressDialog dialog = new ProgressDialog(act);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);//设置风格为圆形进度条
         dialog.setTitle(title);//设置标题
         dialog.setMessage(content);

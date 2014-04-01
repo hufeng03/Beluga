@@ -12,7 +12,7 @@ import android.util.Log;
 import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.browser.FileSorter;
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 
 import org.json.JSONArray;
 import org.json.JSONException;

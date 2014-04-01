@@ -101,9 +101,7 @@ public class IconLoaderHelper {
             if (path.equals("/")) {
                 return with_square?R.drawable.file_icon_phone_square:R.drawable.phone;
             } else if (StorageManager.getInstance(context).isStorage(path)) {
-                if (StorageManager.getInstance(context).isExternalStorage(path)) {
-                    return with_square?R.drawable.file_icon_sdcard_square:R.drawable.sdcard;
-                } else if (StorageManager.getInstance(context).isInternalStorage(path)) {
+                if (StorageManager.getInstance(context).isInternalStorage(path)) {
                     return with_square?R.drawable.file_icon_phone_square:R.drawable.phone;
                 } else {
                     return with_square?R.drawable.file_icon_sdcard_square:R.drawable.sdcard;

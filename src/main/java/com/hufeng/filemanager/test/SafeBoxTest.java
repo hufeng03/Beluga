@@ -3,7 +3,7 @@ package com.hufeng.filemanager.test;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
-import com.hufeng.filemanager.safebox.CryptUtil;
+import com.hufeng.safebox.CryptUtil;
 
 import junit.framework.Assert;
 

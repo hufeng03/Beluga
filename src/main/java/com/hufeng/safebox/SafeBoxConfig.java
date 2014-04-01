@@ -1,4 +1,4 @@
-package com.hufeng.filemanager.safebox;
+package com.hufeng.safebox;
 
 public class SafeBoxConfig {
 	

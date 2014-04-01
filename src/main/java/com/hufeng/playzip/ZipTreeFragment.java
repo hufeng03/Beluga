@@ -11,8 +11,6 @@ import android.view.View;
 
 import com.hufeng.filemanager.TreeFragment;
 import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.browser.FileSorter;
-import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.treeview.InMemoryTreeStateManager;
 import com.hufeng.filemanager.treeview.TreeBuilder;
 import com.hufeng.filemanager.treeview.TreeNodeInfo;
@@ -23,6 +21,7 @@ import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,15 +43,25 @@ public class ZipTreeFragment  extends TreeFragment implements LoaderManager.Load
 
     private String mZipFile;
 
+    private WeakReference<ZipTreeFragmentListener> mWeakListener = null;
+
+
     public static ZipTreeFragment newZipBrowser(String dir) {
         ZipTreeFragment fragment = new ZipTreeFragment();
         Bundle data = new Bundle();
-        String[] files = FileUtils.getStorageDirs();
         if (!TextUtils.isEmpty(dir)) {
             data.putString(ARGUMNET_ZIP_FILE, dir);
         }
         fragment.setArguments(data);
         return fragment;
+    }
+
+    public static interface ZipTreeFragmentListener {
+        public void onZipTreeItemClick(FileEntry entry);
+    }
+
+    public void setListener(ZipTreeFragmentListener listener) {
+        mWeakListener = new WeakReference<ZipTreeFragmentListener>(listener);
     }
 
     @Override
@@ -72,17 +81,9 @@ public class ZipTreeFragment  extends TreeFragment implements LoaderManager.Load
     public void onTreeItemClick(TreeViewList parent, View view, int position, long id) {
         String path = (String)parent.getAdapter().getItem(position);
         FileEntry entry = new FileEntry(path);
-        boolean collasp = false;
         if (entry.isDirectory()) {
             final TreeNodeInfo<String> info = mTreeManager.getNodeInfo(path);
             if(info.isWithChildren()){
-//                if(!info.isExpanded()){
-//                    //expand it
-//
-//                }else{
-//                    //collasp it
-//                    collasp = true;
-//                }
                 mAdapter.handleItemClick(view, path);
             }else{
                 //expand itself
@@ -91,6 +92,13 @@ public class ZipTreeFragment  extends TreeFragment implements LoaderManager.Load
         } else {
             //open file
             mAdapter.handleItemClick(view, path);
+        }
+
+        if (mWeakListener != null) {
+            ZipTreeFragmentListener listener = mWeakListener.get();
+            if (listener != null) {
+                listener.onZipTreeItemClick(entry);
+            }
         }
     }
 
@@ -129,7 +137,7 @@ public class ZipTreeFragment  extends TreeFragment implements LoaderManager.Load
                 //生成一个zip的文件
                 ZipFile zipFile = new ZipFile(mZipFile);
                 //遍历zipFile中所有的实体，并把他们解压出来
-                for (@SuppressWarnings("unchecked")
+                for (
                      Enumeration<ZipEntry> entries = zipFile.getEntries(); entries
                              .hasMoreElements(); ) {
                     ZipEntry entry = entries.nextElement();
@@ -145,7 +153,7 @@ public class ZipTreeFragment  extends TreeFragment implements LoaderManager.Load
 
             }
 //            Collections.sort(files);
-            FileSorter.SORTER sorter = FileSorter.getFileSorter(getContext(), FileUtils.FILE_TYPE_FILE);
+//            FileSorter.SORTER sorter = FileSorter.getFileSorter(getContext(), FileUtils.FILE_TYPE_FILE);
             Collections.sort(files, new Comparator<FileEntry>() {
                 @Override
                 public int compare(FileEntry lhs, FileEntry rhs) {

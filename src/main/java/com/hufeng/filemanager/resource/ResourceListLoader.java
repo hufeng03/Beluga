@@ -13,7 +13,7 @@ import com.hufeng.filemanager.ResourceType;
 import com.hufeng.filemanager.app.PackageIntentReceiver;
 import com.hufeng.filemanager.browser.FileSorter;
 import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.storage.StorageManager;
 
 import java.io.File;

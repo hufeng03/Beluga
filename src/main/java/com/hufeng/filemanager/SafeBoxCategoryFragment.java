@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import com.hufeng.filemanager.safebox.SafeCategoryAdapter;
-import com.hufeng.filemanager.safebox.SafeCategoryEntry;
-import com.hufeng.filemanager.safebox.SafeCategoryManager;
+import com.hufeng.safebox.SafeCategoryAdapter;
+import com.hufeng.safebox.SafeCategoryEntry;
+import com.hufeng.safebox.SafeCategoryManager;
 
 /**
  * Created by feng on 13-10-3.

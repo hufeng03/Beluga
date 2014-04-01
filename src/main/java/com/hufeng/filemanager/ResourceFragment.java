@@ -154,32 +154,12 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
                 } else if(ResourceType.valueOf(entry.resource_category) == ResourceType.DOC) {
                     dir_name = ResourceListLoader.SELECTED_DOC_DIR_NAME;
                 }
-                StorageManager manager = StorageManager.getInstance(FileManager.getAppContext());
-                String[] storages = manager.getMountedStorages();
-                String stor_selected = null;
-                if(storages!=null) {
-                    int size = storages.length;
-                    int idx = 0;
-                    while(idx<size){
-                        String stor = storages[idx];
-                        File selected_dir = new File(stor, dir_name);
-                        if (selected_dir.exists() && selected_dir.isDirectory() && selected_dir.canWrite()) {
-                            stor_selected = stor;
-                            break;
-                        } else {
-                            if (stor_selected == null) {
-                                stor_selected = stor;
-                            }
-                        }
-                        idx++;
-                    }
-                }
-                FileDownloader.downloadFile(g.getContext(), entry.download_url, new File(stor_selected, dir_name).getAbsolutePath(), name);
+                String primary_stor = StorageManager.getInstance(FileManager.getAppContext()).getPrimaryExternalStorage();
+                FileDownloader.downloadFile(g.getContext(), entry.download_url, new File(primary_stor, dir_name).getAbsolutePath(), name);
             }
         } else if(entry.isInstalled()) {
                 AppAction.launchApp(g.getContext(), entry.package_name);
         } else if(!TextUtils.isEmpty(entry.path) && new File(entry.path).exists()) {
-            //FileAction.
             FileAction.viewFile(g.getContext(), entry.path);
         }
     }

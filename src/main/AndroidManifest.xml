@@ -302,13 +302,13 @@
         </receiver-->
  		<provider
  		    android:exported="false"
-            android:name=".data.FileManagerProvider"
+            android:name=".provider.FileManagerProvider"
             android:process="com.hufeng.filemanager.scan"
             android:authorities="com.hufeng.filemanager" />
 
         <provider
                 android:exported="false"
-                android:name="com.hufeng.filemanager.safebox.SafeBoxDatabaseProvider"
+                android:name="com.hufeng.safebox.SafeBoxDatabaseProvider"
                 android:process="com.hufeng.filemanager.scan"
                 android:authorities="com.hufeng.safemanager" />
  		

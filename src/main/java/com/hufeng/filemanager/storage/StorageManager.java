@@ -5,11 +5,15 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.hufeng.filemanager.BuildConfig;
+
 import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /***
@@ -34,6 +38,10 @@ public class StorageManager {
 		if ( instance == null ) {
 			instance = new StorageManager();
 			instance.refreshStorageVolume(context);
+            if (BuildConfig.DEBUG) {
+                EnvironmentUtil.test();
+                EnvironmentUtil.test2(context);
+            }
 		}
 		return instance;
 	}
@@ -44,19 +52,6 @@ public class StorageManager {
             for (StorageUnit unit : mStorageUnits) {
                 if ( path.equalsIgnoreCase(unit.path) ) {
                     result = true;
-                    break;
-                }
-            }
-        }
-		return result;
-	}
-	
-	public boolean isExternalStorage(String path){
-		boolean result = false;
-        if (path != null) {
-            for (StorageUnit unit : mStorageUnits) {
-                if(path.equalsIgnoreCase(unit.path)){
-                    result = unit.removable;
                     break;
                 }
             }
@@ -76,21 +71,7 @@ public class StorageManager {
         }
 		return result;
 	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean hasMountedStorage(){
-		boolean result = false;
-		for (StorageUnit unit : mStorageUnits) {
-			if ( Environment.MEDIA_MOUNTED.equals(unit.state) ) {
-				result = true;
-				break;
-			}
-		}
-		return result;
-	}
+
 	
 	public String[] getMountedStorages() {
 		List<String> stors = new ArrayList<String>();
@@ -101,20 +82,62 @@ public class StorageManager {
 		}
 		return stors.toArray(new String[stors.size()]);
 	}
+
+    public String getPrimaryExternalStorage() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return Environment.getExternalStorageDirectory().getAbsolutePath();
+        }
+        String best_hit_storage = Environment.getExternalStorageDirectory().getAbsolutePath();
+        int best_hit_priority = -1;
+        for (StorageUnit unit : mStorageUnits) {
+            if (Environment.MEDIA_MOUNTED.equals(unit.state)) {
+                if (!unit.removable) {
+                    if (best_hit_priority < 4) {
+                        best_hit_storage = unit.path;
+                        best_hit_priority = 4;
+                    }
+                } else {
+                    if (best_hit_priority < 3) {
+                        best_hit_storage = unit.path;
+                        best_hit_priority = 3;
+                    }
+                }
+            } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(unit.state)) {
+                if (!unit.removable) {
+                    if (best_hit_priority < 2) {
+                        best_hit_storage = unit.path;
+                        best_hit_priority = 2;
+                    }
+                } else {
+                    if (best_hit_priority < 1) {
+                        best_hit_storage = unit.path;
+                        best_hit_priority = 1;
+                    }
+                }
+            } else {
+                if (best_hit_priority < 0) {
+                    best_hit_storage = unit.path;
+                    best_hit_priority = 0;
+                }
+            }
+        }
+        return best_hit_storage;
+    }
 	
 	/**
 	 * 
 	 * @return
 	 */
 	public String[] getAllStorages() {
-		List<String> stors = new ArrayList<String>();
+		List<String> storages = new ArrayList<String>();
 		for (StorageUnit unit : mStorageUnits) {
-			stors.add(unit.path);
+            storages.add(unit.path);
 		}
-		return stors.toArray(new String[stors.size()]);
+		return storages.toArray(new String[storages.size()]);
 	}
 	
-	public String getStoragePath(String path) {
+	public String getStorageForPath(String path) {
 		if(path == null)
 			return null;
 		String storage = null;
@@ -128,93 +151,67 @@ public class StorageManager {
 	}
 	
 	
-	public String getExternalStorageDirectory(){
-		List<String> stors = new ArrayList<String>();
-		String path = null;
-		for (int i=0;i<mStorageUnits.size();i++) {
-			StorageUnit unit = mStorageUnits.get(i);
-			if ( unit.removable ) {
-				if(unit.path.contains("sdcard")){
-					return unit.path;
-				}
-				if( path == null)
-					path = unit.path;
-			}
-		}
-		return path;	
-	}
+//	public String getExternalStorageDirectory(){
+//		String path = null;
+//		for (int i=0;i<mStorageUnits.size();i++) {
+//			StorageUnit unit = mStorageUnits.get(i);
+//			if ( unit.removable ) {
+//				if(unit.path.contains("sdcard")){
+//					return unit.path;
+//				}
+//				if( path == null)
+//					path = unit.path;
+//			}
+//		}
+//		return path;
+//	}
 	
-	public String getExternalStorageState(){
-		List<String> stors = new ArrayList<String>();
-		String state = Environment.MEDIA_REMOVED;
-		boolean flag = false;
-		for (int i=0;i<mStorageUnits.size();i++) {
-			StorageUnit unit = mStorageUnits.get(i);
-			if ( unit.removable ) {
-				if(unit.path.contains("sdcard")){
-					return unit.state;
-				}
-				if(!flag){
-					state = unit.state;
-					flag = true;
-				}
-			}
-		}
-		return state;
-	}
-	
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public String[] getInnerStorages() {
-		List<String> stors = new ArrayList<String>();
-		for (StorageUnit unit : mStorageUnits) {
-			if ( unit.removable ) {
-				stors.add(unit.path);
-			}
-		}
-		return stors.toArray(new String[stors.size()]);
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public String[] getExternalStorages(){
-		List<String> stors = new ArrayList<String>();
-		for (StorageUnit unit : mStorageUnits) {
-			if ( !unit.removable ) {
-				stors.add(unit.path);
-			}
-		}
-		return stors.toArray(new String[stors.size()]);
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public long getTotalAllSize(){
-		long size = 0L;
-		for( StorageUnit unit : mStorageUnits ) {
-			size += unit.allSpace;
-		}
-		return size;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public long getTotalAvailableSize() {
-		long size = 0L;
-		for( StorageUnit unit : mStorageUnits ) {
-			size += unit.availableSpace;
-		}
-		return size;
-	}
+//	public String getExternalStorageState(){
+//		String state = Environment.MEDIA_REMOVED;
+//		boolean flag = false;
+//		for (int i=0;i<mStorageUnits.size();i++) {
+//			StorageUnit unit = mStorageUnits.get(i);
+//			if ( unit.removable ) {
+//				if(unit.path.contains("sdcard")){
+//					return unit.state;
+//				}
+//				if(!flag){
+//					state = unit.state;
+//					flag = true;
+//				}
+//			}
+//		}
+//		return state;
+//	}
+//
+//
+//	/**
+//	 *
+//	 * @return
+//	 */
+//	public String[] getInnerStorages() {
+//		List<String> storages = new ArrayList<String>();
+//		for (StorageUnit unit : mStorageUnits) {
+//			if ( unit.removable ) {
+//				storages.add(unit.path);
+//			}
+//		}
+//		return storages.toArray(new String[storages.size()]);
+//	}
+//
+//	/**
+//	 *
+//	 * @return
+//	 */
+//	public String[] getExternalStorages(){
+//		List<String> storages = new ArrayList<String>();
+//		for (StorageUnit unit : mStorageUnits) {
+//			if ( !unit.removable ) {
+//				storages.add(unit.path);
+//			}
+//		}
+//		return storages.toArray(new String[storages.size()]);
+//	}
 	
 	/**
 	 * 
@@ -244,7 +241,8 @@ public class StorageManager {
 		if( path != null ) {
 			for (StorageUnit unit : mStorageUnits) {
 				if ( path.equals(unit.path) ) {
-					size = unit.availableSpace;
+					unit.availableSpace = StorageUtil.getAvailaleSize(unit.path);
+                    size = unit.availableSpace;
 					break;
 				}
 			}
@@ -283,6 +281,9 @@ public class StorageManager {
 							Object real_volume = StorageVolume.cast(volume);
 							
 							String path = (String) method_getPath.invoke(real_volume);
+                            if (TextUtils.isEmpty(path)) return;
+                            path = new File(path).getAbsolutePath();
+                            if (TextUtils.isEmpty(path)) return;
 							//String description = (String) method_getPath.invoke(real_volume);
 							boolean isRemovable = (Boolean) method_isRemovable.invoke(real_volume);
 							String state = (String) method_getVolumeState.invoke(sStorageManager, path);
@@ -297,20 +298,6 @@ public class StorageManager {
 								long availableSize = StorageUtil.getAvailaleSize(path);
 								long allSize = StorageUtil.getAllSize(path);
 								mStorageUnits.add(new StorageUnit(path, null, isRemovable, state, availableSize, allSize ));
-							}
-						}
-						String path = Environment.getDataDirectory().getAbsolutePath();
-						if(path!=null && new File(path).canRead()){
-							boolean flag = false;
-							for(StorageUnit unit:mStorageUnits){
-								if(unit.path.equals(path)){
-									flag = true;
-								}
-							}
-							if(!flag){
-								long availableSize = StorageUtil.getAvailaleSize(path);
-								long allSize = StorageUtil.getAllSize(path);
-								mStorageUnits.add(new StorageUnit(path, null, false, Environment.MEDIA_MOUNTED, availableSize, allSize ));
 							}
 						}
 					}
@@ -335,27 +322,30 @@ public class StorageManager {
 				flag_reflection_error = true;
 			}
 		}
-		if(flag_reflection_error){
-			if(mStorageUnits.size()==0){
-				File file = Environment.getExternalStorageDirectory();
-				String path = file.getAbsolutePath();
-				if(!TextUtils.isEmpty(path)){
-					boolean flag = false;
-					for(StorageUnit unit:mStorageUnits){
-						if(unit.path.equals(path)){
-							flag = true;
-						}
-					}
-					if(!flag){
-						long availableSize = StorageUtil.getAvailaleSize(path);
-						long allSize = StorageUtil.getAllSize(path);
-						mStorageUnits.add(new StorageUnit(path, null, false, Environment.getExternalStorageState(), availableSize, allSize ));
-					}
-				}
-			}
-		}
+
+        File file = Environment.getExternalStorageDirectory();
+        String path = file.getAbsolutePath();
+        if (!TextUtils.isEmpty(path)) {
+            boolean flag = false;
+            for (StorageUnit unit : mStorageUnits) {
+                if (unit.path.equals(path)) {
+                    flag = true;
+                }
+            }
+            if (!flag) {
+                long availableSize = StorageUtil.getAvailaleSize(path);
+                long allSize = StorageUtil.getAllSize(path);
+                mStorageUnits.add(new StorageUnit(path, null, false, Environment.getExternalStorageState(), availableSize, allSize));
+            }
+        }
 
         if(mStorageUnits.size()>0) {
+            Collections.sort(mStorageUnits, new Comparator<StorageUnit>() {
+                @Override
+                public int compare(StorageUnit lhs, StorageUnit rhs) {
+                    return lhs.path.compareTo(rhs.path);
+                }
+            });
             int idx = 0;
             for(StorageUnit storage:mStorageUnits) {
                 Log.i(LOG_TAG, "storage unit "+idx+":"+storage.toString());
@@ -366,15 +356,5 @@ public class StorageManager {
         }
 
 		return;
-	}
-	
-	public String getMyStoragePath(){
-		String[] path = getMountedStorages();
-		
-		if(path.length>0){
-			return path[0]+File.separator+"filemanager";
-		}else{
-			return getExternalStorageDirectory()+File.separator+"filemanager";
-		}
 	}
 }

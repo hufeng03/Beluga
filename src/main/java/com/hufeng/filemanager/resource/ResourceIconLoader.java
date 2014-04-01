@@ -25,7 +25,7 @@ import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.browser.IconLoaderHelper;
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;

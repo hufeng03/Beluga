@@ -15,7 +15,7 @@ import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.utils.TimeUtil;
 import com.kanbox.api.Kanbox;

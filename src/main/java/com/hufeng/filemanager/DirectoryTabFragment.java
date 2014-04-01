@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.provider.UiProvider;
 
 import java.io.File;
 
@@ -68,7 +68,7 @@ public class DirectoryTabFragment extends FileTabFragment implements
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i(LOG_TAG, "mReceiver receive" + intent.getAction());
-                String[] files = FileUtils.getStorageDirs();
+                String[] files = UiProvider.getStorageDirs();
                 if (mFileBrowserFragment != null) {
                     mFileBrowserFragment.setInitDirs(files);
                 }

@@ -14,12 +14,10 @@ import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.skin.SkinManager;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Xml;
 import android.view.View;
@@ -28,7 +26,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 public class SmsBackupViewer extends Activity implements OnClickListener{
 	
@@ -53,7 +50,7 @@ public class SmsBackupViewer extends Activity implements OnClickListener{
 		Uri uri =  getIntent().getData();
 		if(uri!=null)
 		{
-			mFilePath = FileUtils.getPathFromContent(this, uri).getPath();
+			mFilePath = FileUtils.getPathFromMediaContent(this, uri).getPath();
 		}
 		mTopTab = (RelativeLayout)findViewById(R.id.top_tab);
 		mBack = (Button)findViewById(R.id.back);

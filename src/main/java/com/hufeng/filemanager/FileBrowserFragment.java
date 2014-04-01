@@ -19,6 +19,7 @@ import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileEntryFactory;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.data.FileListLoader;
+import com.hufeng.filemanager.provider.UiProvider;
 import com.hufeng.filemanager.services.IUiImpl;
 import com.hufeng.filemanager.services.UiServiceHelper;
 import com.hufeng.filemanager.ui.FileArrayAdapter;
@@ -52,7 +53,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
     public static FileBrowserFragment newDownloadBrowser(String root) {
         FileBrowserFragment fragement = new FileBrowserFragment();
         Bundle data = new Bundle();
-        String[] files = FileUtils.getDownloadDirs();
+        String[] files = UiProvider.getDownloadDirs();
         if (files != null && files.length > 0) {
             data.putStringArray(ARGUMENT_INIT_DIR_LIST, files);
         }
@@ -66,7 +67,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
     public static FileBrowserFragment newFavoriteBrowser(String root) {
         FileBrowserFragment fragement = new FileBrowserFragment();
         Bundle data = new Bundle();
-        String[] files = FileUtils.getFavoriteFiles();
+        String[] files = UiProvider.getFavoriteFiles();
         if (files != null && files.length > 0) {
             data.putStringArray(ARGUMENT_INIT_DIR_LIST, files);
         }
@@ -80,7 +81,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
     public static FileBrowserFragment newStorageBrowser(String root) {
         FileBrowserFragment fragment = new FileBrowserFragment();
         Bundle data = new Bundle();
-        String[] files = FileUtils.getStorageDirs();
+        String[] files = UiProvider.getStorageDirs();
         if (files != null && files.length > 0) {
             data.putStringArray(ARGUMENT_INIT_DIR_LIST, files);
         }

@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import com.hufeng.filemanager.browser.FileSorter;
 import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 
 /**
  * Created by feng on 14-1-19.

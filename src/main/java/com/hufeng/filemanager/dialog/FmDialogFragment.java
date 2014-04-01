@@ -34,7 +34,7 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.utils.FileUtil;
 import com.hufeng.filemanager.utils.NetworkUtil;
 import com.hufeng.filemanager.utils.TimeUtil;

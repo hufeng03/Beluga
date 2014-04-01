@@ -1,4 +1,4 @@
-package com.hufeng.filemanager.safebox;
+package com.hufeng.safebox;
 
 import android.content.Context;
 import android.content.res.Resources;

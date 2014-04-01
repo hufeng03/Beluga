@@ -1,4 +1,4 @@
-package com.hufeng.filemanager.safe;
+package com.hufeng.safebox.safe;
 
 public class SafeInfo {
 	public static String originalPath;

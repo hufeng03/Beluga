@@ -2,44 +2,31 @@ package com.hufeng.filemanager.browser;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 import com.hufeng.filemanager.FileManager;
-import com.hufeng.filemanager.data.DataStructures;
-import com.hufeng.filemanager.data.DataStructures.MatchColumns;
-import com.hufeng.filemanager.root.RootHelper;
-import com.hufeng.filemanager.storage.StorageManager;
+import com.hufeng.filemanager.provider.DataStructures.MatchColumns;
+import com.hufeng.filemanager.storage.MediaContentUtil;
 import com.hufeng.filemanager.utils.FileUtil;
 import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.utils.MimeUtils;
 import com.hufeng.filemanager.utils.TimeUtil;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 public class FileUtils {
 
@@ -64,323 +51,6 @@ public class FileUtils {
     public static final int FILE_TYPE_RESOURCE_ALL = 108;
     public static final int FILE_TYPE_CLOUD = 150;
 
-
-    public interface OnFileSelectedListener {
-        void onFileSelected(String path);
-    }
-
-    public static String getRootDir() {
-        String root = "/mnt/sdcard";
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)
-                || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            root = getSDCardDir();
-            if (root.startsWith("/mnt"))
-            {
-            	boolean flag1 = false, flag2 = false;
-            	File dir = new File("/mnt");
-            	if(dir.isDirectory())
-            	{
-            		File[] files = dir.listFiles();
-            		if(files!=null)
-            		{
-	            		for(File file : files)
-	            		{
-	            			if(file.getPath().equals(root))
-	            			{
-	            				flag1 = true;
-	            			}
-	            			else
-	            			{
-	            				if(file.isDirectory() && file.canRead() && file.canWrite())
-	            				{
-	            					flag2 = true;
-	            				}
-	            			}
-	            		}
-            		}
-            	}
-            	if(flag1==true && flag2==true)
-            	{
-            		root = "/mnt";
-            	}
-//            	else
-//            	{
-//            		root = root.substring(4);
-//            	}
-            }
-        }
-        return root;
-    }
-    
-    public static void setDefaultCategory() 
-    {
-        FileManager.setCategoryMatch(".3gp", FileUtils.FILE_TYPE_VIDEO);
-        FileManager.setCategoryMatch(".asf", FileUtils.FILE_TYPE_VIDEO);
-        FileManager.setCategoryMatch(".avi", FileUtils.FILE_TYPE_VIDEO);
-        FileManager.setCategoryMatch(".m4u", FileUtils.FILE_TYPE_VIDEO);
-        FileManager.setCategoryMatch(".m4v", FileUtils.FILE_TYPE_VIDEO);
-        FileManager.setCategoryMatch(".mov", FileUtils.FILE_TYPE_VIDEO);
-        FileManager.setCategoryMatch(".mp4", FileUtils.FILE_TYPE_VIDEO);
-        FileManager.setCategoryMatch(".mpe", FileUtils.FILE_TYPE_VIDEO);
-        FileManager.setCategoryMatch(".mpeg", FileUtils.FILE_TYPE_VIDEO);
-        FileManager.setCategoryMatch(".mpg", FileUtils.FILE_TYPE_VIDEO);
-        FileManager.setCategoryMatch(".mpg4", FileUtils.FILE_TYPE_VIDEO);
-        FileManager.setCategoryMatch(".rmvb", FileUtils.FILE_TYPE_VIDEO);
-        FileManager.setCategoryMatch(".rm", FileUtils.FILE_TYPE_VIDEO);
-        FileManager.setCategoryMatch(".wmv", FileUtils.FILE_TYPE_VIDEO);
-        FileManager.setCategoryMatch(".xv", FileUtils.FILE_TYPE_VIDEO);
-
-        FileManager.setCategoryMatch(".m3u", FileUtils.FILE_TYPE_AUDIO);
-        FileManager.setCategoryMatch(".m4a", FileUtils.FILE_TYPE_AUDIO);
-        FileManager.setCategoryMatch(".m4b", FileUtils.FILE_TYPE_AUDIO);
-        FileManager.setCategoryMatch(".m4p", FileUtils.FILE_TYPE_AUDIO);
-        FileManager.setCategoryMatch(".mp2", FileUtils.FILE_TYPE_AUDIO);
-        FileManager.setCategoryMatch(".mp3", FileUtils.FILE_TYPE_AUDIO);
-        FileManager.setCategoryMatch(".mpga", FileUtils.FILE_TYPE_AUDIO);
-        FileManager.setCategoryMatch(".amr", FileUtils.FILE_TYPE_AUDIO);
-        FileManager.setCategoryMatch(".aac", FileUtils.FILE_TYPE_AUDIO);       
-        FileManager.setCategoryMatch(".ogg", FileUtils.FILE_TYPE_AUDIO);
-        FileManager.setCategoryMatch(".wav", FileUtils.FILE_TYPE_AUDIO);
-        FileManager.setCategoryMatch(".wma", FileUtils.FILE_TYPE_AUDIO);
-        FileManager.setCategoryMatch(".ape", FileUtils.FILE_TYPE_AUDIO);
-        FileManager.setCategoryMatch(".flac", FileUtils.FILE_TYPE_AUDIO);
-        FileManager.setCategoryMatch(".imy", FileUtils.FILE_TYPE_AUDIO);
-        FileManager.setCategoryMatch(".mmf", FileUtils.FILE_TYPE_AUDIO);
-        
-
-        FileManager.setCategoryMatch(".apk", FileUtils.FILE_TYPE_APK);
-
-        FileManager.setCategoryMatch(".bmp", FileUtils.FILE_TYPE_IMAGE);
-        FileManager.setCategoryMatch(".gif", FileUtils.FILE_TYPE_IMAGE);
-        FileManager.setCategoryMatch(".jpeg", FileUtils.FILE_TYPE_IMAGE);
-        FileManager.setCategoryMatch(".jpg", FileUtils.FILE_TYPE_IMAGE);
-        FileManager.setCategoryMatch(".png", FileUtils.FILE_TYPE_IMAGE);
-        FileManager.setCategoryMatch(".tif", FileUtils.FILE_TYPE_IMAGE);
-
-        FileManager.setCategoryMatch(".txt", FileUtils.FILE_TYPE_DOCUMENT);
-        FileManager.setCategoryMatch(".epub", FileUtils.FILE_TYPE_DOCUMENT);
-        FileManager.setCategoryMatch(".chm", FileUtils.FILE_TYPE_DOCUMENT);
-        FileManager.setCategoryMatch(".pdf", FileUtils.FILE_TYPE_DOCUMENT);
-        FileManager.setCategoryMatch(".ps", FileUtils.FILE_TYPE_DOCUMENT);
-        FileManager.setCategoryMatch(".doc", FileUtils.FILE_TYPE_DOCUMENT);
-        FileManager.setCategoryMatch(".ppt", FileUtils.FILE_TYPE_DOCUMENT);
-        FileManager.setCategoryMatch(".xls", FileUtils.FILE_TYPE_DOCUMENT);
-        FileManager.setCategoryMatch(".docx", FileUtils.FILE_TYPE_DOCUMENT);
-        FileManager.setCategoryMatch(".pptx", FileUtils.FILE_TYPE_DOCUMENT);
-        FileManager.setCategoryMatch(".xlsx", FileUtils.FILE_TYPE_DOCUMENT);
-        FileManager.setCategoryMatch(".html", FileUtils.FILE_TYPE_DOCUMENT);
-        FileManager.setCategoryMatch(".htm", FileUtils.FILE_TYPE_DOCUMENT);
-        FileManager.setCategoryMatch(".xhtml", FileUtils.FILE_TYPE_DOCUMENT);
-        FileManager.setCategoryMatch(".xml", FileUtils.FILE_TYPE_DOCUMENT);
-        
-        FileManager.setCategoryMatch(".zip", FileUtils.FILE_TYPE_ZIP);
-        FileManager.setCategoryMatch(".rar", FileUtils.FILE_TYPE_ZIP);
-        FileManager.setCategoryMatch(".tar", FileUtils.FILE_TYPE_ZIP);
-        FileManager.setCategoryMatch(".z", FileUtils.FILE_TYPE_ZIP);
-        FileManager.setCategoryMatch(".7z", FileUtils.FILE_TYPE_ZIP);
-        FileManager.setCategoryMatch(".gz", FileUtils.FILE_TYPE_ZIP);
-    }
-    
-    public static String getPhoneDataDir()
-    {
-    	return Environment.getDataDirectory().getAbsolutePath();
-    }
-    
-    public static String getDownloadDir() {
-
-        String dir = Environment.getDownloadCacheDirectory().getPath();
-            if (dir.startsWith("/mnt"))
-                dir = dir.substring(4);
-        return dir;
-    }
-    
-    public static ArrayList<String> getFavoriteFileArray() {
-    	ArrayList<String> dirs = new ArrayList<String>(0);
-    	ArrayList<String> deleted_dirs = new ArrayList<String>(0);
-    	Cursor mCursor = FileManager.getAppContext().getContentResolver().query(DataStructures.FavoriteColumns.CONTENT_URI, DataStructures.FavoriteColumns.FILE_PROJECTION, null, null, null);
-    	if(mCursor!=null)
-    	{
-    		while(mCursor.moveToNext())
-    		{
-    			String file = mCursor.getString(DataStructures.FavoriteColumns.FILE_PATH_FIELD_INDEX);
-    			if(new File(file).exists())
-    				dirs.add(file);
-    			else
-    				deleted_dirs.add(file);
-    		}
-    		mCursor.close();
-    	}
-    	
-    	if(!deleted_dirs.isEmpty())
-    	{
-            StringBuilder selection = new StringBuilder();
-            selection.append(DataStructures.FavoriteColumns.FILE_PATH_FIELD + " IN ");
-            selection.append('(');
-            boolean isFirst = true;
-            for (String  path:deleted_dirs) {
-                if (isFirst) {
-                    selection.append('\'');
-                    selection.append(path.replace("'", "\""));
-                    selection.append('\'');
-                    isFirst = false;
-                } else {
-                    selection.append(',');
-                    selection.append('\'');
-                    selection.append(path.replace("'", "\""));
-                    selection.append('\'');
-                }
-            }
-            selection.append(')');
-            deleted_dirs.clear();
-            int count = FileManager.getAppContext().getContentResolver().delete(DataStructures.FavoriteColumns.CONTENT_URI, selection.toString(), null);
-            if(LogUtil.IDBG) LogUtil.i(TAG, "File Manager deletes "+count+" favorite files");
-    	}
-        return dirs;
-    }
-    
-    public static String[] getSafeFiles() {
-    	return null;
-    }
-
-    public static String[] getDownloadDirs() {
-        String[] files = null;
-        String[] devices = StorageManager.getInstance(FileManager.getAppContext()).getMountedStorages();
-        if (devices != null) {
-            ArrayList<String> all_downloads = new ArrayList<String>();
-            for(String device:devices) {
-                String[] downloads = new File(device).list(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String filename) {
-                        if(new File(dir, filename).isDirectory() && filename.toLowerCase().contains("download")) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                });
-                if (downloads != null) {
-                    for (String download: downloads) {
-                        all_downloads.add(new File(device, download).getAbsolutePath());
-                    }
-                }
-            }
-            files = all_downloads.toArray(new String[0]);
-        }
-        return files;
-    }
-    
-    public static String[] getFavoriteFiles() {
-    	ArrayList<String> dirs = new ArrayList<String>(0);
-    	ArrayList<String> deleted_dirs = new ArrayList<String>(0);
-    	Cursor mCursor = FileManager.getAppContext().getContentResolver().query(DataStructures.FavoriteColumns.CONTENT_URI, DataStructures.FavoriteColumns.FILE_PROJECTION, null, null, null);
-    	if(mCursor!=null)
-    	{
-    		while(mCursor.moveToNext())
-    		{
-    			String file = mCursor.getString(DataStructures.FavoriteColumns.FILE_PATH_FIELD_INDEX);
-    			if(new File(file).exists())
-    				dirs.add(file);
-    			else
-    				deleted_dirs.add(file);
-    		}
-    		mCursor.close();
-    	}
-    	
-    	if(!deleted_dirs.isEmpty())
-    	{
-            StringBuilder selection = new StringBuilder();
-            selection.append(DataStructures.FavoriteColumns.FILE_PATH_FIELD + " IN ");
-            selection.append('(');
-            boolean isFirst = true;
-            for (String  path:deleted_dirs) {
-                if (isFirst) {
-                    selection.append('\'');
-                    selection.append(path.replace("'", "\""));
-                    selection.append('\'');
-                    isFirst = false;
-                } else {
-                    selection.append(',');
-                    selection.append('\'');
-                    selection.append(path.replace("'", "\""));
-                    selection.append('\'');
-                }
-            }
-            selection.append(')');
-            deleted_dirs.clear();
-            int count = FileManager.getAppContext().getContentResolver().delete(DataStructures.FavoriteColumns.CONTENT_URI, selection.toString(), null);
-            if(LogUtil.IDBG) LogUtil.i(TAG, "File Manager deletes "+count+" favorite files");
-    	}
-//    	String[] download_dirs = getDownloadDirs();
-//    	if(download_dirs!=null && download_dirs.length>0)
-//    	{
-//	    	for(String dir: download_dirs)
-//	    	{
-//	    		dirs.add(dir);
-//	    	}
-//    	}
-    	
-    	
-        Set someSet   =   new HashSet(dirs); 
-
-        //   将Set中的集合，放到一个临时的链表中(tempList) 
-        Iterator   iterator   =   someSet.iterator(); 
-        ArrayList<String>   tempList   =   new   ArrayList<String>(); 
-        while   (iterator.hasNext())   { 
-        	String path = iterator.next().toString();
-        	if(!new File(path).isDirectory())
-        	{
-        		tempList.add(path); 
-        	}
-        } 
-        iterator = someSet.iterator();
-        while   (iterator.hasNext())   { 
-        	String path = iterator.next().toString();
-        	if(new File(path).isDirectory())
-        	{
-        		tempList.add(path); 
-        	}
-        } 
-        dirs = tempList;
-    	
-        if(dirs.size()==0)
-        	return null;
-        else
-        {
-        	String[] store = new String[dirs.size()];
-        	return (String[])dirs.toArray(store);
-        }
-    }
-    
-    public static String[] getStorageDirs() {
-        String[] files = StorageManager.getInstance(FileManager.getAppContext()).getMountedStorages();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
-        boolean show_root = preferences.getBoolean("SHOW_ROOT_DIR",true);
-        if (RootHelper.isRootedPhone() && show_root) {
-            int len = (files == null ? 0: files.length) + 1;
-            String[] new_files = new String[len];
-            for (int i = 0; i < len-1; i++) {
-                new_files[i] = files[i];
-            }
-            new_files[len-1] = "/";
-            files = new_files;
-        }
-        return files;
-    }
-
-    public static String getSDCardDir() {
-        return Environment.getExternalStorageDirectory().getPath();
-    }
-
-    public static String getSDCard2Dir() {
-    	
-        return "/mnt/sdcard2/";
-    }
-    
-    public static String getExtSDCardDir()
-    {
-    	return "/mnt/extSdCard";
-    }
     public static String getFileSize(File path) {
         if (path == null)
             return "";
@@ -585,84 +255,6 @@ public class FileUtils {
     		LogUtil.e(TAG, "build File Map error because not match pair in database");
     	}
     }
-    
-//    static {
-//        sFileMap = new HashMap<String, Integer>();
-//        sFileMap.put(".3gp", FILE_TYPE_VIDEO);
-//        sFileMap.put(".asf", FILE_TYPE_VIDEO);
-//        sFileMap.put(".avi", FILE_TYPE_VIDEO);
-//        sFileMap.put(".m4u", FILE_TYPE_VIDEO);
-//        sFileMap.put(".m4v", FILE_TYPE_VIDEO);
-//        sFileMap.put(".mov", FILE_TYPE_VIDEO);
-//        sFileMap.put(".mp4", FILE_TYPE_VIDEO);
-//        sFileMap.put(".mpe", FILE_TYPE_VIDEO);
-//        sFileMap.put(".mpeg", FILE_TYPE_VIDEO);
-//        sFileMap.put(".mpg", FILE_TYPE_VIDEO);
-//        sFileMap.put(".mpg4", FILE_TYPE_VIDEO);
-//        sFileMap.put(".rmvb", FILE_TYPE_VIDEO);
-//        sFileMap.put(".wmv", FILE_TYPE_VIDEO);
-//
-//        sFileMap.put(".m3u", FILE_TYPE_AUDIO);
-//        sFileMap.put(".m4a", FILE_TYPE_AUDIO);
-//        sFileMap.put(".m4b", FILE_TYPE_AUDIO);
-//        sFileMap.put(".m4p", FILE_TYPE_AUDIO);
-//        sFileMap.put(".mp2", FILE_TYPE_AUDIO);
-//        sFileMap.put(".mp3", FILE_TYPE_AUDIO);
-//        sFileMap.put(".mpga", FILE_TYPE_AUDIO);
-//        sFileMap.put(".amr", FILE_TYPE_AUDIO);
-//        sFileMap.put(".aac", FILE_TYPE_AUDIO);       
-//        sFileMap.put(".ogg", FILE_TYPE_AUDIO);
-//        sFileMap.put(".wav", FILE_TYPE_AUDIO);
-//        sFileMap.put(".wma", FILE_TYPE_AUDIO);
-//
-//        sFileMap.put(".apk", FILE_TYPE_APK);
-//
-//        sFileMap.put(".bmp", FILE_TYPE_IMAGE);
-//        sFileMap.put(".gif", FILE_TYPE_IMAGE);
-//        sFileMap.put(".jpeg", FILE_TYPE_IMAGE);
-//        sFileMap.put(".jpg", FILE_TYPE_IMAGE);
-//        sFileMap.put(".png", FILE_TYPE_IMAGE);
-//        sFileMap.put(".tif", FILE_TYPE_IMAGE);
-//
-//        sFileMap.put(".txt", FILE_TYPE_DOCUMENT);
-//        sFileMap.put(".epub", FILE_TYPE_DOCUMENT);
-//        sFileMap.put(".umd", FILE_TYPE_DOCUMENT);
-//        sFileMap.put(".pdf", FILE_TYPE_DOCUMENT);
-//        sFileMap.put(".ps", FILE_TYPE_DOCUMENT);
-//        sFileMap.put(".doc", FILE_TYPE_DOCUMENT);
-//        sFileMap.put(".ppt", FILE_TYPE_DOCUMENT);
-//        sFileMap.put(".xls", FILE_TYPE_DOCUMENT);
-//        sFileMap.put(".docx", FILE_TYPE_DOCUMENT);
-//        sFileMap.put(".pptx", FILE_TYPE_DOCUMENT);
-//        sFileMap.put(".xlsx", FILE_TYPE_DOCUMENT);
-//        
-//        sFileMap.put(".zip", FILE_TYPE_ZIP);
-//        sFileMap.put(".rar", FILE_TYPE_ZIP);
-//        sFileMap.put(".tar", FILE_TYPE_ZIP);
-//        sFileMap.put(".z", FILE_TYPE_ZIP);
-//        sFileMap.put(".7z", FILE_TYPE_ZIP);
-//        sFileMap.put(".gz", FILE_TYPE_ZIP);
-////        sFileMap.put(".apk", FILE_TYPE_ZIP);
-//
-//        sFileMap.put("", FILE_TYPE_FILE);
-//    }
-    
-    public static Drawable getInstalledAppIcon(Context context, String apkPath) {
-        PackageManager pm = context.getPackageManager();
-        PackageInfo info = pm.getPackageArchiveInfo(apkPath,
-                PackageManager.GET_ACTIVITIES);
-        if (info != null) {
-            ApplicationInfo appInfo = info.applicationInfo;
-            appInfo.sourceDir = apkPath;
-            appInfo.publicSourceDir = apkPath;
-            try {
-                return appInfo.loadIcon(pm);
-            } catch (OutOfMemoryError e) {
-                Log.e(TAG, e.toString());
-            }
-        }
-        return null;
-    }
 
     public static String getUninstallApkLabel(Context context, String apkPath) {
         String PATH_PackageParser = "android.content.pm.PackageParser";
@@ -807,51 +399,41 @@ public class FileUtils {
         return null;
     }
 
-    public static boolean isPackageExists(Context context, String packageName) {
-        PackageManager pm = context.getPackageManager();
-        ApplicationInfo appInfo = null;
-        boolean errFlag = false;
-        try {
-            appInfo = pm.getApplicationInfo(packageName,
-                    PackageManager.GET_UNINSTALLED_PACKAGES);
-        } catch (NameNotFoundException e) {
-            errFlag = true;
-        }
-        if (appInfo == null || errFlag) {
-            return false;
-        }
-        return true;
-    }
 
-
-    public static Uri getPathFromContent(Context context, Uri contentUri) {
+    public static Uri getPathFromMediaContent(Context context, Uri contentUri) {
         ContentResolver resolver = context.getContentResolver();
         Cursor cursor = null;
-        Uri retUri = contentUri;
-        try {
-            String path = contentUri.getPath();
-            if (path.contains("images")) {
+        Uri rstUri = contentUri;
+        String uri_str = contentUri.toString();
+        try{
+            if (uri_str.startsWith(MediaContentUtil.EXTERNAL_IMAGE_URI)) {
                 cursor = resolver.query(contentUri,
                         new String[] { MediaStore.Images.ImageColumns.DATA },
                         null, null, null);
                 cursor.moveToFirst();
-                retUri = Uri.fromFile(new File(cursor.getString(0)));
-            } else if (path.contains("video")) {
+                rstUri = Uri.fromFile(new File(cursor.getString(0)));
+            } else if (uri_str.startsWith(MediaContentUtil.EXTERNAL_VIDEO_URI)) {
                 cursor = resolver.query(contentUri,
                         new String[] { MediaStore.Video.VideoColumns.DATA },
                         null, null, null);
                 cursor.moveToFirst();
-                retUri = Uri.fromFile(new File(cursor.getString(0)));
-            }	else if (path.contains("audio")) {
+                rstUri = Uri.fromFile(new File(cursor.getString(0)));
+            }	else if (uri_str.startsWith(MediaContentUtil.EXTERNAL_AUDIO_URI)) {
                 cursor = resolver.query(contentUri,
                         new String[] { MediaStore.Audio.AudioColumns.DATA },
                         null, null, null);
                 cursor.moveToFirst();
-                retUri = Uri.fromFile(new File(cursor.getString(0)));
+                rstUri = Uri.fromFile(new File(cursor.getString(0)));
+            }   else if (uri_str.startsWith(MediaContentUtil.EXTERNAL_FILE_URI)) {
+                cursor = resolver.query(contentUri,
+                        new String[] { MediaStore.Files.FileColumns.DATA },
+                        null, null, null);
+                cursor.moveToFirst();
+                rstUri = Uri.fromFile(new File(cursor.getString(0)));
             }
             else
             {
-            	retUri = contentUri;
+            	rstUri = contentUri;
             }
             
         } catch (Exception e) {
@@ -860,7 +442,7 @@ public class FileUtils {
             if (cursor != null && !cursor.isClosed())
                 cursor.close();
         }
-        return retUri;
+        return rstUri;
     }
 
     public static String getFilename(String path) {

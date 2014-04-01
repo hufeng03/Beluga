@@ -2,8 +2,7 @@ package com.hufeng.filemanager.scan;
 
 import java.io.File;
 
-import com.hufeng.filemanager.data.DataStructures;
-import com.hufeng.filemanager.data.DataStructures.AudioColumns;
+import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.reader.Mp3Reader;
 
 import android.content.ContentValues;

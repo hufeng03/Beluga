@@ -1,4 +1,4 @@
-package com.hufeng.filemanager.safebox;
+package com.hufeng.safebox;
 
 import java.io.File;
 import java.io.FileInputStream;

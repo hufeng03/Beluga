@@ -3,7 +3,7 @@ package com.hufeng.filemanager.resource;
 import android.database.ContentObserver;
 import android.os.Handler;
 
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 
 /**
  * Created by feng on 13-9-28.

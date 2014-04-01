@@ -28,13 +28,13 @@ import com.hufeng.filemanager.FileManagerTabActivity;
 import com.hufeng.filemanager.IntentData;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.SettingsScanActivity;
-import com.hufeng.filemanager.data.DataStructures;
-import com.hufeng.filemanager.data.DataStructures.FavoriteColumns;
-import com.hufeng.filemanager.data.DataStructures.FileColumns;
+import com.hufeng.filemanager.provider.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures.FavoriteColumns;
+import com.hufeng.filemanager.provider.DataStructures.FileColumns;
 import com.hufeng.filemanager.kanbox.KanBoxApi;
-import com.hufeng.filemanager.safebox.CryptUtil;
-import com.hufeng.filemanager.safebox.SafeBoxConfig;
-import com.hufeng.filemanager.safebox.SafeDataStructs;
+import com.hufeng.safebox.CryptUtil;
+import com.hufeng.safebox.SafeBoxConfig;
+import com.hufeng.safebox.SafeDataStructs;
 import com.hufeng.filemanager.scan.ApkObject;
 import com.hufeng.filemanager.scan.AudioObject;
 import com.hufeng.filemanager.scan.DocumentObject;
@@ -149,7 +149,7 @@ public class FileAction {
 
     private static String moveToSafeBox(File nfile){
         boolean result = true;
-        String device0 = StorageManager.getInstance(FileManager.getAppContext()).getStoragePath(nfile.getAbsolutePath());
+        String device0 = StorageManager.getInstance(FileManager.getAppContext()).getStorageForPath(nfile.getAbsolutePath());
         String dir = device0 + File.separator + SafeBoxConfig.STORAGE_DIR;
         if(!new File(dir).exists()) {
             new File(dir).mkdirs();
@@ -468,8 +468,8 @@ public class FileAction {
     			continue;
     		}
             StorageManager stor = StorageManager.getInstance(FileManager.getAppContext());
-    		String device0 = stor.getStoragePath(path);
-    		String device = stor.getStoragePath(target);
+    		String device0 = stor.getStorageForPath(path);
+    		String device = stor.getStorageForPath(target);
     		if(!TextUtils.isEmpty(device) && !TextUtils.isEmpty(device0) && !device0.equals(device))
     		{
     			//not in same sdcard

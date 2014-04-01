@@ -1,9 +1,7 @@
 package com.hufeng.filemanager;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +32,8 @@ public abstract class FileOperationActivity extends BaseActivity implements
 
     public FileOperation mGlobalFileOperation;
 
-    private ProgressDialog mProgressDialog;
-    PowerManager.WakeLock mWakeLock;
+//    private ProgressDialog mProgressDialog;
+//    PowerManager.WakeLock mWakeLock;
 
     public ActionMode getActionMode() {
         return mActionMode;

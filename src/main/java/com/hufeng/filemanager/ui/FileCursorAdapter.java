@@ -18,7 +18,7 @@ import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.browser.IconLoader;
 import com.hufeng.filemanager.browser.IconLoaderHelper;
 import com.hufeng.filemanager.browser.InfoLoader;
-import com.hufeng.filemanager.data.DataStructures.FileColumns;
+import com.hufeng.filemanager.provider.DataStructures.FileColumns;
 
 import java.util.ArrayList;
 

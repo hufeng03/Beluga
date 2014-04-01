@@ -1,8 +1,4 @@
-package com.hufeng.filemanager.safe;
-
-import java.util.ArrayList;
-
-import com.hufeng.filemanager.app.AppInfo;
+package com.hufeng.safebox.safe;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,19 +6,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public class SafeGridAdapter extends BaseAdapter{
-	
+import java.util.ArrayList;
+
+public class SafeListAdapter extends BaseAdapter{
+
 	private ArrayList<SafeInfo> mSafeInfos;
 	private Context mContext;
 	private LayoutInflater mInflater;
 	
-	public SafeGridAdapter(Context context, ArrayList<SafeInfo> safes) {
+	public SafeListAdapter(Context context, ArrayList<SafeInfo> safes) {
 		// TODO Auto-generated constructor stub
 		mContext = context;
 		mInflater = LayoutInflater.from(context);
 		mSafeInfos = safes;
 	}
-
+	
     public void setSafes(ArrayList<SafeInfo> safes)
     {
     	mSafeInfos = safes;

@@ -13,7 +13,7 @@ import android.text.TextUtils;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.SettingsScanActivity;
 import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.utils.MediaStoreUtil;
@@ -292,7 +292,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                             cv.put(DataStructures.FileColumns.FILE_EXTENSION_FIELD, name.substring(i+1));
                         }
                     }
-                    String storage_path = stor.getStoragePath(path);
+                    String storage_path = stor.getStorageForPath(path);
                     cv.put(DataStructures.FileColumns.FILE_STORAGE_FIELD, storage_path);
                     switch (category_type) {
                         case FileUtils.FILE_TYPE_IMAGE:
@@ -416,14 +416,12 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
             copyMediastoreToDatabase(uri, projection, selection, uri_fm, FileUtils.FILE_TYPE_APK);
 
             //zip
-            uri = MediaStore.Files.getContentUri(volumeName);
             selection = MediaStoreUtil.buildSelectionByCategory(FileUtils.FILE_TYPE_ZIP);
             uri_fm = DataStructures.ZipColumns.CONTENT_URI;
             copyMediastoreToDatabase(uri, projection, selection, uri_fm, FileUtils.FILE_TYPE_ZIP);
 
 
             //document
-            uri = MediaStore.Files.getContentUri(volumeName);
             selection = MediaStoreUtil.buildSelectionByCategory(FileUtils.FILE_TYPE_DOCUMENT);
             uri_fm = DataStructures.DocumentColumns.CONTENT_URI;
             copyMediastoreToDatabase(uri, projection, selection, uri_fm, FileUtils.FILE_TYPE_DOCUMENT);

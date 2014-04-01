@@ -11,8 +11,8 @@ import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
-import com.hufeng.filemanager.data.DataStructures.MatchColumns;
-import com.hufeng.filemanager.data.DataStructures.PreferenceColumns;
+import com.hufeng.filemanager.provider.DataStructures.MatchColumns;
+import com.hufeng.filemanager.provider.DataStructures.PreferenceColumns;
 import com.hufeng.filemanager.services.UiServiceHelper;
 import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.utils.OSUtil;

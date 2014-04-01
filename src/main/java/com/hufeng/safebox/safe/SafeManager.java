@@ -1,4 +1,4 @@
-package com.hufeng.filemanager.safe;
+package com.hufeng.safebox.safe;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -15,7 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.safebox.SafeDataStructs;
+import com.hufeng.safebox.SafeDataStructs;
 
 import java.io.File;
 import java.util.ArrayList;

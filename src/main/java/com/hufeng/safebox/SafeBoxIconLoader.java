@@ -1,4 +1,4 @@
-package com.hufeng.filemanager.safebox;
+package com.hufeng.safebox;
 
 import android.graphics.Bitmap;
 import android.widget.ImageView;

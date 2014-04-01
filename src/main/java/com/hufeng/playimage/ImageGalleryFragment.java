@@ -24,7 +24,7 @@ import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileEntryFactory;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.browser.ImageEntry;
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 
 import java.io.File;
 import java.io.FileFilter;

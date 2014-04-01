@@ -1,4 +1,4 @@
-package com.hufeng.filemanager.data;
+package com.hufeng.filemanager.provider;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -15,24 +15,22 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.data.DataStructures.ApkColumns;
-import com.hufeng.filemanager.data.DataStructures.AudioColumns;
-import com.hufeng.filemanager.data.DataStructures.CategoryColumns;
-import com.hufeng.filemanager.data.DataStructures.DocumentColumns;
-import com.hufeng.filemanager.data.DataStructures.FavoriteColumns;
-import com.hufeng.filemanager.data.DataStructures.FileColumns;
-import com.hufeng.filemanager.data.DataStructures.ImageColumns;
-import com.hufeng.filemanager.data.DataStructures.MatchColumns;
-import com.hufeng.filemanager.data.DataStructures.PreferenceColumns;
-import com.hufeng.filemanager.data.DataStructures.SelectedColumns;
-import com.hufeng.filemanager.data.DataStructures.VideoColumns;
-import com.hufeng.filemanager.data.DataStructures.ZipColumns;
-import com.hufeng.filemanager.data.DataStructures.CloudBoxColumns;
+import com.hufeng.filemanager.provider.DataStructures.ApkColumns;
+import com.hufeng.filemanager.provider.DataStructures.AudioColumns;
+import com.hufeng.filemanager.provider.DataStructures.CategoryColumns;
+import com.hufeng.filemanager.provider.DataStructures.CloudBoxColumns;
+import com.hufeng.filemanager.provider.DataStructures.DocumentColumns;
+import com.hufeng.filemanager.provider.DataStructures.FavoriteColumns;
+import com.hufeng.filemanager.provider.DataStructures.FileColumns;
+import com.hufeng.filemanager.provider.DataStructures.ImageColumns;
+import com.hufeng.filemanager.provider.DataStructures.MatchColumns;
+import com.hufeng.filemanager.provider.DataStructures.PreferenceColumns;
+import com.hufeng.filemanager.provider.DataStructures.SelectedColumns;
+import com.hufeng.filemanager.provider.DataStructures.VideoColumns;
+import com.hufeng.filemanager.provider.DataStructures.ZipColumns;
 import com.hufeng.filemanager.utils.LogUtil;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -442,10 +440,6 @@ public class FileManagerProvider extends ContentProvider{
 	public int delete(Uri uri, String where, String[] whereArgs) {
 		// TODO Auto-generated method stub
         LogUtil.d(LOG_TAG, "delete:" + uri.toString() + "," + where);
-//        if(!databaseExist())
-//		{
-//        	return 0;
-//		}
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int count;
         String tablename = null;
@@ -635,25 +629,9 @@ public class FileManagerProvider extends ContentProvider{
             throw new IllegalArgumentException("Unknown uri " + uri);
 		}
 	}
-	
-	private boolean databaseExist()
-	{
-		File dbFile =  FileManager.getAppContext().getApplicationContext().getDatabasePath("hufeng.db");
-		boolean result = dbFile.exists();
-		if(!result)
-		{
-			 LogUtil.e(LOG_TAG, "database doesnot exist!");
-		}
-		return result;
-	}
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		// TODO Auto-generated method stub
-//		if(!databaseExist())
-//		{
-//			FileManager.getAppContext().getApplicationContext().openOrCreateDatabase("hufeng.db", Context.MODE_PRIVATE, null);
-//		}
         Log.i(LOG_TAG, "insert " + uri + " " + values);
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         long rowId = 0;
@@ -718,8 +696,6 @@ public class FileManagerProvider extends ContentProvider{
         }
         if (rowId > 0) {
         	if(type!=-1){
-//            	String path = values.getAsString(FileColumns.FILE_PATH_FIELD);
-//            	String storage = StorageManager.getInstance(getContext()).getStoragePath(path);
                 updateCategoryData(db,tablename,type);
         	}
             Uri uri_with_id = ContentUris.withAppendedId(uri, rowId);
@@ -954,12 +930,7 @@ public class FileManagerProvider extends ContentProvider{
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
-        
-        // Get the database and run the query
-//        if(!databaseExist())
-//		{
-//			return null;
-//		}
+
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
         Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy, null);
 
@@ -1181,10 +1152,7 @@ public class FileManagerProvider extends ContentProvider{
         }
         if(tablename==null)
         	return 0;
-//        if(!databaseExist())
-//		{
-//			FileManager.getAppContext().getApplicationContext().openOrCreateDatabase("hufeng.db", Context.MODE_PRIVATE, null);
-//		}
+
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         InsertHelper ih = new InsertHelper(db, tablename);
         db.beginTransaction();
@@ -1253,11 +1221,6 @@ public class FileManagerProvider extends ContentProvider{
         }
 
         if(type!=-1){
-//        	if(values.length>0){
-//        		String path = values[0].getAsString(FileColumns.FILE_PATH_FIELD);
-//        		String storage = StorageManager.getInstance(getContext()).getStoragePath(path);
-//            	updateCategoryData(db,tablename,type, storage);
-//        	}
         	updateCategoryData(db, tablename, type);
         }
         

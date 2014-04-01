@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.browser.ImageEntry;
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.AnimatorSet;

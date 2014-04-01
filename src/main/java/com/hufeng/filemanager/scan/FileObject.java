@@ -3,7 +3,7 @@ package com.hufeng.filemanager.scan;
 import android.content.ContentValues;
 
 import com.hufeng.filemanager.FileManager;
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.storage.StorageManager;
 
 import java.io.File;
@@ -97,13 +97,12 @@ public class FileObject implements Serializable{
 	
 	public void toContentValues(ContentValues cv)
 	{
-//		cv.put(DataStructures.FileColumns.FILE_TYPE_FIELD, this.type);
 		cv.put(DataStructures.FileColumns.FILE_DATE_FIELD, this.date);
 		cv.put(DataStructures.FileColumns.FILE_SIZE_FIELD, this.size);
 		cv.put(DataStructures.FileColumns.FILE_EXTENSION_FIELD, this.extension);
 		cv.put(DataStructures.FileColumns.FILE_PATH_FIELD, this.path);
 		cv.put(DataStructures.FileColumns.FILE_NAME_FIELD, this.name);
-		cv.put(DataStructures.FileColumns.FILE_STORAGE_FIELD, StorageManager.getInstance(FileManager.getAppContext()).getStoragePath(this.path));
+		cv.put(DataStructures.FileColumns.FILE_STORAGE_FIELD, StorageManager.getInstance(FileManager.getAppContext()).getStorageForPath(this.path));
 	}
 	
 	

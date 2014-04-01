@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.hufeng.filemanager.FileManager;
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 import com.kanbox.api.PushSharePreference;
 
 import org.json.JSONArray;

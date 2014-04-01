@@ -75,7 +75,7 @@ import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.FileManagerTabActivity;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.data.DataStructures;
+import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.skin.SkinManager;
 import com.hufeng.filemanager.utils.ChannelUtil;
 import com.hufeng.filemanager.utils.ImageUtil;
@@ -410,7 +410,7 @@ public class PlayMusicActivity extends /*SherlockFragment*/Activity implements C
 						Toast.makeText(PlayMusicActivity.this, R.string.music_format_not_supported, Toast.LENGTH_SHORT).show();
 					}
 				}
-				mPath = FileUtils.getPathFromContent(this, mUri).getPath();
+				mPath = FileUtils.getPathFromMediaContent(this, mUri).getPath();
 			}
 		}
 		

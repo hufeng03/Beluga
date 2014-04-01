@@ -52,8 +52,9 @@ public class FileListLoader extends AsyncTaskLoader<List<FileEntry>> {
                 FileEntry entry = null;
                 for (String file : files) {
                     entry = new FileEntry(mRoot, file);
-                    if (!entry.isDirectory() || !mNoDirectory) {
+                    if (entry.path!=null && (!entry.isDirectory() || !mNoDirectory)) {
                         if (TextUtils.isEmpty(mSearch) || entry.getName().contains(mSearch)) {
+                            Log.i(LOG_TAG, "add "+file+"!!!!!!!!!!"+entry);
                             entries.add(entry);
                         }
                     }
@@ -63,7 +64,7 @@ public class FileListLoader extends AsyncTaskLoader<List<FileEntry>> {
                 FileEntry entry = null;
                 for (String file : mDirs) {
                     entry = new FileEntry(file);
-                    if (!entry.isDirectory() || !mNoDirectory) {
+                    if (entry.path!=null && (!entry.isDirectory() || !mNoDirectory)) {
                         if (TextUtils.isEmpty(mSearch) || entry.getName().contains(mSearch)) {
                             entries.add(entry);
                         }

@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileSorter;
-import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.provider.UiProvider;
 import com.hufeng.filemanager.treeview.InMemoryTreeStateManager;
 import com.hufeng.filemanager.treeview.TreeBuilder;
 import com.hufeng.filemanager.treeview.TreeNodeInfo;
@@ -52,7 +52,7 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
     public static FileTreeFragment newStorageBrowser(String dir){
         FileTreeFragment fragment = new FileTreeFragment();
         Bundle data = new Bundle();
-        String[] files = FileUtils.getStorageDirs();
+        String[] files = UiProvider.getStorageDirs();
         if (files != null && files.length > 0) {
             data.putStringArray(ARGUMENT_INIT_DIR_LIST, files);
         }

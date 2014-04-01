@@ -333,7 +333,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="progress_add_to_safe_title">Safebox</string>
 <string name="progress_add_to_safe_content">Moving files into safebox, please wait...</string>
 <string name="progress_delete_title">Delete</string>
-<string name="progress_delete_content">Moving files into safebox, please wait...</string>
+<string name="progress_delete_content">Deleting files, please wait...</string>
 <string name="progress_paste_title">Paste</string>
 <string name="progress_paste_content">Pasting files, please wait...</string>
 <string name="details_ms">"%1$02d:%2$02d"</string>

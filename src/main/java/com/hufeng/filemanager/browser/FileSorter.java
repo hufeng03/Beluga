@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.File;
 import java.text.Collator;
 import java.util.Comparator;
 
 public class FileSorter {
+
+    private static final String TAG = FileSorter.class.getSimpleName();
     
     public static class SORTER {
         public SORT_FIELD field;
@@ -269,6 +272,7 @@ public class FileSorter {
 	public static final Comparator<FileEntry> COMPARATOR_NAME_ASC = new Comparator<FileEntry>() {
 		@Override
 		public int compare(FileEntry lhs, FileEntry rhs) {
+            Log.i(TAG, "comparing " + lhs + ", " + rhs);
             return sCollator.compare(lhs.getName(), rhs.getName());
 	    }
 	};

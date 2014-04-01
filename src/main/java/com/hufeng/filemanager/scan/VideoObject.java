@@ -1,7 +1,6 @@
 package com.hufeng.filemanager.scan;
 
-import com.hufeng.filemanager.data.DataStructures;
-import com.hufeng.filemanager.data.DataStructures.VideoColumns;
+import com.hufeng.filemanager.provider.DataStructures;
 
 import android.content.ContentValues;
 
