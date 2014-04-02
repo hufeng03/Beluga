@@ -25,6 +25,7 @@ public class KanBoxUploadFragment extends FileGridFragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setEmptyText(getResources().getString(R.string.kanbox_uploading_empty));
         KanBoxApi.getInstance().registerKanBoxApiListener(this);
         mAdapter = new KanBoxUploadAdapter(getSherlockActivity(), this);
         setGridAdapter(mAdapter);

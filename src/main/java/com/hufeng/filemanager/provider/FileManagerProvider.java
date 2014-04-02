@@ -639,27 +639,42 @@ public class FileManagerProvider extends ContentProvider{
         int type = -1;
         switch(URI_MATCHER.match(uri)){
 	        case FILES:
+                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
+                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+                }
 	        	tablename = FileColumns.TABLE;
 	        	type = FileUtils.FILE_TYPE_FILE;
 	        	rowId = db.insert(FileColumns.TABLE, null, values);
 	        	break;
 	        case IMAGES:
-	        	tablename = ImageColumns.TABLE;
+                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
+                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+                }
+                tablename = ImageColumns.TABLE;
 	        	type = FileUtils.FILE_TYPE_IMAGE;
 	        	rowId = db.insert(ImageColumns.TABLE, null, values);
 	        	break;
 	        case AUDIOS:
-	        	tablename = AudioColumns.TABLE;
+                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
+                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+                }
+                tablename = AudioColumns.TABLE;
 	        	type = FileUtils.FILE_TYPE_AUDIO;
 	        	rowId = db.insert(AudioColumns.TABLE, null, values);
 	        	break;
 	        case VIDEOS:
-	        	tablename = VideoColumns.TABLE;
+                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
+                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+                }
+                tablename = VideoColumns.TABLE;
 	        	type = FileUtils.FILE_TYPE_VIDEO;
 	        	rowId = db.insert(VideoColumns.TABLE, null, values);
 	        	break;
 	        case APKS:
-	        	tablename = ApkColumns.TABLE;
+                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
+                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+                }
+                tablename = ApkColumns.TABLE;
 	        	type = FileUtils.FILE_TYPE_APK;
 	        	rowId = db.insert(ApkColumns.TABLE, null, values);
 	        	break;
@@ -667,12 +682,18 @@ public class FileManagerProvider extends ContentProvider{
 	        	rowId = db.insert(CategoryColumns.TABLE, null, values);
 	        	break;
 	        case DOCUMENTS:
-	        	tablename = DocumentColumns.TABLE;
+                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
+                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+                }
+                tablename = DocumentColumns.TABLE;
 	        	type = FileUtils.FILE_TYPE_DOCUMENT;
 	        	rowId = db.insert(DocumentColumns.TABLE, null, values);
 	        	break;
 	        case ZIPS:
-	        	tablename = ZipColumns.TABLE;
+                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
+                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+                }
+                tablename = ZipColumns.TABLE;
 	        	type = FileUtils.FILE_TYPE_ZIP;
 	        	rowId = db.insert(ZipColumns.TABLE, null, values);
 	        	break;

@@ -3,6 +3,7 @@ package com.hufeng.filemanager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,10 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.dialog.FmDialogFragment;
-import com.hufeng.filemanager.kanbox.KanBoxApi;
 import com.hufeng.filemanager.ui.FileOperation;
 import com.hufeng.playimage.AnimatedImageView;
 import com.hufeng.playimage.AnimatorViewProvider;
+import com.kanbox.api.Token;
 
 import java.io.File;
 
@@ -155,8 +156,8 @@ public abstract class FileOperationActivity extends BaseActivity implements
                         if (item2 != null) item2.setVisible(true);
                         break;
                     default:
-                        if (item1 != null) item1.setVisible(true);
-                        if (item2 != null) item2.setVisible(true);
+                        if (item1 != null) item1.setVisible(false);
+                        if (item2 != null) item2.setVisible(false);
                         break;
                 }
 
@@ -241,8 +242,7 @@ public abstract class FileOperationActivity extends BaseActivity implements
                 break;
             case R.id.file_operation_addcloud2:
             case R.id.file_operation_addcloud:
-                KanBoxApi.TOKEN_STATUS status = KanBoxApi.getInstance().getTokenStatus();
-                if (KanBoxApi.TOKEN_STATUS.NONE == status) {
+                if (TextUtils.isEmpty(Token.getInstance().getAccessToken())) {
                     getFileOperation().clearOperationFiles();
                     refreshActionMode();
                     Toast.makeText(this, R.string.please_login_kanbox, Toast.LENGTH_SHORT).show();

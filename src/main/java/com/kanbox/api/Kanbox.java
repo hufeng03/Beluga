@@ -32,8 +32,8 @@ public class Kanbox {
 	 */
 	public void getAccountInfo(Token token, RequestListener listener) {
 		String getAccountInfoUrl = "https://api.kanbox.com/0/info";
-		HttpRequestBase httpMethod = KanboxHttp.doGet(getAccountInfoUrl, token);
-		new KanboxAsyncTask(null, null, httpMethod, listener, RequestListener.OP_GET_ACCCOUNT_INFO).serialExecute();
+		HttpRequestBase httpMethod = KanboxHttp.doGet(getAccountInfoUrl, null/*, token*/);
+		new KanboxAsyncTask(null, null, httpMethod, listener, RequestListener.OP_GET_ACCCOUNT_INFO, true).serialExecute();
 	}
 	
 	/**
@@ -44,8 +44,8 @@ public class Kanbox {
 	 */
 	public void getFileList(Token token, String path, RequestListener listener) {
 		String getFileListUrl = "https://api.kanbox.com/0/list";
-		HttpRequestBase httpMethod = KanboxHttp.doGet(getFileListUrl + path, token);
-		new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_GET_FILELIST).serialExecute();
+		HttpRequestBase httpMethod = KanboxHttp.doGet(getFileListUrl + path, null/*, token*/);
+		new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_GET_FILELIST, true).serialExecute();
 	}
 	
 	/**
@@ -61,8 +61,8 @@ public class Kanbox {
 		params.put("path", sourcePath);
 		params.put("destination_path", desPath);
 		
-		HttpRequestBase httpMethod = KanboxHttp.doGet(moveUrl, params, token);
-		new KanboxAsyncTask(sourcePath, desPath, httpMethod, listener, RequestListener.OP_MOVE).serialExecute();
+		HttpRequestBase httpMethod = KanboxHttp.doGet(moveUrl, params/*, token*/);
+		new KanboxAsyncTask(sourcePath, desPath, httpMethod, listener, RequestListener.OP_MOVE, true).serialExecute();
 	}
 	
 	/**
@@ -78,8 +78,8 @@ public class Kanbox {
 		params.put("path", sourcePath);
 		params.put("destination_path", desPath);
 		
-		HttpRequestBase httpMethod = KanboxHttp.doGet(moveUrl, params, token);
-		new KanboxAsyncTask(sourcePath, desPath, httpMethod, listener, RequestListener.OP_COPY).serialExecute();
+		HttpRequestBase httpMethod = KanboxHttp.doGet(moveUrl, params/*, token*/);
+		new KanboxAsyncTask(sourcePath, desPath, httpMethod, listener, RequestListener.OP_COPY, true).serialExecute();
 	}
 	
 	/**
@@ -93,8 +93,8 @@ public class Kanbox {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("path", path);
 		
-		HttpRequestBase httpMethod = KanboxHttp.doGet(moveUrl, params, token);
-		new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_DELETE).serialExecute();
+		HttpRequestBase httpMethod = KanboxHttp.doGet(moveUrl, params/*, token*/);
+		new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_DELETE, true).serialExecute();
 	}
 	
 	/**
@@ -108,8 +108,8 @@ public class Kanbox {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("path", path);
 	
-		HttpRequestBase httpMethod = KanboxHttp.doGet(moveUrl, params, token);
-		new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_MAKE_DIR).serialExecute();
+		HttpRequestBase httpMethod = KanboxHttp.doGet(moveUrl, params/*, token*/);
+		new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_MAKE_DIR, true).serialExecute();
 	}
 	
 	/**
@@ -127,8 +127,8 @@ public class Kanbox {
 			params.put(string);
 		}
 
-		HttpRequestBase httpMethod = KanboxHttp.doPost(makeShareDirUrl + path, params.toString(), token);
-		new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_MAKE_SHARE_DIR).serialExecute();
+		HttpRequestBase httpMethod = KanboxHttp.doPost(makeShareDirUrl + path, params.toString()/*, token*/);
+		new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_MAKE_SHARE_DIR, true).serialExecute();
 	}
 
 	/**
@@ -138,8 +138,8 @@ public class Kanbox {
 	 */
 	public void getShareInviteList(Token token, RequestListener listener) {
 		String getShareInviteUrl = "https://api.kanbox.com/0/pendingshares";
-		HttpRequestBase httpMethod = KanboxHttp.doGet(getShareInviteUrl, token);
-		new KanboxAsyncTask(null, null, httpMethod, listener, RequestListener.OP_GET_SHARE_INVITE_LIST).serialExecute();
+		HttpRequestBase httpMethod = KanboxHttp.doGet(getShareInviteUrl, null/*, token*/);
+		new KanboxAsyncTask(null, null, httpMethod, listener, RequestListener.OP_GET_SHARE_INVITE_LIST, true).serialExecute();
 	}
 
 	/**
@@ -161,8 +161,8 @@ public class Kanbox {
 		String strParams = params.toString();
 //		strParams.replaceAll("\\\\/", "/");
 		Log.e("test", strParams);
-		HttpRequestBase httpMethod = KanboxHttp.doPost(handleShareInviteUrl, strParams, token);
-		new KanboxAsyncTask(shareDir, null, httpMethod, listener, RequestListener.OP_HANDLE_SHARE_INVITE).serialExecute();
+		HttpRequestBase httpMethod = KanboxHttp.doPost(handleShareInviteUrl, strParams/*, token*/);
+		new KanboxAsyncTask(shareDir, null, httpMethod, listener, RequestListener.OP_HANDLE_SHARE_INVITE, true).serialExecute();
 	}
 
 	/**
@@ -171,8 +171,8 @@ public class Kanbox {
 	 */
 	public void checkSharedOwner(Token token, String path, RequestListener listener) {
 		String url = "https://api.kanbox.com/0/checkowner";
-		HttpRequestBase httpMethod = KanboxHttp.doGet(url + path, token);
-		new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_SHARED_BY_SELF).serialExecute();
+		HttpRequestBase httpMethod = KanboxHttp.doGet(url + path, null/*, token*/);
+		new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_SHARED_BY_SELF, true).serialExecute();
 	}
 
 	/**
@@ -185,9 +185,9 @@ public class Kanbox {
 	public KanboxAsyncTask download(String path, String destPath, Token token, RequestListener listener) {
 		String downloadUrl = "https://api.kanbox.com/0/download";
 
-		HttpRequestBase httpMethod = KanboxHttp.doGet(downloadUrl + path, token);
-		KanboxAsyncTask task = new KanboxAsyncTask(path, destPath, httpMethod, listener, RequestListener.OP_DOWNLOAD);
-        task.serialExecute();
+		HttpRequestBase httpMethod = KanboxHttp.doGet(downloadUrl + path, null/*, token*/);
+		KanboxAsyncTask task = new KanboxAsyncTask(path, destPath, httpMethod, listener, RequestListener.OP_DOWNLOAD, true);
+        task.execute();
         return task;
 	}
 
@@ -196,8 +196,8 @@ public class Kanbox {
         String thumbnailUrl = "https://api.kanbox.com/0/thumbnail";
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("size", "small");
-        HttpRequestBase httpMethod = KanboxHttp.doGet(thumbnailUrl + path, params, token);
-        new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_GET_THUMBNAIL).serialExecute();
+        HttpRequestBase httpMethod = KanboxHttp.doGet(thumbnailUrl + path, params/*, token*/);
+        new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_GET_THUMBNAIL, true).serialExecute();
     }
 
 	/**
@@ -211,11 +211,12 @@ public class Kanbox {
 	public KanboxAsyncTask upload(String localPath, String destPath, Token token, RequestListener listener) throws UnsupportedEncodingException {
 		String uploadUrl = "https://api-upload.kanbox.com/0/upload";
 		
-		HttpPost httpMethod = KanboxHttp.doPost(uploadUrl + destPath, null, token);
+		HttpPost httpMethod = KanboxHttp.doPost(uploadUrl + destPath, (String)null/*, token*/);
 //		InputStream is = new FileInputStream(localPath);
 //		httpMethod.setEntity(new KanboxAsyncTask.CountingInputStreamEntity(is, is.available()));
-        KanboxAsyncTask task = new KanboxAsyncTask(localPath, destPath, httpMethod, listener, RequestListener.OP_UPLOAD);
-        task.serialExecute();
+        KanboxAsyncTask task = new KanboxAsyncTask(localPath, destPath, httpMethod, listener, RequestListener.OP_UPLOAD, true);
+//        task.serialExecute();
+        task.execute();
         return task;
 	}
 }

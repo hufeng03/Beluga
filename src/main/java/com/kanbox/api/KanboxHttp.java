@@ -11,21 +11,21 @@ import java.util.Map;
 
 public class KanboxHttp {
 	
-	public static HttpGet doGet(String url) {
-		return doGet(url, null, null);
-	}
+//	public static HttpGet doGet(String url) {
+//		return doGet(url, null, null);
+//	}
+	
+//	@SuppressWarnings("rawtypes")
+//	public static HttpGet doGet(String url, Map params) {
+//		return doGet(url, params, null);
+//	}
+//
+//	public static HttpGet doGet(String url, Token token) {
+//		return doGet(url, null, token);
+//	}
 	
 	@SuppressWarnings("rawtypes")
-	public static HttpGet doGet(String url, Map params) {
-		return doGet(url, params, null);
-	}
-	
-	public static HttpGet doGet(String url, Token token) {
-		return doGet(url, null, token);
-	}
-	
-	@SuppressWarnings("rawtypes")
-	public static HttpGet doGet(String url, Map params, Token token) {
+	public static HttpGet doGet(String url, Map params/*, Token token*/) {
 		if(params != null && params.size() > 0) {
 			String paramStr = "";
 			Iterator iter = params.entrySet().iterator();
@@ -43,9 +43,9 @@ public class KanboxHttp {
 		}
 		
 		HttpGet httpRequest = new HttpGet(url);
-		if(token != null) {
-			httpRequest.setHeader("Authorization", "Bearer " + token.getAcceccToken());
-		}
+//		if(token != null) {
+//			httpRequest.setHeader("Authorization", "Bearer " + token.getAcceccToken());
+//		}
 		return httpRequest;
 	}
 	
@@ -67,14 +67,14 @@ public class KanboxHttp {
 				paramStr = paramStr.substring(1);
 			}
 		}
-		return doPost(url, paramStr, null);
+		return doPost(url, paramStr);
 	}
 	
-	public static HttpPost doPost(String url, String params) throws UnsupportedEncodingException {
-		return doPost(url, params, null);
-	}
+//	public static HttpPost doPost(String url, String params) throws UnsupportedEncodingException {
+//		return doPost(url, params, null);
+//	}
 	
-	public static HttpPost doPost(String url, String params, Token token) throws UnsupportedEncodingException {
+	public static HttpPost doPost(String url, String params/*, Token token*/) throws UnsupportedEncodingException {
 		HttpPost httpRequest = new HttpPost(url);
 		httpRequest.setHeader("Content-Type", "application/x-www-form-urlencoded");
 		
@@ -82,9 +82,9 @@ public class KanboxHttp {
 			httpRequest.setEntity(new StringEntity(params, HTTP.UTF_8));
 		}
 		
-		if(token != null) {
+		/*if(token != null) {
 			httpRequest.setHeader("Authorization", "Bearer " + token.getAcceccToken());
-		}
+		}*/
 		return httpRequest;
 	}
 	

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.resource.FileDownloader;
+import com.kanbox.api.Token;
 
 import java.io.File;
 import java.util.List;
@@ -56,6 +58,7 @@ public class KanBoxTabFragment extends FileTabFragment implements
         mBrowserFragment = null;
         mUploadFragment = null;
         mFileGrouperFragment = null;
+        mCurrentChildFragment = null;
     }
 
     @Override
@@ -79,18 +82,27 @@ public class KanBoxTabFragment extends FileTabFragment implements
         ad_ok.setOnClickListener(this);
         ad_close.setOnClickListener(this);
         mAdLayout.setVisibility(View.GONE);
-        KanBoxApi.TOKEN_STATUS token = KanBoxApi.getInstance().getTokenStatus();
-        switch (token) {
-            case VALID:
-                showKanBoxBrowserFragment();
-                break;
-            case OBSOLETE:
-                showKanBoxAuthFragment();
-                break;
-            case NONE:
-                showKanBoxIntroFragment();
-                break;
+//        KanBoxApi.TOKEN_STATUS token = KanBoxApi.getInstance().getTokenStatus();
+//        switch (token) {
+//            case VALID:
+//                showKanBoxBrowserFragment();
+//                break;
+//            case OBSOLETE:
+//                showKanBoxAuthFragment();
+//                break;
+//            case NONE:
+//                showKanBoxIntroFragment();
+//                break;
+//        }
+
+        if (TextUtils.isEmpty(Token.getInstance().getAccessToken())) {
+            showKanBoxIntroFragment();
+        } else if (Token.getInstance().isExpired()){
+            showKanBoxAuthFragment();
+        } else {
+            showKanBoxBrowserFragment();
         }
+
         FileDownloader.addFileDownloaderListener(this);
     }
 
@@ -121,7 +133,7 @@ public class KanBoxTabFragment extends FileTabFragment implements
         if (super.onBackPressed()) {
             return true;
         }
-        if (mFileGrouperFragment != null && mUploadFragment != null) {
+        if (mFileGrouperFragment != null || mUploadFragment != null) {
             showKanBoxBrowserFragment();
             return true;
         } else if (mAuthFragment != null) {
@@ -200,7 +212,6 @@ public class KanBoxTabFragment extends FileTabFragment implements
         ft.commit();
         clearFragmentInstance();
         mIntroFragment = fragment;
-        mCurrentChildFragment = null;
     }
 
     private void showKanBoxAuthFragment() {
@@ -221,7 +232,6 @@ public class KanBoxTabFragment extends FileTabFragment implements
         ft.commit();
         clearFragmentInstance();
         mAuthFragment = fragment;
-        mCurrentChildFragment = null;
     }
 
 

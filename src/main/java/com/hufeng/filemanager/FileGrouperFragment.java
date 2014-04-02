@@ -216,6 +216,7 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
 
     @Override
     public void onGridItemClick(GridView g, View v, int position, long id) {
+        super.onGridItemClick(g,v,position,id);
         if (mWeakListener != null) {
             FileGrouperFragmentListener listener = mWeakListener.get();
             if (listener != null) {
@@ -230,6 +231,7 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
 
     @Override
     public void onGridItemSelect(GridView g, View v, int position, long id) {
+        super.onGridItemSelect(g,v,position,id);
         if (mWeakListener != null) {
             FileGrouperFragmentListener listener = mWeakListener.get();
             if (listener != null) {

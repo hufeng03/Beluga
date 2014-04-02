@@ -38,8 +38,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
     private FileArrayAdapter mAdapter;
 
-//    private BROWSER_TYPE mBrowserType = BROWSER_TYPE.DEVICE;
-    private String mRootDir; //if mBrowserType == BROWSER_TYPE.DEVICE
+    private String mRootDir;
     private boolean mWorkWithTree;
     private String mSelectedDir = null;
     private int mSelectedPostion = -1;
@@ -255,6 +254,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
     @Override
     public void onGridItemClick(GridView g, View v, int position, long id) {
+        super.onGridItemSelect(g,v,position,id);
         FileEntry entry = (FileEntry)g.getAdapter().getItem(position);
         Log.i(LOG_TAG, "onItemClick " + entry.toString());
 
@@ -269,6 +269,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
     @Override
     public void onGridItemSelect(GridView g, View v, int position, long id) {
+        super.onGridItemSelect(g,v,position,id);
         FileEntry entry = (FileEntry)g.getAdapter().getItem(position);
         Log.i(LOG_TAG, "onItemSelect " + entry.toString());
 

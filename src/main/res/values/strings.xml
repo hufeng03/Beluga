@@ -610,7 +610,8 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="upload_success">%s upload success</string>
 <string name="upload_failed">%s upload failed</string>
 <string name="kanbox_refresh_token_start">refreshing access token ...</string>
-<string name="kanbox_get_auth_start">getting authorization code ...</string>
+<string name="kanbox_get_auth_start">getting authorization token ...</string>
+<string name="kanbox_load_auth_page">loading authorization page ...</string>
 <string name="kanbox_refresh_token_failed">refresh access token failed!</string>
 <string name="kanbox_get_auth_failed">get authorization code failed!</string>
 <string name="kanbox_refresh_token_success">refresh access token success!</string>
@@ -619,6 +620,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="downloading_kanbox_android_client">Kanbox client app is downloading: %1$d%%</string>
 <string name="install_kanbox_android_client">Kanbox apk is ready to be installed</string>
 <string name="kanbox_uploading_files">Kanbox is uploading %1$d files</string>
+<string name="kanbox_uploading_empty">No uploading files</string>
 <string name="logout_dialog_info_content">Logout cloud service?</string>
 <string name="kanbox_intro_name">Kanbox</string>
 <string name="kanbox_intro_enter">Enter Kanbox</string>

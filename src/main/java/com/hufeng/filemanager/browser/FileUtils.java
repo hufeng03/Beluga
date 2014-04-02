@@ -167,6 +167,7 @@ public class FileUtils {
 	        FileManager.setCategoryMatch(".rm", FileUtils.FILE_TYPE_VIDEO);
 	        FileManager.setCategoryMatch(".wmv", FileUtils.FILE_TYPE_VIDEO);
 	        FileManager.setCategoryMatch(".xv", FileUtils.FILE_TYPE_VIDEO);
+            FileManager.setCategoryMatch(".flv", FileUtils.FILE_TYPE_VIDEO);
 
 	        FileManager.setCategoryMatch(".m3u", FileUtils.FILE_TYPE_AUDIO);
 	        FileManager.setCategoryMatch(".m4a", FileUtils.FILE_TYPE_AUDIO);
@@ -185,6 +186,7 @@ public class FileUtils {
 	        FileManager.setCategoryMatch(".imy", FileUtils.FILE_TYPE_AUDIO);
 	        FileManager.setCategoryMatch(".mmf", FileUtils.FILE_TYPE_AUDIO);
 	        FileManager.setCategoryMatch(".3gpp", FileUtils.FILE_TYPE_AUDIO);
+            FileManager.setCategoryMatch(".awb", FileUtils.FILE_TYPE_AUDIO);
 
 	        FileManager.setCategoryMatch(".apk", FileUtils.FILE_TYPE_APK);
 
@@ -195,6 +197,10 @@ public class FileUtils {
 	        FileManager.setCategoryMatch(".png", FileUtils.FILE_TYPE_IMAGE);
 	        FileManager.setCategoryMatch(".tif", FileUtils.FILE_TYPE_IMAGE);
 	        FileManager.setCategoryMatch(".mpo", FileUtils.FILE_TYPE_IMAGE);
+            FileManager.setCategoryMatch(".wbmp", FileUtils.FILE_TYPE_IMAGE);
+            FileManager.setCategoryMatch(".pcx", FileUtils.FILE_TYPE_IMAGE);
+            FileManager.setCategoryMatch(".tga", FileUtils.FILE_TYPE_IMAGE);
+            FileManager.setCategoryMatch(".wmf", FileUtils.FILE_TYPE_IMAGE);
 	        
 	        FileManager.setCategoryMatch(".txt", FileUtils.FILE_TYPE_DOCUMENT);
 	        FileManager.setCategoryMatch(".epub", FileUtils.FILE_TYPE_DOCUMENT);

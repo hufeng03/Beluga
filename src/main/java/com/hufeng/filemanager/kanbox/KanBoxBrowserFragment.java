@@ -156,8 +156,8 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
 
     @Override
     public void onGridItemClick(GridView g, View v, int position, long id) {
-        clickGridItem(position);
         super.onGridItemClick(g, v, position, id);
+        clickGridItem(position);
     }
 
     @Override
@@ -536,7 +536,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
         switch(dialog_id) {
             case FmDialogFragment.CLOUD_LOGOUT_DIALOG:
                 FileManager.getAppContext().getContentResolver().delete(DataStructures.CloudBoxColumns.CONTENT_URI, null, null);
-                KanBoxApi.getInstance().clearToken();
+                KanBoxApi.getInstance().logOut();
                 if (mListener != null) {
                     KanBoxBrowserListener listener = mListener.get();
                     if (listener != null) {

@@ -73,7 +73,7 @@ public class KanboxIconDownloader extends AsyncTask<Void, Void, byte[]> {
         HttpGet httpRequest = new HttpGet(thumbnailUrl.toString());
         Token token = Token.getInstance();
         if(token != null) {
-            httpRequest.setHeader("Authorization", "Bearer " + token.getAcceccToken());
+            httpRequest.setHeader("Authorization", "Bearer " + token.getAccessToken());
         }
 
 

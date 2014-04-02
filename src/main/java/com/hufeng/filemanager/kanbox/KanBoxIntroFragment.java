@@ -1,6 +1,7 @@
 package com.hufeng.filemanager.kanbox;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.hufeng.filemanager.BaseFragment;
 import com.hufeng.filemanager.R;
+import com.kanbox.api.Token;
 
 import java.lang.ref.WeakReference;
 
@@ -46,17 +48,12 @@ public class KanBoxIntroFragment extends BaseFragment implements View.OnClickLis
 //            mStartButton.setText("登录酷盘账号");
 //            mStartTip.setVisibility(View.VISIBLE);
 //        }
-        KanBoxApi.TOKEN_STATUS token = KanBoxApi.getInstance().getTokenStatus();
-        switch (token) {
-            case VALID:
-            case OBSOLETE:
-                mStartButton.setText(R.string.kanbox_intro_enter);
-                mStartTip.setVisibility(View.GONE);
-                break;
-            case NONE:
-                mStartButton.setText(R.string.kanbox_intro_login);
-                mStartTip.setVisibility(View.VISIBLE);
-                break;
+        if (TextUtils.isEmpty(Token.getInstance().getAccessToken())) {
+            mStartButton.setText(R.string.kanbox_intro_enter);
+            mStartTip.setVisibility(View.GONE);
+        } else {
+            mStartButton.setText(R.string.kanbox_intro_login);
+            mStartTip.setVisibility(View.VISIBLE);
         }
     }
 

@@ -59,4 +59,14 @@ public class ServiceUiHelper {
         }
     }
 
+    public void storageChanged() {
+        if (mIUi != null) {
+            try {
+                mIUi.storageChanged();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

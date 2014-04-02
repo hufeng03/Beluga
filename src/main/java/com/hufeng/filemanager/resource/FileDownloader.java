@@ -14,6 +14,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by feng on 13-9-27.
@@ -30,7 +31,7 @@ public class FileDownloader extends AsyncTask<String, Integer, String>{
 
     private static ArrayList<String> mDownloadingUrl = new ArrayList<String>();
     private static HashMap<String, FileDownloader> mDownloadingTask = new HashMap<String, FileDownloader>();
-    private static ArrayList<WeakReference<FileDownloaderListener>> mWeakListeners = new ArrayList<WeakReference<FileDownloaderListener>>();
+    private static ConcurrentLinkedQueue<WeakReference<FileDownloaderListener>> mWeakListeners = new ConcurrentLinkedQueue<WeakReference<FileDownloaderListener>>();
 
     private static HashMap<String, Integer> mDownloadProgress = new HashMap<String, Integer>();
 

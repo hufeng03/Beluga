@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -43,6 +42,8 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
 	private String mDestPath;
     private String mPath;
     private boolean pauseRequested = false;
+//    private Token mToken;
+    private boolean mNeedAccessToken;
 
     public String getPath () {
         return mPath;
@@ -58,38 +59,50 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
 	 * @param listener
 	 * @param opType
 	 */
-	public KanboxAsyncTask(String path, String destPath, HttpRequestBase httpRequest, RequestListener listener, int opType) {
+	public KanboxAsyncTask(String path, String destPath, HttpRequestBase httpRequest, RequestListener listener, int opType, boolean need_token) {
 	    mPath = path;
         mDestPath = destPath;
 		mHttpRequest = httpRequest;
 		mRequestListener = listener;
 		mOpType = opType;
+        mNeedAccessToken = need_token;
 	}
 
 	@Override
 	protected String doInBackground(String... params) {
 		HttpClient sHttpClient = createHttpClient();
 		try {
-            if (mOpType == RequestListener.OP_UPLOAD) {
-                InputStream is = new FileInputStream(mPath);
-                ((HttpPost)mHttpRequest).setEntity(new CountingInputStreamEntity(is, is.available()));
+            if (mOpType == RequestListener.OP_GET_TOKEN) {
+                return Token.getInstance().getToken(sHttpClient);
+            } if (mOpType == RequestListener.OP_REFRESH_TOKEN) {
+                return Token.getInstance().refreshToken(sHttpClient);
+            } else {
+                String token_result = Token.getInstance().refreshTokenIfExpired(sHttpClient);
+                String access_token = Token.getInstance().getAccessToken();
+                if (mNeedAccessToken) {
+                    mHttpRequest.setHeader("Authorization", "Bearer " + access_token);
+                }
+                if (mOpType == RequestListener.OP_UPLOAD) {
+                    InputStream is = new FileInputStream(mPath);
+                    ((HttpPost) mHttpRequest).setEntity(new CountingInputStreamEntity(is, is.available()));
+                }
+                HttpResponse sHttpResponse = sHttpClient.execute(mHttpRequest);
+                int statusCode = sHttpResponse.getStatusLine().getStatusCode();
+                if (statusCode == 200) {
+                    switch (mOpType) {
+                        case RequestListener.OP_GET_THUMBNAIL:
+                            return downloadingThumbnail(sHttpResponse.getEntity());
+                        case RequestListener.OP_DOWNLOAD:
+                            return downloading(sHttpResponse.getEntity());
+                        default:
+                            String strResult = EntityUtils.toString(sHttpResponse.getEntity());
+                            return strResult;
+                    }
+                } else {
+                    mException = new KanboxException(statusCode);
+                    return "error";
+                }
             }
-			HttpResponse sHttpResponse = sHttpClient.execute(mHttpRequest);
-			int statusCode = sHttpResponse.getStatusLine().getStatusCode();
-			if (statusCode == 200) {
-				switch (mOpType) {
-                case RequestListener.OP_GET_THUMBNAIL:
-                    return downloadingThumbnail(sHttpResponse.getEntity());
-				case RequestListener.OP_DOWNLOAD:
-					return downloading(sHttpResponse.getEntity());
-				default:
-					String strResult = EntityUtils.toString(sHttpResponse.getEntity());
-					return strResult;
-				}
-			} else {
-				mException = new KanboxException(statusCode);
-				return "error";
-			}
 		} catch (ClientProtocolException e) {
 			mException = new KanboxException(e);
 			return "error";
@@ -106,7 +119,6 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		super.onPostExecute(result);
-		Log.e("test", result + "...");
         if(mRequestListener!=null) {
             if(result == null || result.equals("error")) {
                 mRequestListener.onError(mPath, mException, mOpType);

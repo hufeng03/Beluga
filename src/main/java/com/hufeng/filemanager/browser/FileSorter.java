@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.File;
 import java.text.Collator;
@@ -265,15 +264,30 @@ public class FileSorter {
     public static final Comparator<File> FILE_COMPARATOR_NAME_DESC = new Comparator<File>() {
         @Override
         public int compare(File lhs, File rhs) {
-            return sCollator.compare(rhs.getName(), lhs.getName());
+            String lhs_name = lhs.getName();
+            String rhs_name = rhs.getName();
+            if(lhs_name.startsWith(".") && !rhs_name.startsWith(".")){
+                return 1;
+            }else if(rhs_name.startsWith(".") && !lhs_name.startsWith(".")) {
+                return -1;
+            } else {
+                return sCollator.compare(rhs_name, lhs_name);
+            }
         }
     };
 	
 	public static final Comparator<FileEntry> COMPARATOR_NAME_ASC = new Comparator<FileEntry>() {
 		@Override
 		public int compare(FileEntry lhs, FileEntry rhs) {
-            Log.i(TAG, "comparing " + lhs + ", " + rhs);
-            return sCollator.compare(lhs.getName(), rhs.getName());
+            String lhs_name = lhs.getName();
+            String rhs_name = rhs.getName();
+            if(lhs_name.startsWith(".") && !rhs_name.startsWith(".")){
+                return 1;
+            }else if(rhs_name.startsWith(".") && !lhs_name.startsWith(".")) {
+                return -1;
+            } else {
+                return sCollator.compare(lhs_name, rhs_name);
+            }
 	    }
 	};
 
@@ -463,12 +477,18 @@ public class FileSorter {
         } else if(rhs_directory){
             result = -1;
         } else {
-            if(TextUtils.isEmpty(lhs_extension) && !TextUtils.isEmpty(rhs_extension)){
-                result = -1;
-            }else if(TextUtils.isEmpty(rhs_extension) && !TextUtils.isEmpty(lhs_extension)){
+            if(lhs_name.startsWith(".") && !rhs_name.startsWith(".")){
                 result = 1;
-            }else{
-                result = lhs_extension.compareTo(rhs_extension);
+            }else if(rhs_name.startsWith(".") && !lhs_name.startsWith(".")){
+                result = -1;
+            }else {
+                if (TextUtils.isEmpty(lhs_extension) && !TextUtils.isEmpty(rhs_extension)) {
+                    result = -1;
+                } else if (TextUtils.isEmpty(rhs_extension) && !TextUtils.isEmpty(lhs_extension)) {
+                    result = 1;
+                } else {
+                    result = lhs_extension.compareTo(rhs_extension);
+                }
             }
         }
         return result;
@@ -492,12 +512,18 @@ public class FileSorter {
         } else if(rhs_directory){
             return -1;
         } else {
-            if(TextUtils.isEmpty(lhs_extension) && !TextUtils.isEmpty(rhs_extension)){
+            if(lhs_name.startsWith(".") && !rhs_name.startsWith(".")){
                 return 1;
-            }else if(TextUtils.isEmpty(rhs_extension) && !TextUtils.isEmpty(lhs_extension)){
+            }else if(rhs_name.startsWith(".") && !lhs_name.startsWith(".")){
                 return -1;
-            }else{
-                return (0-lhs_extension.compareTo(rhs_extension));
+            }else {
+                if (TextUtils.isEmpty(lhs_extension) && !TextUtils.isEmpty(rhs_extension)) {
+                    return 1;
+                } else if (TextUtils.isEmpty(rhs_extension) && !TextUtils.isEmpty(lhs_extension)) {
+                    return -1;
+                } else {
+                    return (0 - lhs_extension.compareTo(rhs_extension));
+                }
             }
         }
     }

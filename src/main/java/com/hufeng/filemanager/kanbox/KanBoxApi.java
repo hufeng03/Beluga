@@ -11,13 +11,11 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import com.hufeng.filemanager.BuildConfig;
-import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.utils.LogUtil;
-import com.hufeng.filemanager.utils.TimeUtil;
 import com.kanbox.api.Kanbox;
 import com.kanbox.api.KanboxAsyncTask;
 import com.kanbox.api.KanboxException;
@@ -26,19 +24,10 @@ import com.kanbox.api.PushSharePreference;
 import com.kanbox.api.RequestListener;
 import com.kanbox.api.Token;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
@@ -80,65 +69,53 @@ public class KanBoxApi implements RequestListener{
         return instance;
     }
 
-    public enum TOKEN_STATUS {
-        VALID, OBSOLETE, NONE;
-    }
-
-    public void getToken(String code) {
+    public void getToken() {
         try {
-            Token.getInstance().getToken(Constants.CLIENT_ID, Constants.CLIENT_SECRET, code, KanBoxConfig.GET_TOKEN_REDIRECT_URI, this);
+            Token.getInstance().getToken(this);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
 
-    public void clearToken() {
+    public void logOut() {
         PushSharePreference sPreference = new PushSharePreference(FileManager.getAppContext(), PUSH_SHAREPREFERENCE_NAME);
         sPreference.clear();
-        Token.clear();
+        Token.getInstance().clear();
         CookieSyncManager.createInstance(FileManager.getAppContext());
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
     }
 
-    public void saveToken(Token token) {
-        PushSharePreference sPreference = new PushSharePreference(FileManager.getAppContext(), PUSH_SHAREPREFERENCE_NAME);
-        sPreference.saveStringValueToSharePreferences("accecc_token", token.getAcceccToken());
-        sPreference.saveStringValueToSharePreferences("refresh_token", token.getRefreshToken());
-        Log.i(TAG, "save token expires "+ TimeUtil.getDateString(token.getExpiresTill())+"|"+token.getExpires());
-        sPreference.saveLongValueToSharePreferences("expriesTill", token.getExpiresTill());
-        sPreference.saveLongValueToSharePreferences("expries", token.getExpires());
-    }
 
-    public TOKEN_STATUS getTokenStatus() {
-        if(!TextUtils.isEmpty(Token.getInstance().getAcceccToken()) && !TextUtils.isEmpty(Token.getInstance().getRefreshToken())) {
-            long expirestill = Token.getInstance().getExpiresTill();
-            long current = System.currentTimeMillis();
-            if(current<expirestill) {
-                return TOKEN_STATUS.VALID;
-            } else {
-                return TOKEN_STATUS.OBSOLETE;
-            }
-        } else {
-            PushSharePreference sPreference = new PushSharePreference(FileManager.getAppContext(), PUSH_SHAREPREFERENCE_NAME);
-            if(sPreference.contains("accecc_token") && sPreference.contains("refresh_token")){
-                long current = System.currentTimeMillis();
-                long expiresTill = sPreference.getLongValueByKey("expriesTill");
-                Token.getInstance().setAcceccToken(sPreference.getStringValueByKey("accecc_token"));
-                Token.getInstance().setRefreshToken(sPreference.getStringValueByKey("refresh_token"));
-                Token.getInstance().setExpires(sPreference.getLongValueByKey("expries"));
-                Token.getInstance().setExpiresTill(expiresTill);
-                Log.i(TAG, "token expires at " + TimeUtil.getDateString(expiresTill) + ", current is " + TimeUtil.getDateString(current));
-                if(current<expiresTill) {
-                    return TOKEN_STATUS.VALID;
-                } else {
-                    return TOKEN_STATUS.OBSOLETE;
-                }
-            } else {
-                return TOKEN_STATUS.NONE;
-            }
-        }
-    }
+//    public TOKEN_STATUS getTokenStatus() {
+//        if(!TextUtils.isEmpty(Token.getInstance().getAcceccToken()) && !TextUtils.isEmpty(Token.getInstance().getRefreshToken())) {
+//            long expirestill = Token.getInstance().getExpiresTill();
+//            long current = System.currentTimeMillis();
+//            if(current<expirestill) {
+//                return TOKEN_STATUS.VALID;
+//            } else {
+//                return TOKEN_STATUS.OBSOLETE;
+//            }
+//        } else {
+//            PushSharePreference sPreference = new PushSharePreference(FileManager.getAppContext(), PUSH_SHAREPREFERENCE_NAME);
+//            if(sPreference.contains("accecc_token") && sPreference.contains("refresh_token")){
+//                long current = System.currentTimeMillis();
+//                long expiresTill = sPreference.getLongValueByKey("expriesTill");
+//                Token.getInstance().setAcceccToken(sPreference.getStringValueByKey("accecc_token"));
+//                Token.getInstance().setRefreshToken(sPreference.getStringValueByKey("refresh_token"));
+//                Token.getInstance().setExpires(sPreference.getLongValueByKey("expries"));
+//                Token.getInstance().setExpiresTill(expiresTill);
+//                Log.i(TAG, "token expires at " + TimeUtil.getDateString(expiresTill) + ", current is " + TimeUtil.getDateString(current));
+//                if(current<expiresTill) {
+//                    return TOKEN_STATUS.VALID;
+//                } else {
+//                    return TOKEN_STATUS.OBSOLETE;
+//                }
+//            } else {
+//                return TOKEN_STATUS.NONE;
+//            }
+//        }
+//    }
 
     public interface KanBoxApiListener {
         public void onKanBoxApiSuccess(int op_type, String path, String response);
@@ -207,15 +184,16 @@ public class KanBoxApi implements RequestListener{
                 }
                 sPreference.removeSharePreferences(path);
                 break;
-            case OP_GET_TOKEN:
-            case OP_REFRESH_TOKEN:
-                try {
-                    Token.getInstance().parseToken(response);
-                    KanBoxApi.getInstance().saveToken(Token.getInstance());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                break;
+//            case OP_GET_TOKEN:
+//            case OP_REFRESH_TOKEN:
+//                try {
+//                    Log.i(TAG, "token return "+response);
+//                    Token.getInstance().parseToken(response);
+//                    KanBoxApi.getInstance().saveToken(Token.getInstance());
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//                break;
             case OP_GET_ACCCOUNT_INFO:
                 break;
             case OP_GET_FILELIST:
@@ -300,9 +278,6 @@ public class KanBoxApi implements RequestListener{
             case OP_GET_ACCCOUNT_INFO:
                 break;
             case OP_GET_FILELIST:
-                if(getTokenStatus()== KanBoxApi.TOKEN_STATUS.OBSOLETE) {
-                    refreshToken();
-                }
                 break;
             case OP_REFRESH_TOKEN:
                 break;
@@ -357,7 +332,7 @@ public class KanBoxApi implements RequestListener{
 
     public void refreshToken() {
         try {
-            Token.getInstance().refreshToken(Constants.CLIENT_ID, Constants.CLIENT_SECRET, this);
+            Token.getInstance().refreshToken(this);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
 //            Toast.makeText(getActivity(), "操作失败\n\n" + e.toString(), Toast.LENGTH_LONG).show();
@@ -385,12 +360,12 @@ public class KanBoxApi implements RequestListener{
         }
         HttpRequestBase httpMethod = null;
         if(!"/".equals(path)) {
-            httpMethod = KanboxHttp.doGet(getFileListUrl + path.substring(0,path.length()-1), params, token);
+            httpMethod = KanboxHttp.doGet(getFileListUrl + path.substring(0,path.length()-1), params/*, token*/);
         } else {
-            httpMethod = KanboxHttp.doGet(getFileListUrl + path, params, token);
+            httpMethod = KanboxHttp.doGet(getFileListUrl + path, params/*, token*/);
         }
 
-        new KanboxAsyncTask(null, null, httpMethod, this, RequestListener.OP_GET_FILELIST).serialExecute();
+        new KanboxAsyncTask(null, null, httpMethod, this, RequestListener.OP_GET_FILELIST, true).serialExecute();
     }
 
     public void makeDir(String new_dir) {
@@ -554,59 +529,5 @@ public class KanBoxApi implements RequestListener{
         }
     }
 
-    public boolean uploadFileSynchronized(String localPath, String root, Token token) {
-        String uploadUrl = "https://api-upload.kanbox.com/0/upload";
-        HttpPost httpMethod = null;
-        String name = new File(localPath).getName();
-        try {
-            name = URLEncoder.encode(name, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        String destPath = new File(root, name).getAbsolutePath();
-        InputStream is = null;
-        try {
-            httpMethod = KanboxHttp.doPost(uploadUrl + destPath, null, token);
-            is = new FileInputStream(localPath);
-            httpMethod.setEntity(new InputStreamEntity(is, is.available()));
-            HttpClient sHttpClient = KanboxAsyncTask.createHttpClient();
-            HttpResponse sHttpResponse = sHttpClient.execute(httpMethod);
-            int statusCode = sHttpResponse.getStatusLine().getStatusCode();
-            if (statusCode == 200) {
-                String strResult = EntityUtils.toString(sHttpResponse.getEntity());
-                KanBoxFileEntry entry = new KanBoxFileEntry(localPath);
-                entry.path = destPath;
-                entry.parent_path = root;
-                entry.local_file_path = localPath;
-                entry.is_directory = false;
-                ContentValues cv = KanBoxResponseHandler.buildFullContentValueFromKanBoxFileEntry(entry);
-                Uri uri = FileManager.getAppContext().getContentResolver().insert(DataStructures.CloudBoxColumns.CONTENT_URI, cv);
-                return true;
-            } else {
-                LogUtil.i(TAG, "Kanbox upload return "+statusCode);
-                //mException = new KanboxException(statusCode);
-                return false;
-            }
-        } catch (ClientProtocolException e) {
-            //mException = new KanboxException(e);
-            e.printStackTrace();
-            return false;
-        } catch (IOException e) {
-            //mException = new KanboxException(e);
-            e.printStackTrace();
-            return false;
-        } catch (Exception e){
-            e.printStackTrace();
-            return false;
-        } finally {
-            if(is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-//        new KanboxAsyncTask(destPath, httpMethod, listener, RequestListener.OP_UPLOAD).execute();
-    }
+
 }

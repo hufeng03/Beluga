@@ -2,6 +2,8 @@ package com.hufeng.filemanager.services;
 
 import android.os.RemoteException;
 
+import com.hufeng.filemanager.storage.StorageManager;
+
 import java.util.ArrayList;
 
 /**
@@ -46,5 +48,10 @@ public class IUiImpl extends IUi.Stub {
         for (UiCallback callback : mCallbacks) {
             callback.changeMonitored(dir);
         }
+    }
+
+    @Override
+    public void storageChanged() throws RemoteException {
+        StorageManager.clear();
     }
 }

@@ -1,8 +1,7 @@
-package com.hufeng.filemanager.data;
+package com.hufeng.filemanager.services;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.FileObserver;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -13,8 +12,6 @@ import android.util.Log;
 
 import com.hufeng.filemanager.BuildConfig;
 import com.hufeng.filemanager.browser.FileAction;
-import com.hufeng.filemanager.services.ServiceUiHelper;
-import com.hufeng.filemanager.storage.StorageManager;
 
 import java.io.File;
 import java.util.Iterator;
@@ -34,7 +31,7 @@ public class ImportantDirectoryMonitor {
 
     private MyHandler mHandler;
 
-    private static class MyHandler extends Handler{
+    private class MyHandler extends Handler{
 
         public MyHandler(Looper looper) {
             super(looper);
@@ -42,7 +39,9 @@ public class ImportantDirectoryMonitor {
 
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == 1) {
+            if (msg.what == 0) {
+                init();
+            } else if (msg.what == 1) {
                 String path = msg.getData().getString("path");
                 if (!TextUtils.isEmpty(path)) {
                     FileAction.scanSinglePath(path);
@@ -53,43 +52,6 @@ public class ImportantDirectoryMonitor {
     }
 
 
-    private static final String[] IMPORTANT_DIRECTORY = {
-            Environment.DIRECTORY_DCIM,
-            Environment.DIRECTORY_ALARMS,
-            Environment.DIRECTORY_DOWNLOADS,
-            Environment.DIRECTORY_MOVIES,
-            Environment.DIRECTORY_MUSIC,
-            Environment.DIRECTORY_NOTIFICATIONS,
-            Environment.DIRECTORY_PODCASTS,
-            Environment.DIRECTORY_RINGTONES,
-            Environment.DIRECTORY_PICTURES,
-            "Documents"
-    };
-
-    private void addImportantDir(String stor) {
-        for(String dir:IMPORTANT_DIRECTORY) {
-            if (new File(stor, dir).exists() && new File(stor, dir).isDirectory()) {
-                addSelfAndChildren(new File(stor, dir).getAbsolutePath());
-            }
-        }
-    }
-
-    private void addSelfAndChildren(String path){
-        SingleDirectoryObserver observer = new SingleDirectoryObserver(path);
-        mPersistentObservers.put(path, observer);
-        observer.startWatching();
-
-        File[] childs = new File(path).listFiles();
-        if (childs != null) {
-            for (File child : childs) {
-                if (child.isDirectory()) {
-                    observer = new SingleDirectoryObserver(child.getAbsolutePath());
-                    mPersistentObservers.put(child.getAbsolutePath(), observer);
-                    observer.startWatching();
-                }
-            }
-        }
-    }
 
     public ImportantDirectoryMonitor() {
         HandlerThread thread = new HandlerThread("ImportantDirectoryMonitor");
@@ -138,18 +100,22 @@ public class ImportantDirectoryMonitor {
         }
     }
 
-    public void init(Context context) {
-        String[] stors = StorageManager.getInstance(context).getMountedStorages();
-        if (stors != null) {
-            for (String stor : stors) {
-                SingleDirectoryObserver observer = new SingleDirectoryObserver(stor);
-                mPersistentObservers.put(stor, observer);
+    public void init() {
+        mPersistentObservers.clear();
+        String[] dirs = ServiceUtil.getAllImportantDirectory();
+        for(String dir : dirs) {
+            if (!mPersistentObservers.containsKey(dir)) {
+                SingleDirectoryObserver observer = new SingleDirectoryObserver(dir);
+                mPersistentObservers.put(dir, observer);
                 observer.startWatching();
-
-                addImportantDir(stor);
             }
         }
+    }
 
+    public void refresh(Context context) {
+        if(mHandler.hasMessages(0))
+            mHandler.removeMessages(0);
+        mHandler.sendEmptyMessageDelayed(0,3000);
     }
 
     public void destroy() {

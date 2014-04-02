@@ -28,6 +28,10 @@ public class StorageManager {
 	public ArrayList<StorageUnit> mStorageUnits = new ArrayList<StorageUnit>();
 	
 	private static StorageManager instance;
+
+    private StorageManager() {
+
+    }
 	
 	/**
 	 * 

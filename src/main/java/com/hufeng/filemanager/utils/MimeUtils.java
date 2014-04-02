@@ -19,6 +19,8 @@
 
 package com.hufeng.filemanager.utils;
 
+import android.text.TextUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,8 +28,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import android.text.TextUtils;
 
 /**
  * Utilities for dealing with MIME types.
@@ -209,6 +209,7 @@ public final class MimeUtils {
         add("application/xhtml+xml", "xhtml");
         add("audio/3gpp", "3gpp");
         add("audio/amr", "amr");
+        add("audio/awb", "awb");
         add("audio/aac", "aac");
         add("audio/basic", "snd");
         add("audio/midi", "mid");
@@ -266,7 +267,6 @@ public final class MimeUtils {
         add("image/x-icon", "ico");
         add("image/x-jg", "art");
         add("image/x-jng", "jng");
-        add("image/x-ms-bmp", "bmp");
         add("image/x-photoshop", "psd");
         add("image/x-portable-anymap", "pnm");
         add("image/x-portable-bitmap", "pbm");

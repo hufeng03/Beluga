@@ -6,7 +6,6 @@ import android.net.http.SslError;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +27,7 @@ import com.hufeng.filemanager.BaseFragment;
 import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.kanbox.view.KanBoxLoginWebView;
+import com.kanbox.api.Token;
 
 import java.lang.ref.WeakReference;
 
@@ -37,12 +38,13 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
 
     private static final String TAG = KanBoxAuthFragment.class.getSimpleName();
 
-    private LinearLayout mProgressLayout;
+    private RelativeLayout mProgressLayout;
     private LinearLayout mWebLayout;
     private ProgressBar mProgressBar;
     private TextView mProgressText;
+    private TextView mProgressNumber;
     private KanBoxLoginWebView mWebView;
-    private ProgressBar mWebLoadingProgressBar;
+//    private ProgressBar mWebLoadingProgressBar;
 
     WeakReference<KanBoxAuthFragmentListener> mWeakListener;
 
@@ -67,19 +69,28 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
 
         FrameLayout root = new FrameLayout(context);
 
-        mProgressLayout = new LinearLayout(context);
-        mProgressLayout.setOrientation(LinearLayout.VERTICAL);
-        mProgressLayout.setVisibility(View.GONE);
-        mProgressLayout.setGravity(Gravity.CENTER);
+        mProgressLayout = new RelativeLayout(context);
 
         mProgressBar = new ProgressBar(context, null,
                 android.R.attr.progressBarStyleLarge);
+        mProgressBar.setId(1);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        mProgressLayout.addView(mProgressBar, params);
+
         mProgressText = new TextView(getActivity());
-        mProgressText.setGravity(Gravity.CENTER);
-        mProgressLayout.addView(mProgressBar, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        mProgressLayout.addView(mProgressText, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params2.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        params2.addRule(RelativeLayout.BELOW, 1);
+        mProgressLayout.addView(mProgressText, params2);
+
+        mProgressNumber = new TextView(getActivity());
+        RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params3.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        mProgressLayout.addView(mProgressNumber, params3);
 
         root.addView(mProgressLayout, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -87,12 +98,12 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
         mWebLayout = new LinearLayout(context);
         mWebLayout.setOrientation(LinearLayout.VERTICAL);
 
-        mWebLoadingProgressBar = new ProgressBar(getActivity(), null,
-                android.R.attr.progressBarStyleHorizontal);
-        mWebLoadingProgressBar.setMax(100);
-        mWebLoadingProgressBar.setVisibility(View.GONE);
-        mWebLayout.addView(mWebLoadingProgressBar, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, 15));
+//        mWebLoadingProgressBar = new ProgressBar(getActivity(), null,
+//                android.R.attr.progressBarStyleHorizontal);
+//        mWebLoadingProgressBar.setMax(100);
+//        mWebLoadingProgressBar.setVisibility(View.VISIBLE);
+//        mWebLayout.addView(mWebLoadingProgressBar, new LinearLayout.LayoutParams(
+//                ViewGroup.LayoutParams.MATCH_PARENT, 15));
         mWebView = new KanBoxLoginWebView(context);
         mWebView.getSettings().setSavePassword(false);
         mWebView.getSettings().setSaveFormData(false);
@@ -121,7 +132,13 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int progress) {
-                mWebLoadingProgressBar.setProgress(progress);
+                Log.i(TAG, "onProgressChanged:"+progress);
+                if (progress > 0) {
+//                    mProgressLayout.setVisibility(View.GONE);
+//                    mWebLoadingProgressBar.setVisibility(View.VISIBLE);
+                    mProgressNumber.setText(String.valueOf(progress));
+                }
+//                mWebLoadingProgressBar.setProgress(progress);
             }
         });
 //        mWebView.loadUrl(getIntent().getStringExtra("url"));
@@ -129,26 +146,42 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
         mProgressLayout.setVisibility(View.VISIBLE);
         mWebLayout.setVisibility(View.GONE);
 
-        KanBoxApi.TOKEN_STATUS token = KanBoxApi.getInstance().getTokenStatus();
-        Log.i(TAG, "token status is "+token);
-        switch (token) {
-            case VALID:
-                if(mWeakListener!=null) {
-                    KanBoxAuthFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-                        listener.onKanBoxAuthSuccess();
-                    }
+
+//        Log.i(TAG, "token status is "+token);
+//        switch (token) {
+//            case VALID:
+//                if(mWeakListener!=null) {
+//                    KanBoxAuthFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+//                        listener.onKanBoxAuthSuccess();
+//                    }
+//                }
+//                break;
+//            case OBSOLETE:
+//                mProgressText.setText(R.string.kanbox_refresh_token_start);
+//                KanBoxApi.getInstance().refreshToken();
+//                break;
+//            case NONE:
+//                mProgressText.setText(R.string.kanbox_get_auth_start);
+//                String url = KanBoxConfig.OAUTH_URL+"?response_type=code&client_id=" + Constants.CLIENT_ID + "&platform=android" + "&redirect_uri=" + KanBoxConfig.GET_AUTH_REDIRECT_URI + "&user_language=ZH";
+//                mWebView.loadUrl(url);
+//                break;
+//        }
+
+        if (TextUtils.isEmpty(Token.getInstance().getAccessToken())) {
+            mProgressText.setText(R.string.kanbox_load_auth_page);
+            String url = KanBoxConfig.OAUTH_URL+"?response_type=code&client_id=" + Constants.CLIENT_ID + "&platform=android" + "&redirect_uri=" + KanBoxConfig.GET_AUTH_REDIRECT_URI + "&user_language=ZH";
+            mWebView.loadUrl(url);
+        } else if (Token.getInstance().isExpired()){
+            mProgressText.setText(R.string.kanbox_refresh_token_start);
+            KanBoxApi.getInstance().refreshToken();
+        } else {
+            if(mWeakListener!=null) {
+                KanBoxAuthFragmentListener listener = mWeakListener.get();
+                if (listener != null) {
+                    listener.onKanBoxAuthSuccess();
                 }
-                break;
-            case OBSOLETE:
-                mProgressText.setText(R.string.kanbox_refresh_token_start);
-                KanBoxApi.getInstance().refreshToken();
-                break;
-            case NONE:
-                mProgressText.setText(R.string.kanbox_get_auth_start);
-                String url = KanBoxConfig.OAUTH_URL+"?response_type=code&client_id=" + Constants.CLIENT_ID + "&platform=android" + "&redirect_uri=" + KanBoxConfig.GET_AUTH_REDIRECT_URI + "&user_language=ZH";
-                mWebView.loadUrl(url);
-                break;
+            }
         }
     }
 
@@ -217,18 +250,21 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
         }
 
         private void onProgressFinished() {
-            mWebLoadingProgressBar.setVisibility(View.GONE);
+            Log.i(TAG, "onProgressFinished");
+            mProgressNumber.setText("");
+//            mWebLoadingProgressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onPageFinished(WebView wv, String url) {
             Log.i(TAG, "onPageFinished:"+url);
+            mProgressNumber.setText("");
             handlUrlEnd(url);
         }
 
         @Override
         public void onPageStarted(WebView wv, String url, Bitmap favicon) {
-            mWebLoadingProgressBar.setVisibility(View.VISIBLE);
+//            mWebLoadingProgressBar.setVisibility(View.VISIBLE);
             handleUrlStart(url);
             Log.i(TAG, "onPageStarted:"+url);
         }
@@ -244,6 +280,7 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
             Log.i(TAG, "onReceivedSslError:"+error);
+            mProgressNumber.setText("");
             handler.proceed();
         }
     }
@@ -252,7 +289,7 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
     private boolean mWebError = false;
 
     private void handlUrlEnd(String url) {
-        mWebLoadingProgressBar.setVisibility(View.GONE);
+//        mWebLoadingProgressBar.setVisibility(View.GONE);
         if (TextUtils.isEmpty(url)) return;
         if (url.startsWith(KanBoxConfig.OAUTH_URL) && !mWebError) {
             mProgressLayout.setVisibility(View.GONE);
@@ -266,8 +303,10 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
             if (haveGetToken) return;
             haveGetToken = true;
             String code = url.substring(url.indexOf("code=") + 5);
-            KanBoxApi.getInstance().getToken(code);
+            Token.getInstance().setCode(code);
+            KanBoxApi.getInstance().getToken();
             mWebLayout.setVisibility(View.GONE);
+            mProgressText.setText(R.string.kanbox_get_auth_start);
             mProgressLayout.setVisibility(View.VISIBLE);
         } else if (url.startsWith(KanBoxConfig.GET_TOKEN_REDIRECT_URI)) {
 

@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -26,6 +30,12 @@ public abstract class FileGridFragment extends GridFragment{
 
     protected String mSearchString;
     protected int mCategory;
+
+    int navigation_mode = ActionBar.NAVIGATION_MODE_STANDARD;
+
+    private SearchView mSearchView;
+
+    boolean mFakeSearch = true;
 
     protected int mMenuId;
 
@@ -91,40 +101,70 @@ public abstract class FileGridFragment extends GridFragment{
             }
             SearchManager searchManager = (SearchManager) getSherlockActivity()
                     .getSystemService(Context.SEARCH_SERVICE);
-            SearchView searchView = (SearchView) menu.findItem(R.id.menu_search)
+            mSearchView = (SearchView) menu.findItem(R.id.menu_search)
                     .getActionView();
-            searchView.setSearchableInfo(searchManager
+            mSearchView.setSearchableInfo(searchManager
                     .getSearchableInfo(getSherlockActivity().getComponentName()));
-
+            mSearchView.clearFocus();
+            mSearchView.setQuery(mSearchString, false);
+            mFakeSearch = true;
             menu.findItem(R.id.menu_search).setOnActionExpandListener(new MenuItem.OnActionExpandListener(){
-
-                int navigation_mode = ActionBar.NAVIGATION_MODE_STANDARD;
 
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem item) {
-                    navigation_mode = (getSherlockActivity()).getSupportActionBar().getNavigationMode();
+                    if (navigation_mode == ActionBar.NAVIGATION_MODE_STANDARD) {
+                        navigation_mode = (getSherlockActivity()).getSupportActionBar().getNavigationMode();
+                    }
                     (getSherlockActivity()).getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
                     return true;
                 }
 
                 @Override
                 public boolean onMenuItemActionCollapse(MenuItem item) {
+                    Fragment fragment = getParentFragment();
+                    if (fragment instanceof FileTabFragment) {
+                        if (((FileTabFragment)fragment).closeImage()) {
+                            return false;
+                        }
+                    }
+
                     (getSherlockActivity()).getSupportActionBar().setNavigationMode(navigation_mode);
+                    navigation_mode = ActionBar.NAVIGATION_MODE_STANDARD;
+                    mSearchString = null;
+                    mSearchView.setQuery("",false);
+                    reloadFiles();
                     return true;
                 }
 
             });
 
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            mSearchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener(){
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+//                        showSoftKeyboard(v);
+                    }
+                }
+            });
+
+            mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
                 @Override
                 public boolean onQueryTextSubmit(String query) {
                     // TODO Auto-generated method stub
+                    mSearchView.clearFocus();
                     return true;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
+                    if (mFakeSearch && TextUtils.isEmpty(newText)) {
+//                        mSearchView.setQuery((mSearchString==null)?"":mSearchString, false);
+                        mSearchView.clearFocus();
+                        mFakeSearch = false;
+                        return true;
+                    }
+                    mFakeSearch = false;
                     if ((mSearchString == null && !TextUtils.isEmpty(newText)) ||
                             (newText == null && !TextUtils.isEmpty(mSearchString)) ||
                             (mSearchString != null && !mSearchString.equals(newText))) {
@@ -136,16 +176,40 @@ public abstract class FileGridFragment extends GridFragment{
 
             });
 
-            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
 
                 @Override
                 public boolean onClose() {
+                    mSearchView = null;
+                    mSearchString = null;
                    return false;
                 }
             });
 
         }
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu();
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (mSearchView != null && navigation_mode != ActionBar.NAVIGATION_MODE_STANDARD) {
+            if (getSherlockActivity() != null) {
+                (getSherlockActivity()).getSupportActionBar().setNavigationMode(navigation_mode);
+            }
+        }
+        super.onDestroyView();
+    }
+
+    public void showSoftKeyboard(View v) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.showSoftInput(v, 0);
+        }
     }
 
 
@@ -205,9 +269,26 @@ public abstract class FileGridFragment extends GridFragment{
         return true;
     }
 
+    @Override
+    public void onGridItemClick(GridView g, View v, int position, long id) {
+        super.onGridItemClick(g, v, position, id);
+        if (mSearchView != null) {
+            mSearchView.clearFocus();
+        }
+    }
+
+    @Override
+    public void onGridItemSelect(GridView g, View v, int position, long id) {
+        super.onGridItemSelect(g, v, position, id);
+        if (mSearchView != null) {
+//            SearchManager searchManager = (SearchManager) getSherlockActivity()
+//                    .getSystemService(Context.SEARCH_SERVICE);
+//            searchManager.stopSearch();
+        }
+    }
 
 
-//    @Override
+    //    @Override
 //    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 //        Log.i(TAG, "onCreateContextMenu");
 //        android.view.MenuInflater inflater = getSherlockActivity().getMenuInflater();

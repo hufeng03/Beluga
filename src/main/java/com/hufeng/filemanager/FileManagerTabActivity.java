@@ -126,6 +126,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
 	
 	@Override
 	public void onNewIntent(Intent intent){
+        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		handleIntent(intent);
 	}
 
@@ -191,7 +192,6 @@ public class FileManagerTabActivity extends FileOperationActivity{
         invalidateOptionsMenu();
 	}
 
-	
     @Override
     public void onBackPressed() {
         BaseFragment fragment = (BaseFragment) mTabAdapter

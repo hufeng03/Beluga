@@ -38,7 +38,7 @@ public class FileUtil {
                 end.equals("mp2") || end.equals("mp3") || end.equals("mpga") ||
                 end.equals("ogg") || end.equals("wma") || end.equals("ape") ||
                 end.equals("flac") || end.equals("amr") || end.equals("aac") ||
-                end.equals("imy") || end.equals("mmf") || end.equals("3gpp")
+                end.equals("imy") || end.equals("mmf") || end.equals("3gpp") || end.equals("awb")
         		)
         {
             type = "audio/*"; 
@@ -52,7 +52,7 @@ public class FileUtil {
             type = "video/*";
         }
         else if(end.equals("jpg")||end.equals("gif")||end.equals("png")||
-                end.equals("jpeg")||end.equals("bmp") || end.equals("tif") || end.equals("mpo")
+                end.equals("jpeg")||end.equals("bmp") || end.equals("tif") || end.equals("mpo") || end.equals("wbmp")
         		)
         {
             type = "image/*";

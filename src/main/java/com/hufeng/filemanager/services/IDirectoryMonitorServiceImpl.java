@@ -3,8 +3,6 @@ package com.hufeng.filemanager.services;
 import android.content.Context;
 import android.os.RemoteException;
 
-import com.hufeng.filemanager.data.ImportantDirectoryMonitor;
-
 /**
  * Created by feng on 14-3-6.
  */
@@ -20,11 +18,15 @@ public class IDirectoryMonitorServiceImpl extends IDirectoryMonitorService.Stub 
     }
 
     public void onCreate() {
-        mMonitor.init(mContext);
+        mMonitor.init();
     }
 
     public void onDestroy() {
         mMonitor.destroy();
+    }
+
+    public void refresh() {
+        mMonitor.refresh(mContext);
     }
 
     @Override
