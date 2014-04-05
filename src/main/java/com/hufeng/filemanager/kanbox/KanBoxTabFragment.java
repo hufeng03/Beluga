@@ -236,7 +236,6 @@ public class KanBoxTabFragment extends FileTabFragment implements
 
 
     private void showKanBoxBrowserFragment() {
-        refreshAdLayout();
         final FragmentManager fm = getChildFragmentManager();
 //        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         final FragmentTransaction ft = fm.beginTransaction();
@@ -255,6 +254,7 @@ public class KanBoxTabFragment extends FileTabFragment implements
         clearFragmentInstance();
         mBrowserFragment = fragment;
         mCurrentChildFragment = fragment;
+        refreshAdLayout();
     }
 
     private void showKanBoxUploadFragment() {
@@ -315,15 +315,15 @@ public class KanBoxTabFragment extends FileTabFragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(getFileOperation().isUploading()) {
-            menu.clear();
-            inflater.inflate(R.menu.kanbox_fragment_upload_menu,menu);
-        } else {
+//        if(getFileOperation() != null && getFileOperation().isUploading()) {
+//            menu.clear();
+//            inflater.inflate(R.menu.kanbox_fragment_upload_menu,menu);
+//        } else {
             SherlockFragment fragment = (SherlockFragment)getChildFragmentManager().findFragmentById(R.id.fragment_container);
             if(fragment!=null) {
                 fragment.onCreateOptionsMenu(menu, inflater);
             }
-        }
+//        }
     }
 
     @Override
@@ -336,14 +336,16 @@ public class KanBoxTabFragment extends FileTabFragment implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.menu_cloud_upload_cancel) {
-            getFileOperation().clearOperationFiles();
-            getSherlockActivity().invalidateOptionsMenu();
-            return true;
-        } else {
+//        if(item.getItemId() == R.id.menu_cloud_upload_cancel) {
+//            if (getFileOperation() != null) {
+//                getFileOperation().clearOperationFiles();
+//            }
+//            getSherlockActivity().invalidateOptionsMenu();
+//            return true;
+//        } else {
             SherlockFragment fragment = (SherlockFragment)getChildFragmentManager().findFragmentById(R.id.fragment_container);
             return fragment.onOptionsItemSelected(item);
-        }
+//        }
     }
 
 

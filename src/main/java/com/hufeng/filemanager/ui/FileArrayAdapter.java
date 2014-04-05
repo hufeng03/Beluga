@@ -19,7 +19,9 @@ import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.browser.IconLoader;
 import com.hufeng.filemanager.browser.IconLoaderHelper;
 import com.hufeng.filemanager.browser.InfoLoader;
+import com.hufeng.filemanager.browser.InfoUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class FileArrayAdapter extends ArrayAdapter<FileEntry> implements GridAdapter {
@@ -106,15 +108,21 @@ public class FileArrayAdapter extends ArrayAdapter<FileEntry> implements GridAda
             filename = item.path;
         }
         SpannableStringBuilder span = FileSearchUtil.highlightSearchText(parent.getContext(), filename, mSearchString);
-        int type = FileUtils.getFileType(holder.path);
+        File file = new File(holder.path);
+        if (!file.exists()) {
+            if (mFileGridAdapterListener != null) {
+                mFileGridAdapterListener.reportNotExistFile();
+            }
+        }
+        int type = FileUtils.getFileType(file);
         if (FileUtils.FILE_TYPE_APK == type) {
             if (span != null) {
-                mInfoLoader.remove(holder.info);
+//                mInfoLoader.remove(holder.info);
                 holder.name.setText(span);
             } else {
                 holder.name.setText(filename);
-                mApkInfoLoader.loadInfo(holder.info, holder.path);
             }
+            mApkInfoLoader.loadInfo(holder.info, holder.path);
         } else {
             mApkInfoLoader.remove(holder.info);
             if (span != null) {
@@ -122,7 +130,9 @@ public class FileArrayAdapter extends ArrayAdapter<FileEntry> implements GridAda
             } else {
                 holder.name.setText(filename);
             }
-            mInfoLoader.loadInfo(holder.info, holder.path);
+//            mInfoLoader.loadInfo(holder.info, holder.path);
+            String info = InfoUtil.getFileInfo(holder.path, type);
+            holder.info.setText(info);
         }
 
         if( mFileOperation!=null ) {

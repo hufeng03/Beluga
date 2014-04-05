@@ -1,6 +1,7 @@
 package com.hufeng.filemanager;
 
 import android.app.Activity;
+import android.database.ContentObserver;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,6 +14,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.provider.DataStructures;
+import com.hufeng.filemanager.provider.UiProvider;
 
 import java.io.File;
 
@@ -23,8 +26,9 @@ public class CategoryTabFragment extends FileTabFragment implements
 	private static final String CATEGORY_TYPE = "category_type";
     private int mCategory = FileUtils.FILE_TYPE_ALL;
     private SherlockFragment mCategoryFragment;
+    ContentObserver mContentObserver;
 
-	@Override
+    @Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 	}
@@ -57,6 +61,19 @@ public class CategoryTabFragment extends FileTabFragment implements
             mCategory = savedInstanceState.getInt(CATEGORY_TYPE, FileUtils.FILE_TYPE_ALL);
         }
         showChildCategoryPanel(mCategory);
+
+        mContentObserver = new ContentObserver(null) {
+            @Override
+            public void onChange(boolean selfChange) {
+//                Log.i(TAG, "receive onChange");
+                super.onChange(selfChange);
+                if (mCategory == FileUtils.FILE_TYPE_FAVORITE && mCurrentChildFragment!=null) {
+                    ((FileBrowserFragment)mCurrentChildFragment).setInitDirs( UiProvider.getFavoriteFiles() );
+                }
+            }
+        };
+
+        getActivity().getContentResolver().registerContentObserver(DataStructures.FavoriteColumns.CONTENT_URI, true, mContentObserver);
 	}
 	
 	@Override
@@ -79,6 +96,9 @@ public class CategoryTabFragment extends FileTabFragment implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (mContentObserver != null) {
+            getActivity().getContentResolver().unregisterContentObserver(mContentObserver);
+        }
     }
 
     @Override
@@ -165,14 +185,6 @@ public class CategoryTabFragment extends FileTabFragment implements
         final FragmentTransaction ft = fm.beginTransaction();
         FileBrowserFragment fragment = (FileBrowserFragment) fm.findFragmentByTag(FileBrowserFragment.class.getSimpleName());
         if (fragment == null) {
-//            fragment = new FileBrowserFragment();
-//            Bundle data = new Bundle();
-//            if (FileUtils.FILE_TYPE_FAVORITE ==  type) {
-//                data.putInt(FileBrowserFragment.ARGUMENT_BROWSER_TYPE, FileBrowserFragment.BROWSER_TYPE.FAVORITE.ordinal());
-//            } else if (FileUtils.FILE_TYPE_DOWNLOAD == type) {
-//                data.putInt(FileBrowserFragment.ARGUMENT_BROWSER_TYPE, FileBrowserFragment.BROWSER_TYPE.DOWNLOAD.ordinal());
-//            }
-//            fragment.setArguments(data);
             if (FileUtils.FILE_TYPE_DOWNLOAD == type) {
                 fragment = FileBrowserFragment.newDownloadBrowser(null);
             } else if (FileUtils.FILE_TYPE_FAVORITE == type) {
@@ -185,7 +197,6 @@ public class CategoryTabFragment extends FileTabFragment implements
                 ft.attach(fragment);
             }
         }
-//        ft.addToBackStack(null);
         ft.commit();
         fragment.setListener(this);
         mCurrentChildFragment = fragment;

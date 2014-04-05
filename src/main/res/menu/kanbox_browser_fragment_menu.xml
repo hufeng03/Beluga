@@ -10,10 +10,10 @@
           android:icon="@drawable/ic_menu_back_holo_light"
           android:title="@string/menu_back"
           android:showAsAction="always" />
-    <item android:id="@+id/menu_cloud_refresh"
+    <!--item android:id="@+id/menu_cloud_refresh"
         android:icon="@drawable/ic_menu_refresh_static_holo_light"
         android:title="@string/menu_refresh"
-        android:showAsAction="always" />
+        android:showAsAction="always" /-->
     <item android:id="@+id/menu_cloud_create"
         android:icon="@drawable/ic_menu_create_holo_light"
         android:title="@string/menu_create"

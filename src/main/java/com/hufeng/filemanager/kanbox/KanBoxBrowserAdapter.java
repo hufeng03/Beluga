@@ -129,7 +129,13 @@ public class KanBoxBrowserAdapter extends CursorAdapter implements GridAdapter {
                 holder.info.setVisibility(View.GONE);
                 holder.progress.setVisibility(View.VISIBLE);
                 int progress = KanBoxApi.getDownloadingProgress(holder.path);
-                holder.progress.setProgress(progress);
+                if (progress == 0) {
+                    holder.progress.setIndeterminate(true);
+                    holder.progress.setProgress(progress);
+                } else {
+                    holder.progress.setIndeterminate(false);
+                    holder.progress.setProgress(progress);
+                }
             } else {
                 holder.info.setVisibility(View.VISIBLE);
                 holder.progress.setVisibility(View.GONE);

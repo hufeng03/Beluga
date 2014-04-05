@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
-public class GridFragment extends BaseFragment {
+public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
     static final int INTERNAL_EMPTY_ID = 0x00ff0001;
     static final int INTERNAL_PROGRESS_CONTAINER_ID = 0x00ff0002;
     static final int INTERNAL_LIST_CONTAINER_ID = 0x00ff0003;
@@ -47,6 +48,11 @@ public class GridFragment extends BaseFragment {
         }
     };
 
+    @Override
+    public void onRefresh() {
+
+    }
+
     public enum DISPLAY_MODE {
         LIST, GRID;
 
@@ -73,6 +79,7 @@ public class GridFragment extends BaseFragment {
     CharSequence mEmptyText;
     boolean mGridShown;
     private View mRootView;
+    private SwipeRefreshLayout mRefreshLayout;
 
     public GridFragment() {
     }
@@ -125,11 +132,16 @@ public class GridFragment extends BaseFragment {
         lframe.addView(tv, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
+        mRefreshLayout = new SwipeRefreshLayout(context);
+
         GridView lv = new GridView(getActivity());
         lv.setId(android.R.id.list);
         lv.setDrawSelectorOnTop(false);
         lv.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
         lv.setCacheColorHint(0);
+
+        mRefreshLayout.addView(lv, new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         if(mDisplayMode == DISPLAY_MODE.GRID) {
             setDisplayModeAsGrid(lv);
@@ -137,7 +149,7 @@ public class GridFragment extends BaseFragment {
             setDisplayModeAsList(lv);
         }
 
-        lframe.addView(lv, new FrameLayout.LayoutParams(
+        lframe.addView(mRefreshLayout, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         root.addView(lframe, new FrameLayout.LayoutParams(
@@ -145,11 +157,57 @@ public class GridFragment extends BaseFragment {
 
         // ------------------------------------------------------------------
 
-        root.setLayoutParams(new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         mRootView = root;
-        return root;
+
+        mRootView.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        initSwipeOptions();
+
+        return mRootView;
+    }
+
+    private void initSwipeOptions() {
+        mRefreshLayout.setOnRefreshListener(this);
+        setAppearance();
+        disableSwipe();
+    }
+
+    /**
+     * It shows the SwipeRefreshLayout progress
+     */
+    public void showSwipeProgress() {
+        mRefreshLayout.setRefreshing(true);
+    }
+
+    /**
+     * It shows the SwipeRefreshLayout progress
+     */
+    public void hideSwipeProgress() {
+        mRefreshLayout.setRefreshing(false);
+    }
+
+    /**
+     * Enables swipe gesture
+     */
+    public void enableSwipe() {
+        mRefreshLayout.setEnabled(true);
+    }
+
+    /**
+     * Disables swipe gesture. It prevents manual gestures but keeps the option tu show
+     * refreshing programatically.
+     */
+    public void disableSwipe() {
+        mRefreshLayout.setEnabled(false);
+    }
+
+    private void setAppearance() {
+        mRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     public void setRootShown(boolean shown) {

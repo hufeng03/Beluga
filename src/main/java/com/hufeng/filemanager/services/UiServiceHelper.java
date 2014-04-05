@@ -52,6 +52,10 @@ public class UiServiceHelper implements ServiceConnection {
         getIFileObserverServiceWrapper().startScan();
     }
 
+    public void deleteUnexist (int type) {
+        getIFileObserverServiceWrapper().deleteUnexist(type);
+    }
+
     public boolean isScanning () {
         return getIFileObserverServiceWrapper().isScanning();
     }

@@ -97,7 +97,10 @@ public class Token {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int statusCode = sHttpResponse.getStatusLine().getStatusCode();
+        int statusCode = 0;
+        if (sHttpResponse != null && sHttpResponse.getStatusLine()!=null) {
+            statusCode = sHttpResponse.getStatusLine().getStatusCode();
+        }
         if (statusCode == 200) {
             try {
                 token_result = EntityUtils.toString(sHttpResponse.getEntity());
@@ -140,7 +143,10 @@ public class Token {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            int statusCode = sHttpResponse.getStatusLine().getStatusCode();
+            int statusCode = 0;
+            if (sHttpResponse != null && sHttpResponse.getStatusLine()!=null) {
+                statusCode = sHttpResponse.getStatusLine().getStatusCode();
+            }
             if (statusCode == 200) {
                 try {
                     token_result = EntityUtils.toString(sHttpResponse.getEntity());

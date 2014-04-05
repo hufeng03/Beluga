@@ -22,6 +22,17 @@ public class IFileSyncServiceWrapper {
             }
         }
     }
+
+    public void deleteUnexist(int type) {
+        if (mIFileSyncService != null) {
+            try {
+                mIFileSyncService.deleteUnexist(type);
+            } catch(RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     
     public boolean isScanning()
     {

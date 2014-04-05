@@ -3,14 +3,11 @@ package com.hufeng.filemanager.kanbox;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -20,8 +17,6 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -36,10 +31,9 @@ import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileSorter;
 import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.dialog.FmDialogFragment;
+import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.storage.StorageManager;
-import com.hufeng.filemanager.ui.FileOperation;
 import com.hufeng.filemanager.ui.FileViewHolder;
 import com.hufeng.filemanager.utils.LogUtil;
 import com.kanbox.api.PushSharePreference;
@@ -97,6 +91,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  super.onCreateView(inflater, container, savedInstanceState);
+        enableSwipe();
         return view;
     }
 
@@ -107,7 +102,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
 //        setEmptyText(getResources().getString(R.string.empty_file));
         mAdapter = new KanBoxBrowserAdapter(getSherlockActivity(), null, this);
         setGridAdapter(mAdapter);
-        setGridShownNoAnimation(false);
+//        setGridShownNoAnimation(false);
         getGridView().setOnItemLongClickListener(null);
         registerForContextMenu(getGridView());
 
@@ -175,16 +170,16 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             } else {
                 mRootDir = path;
             }
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String hash = preferences.getString(path, "");
-            if(TextUtils.isEmpty(hash)) {
-                setGridShown(false);
-            }
-            mLoading = true;
-            setEmptyText(getResources().getString(R.string.kanbox_getting_file_list));
-            KanBoxApi.getInstance().getFileList(mRootDir);
-            reloadFiles();
-            getSherlockActivity().invalidateOptionsMenu();
+//            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//            String hash = preferences.getString(path, "");
+//            if(TextUtils.isEmpty(hash)) {
+//                setGridShown(false);
+//            }
+//            mLoading = true;
+//            setEmptyText(getResources().getString(R.string.kanbox_getting_file_list));
+//            KanBoxApi.getInstance().getFileList(mRootDir);
+//            reloadFiles();
+            refresh();
         } else {
 //            int type = FileUtils.getFileType(path);
 //            if (type == FileUtils.FILE_TYPE_IMAGE) {
@@ -201,6 +196,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             if(KanBoxApi.isDownloading(path)) {
                 //we need to pause downloading here
                 KanBoxApi.getInstance().pauseDownloadFile(path);
+                mAdapter.notifyDataSetChanged();
                 return;
             }
             //download/view cloud file
@@ -229,7 +225,11 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
         mProgressDialog = null;
         switch(op_type) {
             case KanBoxApi.OP_UPLOAD:
-                tip = getString(R.string.upload_success, new File(path).getName());
+                if ("pause".equals(response)) {
+//                    tip = getString(R.string.upload_paused, new File(path).getName());
+                } else {
+                    tip = getString(R.string.upload_success, new File(path).getName());
+                }
                 refreshUploadStatus();
                 break;
             case KanBoxApi.OP_MOVE:
@@ -243,14 +243,15 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
                 break;
             case KanBoxApi.OP_DOWNLOAD:
                 if("pause".equals(response)) {
-                    tip = getString(R.string.download_paused, path);
+//                    tip = getString(R.string.download_paused, path);
                 } else {
                     tip = getString(R.string.download_success, path);
                 }
                 break;
             case KanBoxApi.OP_GET_FILELIST:
-                mLoading = false;
-                reloadFiles();
+//                mLoading = false;
+//                reloadFiles();
+//                hideSwipeProgress();
                 completeRefresh();
                 break;
         }
@@ -262,7 +263,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
     @Override
     public void onKanBoxApiFailed(int op_type, String path) {
         mAdapter.notifyDataSetChanged();
-        setGridShown(true);
+//        setGridShown(true);
         String tip = null;
         if(mProgressDialog!=null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
@@ -287,8 +288,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
                 break;
             case KanBoxApi.OP_GET_FILELIST:
                 tip = getString(R.string.kanbox_refresh_file_list_error);
-                mLoading = false;
-                mHandler.sendEmptyMessageDelayed(MESSAGE_SET_EMPTY_TEXT, 1000);
+                completeRefresh();
                 break;
             case KanBoxApi.OP_REFRESH_TOKEN:
                 tip = getString(R.string.kanbox_refresh_token_failed);
@@ -324,9 +324,11 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             } else {
                 mRootDir = parent + "/";
             }
-            setGridShown(true);
+//            setGridShown(true);
+//            hideSwipeProgress();
+            completeRefresh();
             reloadFiles();
-            getSherlockActivity().invalidateOptionsMenu();
+//            getSherlockActivity().invalidateOptionsMenu();
             return true;
         }
     }
@@ -377,15 +379,15 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
         mAdapter.swapCursor(null);
     }
 
-    MenuItem mRefreshItem;
-    Animation mRefreshAnimation;
-    ImageView mRefreshView;
-    boolean mRefreshing = false;
+//    MenuItem mRefreshItem;
+//    Animation mRefreshAnimation;
+//    ImageView mRefreshView;
+//    boolean mRefreshing = false;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        completeRefresh();
-        mRefreshItem = null;
+//        completeRefresh();
+//        mRefreshItem = null;
         super.onCreateOptionsMenu(menu, inflater);
 
         MenuItem item_back = menu.findItem(R.id.menu_back);
@@ -398,50 +400,50 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             item_logout.setVisible(false);
         }
 
-        mRefreshItem = menu.findItem(R.id.menu_cloud_refresh);
-        if(mRefreshItem!=null)
-            LogUtil.i(TAG, "new refresh item is " + mRefreshItem);
-        if(mRefreshItem!=null && mRefreshItem.isVisible()){
-            if(mLoading) {
-                LogUtil.i(TAG, "set refresh menu item to scanning");
-                refresh();
-            }else{
-                LogUtil.i(TAG, "set refresh menu item to complete scanning");
-                completeRefresh();
-            }
-        }
+//        mRefreshItem = menu.findItem(R.id.menu_cloud_refresh);
+//        if(mRefreshItem!=null)
+//            LogUtil.i(TAG, "new refresh item is " + mRefreshItem);
+//        if(mRefreshItem!=null && mRefreshItem.isVisible()){
+//            if(mLoading) {
+//                LogUtil.i(TAG, "set refresh menu item to scanning");
+//                refresh();
+//            }else{
+//                LogUtil.i(TAG, "set refresh menu item to complete scanning");
+//                completeRefresh();
+//            }
+//        }
     }
 
 
     @Override
     public void onDestroyOptionsMenu(){
         LogUtil.i(TAG, "onDestroyOptionsMenu");
-        completeRefresh();
-        mRefreshItem = null;
+//        completeRefresh();
+//        mRefreshItem = null;
         super.onDestroyOptionsMenu();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.menu_cloud_upload_confirm:
-                Fragment fragment = getParentFragment();
-                if(fragment instanceof KanBoxTabFragment) {
-                    FileOperation operation = ((KanBoxTabFragment) fragment).getFileOperation();
-                    String[] files = operation.getUploadingFiles();
-                    if(files!=null && files.length>0) {
-                        mProgressDialog = new ProgressDialog(getActivity());
-                        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);//设置风格为圆形进度条
-                        mProgressDialog.setTitle(R.string.progress_add_to_cloud_title);//设置标题
-                        mProgressDialog.setMessage(getString(R.string.progress_add_to_cloud_content));
-                        mProgressDialog.setIndeterminate(false);//设置进度条是否为不明确
-                        mProgressDialog.setCancelable(true);//设置进度条是否可以按退回键取消
-                        mProgressDialog.setCanceledOnTouchOutside(false);
-                        mProgressDialog.show();
-                        KanBoxApi.getInstance().uploadFile(files[0],getParentFile());
-                    }
-                }
-                return true;
+//            case R.id.menu_cloud_upload_confirm:
+//                Fragment fragment = getParentFragment();
+//                if(fragment instanceof KanBoxTabFragment) {
+//                    FileOperation operation = ((KanBoxTabFragment) fragment).getFileOperation();
+//                    String[] files = operation.getUploadingFiles();
+//                    if(files!=null && files.length>0) {
+//                        mProgressDialog = new ProgressDialog(getActivity());
+//                        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);//设置风格为圆形进度条
+//                        mProgressDialog.setTitle(R.string.progress_add_to_cloud_title);//设置标题
+//                        mProgressDialog.setMessage(getString(R.string.progress_add_to_cloud_content));
+//                        mProgressDialog.setIndeterminate(false);//设置进度条是否为不明确
+//                        mProgressDialog.setCancelable(true);//设置进度条是否可以按退回键取消
+//                        mProgressDialog.setCanceledOnTouchOutside(false);
+//                        mProgressDialog.show();
+//                        KanBoxApi.getInstance().uploadFile(files[0],getParentFile());
+//                    }
+//                }
+//                return true;
             case R.id.menu_cloud_logout:
                 FmDialogFragment.showCloudLogoutDialog(getChildFragmentManager());
                 return true;
@@ -466,12 +468,12 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             case R.id.menu_cloud_add_document:
                 addFileIntoCloud(FileUtils.FILE_TYPE_DOCUMENT);
                 return true;
-            case R.id.menu_cloud_refresh:
-                mLoading = true;
-                setEmptyText(getResources().getString(R.string.kanbox_getting_file_list));
-                KanBoxApi.getInstance().getFileList(mRootDir);
-                refresh();
-                return true;
+//            case R.id.menu_cloud_refresh:
+//                mLoading = true;
+//                setEmptyText(getResources().getString(R.string.kanbox_getting_file_list));
+//                KanBoxApi.getInstance().getFileList(mRootDir);
+//                refresh();
+//                return true;
 //            case R.id.menu_cloud_add_by_directory:
 //                addFileIntoCloud(FileUtils.FILE_TYPE_ALL);
 //                return true;
@@ -610,7 +612,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
         if (!flag_has_local) {
             KanBoxApi.getInstance().downloadFile(remote_path, local_path);
             mAdapter.notifyDataSetChanged();
-            Toast.makeText(getActivity(), getString(R.string.download_start, remote_path), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), getString(R.string.download_start, remote_path), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -694,14 +696,9 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
                     new String[]{DataStructures.CloudBoxColumns._ID, DataStructures.CloudBoxColumns.LOCAL_FILE_FIELD}, DataStructures.CloudBoxColumns.FILE_PATH_FIELD+"=?",
                     new String[]{remote_path}, null);
             if (cursor!=null && cursor.moveToNext()) {
-                int db_id = cursor.getInt(0);
                 String local_file = cursor.getString(1);
                 if (!TextUtils.isEmpty(local_file)) {
-                    Fragment fragment = getParentFragment();
-                    if(fragment instanceof KanBoxTabFragment) {
-                        FileOperation operation = ((KanBoxTabFragment) fragment).getFileOperation();
-                        operation.onOperationSend(getActivity());
-                    }
+                    FileAction.shareFile(getActivity(), local_file);
                 }
             }
         }catch(Exception e) {
@@ -742,52 +739,66 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
     }
 
 
-    private void refresh(){
-        if(!mRefreshing) {
-            if(mRefreshItem!=null && mRefreshItem.isVisible()){
-                if(mRefreshView == null){
-                    LayoutInflater inflater = LayoutInflater.from(getSherlockActivity());
-                    mRefreshView = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
-                }
-                if(mRefreshAnimation == null) {
-                    mRefreshAnimation = AnimationUtils.loadAnimation(getSherlockActivity(), R.anim.clockwise_rotate);
-                    mRefreshAnimation.setRepeatCount(Animation.INFINITE);
-                }
-                if(mRefreshView.getAnimation()==null){
-                    mRefreshView.startAnimation(mRefreshAnimation);
-                }
+//    private void refresh(){
+//        if(!mRefreshing) {
+//            if(mRefreshItem!=null && mRefreshItem.isVisible()){
+//                if(mRefreshView == null){
+//                    LayoutInflater inflater = LayoutInflater.from(getSherlockActivity());
+//                    mRefreshView = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
+//                }
+//                if(mRefreshAnimation == null) {
+//                    mRefreshAnimation = AnimationUtils.loadAnimation(getSherlockActivity(), R.anim.clockwise_rotate);
+//                    mRefreshAnimation.setRepeatCount(Animation.INFINITE);
+//                }
+//                if(mRefreshView.getAnimation()==null){
+//                    mRefreshView.startAnimation(mRefreshAnimation);
+//                }
+//
+//                mRefreshItem.setActionView(mRefreshView);
+//                mRefreshing = true;
+//            }
+//        }
+ //       showSwipeProgress();
+ //   }
 
-                mRefreshItem.setActionView(mRefreshView);
-                mRefreshing = true;
-            }
-        }
-    }
-
-    public void completeRefresh() {
-        if(mRefreshView!=null){
-            mRefreshView.clearAnimation();
-        }
-        if(mRefreshing){
-            if(mRefreshItem!=null) {
-                mRefreshItem.setActionView(null);
-            }
-        }
-        mRefreshing = false;
-    }
+//    public void completeRefresh() {
+//        hideSwipeProgress();
+//    }
 
     @Override
     public void onResume() {
         super.onResume();
         if (mLoading) {
-            refresh();
+            showSwipeProgress();
         } else {
-            completeRefresh();
+            hideSwipeProgress();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        completeRefresh();
+        hideSwipeProgress();
+    }
+
+    @Override
+    public void onRefresh() {
+        super.onRefresh();
+        refresh();
+    }
+
+    private void refresh() {
+        mLoading = true;
+        reloadFiles();
+        setEmptyText(getResources().getString(R.string.kanbox_getting_file_list));
+        KanBoxApi.getInstance().getFileList(mRootDir);
+        showSwipeProgress();
+    }
+
+    private void completeRefresh() {
+        mLoading = false;
+//        mHandler.sendEmptyMessageDelayed(MESSAGE_SET_EMPTY_TEXT, 1000);
+        setEmptyText(getResources().getString(R.string.empty_file));
+        hideSwipeProgress();
     }
 }

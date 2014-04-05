@@ -1,23 +1,20 @@
 package com.hufeng.filemanager.view;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
-import java.util.Map.Entry;
-
-import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.utils.LogUtil;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
+
+import com.hufeng.filemanager.browser.FileUtils;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Vector;
 
 public class CategoryBar extends View{
 	
@@ -29,7 +26,7 @@ public class CategoryBar extends View{
 	
 	private Vector<Integer> mColors = new Vector<Integer>(9);
 	
-	private static final String CATEGORY_COLOR_SPACE = "#f2f2f2";
+	private static final String CATEGORY_COLOR_SPACE = "#d2d2d2";
 	private static final String CATEGORY_COLOR_APK = "#9b7ada";
 	private static final String CATEGORY_COLOR_PICTURE = "#6eba2a";
 	private static final String CATEGORY_COLOR_MUSIC = "#db588d";

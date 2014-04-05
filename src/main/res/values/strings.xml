@@ -378,7 +378,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="btn_info_phone_data">Phone Data</string>
 <string name="btn_info_memory">Memory</string>
 <string name="btn_info_cpu">CPU</string>
-<string name="cancel_set_default">Multiple Choice Dialog</string>
+<string name="cancel_set_default">System Default APP</string>
 <string name="sdcard2_label">SDCard 2</string>
 <string name="sdcard1_label">SDCard 1</string>
 <string name="sdcard_label">SDCard</string>
@@ -516,7 +516,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="directory_browser_count_file_only"><xliff:g id="file">%d</xliff:g> file(s)</string>
 <string name="directory_browser_count_directory_only"><xliff:g id="file">%d</xliff:g> directory(s)</string>
 <string name="to_up_dir">Up</string>
-<string name="sdcard_description">Total: <xliff:g id="total">%s</xliff:g>, free: <xliff:g id="free">%s</xliff:g></string>
+<string name="sdcard_description">[<xliff:g id="free">%s</xliff:g>/<xliff:g id="total">%s</xliff:g>]</string>
 <string name="tools_ftp">FTP</string>
 <string name="tools_http">HTTP</string>
 <string name="tools_smb">SMB</string>
@@ -620,7 +620,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="downloading_kanbox_android_client">Kanbox client app is downloading: %1$d%%</string>
 <string name="install_kanbox_android_client">Kanbox apk is ready to be installed</string>
 <string name="kanbox_uploading_files">Kanbox is uploading %1$d files</string>
-<string name="kanbox_uploading_empty">No uploading files</string>
+<string name="kanbox_uploading_empty">No uploading files, please back</string>
 <string name="logout_dialog_info_content">Logout cloud service?</string>
 <string name="kanbox_intro_name">Kanbox</string>
 <string name="kanbox_intro_enter">Enter Kanbox</string>
@@ -643,7 +643,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="category_selected_doc">Ebooks</string>
 <string name="please_select_copy_or_cancel">Please select copy or cancel</string>
 <string name="btn_txt_install">Install</string>
-<string name="btn_txt_pause">Pause</string>
+<string name="btn_txt_pause">Cancel</string>
 <string name="btn_txt_download">Download</string>
 <string name="btn_txt_downloading">Downloading</string>
 <string name="btn_txt_open">View</string>
@@ -656,4 +656,6 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="app_rate_ask_again">Remind me later</string>
 <string name="app_rate_no_thanks">No thanks</string>
 <string name="app_rate_no_market">No Play Store installed on device</string>
+<string name="file_name_input_wrong">!Illegal file name</string>
+<string name="can_not_share">Can not share this file</string>
 </resources>

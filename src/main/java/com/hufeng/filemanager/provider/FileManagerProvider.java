@@ -13,7 +13,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.provider.DataStructures.ApkColumns;
@@ -31,6 +30,7 @@ import com.hufeng.filemanager.provider.DataStructures.VideoColumns;
 import com.hufeng.filemanager.provider.DataStructures.ZipColumns;
 import com.hufeng.filemanager.utils.LogUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -438,10 +438,8 @@ public class FileManagerProvider extends ContentProvider{
 
 	@Override
 	public int delete(Uri uri, String where, String[] whereArgs) {
-		// TODO Auto-generated method stub
-        LogUtil.d(LOG_TAG, "delete:" + uri.toString() + "," + where);
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        int count;
+        int count = 0;
         String tablename = null;
         int type = -1;
         switch (URI_MATCHER.match(uri)) {
@@ -567,6 +565,7 @@ public class FileManagerProvider extends ContentProvider{
         	default:
         		throw new IllegalArgumentException("Unknown URI " + uri);
         }
+        LogUtil.i(LOG_TAG, "delete:" + uri.toString() + "," + (whereArgs==null?"":whereArgs[0]) + " return "+count);
         if(count>0 && type!=-1){
         	updateCategoryData(db,tablename, type);
         }
@@ -632,7 +631,7 @@ public class FileManagerProvider extends ContentProvider{
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-        Log.i(LOG_TAG, "insert " + uri + " " + values);
+        LogUtil.i(LOG_TAG, "insert " + uri + " " + values);
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         long rowId = 0;
         String tablename = null;
@@ -1260,9 +1259,12 @@ public class FileManagerProvider extends ContentProvider{
         		null,
         		FileColumns.FILE_STORAGE_FIELD, 
         		null, null);
+        boolean flag = false;
+        ArrayList<String> stors = new ArrayList<String>();
+        boolean flag_find = false;
         if(cursor!=null){
-        	boolean flag = false;
 	        while(cursor.moveToNext()){
+                flag_find = true;
 		        int count = cursor.getInt(0);
 		        long size = cursor.getLong(1);
 		        String storage = cursor.getString(2);
@@ -1281,11 +1283,40 @@ public class FileManagerProvider extends ContentProvider{
 		        if(row>0 || id>0){
 		        	flag = true;
 		        }
+                stors.add(storage);
 	        }
         	cursor.close();
-        	if(flag)
-        		getContext().getContentResolver().notifyChange(CategoryColumns.CONTENT_URI, null);
+
         }
+        if (!flag_find) {
+            StringBuilder buffer = new StringBuilder();
+            buffer.append(CategoryColumns.CATEGORY_FIELD).append("=").append(type);
+            if (stors.size() > 0) {
+                buffer.append(" AND ").append(CategoryColumns.STORAGE_FIELD).append(" NOT IN (");
+                for (int i = 0; i < stors.size(); i++) {
+                    if (i == 0) {
+                        buffer.append('\'');
+                        buffer.append(stors.get(i).replace("'", "\""));
+                        buffer.append('\'');
+                    } else {
+                        buffer.append(',');
+                        buffer.append('\'');
+                        buffer.append(stors.get(i).replace("'", "\""));
+                        buffer.append('\'');
+                    }
+                }
+                buffer.append(")");
+            }
+            ContentValues cvs = new ContentValues();
+            cvs.put(CategoryColumns.NUMBER_FIELD, 0);
+            cvs.put(CategoryColumns.SIZE_FIELD, 0);
+            int row = db.update(CategoryColumns.TABLE, cvs, buffer.toString(),null);
+            if (row > 0) {
+                flag = true;
+            }
+        }
+        if(flag)
+            getContext().getContentResolver().notifyChange(CategoryColumns.CONTENT_URI, null);
 	}
 
 }

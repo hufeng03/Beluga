@@ -85,7 +85,8 @@
                 android:layout_height="fill_parent">
                 <LinearLayout
                     android:id="@+id/information_panel"
-	                android:orientation="vertical" 
+	                android:orientation="vertical"
+                    android:gravity="center"
 	                android:layout_width="0.0dip"
 	                android:layout_weight="2.0" 
 	                android:layout_height="fill_parent">

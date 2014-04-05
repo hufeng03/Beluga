@@ -1,5 +1,6 @@
 package com.hufeng.filemanager;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -118,6 +119,17 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         mWorkWithTree = tree;
     }
 
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -125,7 +137,6 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         Log.i(LOG_TAG, "FileBrowserFragment onCreate  with menuId = "+mMenuId);
         Bundle arguments = getArguments();
         if (arguments != null) {
-//            mBrowserType = BROWSER_TYPE.valueOf(arguments.getInt(ARGUMENT_BROWSER_TYPE));
             mRootDir = arguments.getString(ARGUMENT_INIT_ROOT_DIR);
         }
     }
@@ -285,6 +296,12 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
     @Override
     public String getSearchString() {
         return mSearchString;
+    }
+
+    @Override
+    public void reportNotExistFile() {
+        mSelectedPostion = getGridView().getFirstVisiblePosition();
+        reloadFiles();
     }
 
     @Override

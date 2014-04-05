@@ -88,7 +88,14 @@ public class KanBoxUploadAdapter extends ArrayAdapter<FileEntry> implements Grid
 
         holder.name.setText(filename);
 //        mInfoLoader.loadInfo(holder.info, holder.path);
-        holder.progress.setProgress(KanBoxApi.getInstance().getUploadingingProgress(holder.path));
+        int progress = KanBoxApi.getInstance().getUploadingingProgress(holder.path);
+        if (progress == 0) {
+            holder.progress.setIndeterminate(true);
+            holder.progress.setProgress(0);
+        } else {
+            holder.progress.setIndeterminate(false);
+            holder.progress.setProgress(progress);
+        }
         holder.status.setText(R.string.btn_txt_pause);
         holder.position = position;
         view.setBackgroundResource(R.drawable.list_selector_normal);

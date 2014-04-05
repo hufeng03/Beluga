@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -28,6 +29,7 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,22 +37,20 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
+
+    private static final String TAG = "KanboxAsyncTask";
+
 	private HttpRequestBase mHttpRequest;
 	private RequestListener mRequestListener;
 	private KanboxException mException;
 	private int mOpType;
 	private String mDestPath;
     private String mPath;
-    private boolean pauseRequested = false;
 //    private Token mToken;
     private boolean mNeedAccessToken;
 
     public String getPath () {
         return mPath;
-    }
-
-    public void pause() {
-        pauseRequested = true;
     }
 
 	/**
@@ -70,6 +70,9 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
 
 	@Override
 	protected String doInBackground(String... params) {
+        if (isCancelled()) {
+            return "pause";
+        }
 		HttpClient sHttpClient = createHttpClient();
 		try {
             if (mOpType == RequestListener.OP_GET_TOKEN) {
@@ -77,7 +80,10 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
             } if (mOpType == RequestListener.OP_REFRESH_TOKEN) {
                 return Token.getInstance().refreshToken(sHttpClient);
             } else {
-                String token_result = Token.getInstance().refreshTokenIfExpired(sHttpClient);
+                Token.getInstance().refreshTokenIfExpired(sHttpClient);
+                if (isCancelled()) {
+                    return "pause";
+                }
                 String access_token = Token.getInstance().getAccessToken();
                 if (mNeedAccessToken) {
                     mHttpRequest.setHeader("Authorization", "Bearer " + access_token);
@@ -87,7 +93,13 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
                     ((HttpPost) mHttpRequest).setEntity(new CountingInputStreamEntity(is, is.available()));
                 }
                 HttpResponse sHttpResponse = sHttpClient.execute(mHttpRequest);
-                int statusCode = sHttpResponse.getStatusLine().getStatusCode();
+                int statusCode = 0;
+                if (sHttpResponse != null && sHttpResponse.getStatusLine()!=null) {
+                    statusCode = sHttpResponse.getStatusLine().getStatusCode();
+                }
+                if ((mOpType == RequestListener.OP_GET_THUMBNAIL || mOpType == RequestListener.OP_GET_THUMBNAIL) && isCancelled()) {
+                    return "pause";
+                }
                 if (statusCode == 200) {
                     switch (mOpType) {
                         case RequestListener.OP_GET_THUMBNAIL:
@@ -107,18 +119,32 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
 			mException = new KanboxException(e);
 			return "error";
 		} catch (IOException e) {
-			mException = new KanboxException(e);
+            mException = new KanboxException(e);
             if ("pause".equals(e.getMessage())) {
                 return "pause";
             } else {
-			    return "error";
+                return "error";
             }
-		}
+        }
 	}
 
-	@Override
+    @Override
+    protected void onCancelled(String s) {
+        super.onCancelled(s);
+        Log.i(TAG, "onCancelled " + (s==null?"":s));
+        if(mRequestListener!=null) {
+            if ("error".equals(s)) {
+                mRequestListener.onComplete(mPath, "pause", mOpType);
+            } else {
+                mRequestListener.onComplete(mPath, s, mOpType);
+            }
+        }
+    }
+
+    @Override
 	protected void onPostExecute(String result) {
 		super.onPostExecute(result);
+        Log.i(TAG, "onPostExecute " + (result==null?"":result));
         if(mRequestListener!=null) {
             if(result == null || result.equals("error")) {
                 mRequestListener.onError(mPath, mException, mOpType);
@@ -175,18 +201,21 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
 	 * @return
 	 */
 	private String downloading(HttpEntity entity) {
-		try {
+        String result = "ok";
+        InputStream is = null;
+        FileOutputStream fos = null;
+        try {
 			int size = 10 * 1024;	//每10K通知一次（用于更新进度条）
 			long total = entity.getContentLength();
-			InputStream is = entity.getContent();
-			FileOutputStream fos = new FileOutputStream(mDestPath);
+			is = entity.getContent();
+			fos = new FileOutputStream(mDestPath);
 			byte[] buf = new byte[size];
 			int num = -1;
 			long count = 0, sendMessageNextPos = 0;
 			
 			if (is != null) {
 				while ((num = is.read(buf)) != -1) {
-                    if (pauseRequested) {
+                    if (isCancelled()) {
                         break;
                     }
 					fos.write(buf, 0, num);
@@ -202,19 +231,36 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
 					}
 				}
 			}
-            if (pauseRequested) {
-                return "pause";
-            } else {
-			    return "ok";
+            if (isCancelled()) {
+                result = "pause";
             }
 		} catch (IllegalStateException e) {
 			mException = new KanboxException(e);
-			return "error";
+			result = "error";
 		} catch (IOException e) {
 			mException = new KanboxException(e);
-			return "error";
-		}
-	}
+			result = "error";
+		} finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (!"ok".equals(result)) {
+                new File(mDestPath).delete();
+            }
+        }
+        return result;
+    }
 	
 
 	public static DefaultHttpClient createHttpClient() {
@@ -283,8 +329,9 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
 
             @Override
             public void write(int oneByte) throws IOException {
-                if (pauseRequested) {
+                if (isCancelled()) {
                     throw new IOException("pause");
+//                    return;
                 }
                 this.outputStream.write(oneByte);
                 counter++;
@@ -292,10 +339,6 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
                     publishProgress(new Long[]{(counter * 100)/ length});
                     pre_log = counter;
                 }
-//                if (mRequestListener != null) {
-//                    int percent = (int) ((counter * 100)/ length);
-//                    mRequestListener.uploadProgress(mPath, percent);
-//                }
             }
         }
 

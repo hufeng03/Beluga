@@ -210,10 +210,12 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
 
     @Override
     public void onKanBoxApiFailed(int op_type, String path) {
-        if (op_type == KanBoxApi.OP_GET_TOKEN || op_type == KanBoxApi.OP_REFRESH_TOKEN) {
-            Toast.makeText(getActivity(), getString(R.string.kanbox_refresh_token_failed), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+        if (getActivity()!=null) {
+            if (op_type == KanBoxApi.OP_GET_TOKEN || op_type == KanBoxApi.OP_REFRESH_TOKEN) {
+                Toast.makeText(getActivity(), getString(R.string.kanbox_refresh_token_failed), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+            }
         }
 
         mWebLayout.setVisibility(View.GONE);
@@ -318,12 +320,12 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
         menu.clear();
     }
 
-    public boolean onBack() {
-        if (mWebView.canGoBack() ){
-            mWebView.goBack();
-            return true;
-        } else {
-            return false;
-        }
-    }
+//    public boolean onBack() {
+//        if (mWebView.canGoBack() ){
+//            mWebView.goBack();
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 }

@@ -376,7 +376,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="btn_info_phone_data">内部存储</string>
 <string name="btn_info_memory">运行内存</string>
 <string name="btn_info_cpu">CPU</string>
-<string name="cancel_set_default">系统默认多选框</string>
+<string name="cancel_set_default">系统默认应用</string>
 <string name="sdcard2_label">SD卡2</string>
 <string name="sdcard1_label">SD卡1</string>
 <string name="sdcard_label">SD卡</string>
@@ -511,7 +511,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="directory_browser_count_file_only"><xliff:g id="file">%d</xliff:g>个文件</string>
 <string name="directory_browser_count_directory_only"><xliff:g id="directory">%d</xliff:g>个文件夹</string>
 <string name="to_up_dir">上级目录</string>
-<string name="sdcard_description">全部容量: <xliff:g id="total">%s</xliff:g>, 剩余容量: <xliff:g id="free">%s</xliff:g></string>
+<string name="sdcard_description">[<xliff:g id="free">%s</xliff:g>/<xliff:g id="total">%s</xliff:g>]</string>
 <string name="tools_ftp">FTP</string>
 <string name="tools_smb">SMB</string>
 <string name="tools_sftp">SFTP</string>
@@ -607,7 +607,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="downloading_kanbox_android_client">"酷盘客户端正在下载: %1$d%%"</string>
 <string name="install_kanbox_android_client">安装使用酷盘手机版，送2T空间</string>
 <string name="kanbox_uploading_files">正常上传%1$d个文件到酷盘</string>
-<string name="kanbox_uploading_empty">没有正在上传的文件</string>
+<string name="kanbox_uploading_empty">没有正在上传的文件, 请后退</string>
 <string name="logout_dialog_info_content">确认退出酷盘?</string>
 <string name="kanbox_intro_name">酷盘</string>
 <string name="kanbox_intro_enter">进入酷盘</string>
@@ -628,7 +628,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="category_selected_doc">电子书</string>
 <string name="please_select_copy_or_cancel">请选择粘贴或取消</string>
 <string name="btn_txt_install">安装</string>
-<string name="btn_txt_pause">暂停</string>
+<string name="btn_txt_pause">取消</string>
 <string name="btn_txt_download">下载</string>
 <string name="btn_txt_downloading">下载中</string>
 <string name="btn_txt_open">查看</string>
@@ -641,4 +641,6 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="app_rate_ask_again">暂不评论</string>
 <string name="app_rate_no_thanks">不喜欢</string>
 <string name="app_rate_no_market">没有找到应用市场</string>
+<string name="file_name_input_wrong">非法文件名称</string>
+<string name="can_not_share">无法分享此文件</string>
 </resources>

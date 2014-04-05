@@ -208,7 +208,7 @@ public class KanBoxApi implements RequestListener{
                 } else {
                     String local_path2 = sPreference2.getStringValueByKey(path);
 
-                    if(!TextUtils.isEmpty(local_path2)) {
+                    if(!TextUtils.isEmpty(local_path2) && new File(local_path2).exists()) {
                         ContentValues cv2 = new ContentValues();
                         cv2.put(DataStructures.CloudBoxColumns.LOCAL_FILE_FIELD, local_path2);
                         FileManager.getAppContext().getContentResolver().update(DataStructures.CloudBoxColumns.CONTENT_URI, cv2,
@@ -236,20 +236,25 @@ public class KanBoxApi implements RequestListener{
                 mUploadingProgress.remove(path);
                 removeUploadingTask(path);
                 PushSharePreference preference = new PushSharePreference(FileManager.getAppContext(), KanBoxApi.PUSH_SHAREPREFERENCE_NAME);
-                String remote_path = preference.getStringValueByKey(path);
-                if(!TextUtils.isEmpty(remote_path)) {
-                    KanBoxFileEntry entry = new KanBoxFileEntry(path);
-                    entry.path = remote_path;
-                    String parent2 = new File(remote_path).getParent();
-                    if(!parent2.endsWith("/")) {
-                       parent2+="/";
+                if ("pause".equals(response)) {
+
+                } else {
+                    String remote_path = preference.getStringValueByKey(path);
+                    if (!TextUtils.isEmpty(remote_path)) {
+                        KanBoxFileEntry entry = new KanBoxFileEntry(path);
+                        entry.path = remote_path;
+                        String parent2 = new File(remote_path).getParent();
+                        if (!parent2.endsWith("/")) {
+                            parent2 += "/";
+                        }
+                        entry.parent_path = parent2;
+                        entry.local_file_path = path;
+                        entry.is_directory = false;
+                        ContentValues cv2 = KanBoxResponseHandler.buildFullContentValueFromKanBoxFileEntry(entry);
+                        Uri uri = FileManager.getAppContext().getContentResolver().insert(DataStructures.CloudBoxColumns.CONTENT_URI, cv2);
                     }
-                    entry.parent_path = parent2;
-                    entry.local_file_path = path;
-                    entry.is_directory = false;
-                    ContentValues cv2 = KanBoxResponseHandler.buildFullContentValueFromKanBoxFileEntry(entry);
-                    Uri uri = FileManager.getAppContext().getContentResolver().insert(DataStructures.CloudBoxColumns.CONTENT_URI, cv2);
                 }
+                preference.removeSharePreferences(path);
                 break;
         }
         if (listener != null) {
@@ -404,7 +409,7 @@ public class KanBoxApi implements RequestListener{
     }
 
     public void downloadFile(String remote_path, String local_path) {
-        mDownloadingProgress.put(remote_path, 5);
+        mDownloadingProgress.put(remote_path, 0);
         PushSharePreference preference = new PushSharePreference(FileManager.getAppContext(), KanBoxApi.PUSH_SHAREPREFERENCE_NAME);
         preference.saveStringValueToSharePreferences(remote_path, local_path);
         new File(local_path).getParentFile().mkdirs();
@@ -443,12 +448,12 @@ public class KanBoxApi implements RequestListener{
             KanboxAsyncTask task = iter.next();
             if (task.getPath().equals(path)) {
                 downloadingTask = task;
-                mDownloadingTasks.remove(task);
+//                mDownloadingTasks.remove(task);
                 break;
             }
         }
-        if (downloadingTask != null) {
-            downloadingTask.pause();
+        if (downloadingTask != null && !downloadingTask.isCancelled()) {
+            downloadingTask.cancel(true);
         }
     }
 
@@ -461,12 +466,12 @@ public class KanBoxApi implements RequestListener{
             KanboxAsyncTask task = iter.next();
             if (task.getPath().equals(path)) {
                 uploadingTask = task;
-                mUploadingTasks.remove(task);
+//                mUploadingTasks.remove(task);
                 break;
             }
         }
-        if (uploadingTask != null) {
-            uploadingTask.pause();
+        if (uploadingTask != null && !uploadingTask.isCancelled()) {
+            uploadingTask.cancel(true);
         }
     }
 
@@ -480,7 +485,8 @@ public class KanBoxApi implements RequestListener{
     }
 
     public static int getDownloadingProgress(String path) {
-        return mDownloadingProgress.get(path);
+        Integer val =  mDownloadingProgress.get(path);
+        return val == null ? 0 :val;
     }
 
     public static boolean isUploading(String path) {
@@ -488,7 +494,8 @@ public class KanBoxApi implements RequestListener{
     }
 
     public static int getUploadingingProgress(String path) {
-        return mUploadingProgress.get(path);
+        Integer val =  mUploadingProgress.get(path);
+        return val == null ? 0 :val;
     }
 
     public List<FileEntry> getUploadingFiles() {
@@ -508,7 +515,7 @@ public class KanBoxApi implements RequestListener{
 
 
     public void uploadFile(String localPath, String root) {
-        mUploadingProgress.put(localPath, 5);
+        mUploadingProgress.put(localPath, 0);
         String name = new File(localPath).getName();
         try {
             name = URLEncoder.encode(name, "UTF-8");

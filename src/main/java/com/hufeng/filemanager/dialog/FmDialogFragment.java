@@ -16,7 +16,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +50,8 @@ import java.util.Map;
 //import com.hufeng.filemanager.CategoryTab;
 
 public class FmDialogFragment extends SherlockDialogFragment{
+    
+    private String CORRECT_FILENAME = "^[^*&%?!\\s]+$";
 	
 	private int mDialogId = -1;
 
@@ -480,6 +484,33 @@ public class FmDialogFragment extends SherlockDialogFragment{
             View contents = View.inflate(getActivity(), R.layout.new_directory_dialog, null);
             final String root = getArguments().getString("root");
             final EditText edit = (EditText)contents.findViewById(R.id.new_directory_dialog_edit);
+            final TextView error = (TextView)contents.findViewById(R.id.error_name);
+            if (error!= null) {
+                edit.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (s != null) {
+                            String name = s.toString();
+                            if (!TextUtils.isEmpty(name) && !name.matches(CORRECT_FILENAME)) {
+                                error.setVisibility(View.VISIBLE);
+                                return;
+                            }
+                        }
+                        error.setVisibility(View.INVISIBLE);
+                        return;
+                    }
+                });
+            }
             return new AlertDialog.Builder(getActivity())
                     .setTitle(R.string.new_directory_dialog_title)
                     .setView(contents)
@@ -501,6 +532,33 @@ public class FmDialogFragment extends SherlockDialogFragment{
             View contents = View.inflate(getActivity(), R.layout.new_directory_dialog, null);
             final String parent_path = getArguments().getString("path");
             final EditText edit = (EditText)contents.findViewById(R.id.new_directory_dialog_edit);
+            final TextView error = (TextView)contents.findViewById(R.id.error_name);
+            if (error!=null) {
+                edit.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (s != null) {
+                            String name = s.toString();
+                            if (!TextUtils.isEmpty(name) && !name.matches(CORRECT_FILENAME)) {
+                                error.setVisibility(View.VISIBLE);
+                                return;
+                            }
+                        }
+                        error.setVisibility(View.GONE);
+                        return;
+                    }
+                });
+            }
             return new AlertDialog.Builder(getActivity())
             .setTitle(R.string.new_directory_dialog_title)
             .setView(contents)
@@ -546,7 +604,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
 			.setTitle(R.string.delete_confirm_dialog_title)
 			.setView(contents)
 			.setPositiveButton(android.R.string.ok,new DialogInterface.OnClickListener() {
-				
+
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					if(mListener!=null) {
@@ -668,6 +726,10 @@ public class FmDialogFragment extends SherlockDialogFragment{
             final TextView owner = (TextView)contents.findViewById(R.id.file_owner_content);
             final TextView group = (TextView)contents.findViewById(R.id.file_group_content);
             File entry = new File(path);
+            if (entry.isDirectory()) {
+                size.setVisibility(View.GONE);
+                contents.findViewById(R.id.file_size_label).setVisibility(View.GONE);
+            }
             name.setText(entry.getName());
             location.setText(entry.getAbsolutePath());
             timestamp.setText(TimeUtil.getDateString(entry.lastModified()));
@@ -742,6 +804,33 @@ public class FmDialogFragment extends SherlockDialogFragment{
             View contents = View.inflate(getActivity(), R.layout.rename_dialog, null);
             final String orig_path = getArguments().getString("path");
             final EditText edit = (EditText)contents.findViewById(R.id.rename_dialog_edit);
+            final TextView error = (TextView)contents.findViewById(R.id.error_name);
+            if (error != null) {
+                edit.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (s != null) {
+                            String name = s.toString();
+                            if (!TextUtils.isEmpty(name) && !name.matches(CORRECT_FILENAME)) {
+                                error.setVisibility(View.VISIBLE);
+                                return;
+                            }
+                        }
+                        error.setVisibility(View.INVISIBLE);
+                        return;
+                    }
+                });
+            }
             int idx = orig_path.lastIndexOf(File.separator);
             if(idx>0)
                 edit.setText(orig_path.substring(idx+1));
@@ -780,6 +869,33 @@ public class FmDialogFragment extends SherlockDialogFragment{
             View contents = View.inflate(getActivity(), R.layout.rename_dialog, null);
             final String orig_path = getArguments().getString("path");
             final EditText edit = (EditText)contents.findViewById(R.id.rename_dialog_edit);
+            final TextView error = (TextView)contents.findViewById(R.id.error_name);
+            if (error!=null) {
+                edit.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (s != null) {
+                            String name = s.toString();
+                            if (!TextUtils.isEmpty(name) && !name.matches(CORRECT_FILENAME)) {
+                                error.setVisibility(View.VISIBLE);
+                                return;
+                            }
+                        }
+                        error.setVisibility(View.INVISIBLE);
+                        return;
+                    }
+                });
+            }
             int idx = orig_path.lastIndexOf(File.separator);
             if(idx>0)
             	edit.setText(orig_path.substring(idx+1));

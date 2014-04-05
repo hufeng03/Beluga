@@ -736,8 +736,9 @@ public class FileAction {
     	if(uri!=null)
     	{
     		String path = file.getPath();
-    		int count = FileManager.getAppContext().getContentResolver().delete(uri, DataStructures.FileColumns.FILE_PATH_FIELD+"=?", new String[]{path});
-    		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "delete "+path+" return "+count);
+            int favorite_count = FileManager.getAppContext().getContentResolver().delete(FavoriteColumns.CONTENT_URI, DataStructures.FileColumns.FILE_PATH_FIELD+"=?", new String[]{path});
+            int count = FileManager.getAppContext().getContentResolver().delete(uri, DataStructures.FileColumns.FILE_PATH_FIELD+"=?", new String[]{path});
+    		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "delete "+path+" return "+count+","+favorite_count);
     	}
     	
     	deleteFileInMediaDb(file.getAbsolutePath());
@@ -810,7 +811,12 @@ public class FileAction {
     	}
     	if(uri!=null)
     	{
-    		Uri new_uri = FileManager.getAppContext().getContentResolver().insert(uri, values);
+    		Uri new_uri = null;
+            try {
+                new_uri = FileManager.getAppContext().getContentResolver().insert(uri, values);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
     		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "insert "+path+" return "+new_uri);
     	}
 
@@ -903,8 +909,11 @@ public class FileAction {
             data = bos.toByteArray();
             cv.put(SafeDataStructs.SafeColumns.THUMBNAIL, data);
         }
-
-        FileManager.getAppContext().getContentResolver().insert(SafeDataStructs.SafeColumns.CONTENT_URI, cv);
+        try {
+            FileManager.getAppContext().getContentResolver().insert(SafeDataStructs.SafeColumns.CONTENT_URI, cv);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     private static int updateInDb(String old_path, String new_path, int cate){
@@ -940,8 +949,13 @@ public class FileAction {
         ContentValues cvs = new ContentValues();
         cvs.put(MediaStore.Files.FileColumns.DATA, new_path);
         
-        int count = FileManager.getAppContext().getContentResolver()
-                .update(uri, cvs, selection, selectionArgs);
+        int count = 0;
+        try {
+            count = FileManager.getAppContext().getContentResolver()
+                    .update(uri, cvs, selection, selectionArgs);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
  
         return count;
     }
@@ -1039,7 +1053,12 @@ public class FileAction {
         values.put(FavoriteColumns.FILE_PATH_FIELD, object.getPath());
         values.put(FavoriteColumns.FILE_DATE_FIELD, object.getDate());
         values.put(FavoriteColumns.FILE_EXTENSION_FIELD, object.getExtension());
-        int count = FileManager.getAppContext().getContentResolver().update(FavoriteColumns.CONTENT_URI, values, FavoriteColumns.FILE_PATH_FIELD+"=?", new String[]{oldpath});
+        int count = 0;
+        try {
+            count = FileManager.getAppContext().getContentResolver().update(FavoriteColumns.CONTENT_URI, values, FavoriteColumns.FILE_PATH_FIELD+"=?", new String[]{oldpath});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "update favorite from "+oldpath+" to "+newpath+" return "+count);
 
         values.clear();
@@ -1082,11 +1101,19 @@ public class FileAction {
     	if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "update file in media database: "+update_count);
     	if(uri!=null)
     	{
-    		count = FileManager.getAppContext().getContentResolver().update(uri, values, DataStructures.FileColumns.FILE_PATH_FIELD+"=?", new String[]{oldpath});
-    		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "update "+oldpath+" to "+newpath+" return "+count);
+            try {
+                count = FileManager.getAppContext().getContentResolver().update(uri, values, DataStructures.FileColumns.FILE_PATH_FIELD + "=?", new String[]{oldpath});
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "update "+oldpath+" to "+newpath+" return "+count);
     		if(count<=0)
     		{
-    			FileManager.getAppContext().getContentResolver().insert(uri, values);
+                try {
+                    FileManager.getAppContext().getContentResolver().insert(uri, values);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
     			if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "insert "+newpath+" return "+count);
     		}
     //		deleteFileInMediaDb(oldfile.getAbsolutePath());
@@ -1213,11 +1240,21 @@ public class FileAction {
     		values.put(FavoriteColumns.IS_DIRECTORY_FIELD, 0);
     	}
     	Uri uri = FavoriteColumns.CONTENT_URI;
-		int count = FileManager.getAppContext().getContentResolver().update(uri, values, DataStructures.FileColumns.FILE_PATH_FIELD+"=?", new String[]{path});
-		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "update "+path+" return "+count);
+		int count = 0;
+        try {
+            count = FileManager.getAppContext().getContentResolver().update(uri, values, DataStructures.FileColumns.FILE_PATH_FIELD + "=?", new String[]{path});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "update "+path+" return "+count);
 		if(count<=0)
 		{
-			FileManager.getAppContext().getContentResolver().insert(uri, values);
+            try {
+                FileManager.getAppContext().getContentResolver().insert(uri, values);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 			if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "insert "+path+" return "+count);
 		}
     }
@@ -1339,8 +1376,12 @@ public class FileAction {
 	    		values.put(MediaStore.Audio.Media.IS_ALARM, false);//設置鬧鐘鈴聲為false
 	    		values.put(MediaStore.Audio.Media.IS_MUSIC, false);
 	    		// 把需要設為鈴聲的歌曲更新鈴聲庫
-	    		FileManager.getAppContext().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?",new String[] { path });
-	    		newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
+                try {
+                    FileManager.getAppContext().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?", new String[]{path});
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+                newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
 	    	}
 	    	else
 	    	{    	
@@ -1353,8 +1394,12 @@ public class FileAction {
 	    	   values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true);
 	    	   values.put(MediaStore.Audio.Media.IS_ALARM, true);
 	    	   values.put(MediaStore.Audio.Media.IS_MUSIC, false);
-	
-	    	   newUri = FileManager.getAppContext().getContentResolver().insert(uri, values);
+
+                try {
+                    newUri = FileManager.getAppContext().getContentResolver().insert(uri, values);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 	    	}
 	    	if(cursor!=null)
 	    		cursor.close();
@@ -1407,8 +1452,32 @@ public class FileAction {
 //    		e.printStackTrace();
 //    	}
 //    }
+
+    public static void shareFile(Context context, String file) {
+        String mimeType;
+
+        File fileIn = new File(file);
+        if (fileIn.isDirectory() || file.length() == 0) {
+            Toast.makeText(context, R.string.can_not_share, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mimeType = FileUtils.getMIMEType(fileIn);
+        if (TextUtils.isEmpty(mimeType)) {
+            mimeType = "*/*";
+        }
+        Uri u = Uri.fromFile(fileIn);
+
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+
+        if ("application/vnd.android.package-archive".equals(mimeType)) {
+            mimeType = "application/zip";
+        }
+        intent.setType(mimeType);
+        intent.putExtra(Intent.EXTRA_STREAM, u);
+        context.startActivity(intent);
+    }
     
-    public static Intent buildSendFile(Context context, String[] files)
+    public static Intent buildSendFile(Context context, String... files)
     {
         ArrayList<Uri> uris = new ArrayList<Uri>();
 

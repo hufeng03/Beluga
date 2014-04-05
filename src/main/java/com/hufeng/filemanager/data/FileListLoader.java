@@ -46,7 +46,7 @@ public class FileListLoader extends AsyncTaskLoader<List<FileEntry>> {
 //        android.os.Debug.waitForDebugger();
         Log.i(LOG_TAG, this.hashCode()+" FileListLoader loadinbackground()");
         List<FileEntry> entries = new ArrayList<FileEntry>();
-        if (!TextUtils.isEmpty(mRoot) && new File(mRoot).isDirectory()) {
+        if (!TextUtils.isEmpty(mRoot) && new File(mRoot).exists() && new File(mRoot).isDirectory()) {
             String[] files = new File(mRoot).list();
             if (files != null) {
                 FileEntry entry = null;
@@ -64,7 +64,7 @@ public class FileListLoader extends AsyncTaskLoader<List<FileEntry>> {
                 FileEntry entry = null;
                 for (String file : mDirs) {
                     entry = new FileEntry(file);
-                    if (entry.path!=null && (!entry.isDirectory() || !mNoDirectory)) {
+                    if (!TextUtils.isEmpty(entry.path) && new File(entry.path).exists() && (!entry.isDirectory() || !mNoDirectory)) {
                         if (TextUtils.isEmpty(mSearch) || entry.getName().contains(mSearch)) {
                             entries.add(entry);
                         }

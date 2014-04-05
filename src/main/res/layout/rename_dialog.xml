@@ -13,5 +13,13 @@
         android:inputType="text"
         android:textColor="@color/gray"
         />
+    <TextView
+        android:id="@+id/error_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:visibility="invisible"
+        android:paddingLeft="4dp"
+        android:text="@string/file_name_input_wrong"/>
 
 </LinearLayout>

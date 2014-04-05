@@ -115,6 +115,11 @@ public class ResourceListAdapter extends ArrayAdapter<ResourceEntry> implements 
                 holder.progress.setVisibility(View.VISIBLE);
                 int progress = FileDownloader.getDownloadProgress(entry.download_url);
                 Log.i(LOG_TAG, "apk download progress is "+progress);
+                if (progress == 0) {
+                    holder.progress.setIndeterminate(true);
+                } else {
+                    holder.progress.setIndeterminate(false);
+                }
                 holder.progress.setProgress(progress);
                 holder.info.setVisibility(View.GONE);
                 holder.status.setText(R.string.btn_txt_pause);

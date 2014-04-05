@@ -3,7 +3,6 @@ package com.hufeng.filemanager.kanbox;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import com.hufeng.filemanager.FileGridFragment;
@@ -73,10 +72,10 @@ public class KanBoxUploadFragment extends FileGridFragment
         }
     }
 
-    @Override
-    public void onGridItemClick(GridView g, View v, int position, long id) {
-        clickGridItem(position);
-    }
+//    @Override
+//    public void onGridItemClick(GridView g, View v, int position, long id) {
+//        clickGridItem(position);
+//    }
 
     @Override
     public void onFileStatusClicked(String path, long position) {

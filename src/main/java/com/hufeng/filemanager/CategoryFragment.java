@@ -447,42 +447,47 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 			LayoutInflater inflater = LayoutInflater.from(getActivity());
 			mInformationLayout.removeAllViews();
 			for(int i=0;i<paths.length;i++){
-				Map map = new HashMap<Integer, Long>();
-				long total_size = 0;
-				View child = inflater.inflate(R.layout.space_stats, null);
-				child.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 1.0f));
-				CategoryBar bar = (CategoryBar)child.findViewById(R.id.space_volume_stats);
-				TextView label = (TextView)child.findViewById(R.id.space_volume_label);
-				TextView description = (TextView)child.findViewById(R.id.space_volume_description);
-				String path = paths[i];
-				cursor.moveToPosition(-1);
-				map.clear();
-				while(cursor.moveToNext()){
-					String path1 = cursor.getString(CategoryColumns.STORAGE_FIELD_INDEX);
-					if(path.equalsIgnoreCase(path1)){
-						long size = cursor.getLong(DataStructures.CategoryColumns.SIZE_FIELD_INDEX);
-						long number = cursor.getLong(DataStructures.CategoryColumns.NUMBER_FIELD_INDEX);
-						int category = cursor.getInt(DataStructures.CategoryColumns.CATEGORY_FIELD_INDEX);
-						map.put(category, size);
-						if(category!=0)
-							total_size += size;
-					}
-				}
-				long all_size = StorageManager.getInstance(getSherlockActivity()).getAllSize(path);
-				long available_size = StorageManager.getInstance(getSherlockActivity()).getAvailableSize(path);
-				long other_size =  all_size
-						- available_size
-						- total_size;
-				if(other_size<0)
-					other_size = 0;
-				map.put(0, other_size);
-				map.put(-1, all_size);
-				bar.refresh(map);
-				
-				label.setText(paths[i]);
-				description.setText(getString(R.string.sdcard_description, FileUtil.normalize(all_size), FileUtil.normalize(available_size)));
-				mInformationLayout.addView(child, i);
-			}
+//                int j = 0;
+//                while (j<3) {
+                    Map map = new HashMap<Integer, Long>();
+                    long total_size = 0;
+                    View child = inflater.inflate(R.layout.space_stats, null);
+                    child.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 1.0f));
+                    CategoryBar bar = (CategoryBar) child.findViewById(R.id.space_volume_stats);
+                    TextView label = (TextView) child.findViewById(R.id.space_volume_label);
+                    TextView description = (TextView) child.findViewById(R.id.space_volume_description);
+                    String path = paths[i];
+                    cursor.moveToPosition(-1);
+                    map.clear();
+                    while (cursor.moveToNext()) {
+                        String path1 = cursor.getString(CategoryColumns.STORAGE_FIELD_INDEX);
+                        if (path.equalsIgnoreCase(path1)) {
+                            long size = cursor.getLong(DataStructures.CategoryColumns.SIZE_FIELD_INDEX);
+                            long number = cursor.getLong(DataStructures.CategoryColumns.NUMBER_FIELD_INDEX);
+                            int category = cursor.getInt(DataStructures.CategoryColumns.CATEGORY_FIELD_INDEX);
+                            map.put(category, size);
+                            if (category != 0)
+                                total_size += size;
+                        }
+                    }
+                    long all_size = StorageManager.getInstance(getSherlockActivity()).getAllSize(path);
+                    long available_size = StorageManager.getInstance(getSherlockActivity()).getAvailableSize(path);
+                    long other_size = all_size
+                            - available_size
+                            - total_size;
+                    if (other_size < 0)
+                        other_size = 0;
+                    map.put(0, other_size);
+                    map.put(-1, all_size);
+                    bar.refresh(map);
+
+                    label.setText(paths[i]);
+                    description.setText(getString(R.string.sdcard_description, FileUtil.normalize(available_size), FileUtil.normalize(all_size)));
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+                    mInformationLayout.addView(child, params);
+//                    j++;
+//                }
+             }
 
             if(UiServiceHelper.getInstance().isScanning())
             {
@@ -494,12 +499,7 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
             }
 		}
 	}	
-	
-	public void setCategoryInformation(int download, int favorite, int app) {
-		mCategoryDownloadCount.setText("("+download+")");
-//		mCategoryFavoriteCount.setText("("+favorite+")");
-		mCategoryAppCount.setText("("+app+")");
-	}
+
 
 
 	@Override

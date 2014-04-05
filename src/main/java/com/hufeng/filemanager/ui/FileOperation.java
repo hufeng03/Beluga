@@ -61,7 +61,7 @@ public class FileOperation extends BaseFragment {
     private ArrayList<String> mOperationPaths = new ArrayList<String>();
     private ArrayList<String> mCopyPaths = new ArrayList<String>();
     private ArrayList<String> mMovePaths = new ArrayList<String>();
-    private ArrayList<String> mUploadPaths = new ArrayList<String>();
+//    private ArrayList<String> mUploadPaths = new ArrayList<String>();
 
 
     @Override
@@ -123,17 +123,17 @@ public class FileOperation extends BaseFragment {
     		return false;
     }
 
-    public boolean isUploading() {
-        if(mUploadPaths.size()!=0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+//    public boolean isUploading() {
+//        if(mUploadPaths.size()!=0) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
-    public String[] getUploadingFiles(){
-        return mUploadPaths.toArray(new String[mUploadPaths.size()]);
-    }
+//    public String[] getUploadingFiles(){
+//        return mUploadPaths.toArray(new String[mUploadPaths.size()]);
+//    }
     
     public interface FileOperationProvider {
         public void refreshFiles();
@@ -181,19 +181,19 @@ public class FileOperation extends BaseFragment {
             mCopyPaths.add(path);
     }
 
-    public void setUploadFiles(String[] files) {
-        mOperationPaths.clear();
-        mUploadPaths.clear();
-        for(String path:files)
-            mUploadPaths.add(path);
-    }
+//    public void setUploadFiles(String[] files) {
+//        mOperationPaths.clear();
+//        mUploadPaths.clear();
+//        for(String path:files)
+//            mUploadPaths.add(path);
+//    }
 	
 	public void clearOperationFiles()
 	{
     	mOperationPaths.clear();
         mCopyPaths.clear();
         mMovePaths.clear();
-        mUploadPaths.clear();
+//        mUploadPaths.clear();
 	}
 
     public void onOperationCreateConfirm(Context context, final String name) {
@@ -439,10 +439,7 @@ public class FileOperation extends BaseFragment {
 		}
 		
 		Intent intent = FileAction.buildSendFile(context, mOperationPaths.toArray(new String[mOperationPaths.size()]));
-		ResolveInfo[] apps = null;
-        apps = IntentUtils.queryAvailableApps(intent);
-		if(flag)
-			apps = IntentUtils.filterOutMms(apps);
+		ResolveInfo[] apps = IntentUtils.queryAvailableApps(intent);
         apps = IntentUtils.sort(apps);
 		if(flag_directory) {
 			Toast.makeText(context, R.string.directory_cannot_send, Toast.LENGTH_SHORT).show();

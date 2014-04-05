@@ -147,6 +147,7 @@ public class ApkInfoLoader implements Handler.Callback {
     {
         boolean loaded = false;
         int cate = 0;
+        name.setText("");
         if(path.equals("to_up_dir")){
             loaded = true;
         }else{

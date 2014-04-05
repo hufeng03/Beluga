@@ -144,7 +144,7 @@ android {
 
 dependencies {
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
-    compile 'com.android.support:support-v4:18.0.+'
+    compile 'com.android.support:support-v4:19.1.+'
     compile 'com.jakewharton:butterknife:4.0.1'
     compile fileTree(dir: 'libs', include: '*.jar')
     googleCompile fileTree(dir: 'libs', include: '*.jar')

@@ -26,21 +26,19 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.dialog.FmDialogFragment;
+import com.hufeng.filemanager.provider.DataStructures;
+import com.hufeng.filemanager.scan.ImageObject;
+import com.hufeng.filemanager.scan.VideoObject;
 import com.hufeng.safebox.CryptUtil;
 import com.hufeng.safebox.SafeBoxGrouperAdapter;
 import com.hufeng.safebox.SafeDataStructs;
-import com.hufeng.filemanager.scan.ImageObject;
-import com.hufeng.filemanager.scan.VideoObject;
-import com.hufeng.filemanager.ui.FileGridAdapterListener;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class SafeBoxGrouperFragment extends GridFragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        FileGridAdapterListener,
         ActionMode.Callback,
         FmDialogFragment.OnDialogDoneListener{
 
@@ -81,7 +79,6 @@ public class SafeBoxGrouperFragment extends GridFragment implements LoaderManage
         setEmptyText(empty_text);
 
         mAdapter = new SafeBoxGrouperAdapter(getSherlockActivity(),null, mOperationPaths);
-        mAdapter.setFileGridAdapterListener(this);
         setGridAdapter(mAdapter);
 
         setGridShownNoAnimation(false);
@@ -620,11 +617,6 @@ public class SafeBoxGrouperFragment extends GridFragment implements LoaderManage
 
     private void scanRecoveredFiles(final String[] paths) {
         MediaScannerConnection.scanFile(getActivity().getApplicationContext(), paths, null, null);
-    }
-
-    @Override
-    public String getSearchString() {
-        return null;
     }
 
 }

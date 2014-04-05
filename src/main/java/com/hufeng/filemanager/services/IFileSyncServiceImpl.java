@@ -88,6 +88,16 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
         return;
 	}
 
+    @Override
+    public void deleteUnexist(int type) throws RemoteException {
+        if (!mIsScanning.get()) {
+            mIsScanning.set(true);
+            new DeleteUnexistTask().execute(type);
+        }
+        return;
+    }
+
+
     private void performScan() {
         if (!mIsScanning.get()) {
             mIsScanning.set(true);
@@ -96,6 +106,44 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
 
             new ScanTask().execute();
         } else {
+
+        }
+    }
+
+    private class DeleteUnexistTask extends AsyncTask<Integer, Void, Void> {
+        @Override
+        protected Void doInBackground(Integer... params) {
+            deleteUnexistFiles(params[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mIsScanning.set(false);
+        }
+    }
+
+    private void deleteUnexistFiles(int type) {
+        switch (type) {
+            case FileUtils.FILE_TYPE_IMAGE:
+                clearUnexistFileInDatabase(DataStructures.ImageColumns.CONTENT_URI);
+                break;
+            case FileUtils.FILE_TYPE_AUDIO:
+                clearUnexistFileInDatabase(DataStructures.AudioColumns.CONTENT_URI);
+                break;
+            case FileUtils.FILE_TYPE_VIDEO:
+                clearUnexistFileInDatabase(DataStructures.VideoColumns.CONTENT_URI);
+                break;
+            case FileUtils.FILE_TYPE_APK:
+                clearUnexistFileInDatabase(DataStructures.ApkColumns.CONTENT_URI);
+                break;
+            case FileUtils.FILE_TYPE_DOCUMENT:
+                clearUnexistFileInDatabase(DataStructures.DocumentColumns.CONTENT_URI);
+                break;
+            case FileUtils.FILE_TYPE_ZIP:
+                clearUnexistFileInDatabase(DataStructures.ZipColumns.CONTENT_URI);
+                break;
 
         }
     }
@@ -251,6 +299,8 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                         continue;
                     } else if (child.isHidden()) {
                         continue;
+                    } else if (child.length() == 0) {
+                        continue;
                     } else {
                         int type = FileUtils.getFileType(child);
                         String name = child.getAbsolutePath();
@@ -403,8 +453,6 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
     private int[] clearUnexistFileInDatabase(Uri uri) {
         int count = 0;
         String[] projection = new String[]{DataStructures.FileColumns.FILE_PATH_FIELD};
-        String selection_where = DataStructures.FileColumns.FILE_SYNC_FIELD + "!=?";
-        String[] selection_arg = new String[]{String.valueOf(1)};
 
         StringBuilder delete_selection = new StringBuilder();
         delete_selection.append(DataStructures.FileColumns.FILE_PATH_FIELD + " IN ");
@@ -472,7 +520,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                 while(cursor.moveToNext()) {
                     ContentValues cv = new ContentValues();
                     String path = cursor.getString(0);
-                    if (!new File(path).exists() || new File(path).isDirectory()) {
+                    if (!new File(path).exists() || new File(path).isDirectory() || new File(path).length() == 0) {
                         continue;
                     }
                     cv.put(DataStructures.FileColumns.FILE_PATH_FIELD, path);

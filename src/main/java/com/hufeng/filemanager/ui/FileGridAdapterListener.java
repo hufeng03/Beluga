@@ -5,4 +5,5 @@ package com.hufeng.filemanager.ui;
  */
 public abstract interface FileGridAdapterListener{
     public String getSearchString();
+    public void reportNotExistFile();
 }

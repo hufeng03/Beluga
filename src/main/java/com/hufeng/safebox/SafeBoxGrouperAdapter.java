@@ -14,7 +14,6 @@ import com.hufeng.filemanager.GridAdapter;
 import com.hufeng.filemanager.GridFragment;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.ui.FileGridAdapterListener;
 import com.hufeng.filemanager.ui.FileViewHolder;
 
 import java.io.File;
@@ -112,12 +111,6 @@ public class SafeBoxGrouperAdapter extends CursorAdapter implements GridAdapter 
         }
     }
 
-
-    FileGridAdapterListener mFileGridAdapterListener;
-
-    public void setFileGridAdapterListener(FileGridAdapterListener listener){
-        mFileGridAdapterListener = listener;
-    }
 
     @Override
     public void changeDisplayMode(GridFragment.DISPLAY_MODE mode) {

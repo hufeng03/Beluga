@@ -163,7 +163,8 @@ public abstract class FileOperationActivity extends BaseActivity implements
 
                 MenuItem item3 = menu.findItem(R.id.file_operation_addcloud2);
                 if (item3 != null) {
-                    if(new File(path).canRead() && Constants.SHOW_KANBOX_UPLOAD_ACTION) {
+                    File file = new File(path);
+                    if(!file.isDirectory() && file.canRead() && Constants.SHOW_KANBOX_UPLOAD_ACTION) {
                         item3.setVisible(true);
                     } else {
                         item3.setVisible(false);

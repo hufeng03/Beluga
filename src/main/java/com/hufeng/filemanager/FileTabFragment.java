@@ -15,6 +15,7 @@ import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.browser.ImageEntry;
+import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.ui.FileOperation;
 import com.hufeng.playimage.AnimatorViewProvider;
 import com.hufeng.playimage.ImageScaleAnimationController;
@@ -186,6 +187,9 @@ public abstract class FileTabFragment extends BaseFragment implements
     protected void selectFile(ImageView v, FileEntry entry) {
         if (!entry.exist) {
             removeFile(entry.path);
+            return;
+        }
+        if (StorageManager.getInstance(getActivity()).isStorage(entry.path)) {
             return;
         }
         if (getFileOperation() != null) {

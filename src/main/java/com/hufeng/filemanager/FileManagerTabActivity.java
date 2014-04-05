@@ -184,10 +184,11 @@ public class FileManagerTabActivity extends FileOperationActivity{
 			String[] files = intent.getStringArrayExtra("files");
             getFileOperation().setCopyFiles(files);
             mViewPager.setCurrentItem(FRAGMENT_INDEX_DEVICE);
-		} else if( ACTION_UPLOAD_FILES.equals(intent.getAction())) {
-            String[] files = intent.getStringArrayExtra("files");
-            ((KanBoxTabFragment)mTabAdapter.getFragment(FRAGMENT_INDEX_TOOLS)).getFileOperation().setUploadFiles(files);
-        }
+		}
+//        else if( ACTION_UPLOAD_FILES.equals(intent.getAction())) {
+//            String[] files = intent.getStringArrayExtra("files");
+//            ((KanBoxTabFragment)mTabAdapter.getFragment(FRAGMENT_INDEX_TOOLS)).getFileOperation().setUploadFiles(files);
+//        }
         refreshUI();
         invalidateOptionsMenu();
 	}
