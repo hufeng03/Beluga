@@ -30,13 +30,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by feng on 13-11-21.
@@ -48,9 +47,13 @@ public class KanBoxApi implements RequestListener{
 
     public static HashMap<String, Integer> mUploadingProgress = new HashMap<String, Integer>();
 
-    public static LinkedBlockingQueue<KanboxAsyncTask> mDownloadingTasks = new LinkedBlockingQueue<KanboxAsyncTask>();
+    public static ConcurrentHashMap<String, KanboxAsyncTask> mDownloadingTasks = new ConcurrentHashMap<String, KanboxAsyncTask>();
 
-    public static LinkedBlockingQueue<KanboxAsyncTask> mUploadingTasks = new LinkedBlockingQueue<KanboxAsyncTask>();
+    public static ConcurrentHashMap<String, KanboxAsyncTask> mUploadingTasks = new ConcurrentHashMap<String, KanboxAsyncTask>();
+
+    public static ConcurrentHashMap<String, KanboxAsyncTask> mUploadingFailedTasks = new ConcurrentHashMap<String, KanboxAsyncTask>();
+
+    public static ConcurrentHashMap<String, KanboxAsyncTask> mUploadingSuccessTasks = new ConcurrentHashMap<String, KanboxAsyncTask>();
 
     public static final String PUSH_SHAREPREFERENCE_NAME = "oauth";
 
@@ -197,7 +200,7 @@ public class KanBoxApi implements RequestListener{
             case OP_GET_ACCCOUNT_INFO:
                 break;
             case OP_GET_FILELIST:
-                KanBoxResponseHandler.handleHttpResult_GetFileList(response);
+                KanBoxResponseHandler.handleHttpResult_GetFileList(path, response);
                 break;
             case OP_DOWNLOAD:
                 mDownloadingProgress.remove(path);
@@ -234,11 +237,11 @@ public class KanBoxApi implements RequestListener{
                 break;
             case OP_UPLOAD:
                 mUploadingProgress.remove(path);
-                removeUploadingTask(path);
                 PushSharePreference preference = new PushSharePreference(FileManager.getAppContext(), KanBoxApi.PUSH_SHAREPREFERENCE_NAME);
                 if ("pause".equals(response)) {
-
+                    moveUploadingTasktoFailed(path);
                 } else {
+                    moveUploadingTasktoSuccess(path);
                     String remote_path = preference.getStringValueByKey(path);
                     if (!TextUtils.isEmpty(remote_path)) {
                         KanBoxFileEntry entry = new KanBoxFileEntry(path);
@@ -264,6 +267,9 @@ public class KanBoxApi implements RequestListener{
 
     @Override
     public void onError(String path, KanboxException error, int operationType) {
+        if (DEBUG) {
+            Log.i(TAG, "onError " + path + " " + operationType + " ");
+        }
         KanBoxApiListener listener = getListener();
         switch (operationType) {
             case OP_GET_THUMBNAIL:
@@ -298,12 +304,8 @@ public class KanBoxApi implements RequestListener{
                 PushSharePreference sPreference3 = new PushSharePreference(FileManager.getAppContext(), KanBoxApi.PUSH_SHAREPREFERENCE_NAME);
                 sPreference3.removeSharePreferences(path);
                 mUploadingProgress.remove(path);
-                removeUploadingTask(path);
+                moveUploadingTasktoFailed(path);
                 break;
-        }
-        if(DEBUG) {
-            error.printStackTrace();
-            Log.i(TAG, "failed of operation "+operationType +" with error: "+error.getStatusCode());
         }
         if (listener != null) {
             listener.onKanBoxApiFailed(operationType, path);
@@ -312,10 +314,8 @@ public class KanBoxApi implements RequestListener{
 
     @Override
     public void downloadProgress(String path, long progress) {
-        if(progress<5) {
-            progress = 5;
-        }
         mDownloadingProgress.put(path, (int)progress);
+        LogUtil.i(TAG,"progress of downloading "+ path +" is "+progress);
         KanBoxApiListener listener = getListener();
         if (listener != null) {
             listener.onKanBoxApiProgress(OP_DOWNLOAD, path, (int) progress);
@@ -325,9 +325,6 @@ public class KanBoxApi implements RequestListener{
     @Override
     public void uploadProgress(String path, long progress) {
         LogUtil.i(TAG,"progress of uploading "+ path +" is "+progress);
-        if(progress<5) {
-            progress = 5;
-        }
         mUploadingProgress.put(path, (int)progress);
         KanBoxApiListener listener = getListener();
         if (listener != null) {
@@ -365,12 +362,12 @@ public class KanBoxApi implements RequestListener{
         }
         HttpRequestBase httpMethod = null;
         if(!"/".equals(path)) {
-            httpMethod = KanboxHttp.doGet(getFileListUrl + path.substring(0,path.length()-1), params/*, token*/);
-        } else {
-            httpMethod = KanboxHttp.doGet(getFileListUrl + path, params/*, token*/);
-        }
+            path = path.substring(0,path.length()-1);
 
-        new KanboxAsyncTask(null, null, httpMethod, this, RequestListener.OP_GET_FILELIST, true).serialExecute();
+        }
+        httpMethod = KanboxHttp.doGet(getFileListUrl + Kanbox.encodePath(path), params/*, token*/);
+
+        new KanboxAsyncTask(path, null, httpMethod, this, RequestListener.OP_GET_FILELIST, true).serialExecute();
     }
 
     public void makeDir(String new_dir) {
@@ -409,49 +406,57 @@ public class KanBoxApi implements RequestListener{
     }
 
     public void downloadFile(String remote_path, String local_path) {
+//        File file = new File(remote_path);
+//        String name = new File(remote_path).getName();
+//        try {
+//            name = URLEncoder.encode(name, "UTF-8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//        remote_path = new File(file.getParentFile().getAbsolutePath(), name).getAbsolutePath();
         mDownloadingProgress.put(remote_path, 0);
         PushSharePreference preference = new PushSharePreference(FileManager.getAppContext(), KanBoxApi.PUSH_SHAREPREFERENCE_NAME);
         preference.saveStringValueToSharePreferences(remote_path, local_path);
         new File(local_path).getParentFile().mkdirs();
         KanboxAsyncTask task = Kanbox.getInstance().download(remote_path, local_path, Token.getInstance(), this);
-        mDownloadingTasks.add(task);
+        mDownloadingTasks.put(remote_path, task);
     }
 
     public void removeDownloadingTask(String path) {
-        Iterator<KanboxAsyncTask> iter = mDownloadingTasks.iterator();
-        while(iter.hasNext()) {
-            KanboxAsyncTask task = iter.next();
-            if (task!=null && task.getPath().equals(path)) {
-                mDownloadingTasks.remove(task);
-                break;
-            }
-        }
+        mDownloadingTasks.remove(path);
     }
 
-    public void removeUploadingTask(String path) {
-        Iterator<KanboxAsyncTask> iter = mUploadingTasks.iterator();
-        while(iter.hasNext()) {
-            KanboxAsyncTask task = iter.next();
-            if (task != null && task.getPath().equals(path)) {
-                mUploadingTasks.remove(task);
-                break;
-            }
-        }
+//    public void removeUploadingTask(String path) {
+//        Iterator<KanboxAsyncTask> iter = mUploadingTasks.iterator();
+//        while(iter.hasNext()) {
+//            KanboxAsyncTask task = iter.next();
+//            if (task != null && task.getPath().equals(path)) {
+//                mUploadingTasks.remove(task);
+//                break;
+//            }
+//        }
+//    }
+
+    public void moveUploadingTasktoSuccess(String path) {
+        if (TextUtils.isEmpty(path)) return;
+        KanboxAsyncTask task = mUploadingTasks.remove(path);
+        if (task == null) return;
+        task.mOperationTime = System.currentTimeMillis();
+        mUploadingSuccessTasks.put(path, task);
+    }
+
+    public void moveUploadingTasktoFailed(String path) {
+        if (TextUtils.isEmpty(path)) return;
+        KanboxAsyncTask task = mUploadingTasks.remove(path);
+        if (task == null) return;
+        task.mOperationTime = System.currentTimeMillis();
+        mUploadingFailedTasks.put(path, task);
     }
 
 
     public void pauseDownloadFile(String path) {
         mDownloadingProgress.remove(path);
-        KanboxAsyncTask downloadingTask = null;
-        Iterator<KanboxAsyncTask> iter = mDownloadingTasks.iterator();
-        while(iter.hasNext()) {
-            KanboxAsyncTask task = iter.next();
-            if (task.getPath().equals(path)) {
-                downloadingTask = task;
-//                mDownloadingTasks.remove(task);
-                break;
-            }
-        }
+        KanboxAsyncTask downloadingTask = mDownloadingTasks.get(path);
         if (downloadingTask != null && !downloadingTask.isCancelled()) {
             downloadingTask.cancel(true);
         }
@@ -459,29 +464,27 @@ public class KanBoxApi implements RequestListener{
 
 
     public void pauseUploadFile(String path) {
+        if (TextUtils.isEmpty(path)) return;
         mUploadingProgress.remove(path);
-        KanboxAsyncTask uploadingTask = null;
-        Iterator<KanboxAsyncTask> iter = mUploadingTasks.iterator();
-        while(iter.hasNext()) {
-            KanboxAsyncTask task = iter.next();
-            if (task.getPath().equals(path)) {
-                uploadingTask = task;
-//                mUploadingTasks.remove(task);
-                break;
-            }
-        }
+        KanboxAsyncTask uploadingTask = mUploadingTasks.get(path);
         if (uploadingTask != null && !uploadingTask.isCancelled()) {
             uploadingTask.cancel(true);
+            uploadingTask.mOperationTime = System.currentTimeMillis();
         }
-    }
-
-
-    public void downloadThumbnail(String remote_path) {
-        Kanbox.getInstance().getThumbnail(remote_path, Token.getInstance(), this);
     }
 
     public static boolean isDownloading(String path) {
         return mDownloadingProgress.containsKey(path);
+    }
+
+    public static boolean isDownloadCancelling(String path) {
+        KanboxAsyncTask task =  mDownloadingTasks.get(path);
+        return (task != null && task.isCancelled());
+    }
+
+    public static boolean isDownloadWaiting(String path) {
+        KanboxAsyncTask task =  mDownloadingTasks.get(path);
+        return (task != null && !task.isCancelled() && !task.mStarted);
     }
 
     public static int getDownloadingProgress(String path) {
@@ -490,7 +493,56 @@ public class KanBoxApi implements RequestListener{
     }
 
     public static boolean isUploading(String path) {
-        return mUploadingProgress.containsKey(path);
+        KanboxAsyncTask task =  mUploadingTasks.get(path);
+        return (task !=null && !task.isCancelled() && task.mStarted);
+    }
+
+    public static boolean isUploadCancelling(String path) {
+        KanboxAsyncTask task =  mUploadingTasks.get(path);
+        return (task != null && task.isCancelled());
+    }
+
+    public static boolean isUploadWaiting(String path) {
+        KanboxAsyncTask task =  mUploadingTasks.get(path);
+        return (task != null && !task.isCancelled() && !task.mStarted);
+    }
+
+    public static long getUploadingTime(String path) {
+        KanboxAsyncTask task =  mUploadingTasks.get(path);
+        return (task != null)? task.mOperationTime : 0;
+    }
+
+    public static long getUploadWaitingTime(String path) {
+        KanboxAsyncTask task =  mUploadingTasks.get(path);
+        return (task != null && !task.isCancelled() && !task.mStarted) ? task.mOperationTime : 0;
+    }
+
+    public static long getUploadCancellingTime(String path) {
+        KanboxAsyncTask task =  mUploadingTasks.get(path);
+        return (task != null && task.isCancelled())?task.mOperationTime : 0;
+    }
+
+    public static long getUploadCancelledTime(String path) {
+        KanboxAsyncTask task =  mUploadingFailedTasks.get(path);
+        return (task != null && task.isCancelled())?task.mOperationTime : 0;
+    }
+
+    public static boolean isUploadSuccess(String path) {
+        return mUploadingSuccessTasks.containsKey(path);
+    }
+
+    public static long getUploadSuccessTime(String path) {
+        KanboxAsyncTask task = mUploadingSuccessTasks.get(path);
+        return (task != null)?task.mOperationTime : 0;
+    }
+
+    public static boolean isUploadFailed(String path) {
+        return mUploadingFailedTasks.containsKey(path);
+    }
+
+    public static long getUploadFailedTime(String path) {
+        KanboxAsyncTask task = mUploadingFailedTasks.get(path);
+        return (task != null)?task.mOperationTime : 0;
     }
 
     public static int getUploadingingProgress(String path) {
@@ -500,28 +552,76 @@ public class KanBoxApi implements RequestListener{
 
     public List<FileEntry> getUploadingFiles() {
         List<FileEntry> uploadingFiles = new ArrayList<FileEntry>();
-        Iterator<KanboxAsyncTask> iter = mUploadingTasks.iterator();
+        Iterator<String> iter = mUploadingTasks.keySet().iterator();
         while(iter.hasNext()) {
-            KanboxAsyncTask task = iter.next();
-            if (task != null) {
-                String path = task.getPath();
+            String path = iter.next();
                 if (!TextUtils.isEmpty(path)) {
-                    uploadingFiles.add(new FileEntry(path));
+                    FileEntry entry = new FileEntry(path);
+
+                    entry.lastModified = 0-getUploadingTime(path);
+                    uploadingFiles.add(entry);
                 }
-            }
         }
         return uploadingFiles;
     }
 
+    public List<FileEntry> getUploadingSuccessFiles() {
+        List<FileEntry> uploadingFiles = new ArrayList<FileEntry>();
+        Iterator<String> iter = mUploadingSuccessTasks.keySet().iterator();
+        while(iter.hasNext()) {
+            String path = iter.next();
+                if (!TextUtils.isEmpty(path)) {
+                    FileEntry entry = new FileEntry(path);
+                    entry.lastModified = getUploadSuccessTime(path);
+                    uploadingFiles.add(entry);
+                }
+        }
+        return uploadingFiles;
+    }
 
-    public void uploadFile(String localPath, String root) {
+    public List<FileEntry> getUploadingFailedFiles() {
+        List<FileEntry> uploadingFiles = new ArrayList<FileEntry>();
+        Iterator<String> iter = mUploadingFailedTasks.keySet().iterator();
+        while(iter.hasNext()) {
+            String path = iter.next();
+                if (!TextUtils.isEmpty(path)) {
+                    FileEntry entry = new FileEntry(path);
+                    entry.lastModified = getUploadFailedTime(path);
+                    uploadingFiles.add(entry);
+                }
+        }
+        return uploadingFiles;
+    }
+
+    public void uploadFileAgain(String localPath) {
+        KanboxAsyncTask task = mUploadingFailedTasks.get(localPath);
+        String destPath = task.getDestPath();
+//        if(destPath!=null) {
+//            int idx = destPath.lastIndexOf("/");
+//            destPath = destPath.substring(0,idx+1);
+//        }
         mUploadingProgress.put(localPath, 0);
-        String name = new File(localPath).getName();
-        try {
-            name = URLEncoder.encode(name, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+        PushSharePreference preference = new PushSharePreference(FileManager.getAppContext(), KanBoxApi.PUSH_SHAREPREFERENCE_NAME);
+        preference.saveStringValueToSharePreferences(localPath, destPath);
+        KanboxAsyncTask new_task = null;
+        try{
+            new_task = Kanbox.getInstance().upload(localPath, destPath, Token.getInstance(), this);
+        }catch (IOException e) {
             e.printStackTrace();
         }
+        mUploadingSuccessTasks.remove(localPath);
+        mUploadingFailedTasks.remove(localPath);
+        if (new_task != null) {
+            new_task.mOperationTime = System.currentTimeMillis();
+            mUploadingTasks.put(localPath, new_task);
+        }
+    }
+
+
+    public void uploadFile(String localPath, String root) {
+        Log.i(TAG, "upload File from "+localPath+" to "+root);
+        mUploadingProgress.put(localPath, 0);
+        String name = new File(localPath).getName();
         String destPath = new File(root, name).getAbsolutePath();
         PushSharePreference preference = new PushSharePreference(FileManager.getAppContext(), KanBoxApi.PUSH_SHAREPREFERENCE_NAME);
         preference.saveStringValueToSharePreferences(localPath, destPath);
@@ -531,10 +631,11 @@ public class KanBoxApi implements RequestListener{
         }catch (IOException e) {
             e.printStackTrace();
         }
+        mUploadingSuccessTasks.remove(localPath);
+        mUploadingFailedTasks.remove(localPath);
         if (task != null) {
-            mUploadingTasks.add(task);
+            task.mOperationTime = System.currentTimeMillis();
+            mUploadingTasks.put(localPath, task);
         }
     }
-
-
 }

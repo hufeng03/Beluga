@@ -163,8 +163,12 @@ public abstract class FileTabFragment extends BaseFragment implements
             return;
         }
 
-        if (mImageScaleAnimationController != null)
-            mImageScaleAnimationController.animateImageView(v, entry, type);
+        if(Constants.PRODUCT_FLAVOR_NAME.equals("google")) {
+            if (mImageScaleAnimationController != null)
+                mImageScaleAnimationController.animateImageView(v, entry, type);
+        } else {
+            FileAction.viewFile(getActivity(), entry.path);
+        }
 
     }
 

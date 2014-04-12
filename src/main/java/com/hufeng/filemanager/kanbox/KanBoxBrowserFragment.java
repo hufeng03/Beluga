@@ -73,7 +73,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             switch (msg.what) {
                 case MESSAGE_SET_EMPTY_TEXT:
                     if(isAdded()) {
-                        setEmptyText(getResources().getString(R.string.empty_file));
+                        setEmptyText(getResources().getString(R.string.kanbox_empty_file));
                     }
                     break;
                 default:
@@ -99,18 +99,11 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         KanBoxApi.getInstance().registerKanBoxApiListener(this);
-//        setEmptyText(getResources().getString(R.string.empty_file));
         mAdapter = new KanBoxBrowserAdapter(getSherlockActivity(), null, this);
         setGridAdapter(mAdapter);
-//        setGridShownNoAnimation(false);
         getGridView().setOnItemLongClickListener(null);
         registerForContextMenu(getGridView());
-
-//        if(savedInstanceState!=null && savedInstanceState.containsKey("root_dir")) {
-//            mRootDir = savedInstanceState.getString("root_dir");
-//        }
-//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//        mRootDir = preferences.getString("kanbox_browser_root_dir", "/");
+        setEmptyText("");
         PushSharePreference sPreference = new PushSharePreference(FileManager.getAppContext(), KanBoxApi.PUSH_SHAREPREFERENCE_NAME);
         mRootDir = sPreference.getStringValueByKey("kanbox_browser_root_dir");
         if(TextUtils.isEmpty(mRootDir)) {
@@ -124,11 +117,6 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
         }
     }
 
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putString("root_dir",mRootDir);
-//    }
 
     @Override
     public void onDestroyView() {
@@ -170,29 +158,8 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             } else {
                 mRootDir = path;
             }
-//            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//            String hash = preferences.getString(path, "");
-//            if(TextUtils.isEmpty(hash)) {
-//                setGridShown(false);
-//            }
-//            mLoading = true;
-//            setEmptyText(getResources().getString(R.string.kanbox_getting_file_list));
-//            KanBoxApi.getInstance().getFileList(mRootDir);
-//            reloadFiles();
             refresh();
         } else {
-//            int type = FileUtils.getFileType(path);
-//            if (type == FileUtils.FILE_TYPE_IMAGE) {
-//                //animation
-//                if (mListener != null) {
-//                    KanBoxBrowserListener listener = mListener.get();
-//                    if (listener != null) {
-//                        ImageView v_img =  (ImageView)v.findViewById(R.id.icon);
-//                        listener.onImageFileClicked(v_img, path);
-//                    }
-//                }
-//                return;
-//            }
             if(KanBoxApi.isDownloading(path)) {
                 //we need to pause downloading here
                 KanBoxApi.getInstance().pauseDownloadFile(path);
@@ -249,9 +216,6 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
                 }
                 break;
             case KanBoxApi.OP_GET_FILELIST:
-//                mLoading = false;
-//                reloadFiles();
-//                hideSwipeProgress();
                 completeRefresh();
                 break;
         }
@@ -557,9 +521,9 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             case FmDialogFragment.CLOUD_RENAME_DIALOG:
                 String old_name = ((String[])param)[0];
                 String new_name = ((String[])param)[1];
-                String old_path = new File(mRootDir, old_name).getAbsolutePath();
+//                String old_path = new File(mRootDir, old_name).getAbsolutePath();
                 String new_path = new File(mRootDir, new_name).getAbsolutePath();
-                KanBoxApi.getInstance().moveFile(old_path, new_path);
+                KanBoxApi.getInstance().moveFile(old_name, new_path);
                 break;
         }
     }
@@ -726,6 +690,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
                         FileManager.getAppContext().getContentResolver().update(Uri.withAppendedPath(DataStructures.CloudBoxColumns.CONTENT_URI, ""+db_id),
                                 cv, null, null);
                         mAdapter.notifyDataSetChanged();
+                        return;
                     }
                 }
             }
@@ -736,6 +701,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
                 cursor.close();
             }
         }
+        Toast.makeText(getActivity(), R.string.kanbox_delete_local_failed, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -797,8 +763,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
 
     private void completeRefresh() {
         mLoading = false;
-//        mHandler.sendEmptyMessageDelayed(MESSAGE_SET_EMPTY_TEXT, 1000);
-        setEmptyText(getResources().getString(R.string.empty_file));
+        setEmptyText(getResources().getString(R.string.kanbox_empty_file));
         hideSwipeProgress();
     }
 }

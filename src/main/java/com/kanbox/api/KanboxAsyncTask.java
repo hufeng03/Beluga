@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
+import com.hufeng.filemanager.BuildConfig;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -27,6 +29,8 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -46,12 +50,20 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
 	private int mOpType;
 	private String mDestPath;
     private String mPath;
-//    private Token mToken;
     private boolean mNeedAccessToken;
 
     public String getPath () {
         return mPath;
     }
+
+    public String getDestPath() { return mDestPath; }
+
+    private int mStatusCode;
+
+    public long mOperationTime = 0;
+
+    public boolean mStarted = false;
+
 
 	/**
 	 * @param destPath:长传、下载时的目标路径
@@ -70,8 +82,12 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
 
 	@Override
 	protected String doInBackground(String... params) {
+        mStarted = true;
         if (isCancelled()) {
             return "pause";
+        }
+        if (mOpType == RequestListener.OP_DOWNLOAD || mOpType == RequestListener.OP_UPLOAD) {
+            publishProgress(new Long[]{(long)0});
         }
 		HttpClient sHttpClient = createHttpClient();
 		try {
@@ -100,6 +116,7 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
                 if ((mOpType == RequestListener.OP_GET_THUMBNAIL || mOpType == RequestListener.OP_GET_THUMBNAIL) && isCancelled()) {
                     return "pause";
                 }
+                mStatusCode = statusCode;
                 if (statusCode == 200) {
                     switch (mOpType) {
                         case RequestListener.OP_GET_THUMBNAIL:
@@ -108,6 +125,19 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
                             return downloading(sHttpResponse.getEntity());
                         default:
                             String strResult = EntityUtils.toString(sHttpResponse.getEntity());
+                            if(BuildConfig.DEBUG) {
+                                Log.i(TAG, strResult);
+                            }
+                            if (mOpType != RequestListener.OP_GET_FILELIST) {
+                                try {
+                                    JSONObject json = new JSONObject(strResult);
+                                    if (strResult.contains("status")) {
+                                        strResult = json.getString("status");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                             return strResult;
                     }
                 } else {
@@ -131,12 +161,16 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
     @Override
     protected void onCancelled(String s) {
         super.onCancelled(s);
-        Log.i(TAG, "onCancelled " + (s==null?"":s));
+        Log.i(TAG, "onCancelled " + (s==null?"null":s));
         if(mRequestListener!=null) {
             if ("error".equals(s)) {
                 mRequestListener.onComplete(mPath, "pause", mOpType);
             } else {
-                mRequestListener.onComplete(mPath, s, mOpType);
+                if (mStatusCode == 200) {
+                    mRequestListener.onComplete(mPath, s, mOpType);
+                } else {
+                    mRequestListener.onComplete(mPath, "pause", mOpType);
+                }
             }
         }
     }

@@ -105,7 +105,7 @@ public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
         FrameLayout root = new FrameLayout(context);
 
-        // ------------------------------------------------------------------
+        // refreshing progress bar--------------------------------------------
 
         LinearLayout pframe = new LinearLayout(context);
         pframe.setId(INTERNAL_PROGRESS_CONTAINER_ID);
@@ -129,19 +129,22 @@ public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         TextView tv = new TextView(getActivity());
         tv.setId(INTERNAL_EMPTY_ID);
         tv.setGravity(Gravity.CENTER);
+        tv.setClickable(true);
         lframe.addView(tv, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         mRefreshLayout = new SwipeRefreshLayout(context);
 
-        GridView lv = new GridView(getActivity());
+        GridView lv = new MyGridView(getActivity());
         lv.setId(android.R.id.list);
         lv.setDrawSelectorOnTop(false);
         lv.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
         lv.setCacheColorHint(0);
-
+//        lv.setBackgroundColor(getResources().getColor(R.color.red));
         mRefreshLayout.addView(lv, new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+//        mRefreshLayout.setBackgroundColor(getResources().getColor(R.color.blue));
 
         if(mDisplayMode == DISPLAY_MODE.GRID) {
             setDisplayModeAsGrid(lv);

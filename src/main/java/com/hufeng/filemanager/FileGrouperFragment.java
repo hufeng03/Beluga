@@ -187,7 +187,6 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
             }
         }
         setGridShownNoAnimation(false);
-//        registerForContextMenu(getGridView());
 	}
 
     @Override
@@ -279,13 +278,18 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
 	@Override
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor arg1) {
 		mAdapter.changeCursor(arg1);
+        if (arg1 == null || arg1.getCount() == 0) {
+            if (UiServiceHelper.getInstance().isScanning()) {
+                setGridShown(false);
+                return;
+            }
+        }
 		setGridShown(true);
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
 		mAdapter.swapCursor(null);
-		
 	}
 	
 }

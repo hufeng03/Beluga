@@ -14,8 +14,7 @@ import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.IconLoaderHelper;
 import com.hufeng.filemanager.browser.InfoLoader;
 import com.hufeng.filemanager.ui.FileViewHolder;
-
-import java.util.List;
+import com.hufeng.filemanager.utils.TimeUtil;
 
 /**
  * Created by feng on 3/10/2014.
@@ -73,9 +72,6 @@ public class KanBoxUploadAdapter extends ArrayAdapter<FileEntry> implements Grid
             holder = new FileViewHolder(view, mCallback);
             view.setTag(holder);
             holder.display = mMode.ordinal();
-            holder.info.setVisibility(View.GONE);
-            holder.progress.setVisibility(View.VISIBLE);
-            holder.status.setVisibility(View.VISIBLE);
         }
 
         FileEntry item = getItem(position);
@@ -89,27 +85,50 @@ public class KanBoxUploadAdapter extends ArrayAdapter<FileEntry> implements Grid
         holder.name.setText(filename);
 //        mInfoLoader.loadInfo(holder.info, holder.path);
         int progress = KanBoxApi.getInstance().getUploadingingProgress(holder.path);
-        if (progress == 0) {
-            holder.progress.setIndeterminate(true);
-            holder.progress.setProgress(0);
+        holder.progress.setProgress(progress);
+        holder.progress.setVisibility(View.GONE);
+
+        if (KanBoxApi.isUploading(holder.path)) {
+            holder.progress.setVisibility(View.VISIBLE);
+            holder.info.setVisibility(View.GONE);
+            holder.status.setVisibility(View.VISIBLE);
+
+            if (progress == 0) {
+                holder.progress.setIndeterminate(true);
+            } else {
+                holder.progress.setIndeterminate(false);
+            }
+            holder.status.setText(R.string.btn_txt_pause);
         } else {
+            holder.info.setVisibility(View.VISIBLE);
             holder.progress.setIndeterminate(false);
-            holder.progress.setProgress(progress);
+            long time = 0;
+            if( (time = KanBoxApi.getUploadCancellingTime(holder.path)) != 0) {
+                holder.status.setVisibility(View.GONE);
+                holder.info.setText(getContext().getResources().getString(R.string.kanbox_upload_info_cancelling, TimeUtil.getDateString(time)));
+            } else if( (time = KanBoxApi.getUploadWaitingTime(holder.path)) != 0) {
+                holder.status.setVisibility(View.VISIBLE);
+                holder.status.setText(R.string.btn_txt_pause);
+                holder.info.setText(getContext().getResources().getString(R.string.kanbox_upload_info_waiting, TimeUtil.getDateString(time)));
+            } else if ( (time = KanBoxApi.getUploadCancelledTime(holder.path)) != 0) {
+                holder.status.setVisibility(View.VISIBLE);
+                holder.status.setText(R.string.btn_txt_upload_again);
+                holder.info.setText(getContext().getResources().getString(R.string.kanbox_upload_info_cancelled, TimeUtil.getDateString(time)));
+            } else if ( (time = KanBoxApi.getUploadFailedTime(holder.path)) != 0) {
+                holder.status.setVisibility(View.VISIBLE);
+                holder.status.setText(R.string.btn_txt_upload_again);
+                holder.info.setText(getContext().getResources().getString(R.string.kanbox_upload_info_failed, TimeUtil.getDateString(time)));
+            } else if ( (time = KanBoxApi.getUploadSuccessTime(holder.path)) != 0) {
+                holder.status.setVisibility(View.GONE);
+                holder.info.setText(getContext().getResources().getString(R.string.kanbox_upload_info_success, TimeUtil.getDateString(time)));
+            }
         }
-        holder.status.setText(R.string.btn_txt_pause);
+
+
         holder.position = position;
         view.setBackgroundResource(R.drawable.list_selector_normal);
 
         return view;
-    }
-
-    public void setData(List<FileEntry> data) {
-        clear();
-        if (data != null) {
-            for (int i = 0; i < data.size(); i++) {
-                add(data.get(i));
-            }
-        }
     }
 
     @Override

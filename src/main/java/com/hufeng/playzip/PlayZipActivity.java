@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.BaseActivity;
 import com.hufeng.filemanager.browser.FileEntry;
@@ -144,4 +145,12 @@ public class PlayZipActivity extends BaseActivity implements
     public void onZipProgress(String path, int progress) {
 
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
 }

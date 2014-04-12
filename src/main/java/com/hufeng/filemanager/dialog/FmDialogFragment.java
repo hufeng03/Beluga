@@ -849,8 +849,8 @@ public class FmDialogFragment extends SherlockDialogFragment{
                                         return;
                                     }
 
-                                    int idx = orig_path.indexOf(".");
-                                    if(new_name.indexOf(".")==-1 && idx!=-1)
+                                    int idx = orig_path.lastIndexOf(".");
+                                    if(new_name.lastIndexOf(".")==-1 && idx!=-1)
                                     {
                                         new_name +=orig_path.substring(idx);
                                     }
@@ -914,8 +914,8 @@ public class FmDialogFragment extends SherlockDialogFragment{
                     		return;
                     	}
 
-                    	int idx = orig_path.indexOf(".");
-                    	if(new_name.indexOf(".")==-1 && idx!=-1)
+                    	int idx = orig_path.lastIndexOf(".");
+                    	if(new_name.lastIndexOf(".")==-1 && idx!=-1)
                     	{
                     		new_name += orig_path.substring(idx);
                     	}

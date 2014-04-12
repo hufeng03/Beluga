@@ -12,6 +12,7 @@ import com.hufeng.filemanager.ui.FileViewHolder;
 import com.kanbox.api.RequestListener;
 
 import java.io.File;
+import java.util.Comparator;
 
 /**
  * Created by feng on 3/10/2014.
@@ -39,7 +40,23 @@ public class KanBoxUploadFragment extends FileGridFragment
 
     @Override
     public void reloadFiles() {
-        mAdapter.setData(KanBoxApi.getInstance().getUploadingFiles());
+        mAdapter.clear();
+        mAdapter.addAll(KanBoxApi.getInstance().getUploadingFiles());
+        mAdapter.addAll(KanBoxApi.getInstance().getUploadingFailedFiles());
+        mAdapter.addAll(KanBoxApi.getInstance().getUploadingSuccessFiles());
+        mAdapter.sort(new Comparator<FileEntry>() {
+            @Override
+            public int compare(FileEntry lhs, FileEntry rhs) {
+                if (lhs.lastModified < 0) {
+                    return -1;
+                } else if(rhs.lastModified < 0) {
+                    return 1;
+                } else {
+                    return (lhs.lastModified < rhs.lastModified)?1:-1;
+                }
+            }
+        });
+//        mAdapter.setData(KanBoxApi.getInstance().getUploadingFiles());
     }
 
     @Override
@@ -84,8 +101,14 @@ public class KanBoxUploadFragment extends FileGridFragment
 
     private void clickGridItem(long position) {
         FileEntry entry = (FileEntry)getGridAdapter().getItem((int)position);
-        if ( !TextUtils.isEmpty(entry.path) ) {
+        if (TextUtils.isEmpty(entry.path)) return;
+        if ( KanBoxApi.isUploading(entry.path) || KanBoxApi.isUploadWaiting(entry.path)) {
+//            FmDialogFragment.showCreateCloudDirectoryDialog(getChildFragmentManager(), getParentFile());
             KanBoxApi.getInstance().pauseUploadFile(entry.path);
+            refreshUI();
+        } else if (KanBoxApi.isUploadFailed(entry.path)) {
+            KanBoxApi.getInstance().uploadFileAgain(entry.path);
+            refreshUI();
         }
     }
 

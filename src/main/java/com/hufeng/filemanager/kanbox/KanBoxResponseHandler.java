@@ -15,6 +15,7 @@ import com.kanbox.api.PushSharePreference;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,8 +27,13 @@ public class KanBoxResponseHandler {
 
     private static final String TAG = KanBoxResponseHandler.class.getSimpleName();
 
-    @TargetApi(11)
-    public static void handleHttpResult_GetFileList(final String response) {
+    public static void handleHttpResult_GetFileList(String parent, final String response) {
+        final String parent_path;
+        if(parent != null && !parent.endsWith("/")) {
+            parent_path = parent+"/";
+        } else {
+            parent_path = parent;
+        }
 
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -41,7 +47,7 @@ public class KanBoxResponseHandler {
                         JSONArray array = sData.getJSONArray("contents");
                         int len = array.length();
                         if ( len > 0) {
-                            String parent_path = null;
+//                            String parent_path = null;
                             int i = 0;
                             HashMap<String, KanBoxFileEntry> entries = new HashMap<String, KanBoxFileEntry>();
                             StringBuilder selection = new StringBuilder();
@@ -52,9 +58,9 @@ public class KanBoxResponseHandler {
                                 JSONObject obj = array.getJSONObject(i);
                                 KanBoxFileEntry entry = new KanBoxFileEntry(hash, obj);
                                 Log.i(TAG, "kanboxfileentry "+i+": "+entry);
-                                if (i==0) {
-                                    parent_path = entry.parent_path;
-                                }
+//                                if (i==0) {
+//                                    parent_path = entry.parent_path;
+//                                }
                                 entries.put(entry.path, entry);
                                 if (isFirst) {
                                     selection.append('\'');
@@ -90,8 +96,13 @@ public class KanBoxResponseHandler {
                                         String local_file = cursor.getString(3);
                                         byte[] icon_data = cursor.getBlob(4);
                                         String local_hash = cursor.getString(5);
-                                        if(TextUtils.isEmpty(local_hash) || (entry.lastModified == date && entry.size == size)) {
+                                        if(TextUtils.isEmpty(local_hash)) {
                                             entry.local_file_path = local_file;
+                                            entry.icon_data = icon_data;
+                                        } else if ( entry.lastModified == date && entry.size == size) {
+                                            if (new File(local_file).exists()) {
+                                                entry.local_file_path = local_file;
+                                            }
                                             entry.icon_data = icon_data;
                                         }
                                     }
@@ -125,6 +136,14 @@ public class KanBoxResponseHandler {
 
                             PushSharePreference preference = new PushSharePreference(FileManager.getAppContext(), KanBoxApi.PUSH_SHAREPREFERENCE_NAME);
                             preference.saveStringValueToSharePreferences(parent_path, hash);
+
+                        } else {
+                            if(!TextUtils.isEmpty(parent_path)) {
+                                int count = FileManager.getAppContext().getContentResolver().delete(DataStructures.CloudBoxColumns.CONTENT_URI, DataStructures.CloudBoxColumns.PARENT_FOLDER_FIELD + "=?", new String[]{parent_path});
+                                Log.i(TAG, "delete cloudbox count " + count);
+                                PushSharePreference preference = new PushSharePreference(FileManager.getAppContext(), KanBoxApi.PUSH_SHAREPREFERENCE_NAME);
+                                preference.saveStringValueToSharePreferences(parent_path, hash);
+                            }
 
                         }
                     } else if(status.equals("nochange")) {

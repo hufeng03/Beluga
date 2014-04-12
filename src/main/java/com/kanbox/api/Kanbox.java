@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -44,7 +45,7 @@ public class Kanbox {
 	 */
 	public void getFileList(Token token, String path, RequestListener listener) {
 		String getFileListUrl = "https://api.kanbox.com/0/list";
-		HttpRequestBase httpMethod = KanboxHttp.doGet(getFileListUrl + path, null/*, token*/);
+		HttpRequestBase httpMethod = KanboxHttp.doGet(getFileListUrl + encodePath(path), null/*, token*/);
 		new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_GET_FILELIST, true).serialExecute();
 	}
 	
@@ -58,8 +59,8 @@ public class Kanbox {
 	public void moveFile(Token token, String sourcePath, String desPath, RequestListener listener) {
 		String moveUrl = "https://api.kanbox.com/0/move";
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("path", sourcePath);
-		params.put("destination_path", desPath);
+		params.put("path", encodePath(sourcePath));
+		params.put("destination_path", encodePath(desPath));
 		
 		HttpRequestBase httpMethod = KanboxHttp.doGet(moveUrl, params/*, token*/);
 		new KanboxAsyncTask(sourcePath, desPath, httpMethod, listener, RequestListener.OP_MOVE, true).serialExecute();
@@ -75,8 +76,8 @@ public class Kanbox {
 	public void copyFile(Token token, String sourcePath, String desPath, RequestListener listener) {
 		String moveUrl = "https://api.kanbox.com/0/copy";
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("path", sourcePath);
-		params.put("destination_path", desPath);
+		params.put("path", encodePath(sourcePath));
+		params.put("destination_path", encodePath(desPath));
 		
 		HttpRequestBase httpMethod = KanboxHttp.doGet(moveUrl, params/*, token*/);
 		new KanboxAsyncTask(sourcePath, desPath, httpMethod, listener, RequestListener.OP_COPY, true).serialExecute();
@@ -89,11 +90,12 @@ public class Kanbox {
 	 * @param listener
 	 */
 	public void deleteFile(Token token, String path, RequestListener listener) {
-		String moveUrl = "https://api.kanbox.com/0/delete";
+		String deleteUrl = "https://api.kanbox.com/0/delete";
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("path", path);
+
+		params.put("path", encodePath(path));
 		
-		HttpRequestBase httpMethod = KanboxHttp.doGet(moveUrl, params/*, token*/);
+		HttpRequestBase httpMethod = KanboxHttp.doGet(deleteUrl, params/*, token*/);
 		new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_DELETE, true).serialExecute();
 	}
 	
@@ -106,7 +108,7 @@ public class Kanbox {
 	public void makeDir(Token token, String path, RequestListener listener) {
 		String moveUrl = "https://api.kanbox.com/0/create_folder";
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("path", path);
+		params.put("path", encodePath(path));
 	
 		HttpRequestBase httpMethod = KanboxHttp.doGet(moveUrl, params/*, token*/);
 		new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_MAKE_DIR, true).serialExecute();
@@ -184,8 +186,7 @@ public class Kanbox {
 	 */
 	public KanboxAsyncTask download(String path, String destPath, Token token, RequestListener listener) {
 		String downloadUrl = "https://api.kanbox.com/0/download";
-
-		HttpRequestBase httpMethod = KanboxHttp.doGet(downloadUrl + path, null/*, token*/);
+		HttpRequestBase httpMethod = KanboxHttp.doGet(downloadUrl + encodePath(path), null/*, token*/);
 		KanboxAsyncTask task = new KanboxAsyncTask(path, destPath, httpMethod, listener, RequestListener.OP_DOWNLOAD, true);
         task.execute();
         return task;
@@ -196,7 +197,7 @@ public class Kanbox {
         String thumbnailUrl = "https://api.kanbox.com/0/thumbnail";
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("size", "small");
-        HttpRequestBase httpMethod = KanboxHttp.doGet(thumbnailUrl + path, params/*, token*/);
+        HttpRequestBase httpMethod = KanboxHttp.doGet(thumbnailUrl + encodePath(path), params/*, token*/);
         new KanboxAsyncTask(path, null, httpMethod, listener, RequestListener.OP_GET_THUMBNAIL, true).serialExecute();
     }
 
@@ -210,8 +211,7 @@ public class Kanbox {
 	 */
 	public KanboxAsyncTask upload(String localPath, String destPath, Token token, RequestListener listener) throws UnsupportedEncodingException {
 		String uploadUrl = "https://api-upload.kanbox.com/0/upload";
-		
-		HttpPost httpMethod = KanboxHttp.doPost(uploadUrl + destPath, (String)null/*, token*/);
+		HttpPost httpMethod = KanboxHttp.doPost(uploadUrl + encodePath(destPath), (String)null/*, token*/);
 //		InputStream is = new FileInputStream(localPath);
 //		httpMethod.setEntity(new KanboxAsyncTask.CountingInputStreamEntity(is, is.available()));
         KanboxAsyncTask task = new KanboxAsyncTask(localPath, destPath, httpMethod, listener, RequestListener.OP_UPLOAD, true);
@@ -219,4 +219,32 @@ public class Kanbox {
         task.execute();
         return task;
 	}
+
+    public static String encodePath(String path){
+        String path_encoded = path;
+        if (path != null) {
+//                String[] segments = path.split("/");
+//                StringBuilder builder = new StringBuilder();
+//                if (segments != null) {
+//                    for (int i = 0; i < segments.length; i++) {
+//                        try {
+//                            segments[i] = URLEncoder.encode(segments[i], "UTF-8").replace("+", "%20");
+//                        } catch (UnsupportedEncodingException e) {
+//                            e.printStackTrace();
+//                        }
+//                        builder.append(segments[i]);
+//                        if (i != segments.length - 1) {
+//                            builder.append('/');
+//                        }
+//                    }
+//                }
+//                path_encoded = builder.toString();
+            try {
+                path_encoded = URLEncoder.encode(path, "UTF-8").replace("+","%20");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        return path_encoded;
+    }
 }

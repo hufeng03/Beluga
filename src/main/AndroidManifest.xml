@@ -216,7 +216,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="application/zip" />
             </intent-filter>
-        </activity-->
+    </activity-->
 
 
 		<service android:name=".services.FileManagerService" 

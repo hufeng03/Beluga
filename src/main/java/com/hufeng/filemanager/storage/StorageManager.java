@@ -88,10 +88,10 @@ public class StorageManager {
 	}
 
     public String getPrimaryExternalStorage() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return Environment.getExternalStorageDirectory().getAbsolutePath();
-        }
+//        String state = Environment.getExternalStorageState();
+//        if (Environment.MEDIA_MOUNTED.equals(state)) {
+//            return Environment.getExternalStorageDirectory().getAbsolutePath();
+//        }
         String best_hit_storage = Environment.getExternalStorageDirectory().getAbsolutePath();
         int best_hit_priority = -1;
         for (StorageUnit unit : mStorageUnits) {
@@ -327,19 +327,21 @@ public class StorageManager {
 			}
 		}
 
-        File file = Environment.getExternalStorageDirectory();
-        String path = file.getAbsolutePath();
-        if (!TextUtils.isEmpty(path)) {
-            boolean flag = false;
-            for (StorageUnit unit : mStorageUnits) {
-                if (unit.path.equals(path)) {
-                    flag = true;
+        if (mStorageUnits.size() == 0) {
+            File file = Environment.getExternalStorageDirectory();
+            String path = file.getAbsolutePath();
+            if (!TextUtils.isEmpty(path)) {
+                boolean flag = false;
+                for (StorageUnit unit : mStorageUnits) {
+                    if (unit.path.equals(path)) {
+                        flag = true;
+                    }
                 }
-            }
-            if (!flag) {
-                long availableSize = StorageUtil.getAvailaleSize(path);
-                long allSize = StorageUtil.getAllSize(path);
-                mStorageUnits.add(new StorageUnit(path, null, false, Environment.getExternalStorageState(), availableSize, allSize));
+                if (!flag) {
+                    long availableSize = StorageUtil.getAvailaleSize(path);
+                    long allSize = StorageUtil.getAllSize(path);
+                    mStorageUnits.add(new StorageUnit(path, null, false, Environment.getExternalStorageState(), availableSize, allSize));
+                }
             }
         }
 

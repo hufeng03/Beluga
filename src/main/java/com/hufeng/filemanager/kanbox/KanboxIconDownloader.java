@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.kanbox.api.Kanbox;
 import com.kanbox.api.KanboxAsyncTask;
 import com.kanbox.api.Token;
 
@@ -17,8 +18,6 @@ import org.apache.http.client.methods.HttpGet;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * Created by feng on 13-12-5.
@@ -60,14 +59,8 @@ public class KanboxIconDownloader extends AsyncTask<Void, Void, byte[]> {
     private byte[] download_icon(String path) {
 
         byte[] data = null;
-        String encoded_path = null;
-        try {
-            encoded_path = URLEncoder.encode(path,"UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            encoded_path = path;
-            e.printStackTrace();
-        }
         StringBuffer thumbnailUrl = new StringBuffer( "https://api.kanbox.com/0/thumbnail");
+        String encoded_path = Kanbox.encodePath(path);
         thumbnailUrl.append(encoded_path).append("?size=small");
 
         HttpGet httpRequest = new HttpGet(thumbnailUrl.toString());

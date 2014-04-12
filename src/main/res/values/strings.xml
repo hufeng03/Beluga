@@ -553,6 +553,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="empty_document">No document</string>
 <string name="empty_apk">No APK</string>
 <string name="empty_file">No File</string>
+<string name="kanbox_empty_file">No file\n\nPull down to refresh</string>
 <string name="empty_secrect_audio">No secrect audio</string>
 <string name="empty_secrect_image">No secrect image</string>
 <string name="empty_secrect_video">No secrect video</string>
@@ -619,7 +620,12 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="download_kanbox_android_client">Download and install Kanbox client app</string>
 <string name="downloading_kanbox_android_client">Kanbox client app is downloading: %1$d%%</string>
 <string name="install_kanbox_android_client">Kanbox apk is ready to be installed</string>
-<string name="kanbox_uploading_files">Kanbox is uploading %1$d files</string>
+<string name="kanbox_uploading_files" formatted="false">Kanbox is uploading %1$d files</string>
+<string name="kanbox_uploading_files_with_success_and_failed" formatted="false">Uploading %1$d files (%2$d failed, %3$d success)</string>
+<string name="kanbox_uploading_files_with_success" formatted="false">Uploading %1$d files (%2$d success)</string>
+<string name="kanbox_uploading_files_with_failed" formatted="false">Uploading %1$d files (%2$d failed)</string>
+<string name="kanbox_uploading_files_all_failed" formatted="false">%1$d files upload failed</string>
+<string name="kanbox_uploading_files_all_failed_or_success" formatted="false">%1$d files upload failed (%2$d success)</string>
 <string name="kanbox_uploading_empty">No uploading files, please back</string>
 <string name="logout_dialog_info_content">Logout cloud service?</string>
 <string name="kanbox_intro_name">Kanbox</string>
@@ -644,6 +650,8 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="please_select_copy_or_cancel">Please select copy or cancel</string>
 <string name="btn_txt_install">Install</string>
 <string name="btn_txt_pause">Cancel</string>
+<string name="btn_txt_upload">Upload</string>
+<string name="btn_txt_upload_again">Upload</string>
 <string name="btn_txt_download">Download</string>
 <string name="btn_txt_downloading">Downloading</string>
 <string name="btn_txt_open">View</string>
@@ -658,4 +666,12 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="app_rate_no_market">No Play Store installed on device</string>
 <string name="file_name_input_wrong">!Illegal file name</string>
 <string name="can_not_share">Can not share this file</string>
+<string name="kanbox_download_info_cancelling" formatted="false">%1$s Download cancelling</string>
+<string name="kanbox_download_info_waiting" formated="false">%1$s Download waiting</string>
+<string name="kanbox_upload_info_cancelling" formatted="false">Upload cancelling %1$s</string>
+<string name="kanbox_upload_info_waiting" formatted="false">Upload waiting %1$s</string>
+<string name="kanbox_upload_info_cancelled" formatted="false">Upload cancelled %1$s</string>
+<string name="kanbox_upload_info_success" formatted="false">Upload success %1$s</string>
+<string name="kanbox_upload_info_failed" formatted="false">Upload failed %1$s</string>
+<string name="kanbox_delete_local_failed">Delete local file failed</string>
 </resources>

@@ -2,11 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/file_items"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="48dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
 
     <!--the icon should be 32dp*32dp-->
     <com.hufeng.playimage.MyLazyLoadImageView
@@ -27,12 +27,10 @@
         android:layout_centerVertical="true"
         android:minWidth="54dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="10sp"
+        android:layout_height="40dp"
+        android:textSize="12sp"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
         android:layout_marginLeft="4dp"
         android:visibility="visible"
         android:textColor="@color/white"
@@ -71,8 +69,7 @@
         android:layout_toRightOf="@id/icon"
         android:layout_toLeftOf="@id/status"
         android:layout_below="@id/name"
-        android:progress="50"
-        android:visibility="visible"
+        android:progress="0"
         android:progressDrawable="@drawable/progress_bar_bg"
         android:layout_marginTop="4dp" />
 

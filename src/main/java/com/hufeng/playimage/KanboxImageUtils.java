@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.provider.DataStructures;
+import com.kanbox.api.Kanbox;
 import com.kanbox.api.KanboxAsyncTask;
 import com.kanbox.api.Token;
 
@@ -20,8 +21,6 @@ import org.apache.http.client.methods.HttpGet;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * Created by feng on 14-2-3.
@@ -84,13 +83,7 @@ public class KanboxImageUtils {
     public static Bitmap downloadThumbnailFromServer(String path) {
         Bitmap bm = null;
 
-        String encoded_path = null;
-        try {
-            encoded_path = URLEncoder.encode(path, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            encoded_path = path;
-            e.printStackTrace();
-        }
+        String encoded_path = Kanbox.encodePath(path);
         StringBuffer thumbnailUrl = new StringBuffer( "https://api.kanbox.com/0/thumbnail");
         thumbnailUrl.append(encoded_path).append("?size=small");
 

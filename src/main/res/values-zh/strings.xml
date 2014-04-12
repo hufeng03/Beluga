@@ -544,6 +544,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="empty_download">下载列表为空</string>
 <string name="empty_device">目录为空</string>
 <string name="empty_file">没有文件</string>
+<string name="kanbox_empty_file">没有文件\n\n下拉刷新</string>
 <string name="app_storage_external">SD卡</string>
 
 <string name="tool_name_recommend">精品推荐</string>
@@ -606,7 +607,12 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="download_kanbox_android_client">下载使用酷盘手机版，送2T空间</string>
 <string name="downloading_kanbox_android_client">"酷盘客户端正在下载: %1$d%%"</string>
 <string name="install_kanbox_android_client">安装使用酷盘手机版，送2T空间</string>
-<string name="kanbox_uploading_files">正常上传%1$d个文件到酷盘</string>
+<string name="kanbox_uploading_files" formatted="false">正常上传%1$d个文件到酷盘</string>
+<string name="kanbox_uploading_files_with_success_and_failed" formatted="false">正常上传%1$d个文件(%2$d个已失败，%3$d个已成功)</string>
+<string name="kanbox_uploading_files_with_success" formatted="false">正常上传%1$d个文件(%2$d个已成功)</string>
+<string name="kanbox_uploading_files_with_failed" formatted="false">正常上传%1$d个文件(%2$d个已失败)</string>
+<string name="kanbox_uploading_files_all_failed" formatted="false">%1$d个文件上传失败</string>
+<string name="kanbox_uploading_files_all_failed_or_success" formatted="false">%1$d个文件上传失败, %2$d个已成功</string>
 <string name="kanbox_uploading_empty">没有正在上传的文件, 请后退</string>
 <string name="logout_dialog_info_content">确认退出酷盘?</string>
 <string name="kanbox_intro_name">酷盘</string>
@@ -629,6 +635,8 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="please_select_copy_or_cancel">请选择粘贴或取消</string>
 <string name="btn_txt_install">安装</string>
 <string name="btn_txt_pause">取消</string>
+<string name="btn_txt_upload">上传</string>
+<string name="btn_txt_upload_again">重新上传</string>
 <string name="btn_txt_download">下载</string>
 <string name="btn_txt_downloading">下载中</string>
 <string name="btn_txt_open">查看</string>
@@ -643,4 +651,11 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="app_rate_no_market">没有找到应用市场</string>
 <string name="file_name_input_wrong">非法文件名称</string>
 <string name="can_not_share">无法分享此文件</string>
+<string name="kanbox_download_info_cancelling" formatted="false">%1$s 正在取消上传</string>
+<string name="kanbox_upload_info_cancelling" formatted="false">正在取消上传 %1$s</string>
+<string name="kanbox_upload_info_waiting" formatted="false">正在等待上传 %1$s</string>
+<string name="kanbox_upload_info_cancelled" formatted="false">上传已取消 %1$s</string>
+<string name="kanbox_upload_info_success" formatted="false">上传成功 %1$s</string>
+<string name="kanbox_upload_info_failed" formatted="false">上传失败 %1$s</string>
+<string name="kanbox_delete_local_failed">删除本地文件失败</string>
 </resources>

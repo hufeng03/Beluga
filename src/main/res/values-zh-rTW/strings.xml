@@ -544,6 +544,7 @@ or nonexistent.</string>
     <string name="empty_download">下載列表為空</string>
     <string name="empty_device">目錄為空</string>
     <string name="empty_file">沒有文件</string>
+    <string name="kanbox_empty_file">没有文件\n\n下拉刷新</string>
     <string name="app_storage_external">SD卡</string>
 
     <string name="tool_name_recommend">精品推薦</string>

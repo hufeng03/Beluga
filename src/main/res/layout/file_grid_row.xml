@@ -110,7 +110,7 @@
             android:layout_toLeftOf="@id/status"
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:visibility="visible"
-            android:progress="50"
+            android:progress="0"
             android:progressDrawable="@drawable/progress_bar_bg"
             android:layout_marginTop="4dp"/>
 

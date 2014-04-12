@@ -149,12 +149,39 @@ public class KanBoxTabFragment extends FileTabFragment implements
         }
 
         List<FileEntry> uploadingFiles = KanBoxApi.getInstance().getUploadingFiles();
-        if (uploadingFiles != null) {
-            int size = uploadingFiles.size();
-            if (size > 0) {
-                TextView text = (TextView)mAdLayout.findViewById(R.id.kanbox_ad_ok);
-                text.setText(getString(R.string.kanbox_uploading_files, size));
+        List<FileEntry> uploadingSuccessFiles = KanBoxApi.getInstance().getUploadingSuccessFiles();
+        List<FileEntry> uploadingFailedFiles = KanBoxApi.getInstance().getUploadingFailedFiles();
+        int uploading_size = uploadingFiles == null ? 0 :uploadingFiles.size();
+        int uploading_success_size = uploadingSuccessFiles == null ? 0 :uploadingSuccessFiles.size();
+        int uploading_failed_size = uploadingFailedFiles == null ? 0 :uploadingFailedFiles.size();
+        if (uploading_size > 0 || uploading_failed_size > 0) {
+            TextView text = (TextView) mAdLayout.findViewById(R.id.kanbox_ad_ok);
+            boolean flag_show_uploading = true;
+            if (uploading_size > 0) {
+                if (uploading_failed_size > 0 && uploading_failed_size > 0) {
+                    text.setText(getString(R.string.kanbox_uploading_files_with_success_and_failed, uploading_size, uploading_failed_size, uploading_success_size));
+                } else if (uploading_failed_size > 0) {
+                    text.setText(getString(R.string.kanbox_uploading_files_with_failed, uploading_size, uploading_failed_size));
+                } else if (uploading_success_size > 0) {
+                    text.setText(getString(R.string.kanbox_uploading_files_with_success, uploading_size, uploading_success_size));
+                } else {
+                    text.setText(getString(R.string.kanbox_uploading_files, uploading_size));
+                }
+            } else {
+                if (uploading_failed_size > 0 && uploading_failed_size > 0) {
+                    text.setText(getString(R.string.kanbox_uploading_files_all_failed_or_success, uploading_failed_size, uploading_success_size));
+                } else if (uploading_failed_size > 0) {
+                    text.setText(getString(R.string.kanbox_uploading_files_all_failed, uploading_failed_size));
+                } else if (uploading_success_size > 0) {
+                    //no showing, all success
+                    flag_show_uploading = false;
+                } else {
+                    //no showing
+                    flag_show_uploading = false;
+                }
+            }
 
+            if (flag_show_uploading) {
                 mAdLayout.setVisibility(View.VISIBLE);
                 mAdLayout.findViewById(R.id.kanbox_ad_close).setVisibility(View.GONE);
                 text.setTag("up");
