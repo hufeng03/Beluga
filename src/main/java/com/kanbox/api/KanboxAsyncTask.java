@@ -128,7 +128,7 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
                             if(BuildConfig.DEBUG) {
                                 Log.i(TAG, strResult);
                             }
-                            if (mOpType != RequestListener.OP_GET_FILELIST) {
+                            if (mOpType != RequestListener.OP_GET_FILELIST && mOpType != RequestListener.OP_GET_ACCCOUNT_INFO) {
                                 try {
                                     JSONObject json = new JSONObject(strResult);
                                     if (strResult.contains("status")) {
@@ -142,14 +142,17 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
                     }
                 } else {
                     mException = new KanboxException(statusCode);
+                    Log.i(TAG, "statusCode = "+statusCode);
                     return "error";
                 }
             }
 		} catch (ClientProtocolException e) {
 			mException = new KanboxException(e);
+            e.printStackTrace();
 			return "error";
 		} catch (IOException e) {
             mException = new KanboxException(e);
+            e.printStackTrace();
             if ("pause".equals(e.getMessage())) {
                 return "pause";
             } else {

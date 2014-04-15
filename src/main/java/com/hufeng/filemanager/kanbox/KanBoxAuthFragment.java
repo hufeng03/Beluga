@@ -171,11 +171,14 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
         if (TextUtils.isEmpty(Token.getInstance().getAccessToken())) {
             mProgressText.setText(R.string.kanbox_load_auth_page);
             String url = KanBoxConfig.OAUTH_URL+"?response_type=code&client_id=" + Constants.CLIENT_ID + "&platform=android" + "&redirect_uri=" + KanBoxConfig.GET_AUTH_REDIRECT_URI + "&user_language=ZH";
+            mWebView.setVisibility(View.VISIBLE);
             mWebView.loadUrl(url);
         } else if (Token.getInstance().isExpired()){
             mProgressText.setText(R.string.kanbox_refresh_token_start);
+            mWebView.setVisibility(View.GONE);
             KanBoxApi.getInstance().refreshToken();
         } else {
+            mProgressText.setText("");
             if(mWeakListener!=null) {
                 KanBoxAuthFragmentListener listener = mWeakListener.get();
                 if (listener != null) {
@@ -199,6 +202,10 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
     @Override
     public void onKanBoxApiSuccess(int op_type, String path, String response) {
         if (op_type == KanBoxApi.OP_GET_TOKEN || op_type == KanBoxApi.OP_REFRESH_TOKEN) {
+            KanBoxApi.getInstance().getAccountInfo();
+            mProgressNumber.setVisibility(View.GONE);
+            mProgressText.setText(R.string.kanbox_get_account_info);
+        } else if (op_type == KanBoxApi.OP_GET_ACCCOUNT_INFO) {
             if(mWeakListener!=null) {
                 KanBoxAuthFragmentListener listener = mWeakListener.get();
                 if (listener != null) {
@@ -214,7 +221,7 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
             if (op_type == KanBoxApi.OP_GET_TOKEN || op_type == KanBoxApi.OP_REFRESH_TOKEN) {
                 Toast.makeText(getActivity(), getString(R.string.kanbox_refresh_token_failed), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.kanbox_get_account_info_failed), Toast.LENGTH_SHORT).show();
             }
         }
 

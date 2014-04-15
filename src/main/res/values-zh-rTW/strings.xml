@@ -544,7 +544,7 @@ or nonexistent.</string>
     <string name="empty_download">下載列表為空</string>
     <string name="empty_device">目錄為空</string>
     <string name="empty_file">沒有文件</string>
-    <string name="kanbox_empty_file">没有文件\n\n下拉刷新</string>
+    <string name="kanbox_empty_file">沒有文件\n\n下拉刷新</string>
     <string name="app_storage_external">SD卡</string>
 
     <string name="tool_name_recommend">精品推薦</string>
@@ -599,15 +599,22 @@ or nonexistent.</string>
     <string name="upload_failed">%s上傳失敗</string>
     <string name="kanbox_refresh_token_start">刷新授權令牌...</string>
     <string name="kanbox_get_auth_start">獲取授權令牌...</string>
+    <string name="kanbox_get_account_info">獲取用戶信息...</string>
     <string name="kanbox_load_auth_page">加載授權認證頁面...</string>
     <string name="kanbox_refresh_token_failed">刷新授權令牌失敗</string>
+    <string name="kanbox_get_account_info_failed">獲取用戶信息失敗</string>
     <string name="kanbox_get_auth_failed">獲取授權認證失敗</string>
     <string name="kanbox_refresh_token_success">刷新授權令牌成功!</string>
     <string name="kanbox_refresh_file_list_error">刷新文件列表失敗!</string>
     <string name="download_kanbox_android_client">下載使用酷盤手機版，送2T空間</string>
     <string name="downloading_kanbox_android_client">"酷盤客戶端正在下載: %1$d%%"</string>
     <string name="install_kanbox_android_client">安裝使用酷盤手機版，送2T空間</string>
-    <string name="kanbox_uploading_files">正常上傳%1$d個文件到酷盤</string>
+    <string name="kanbox_uploading_files" formatted="false">正常上傳%1$d個文件到酷盤</string>
+    <string name="kanbox_uploading_files_with_success_and_failed" formatted="false">正常上傳%1$d個文件(%2$d個已失敗，%3$d個已成功)</string>
+    <string name="kanbox_uploading_files_with_success" formatted="false">正常上傳%1$d個文件(%2$d個已成功)</string>
+    <string name="kanbox_uploading_files_with_failed" formatted="false">正常上傳%1$d個文件(%2$d個已失敗)</string>
+    <string name="kanbox_uploading_files_all_failed" formatted="false">%1$d個文件上傳失敗</string>
+    <string name="kanbox_uploading_files_all_failed_or_success" formatted="false">%1$d個文件上傳失敗, %2$d個已成功</string>
     <string name="kanbox_uploading_empty">沒有正在上傳的文件, 請後退</string>
     <string name="logout_dialog_info_content">確認退出酷盤?</string>
     <string name="kanbox_intro_name">酷盤</string>
@@ -630,6 +637,8 @@ or nonexistent.</string>
     <string name="please_select_copy_or_cancel">請選擇粘貼或取消</string>
     <string name="btn_txt_install">安裝</string>
     <string name="btn_txt_pause">取消</string>
+    <string name="btn_txt_upload">上傳</string>
+    <string name="btn_txt_upload_again">重新上傳</string>
     <string name="btn_txt_download">下載</string>
     <string name="btn_txt_downloading">下載中</string>
     <string name="btn_txt_open">查看</string>
@@ -642,6 +651,13 @@ or nonexistent.</string>
     <string name="app_rate_ask_again">暫不評論</string>
     <string name="app_rate_no_thanks">不喜歡</string>
     <string name="app_rate_no_market">沒有找到應用市場</string>
-    <string name="file_name_input_wrong">非法文件名稱</string>
+    <string name="file_name_input_wrong">文件名不符合規範</string>
     <string name="can_not_share">無法分享此文件</string>
+    <string name="kanbox_download_info_cancelling" formatted="false">%1$s 正在取消上傳</string>
+    <string name="kanbox_upload_info_cancelling" formatted="false">正在取消上傳 %1$s</string>
+    <string name="kanbox_upload_info_waiting" formatted="false">正在等待上傳 %1$s</string>
+    <string name="kanbox_upload_info_cancelled" formatted="false">上傳已取消 %1$s</string>
+    <string name="kanbox_upload_info_success" formatted="false">上傳成功 %1$s</string>
+    <string name="kanbox_upload_info_failed" formatted="false">上傳失敗 %1$s</string>
+    <string name="kanbox_delete_local_failed">刪除本地文件失敗</string>
 </resources>

@@ -1,15 +1,17 @@
 package com.hufeng.filemanager.kanbox;
 
-import android.annotation.TargetApi;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.provider.DataStructures;
+import com.hufeng.filemanager.storage.StorageManager;
 import com.kanbox.api.PushSharePreference;
 
 import org.json.JSONArray;
@@ -26,6 +28,27 @@ import java.util.Map;
 public class KanBoxResponseHandler {
 
     private static final String TAG = KanBoxResponseHandler.class.getSimpleName();
+
+    public static void handleHttpResult_GetAccountInfo(final String response) {
+        try {
+            JSONObject sData = new JSONObject(response);
+            String email = sData.getString("email");
+            if (TextUtils.isEmpty(email)) {
+                email = "";
+            }
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
+            String old_email = preferences.getString("KanBox_Account_Email", "");
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("KanBox_Account_Email", email);
+            editor.commit();
+            if (TextUtils.isEmpty(old_email) || !old_email.equals(email)) {
+                FileManager.getAppContext().getContentResolver().delete(DataStructures.CloudBoxColumns.CONTENT_URI, null, null);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void handleHttpResult_GetFileList(String parent, final String response) {
         final String parent_path;
@@ -100,10 +123,10 @@ public class KanBoxResponseHandler {
                                             entry.local_file_path = local_file;
                                             entry.icon_data = icon_data;
                                         } else if ( entry.lastModified == date && entry.size == size) {
-                                            if (new File(local_file).exists()) {
+                                            if (new File(local_file).exists() && new File(local_file).length() == size) {
                                                 entry.local_file_path = local_file;
+                                                entry.icon_data = icon_data;
                                             }
-                                            entry.icon_data = icon_data;
                                         }
                                     }
                                 }
@@ -115,6 +138,16 @@ public class KanBoxResponseHandler {
                                 }
                             }
 
+                            Iterator iter = entries.entrySet().iterator();
+                            while (iter.hasNext()) {
+                                Map.Entry entry = (Map.Entry) iter.next();
+                                KanBoxFileEntry item = (KanBoxFileEntry)entry.getValue();
+                                if (TextUtils.isEmpty(item.local_file_path)) {
+                                    //try to find one match
+                                    item.local_file_path = tryToFindLocalFileMatch(item.path, item.size);
+                                }
+                            }
+
                             if(!TextUtils.isEmpty(parent_path)) {
                                 int count = FileManager.getAppContext().getContentResolver().delete(DataStructures.CloudBoxColumns.CONTENT_URI, DataStructures.CloudBoxColumns.PARENT_FOLDER_FIELD+"=?",
                                         new String[]{parent_path});
@@ -122,7 +155,7 @@ public class KanBoxResponseHandler {
                             }
 
                             ContentValues[] cvs = new ContentValues[len];
-                            Iterator iter = entries.entrySet().iterator();
+                            iter = entries.entrySet().iterator();
                             i = 0;
                             while (iter.hasNext()) {
                                 Map.Entry entry = (Map.Entry) iter.next();
@@ -208,6 +241,33 @@ public class KanBoxResponseHandler {
             cv.put(DataStructures.CloudBoxColumns.ICON_DATA_FIELD, "");
         }
         return cv;
+    }
+
+    private static String tryToFindLocalFileMatch(String remote_path, long remote_size) {
+        StorageManager manager = StorageManager.getInstance(FileManager.getAppContext());
+        String[] storages = manager.getMountedStorages();
+        String local_path = null;
+        if(storages!=null) {
+            int size = storages.length;
+            int idx = 0;
+            idx = remote_path.lastIndexOf("/");
+            String name = remote_path.substring(idx+1);
+            String dir = remote_path.substring(0,idx+1);
+            idx = 0;
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
+            String account_email = preferences.getString("KanBox_Account_Email", "").trim();
+            while(idx < size){
+                String stor = storages[idx];
+                File kanbox_dir = new File(stor, KanBoxConfig.LOCAL_STORAGE_DIRECTORY+File.separator+account_email);
+                File kanbox_file = new File(kanbox_dir.getAbsolutePath()+dir, name);
+                if(kanbox_file.exists() && kanbox_file.length() == remote_size) {
+                    local_path = new File(kanbox_dir.getAbsolutePath()+dir, name).getAbsolutePath();
+                    break;
+                }
+                idx++;
+            }
+        }
+        return local_path;
     }
 
 }

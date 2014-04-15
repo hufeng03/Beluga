@@ -832,7 +832,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
                 });
             }
             int idx = orig_path.lastIndexOf(File.separator);
-            if(idx>0)
+            if(idx>=0)
                 edit.setText(orig_path.substring(idx+1));
             return new AlertDialog.Builder(getActivity())
                     .setTitle(R.string.rename_dialog_title)
@@ -897,7 +897,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
                 });
             }
             int idx = orig_path.lastIndexOf(File.separator);
-            if(idx>0)
+            if(idx>=0)
             	edit.setText(orig_path.substring(idx+1));
             return new AlertDialog.Builder(getActivity())
             .setTitle(R.string.rename_dialog_title)

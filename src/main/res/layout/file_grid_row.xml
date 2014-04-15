@@ -45,6 +45,18 @@
                 android:src="@drawable/checkbox_normal"
                 /-->
 
+    <ImageView
+        android:id="@+id/checked"
+        android:src="@drawable/kanbox_ic_downloaded"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/icon"
+        android:layout_alignBottom="@id/icon"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        android:visibility="gone"
+        />
+
             <TextView
                 android:id="@+id/status"
                 android:layout_width= "wrap_content"

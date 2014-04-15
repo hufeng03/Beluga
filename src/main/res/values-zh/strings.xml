@@ -599,8 +599,10 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="upload_failed">%s上传失败</string>
 <string name="kanbox_refresh_token_start">刷新授权令牌...</string>
 <string name="kanbox_get_auth_start">获取授权令牌...</string>
+<string name="kanbox_get_account_info">获取用户信息...</string>
 <string name="kanbox_load_auth_page">加载授权认证页面...</string>
 <string name="kanbox_refresh_token_failed">刷新授权令牌失败</string>
+<string name="kanbox_get_account_info_failed">获取用户信息失败</string>
 <string name="kanbox_get_auth_failed">获取授权认证失败</string>
 <string name="kanbox_refresh_token_success">刷新授权令牌成功!</string>
 <string name="kanbox_refresh_file_list_error">刷新文件列表失败!</string>
@@ -649,7 +651,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="app_rate_ask_again">暂不评论</string>
 <string name="app_rate_no_thanks">不喜欢</string>
 <string name="app_rate_no_market">没有找到应用市场</string>
-<string name="file_name_input_wrong">非法文件名称</string>
+<string name="file_name_input_wrong">文件名不符合规范</string>
 <string name="can_not_share">无法分享此文件</string>
 <string name="kanbox_download_info_cancelling" formatted="false">%1$s 正在取消上传</string>
 <string name="kanbox_upload_info_cancelling" formatted="false">正在取消上传 %1$s</string>

@@ -3,11 +3,13 @@ package com.hufeng.filemanager.kanbox;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -292,7 +294,9 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
 //            hideSwipeProgress();
             completeRefresh();
             reloadFiles();
-//            getSherlockActivity().invalidateOptionsMenu();
+            if ("/".equals(mRootDir)) {
+                getSherlockActivity().invalidateOptionsMenu();
+            }
             return true;
         }
     }
@@ -501,7 +505,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
     public void onDialogDone(DialogInterface dialog, int dialog_id, int button, Object param) {
         switch(dialog_id) {
             case FmDialogFragment.CLOUD_LOGOUT_DIALOG:
-                FileManager.getAppContext().getContentResolver().delete(DataStructures.CloudBoxColumns.CONTENT_URI, null, null);
+//                FileManager.getAppContext().getContentResolver().delete(DataStructures.CloudBoxColumns.CONTENT_URI, null, null);
                 KanBoxApi.getInstance().logOut();
                 if (mListener != null) {
                     KanBoxBrowserListener listener = mListener.get();
@@ -521,7 +525,6 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             case FmDialogFragment.CLOUD_RENAME_DIALOG:
                 String old_name = ((String[])param)[0];
                 String new_name = ((String[])param)[1];
-//                String old_path = new File(mRootDir, old_name).getAbsolutePath();
                 String new_path = new File(mRootDir, new_name).getAbsolutePath();
                 KanBoxApi.getInstance().moveFile(old_name, new_path);
                 break;
@@ -529,56 +532,123 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
     }
 
     private void downloadCloudFile(String remote_path) {
+        long db_size = -1;
+        long db_id = -1;
+        Cursor cursor = null;
+        try{
+            cursor = FileManager.getAppContext().getContentResolver().query(DataStructures.CloudBoxColumns.CONTENT_URI,
+                    new String[]{DataStructures.CloudBoxColumns._ID, DataStructures.CloudBoxColumns.FILE_SIZE_FIELD, DataStructures.CloudBoxColumns.HASH_FIELD}, DataStructures.CloudBoxColumns.FILE_PATH_FIELD+"=?",
+                    new String[]{remote_path}, null);
+            if (cursor!=null && cursor.moveToNext()) {
+                db_id = cursor.getInt(0);
+                db_size = cursor.getLong(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor!=null) {
+                cursor.close();
+            }
+        }
+
         StorageManager manager = StorageManager.getInstance(getActivity());
         String[] storages = manager.getMountedStorages();
         String local_path = null;
+        boolean flag_has_local = false;
         if(storages!=null) {
             int size = storages.length;
             int idx = 0;
-            while(idx<size){
+            idx = remote_path.lastIndexOf("/");
+            String name = remote_path.substring(idx+1);
+            String dir = remote_path.substring(0,idx+1);
+            idx = 0;
+            while(idx < size){
                 String stor = storages[idx];
-                File kanbox_dir = new File(stor, KanBoxConfig.LOCAL_STORAGE_DIRECTORY);
-                if(local_path==null || new File(kanbox_dir.getAbsolutePath()+remote_path).exists()) {
-                    local_path = kanbox_dir.getAbsolutePath()+remote_path;
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String account_email = preferences.getString("KanBox_Account_Email", "").trim();
+                File kanbox_dir = new File(stor, KanBoxConfig.LOCAL_STORAGE_DIRECTORY+File.separator+account_email);
+                File kanbox_file = new File(kanbox_dir.getAbsolutePath()+dir, name);
+                if(kanbox_file.exists() && kanbox_file.length() == db_size) {
+                    local_path = new File(kanbox_dir.getAbsolutePath()+dir, name).getAbsolutePath();
+                    flag_has_local = true;
+                    break;
+                } else {
+                    if (TextUtils.isEmpty(local_path)) {
+                        local_path = new File(kanbox_dir.getAbsolutePath()+dir, name).getAbsolutePath();
+                    }
                 }
                 idx++;
             }
         }
-        boolean flag_has_local = false;
-        if(new File(local_path).exists()){
-            long size = new File(local_path).length();
-            Cursor cursor = null;
-            try{
-                cursor = FileManager.getAppContext().getContentResolver().query(DataStructures.CloudBoxColumns.CONTENT_URI,
-                        new String[]{DataStructures.CloudBoxColumns._ID,DataStructures.CloudBoxColumns.FILE_SIZE_FIELD}, DataStructures.CloudBoxColumns.FILE_PATH_FIELD+"=?",
-                        new String[]{remote_path}, null);
-                if (cursor!=null && cursor.moveToNext()) {
-                    int db_id = cursor.getInt(0);
-                    long db_size = cursor.getLong(1);
-                    if(db_size == size) {
-                        flag_has_local = true;
-                        ContentValues cv = new ContentValues();
-                        cv.put(DataStructures.CloudBoxColumns.LOCAL_FILE_FIELD, local_path);
-                        FileManager.getAppContext().getContentResolver().update(Uri.withAppendedPath(DataStructures.CloudBoxColumns.CONTENT_URI, ""+db_id),
-                                cv, null, null);
-                        mAdapter.notifyDataSetChanged();
-                        Toast.makeText(getActivity(), getString(R.string.download_success, remote_path), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (cursor!=null) {
-                    cursor.close();
-                }
+        if (flag_has_local) {
+            ContentValues cv = new ContentValues();
+            cv.put(DataStructures.CloudBoxColumns.LOCAL_FILE_FIELD, local_path);
+            FileManager.getAppContext().getContentResolver().update(Uri.withAppendedPath(DataStructures.CloudBoxColumns.CONTENT_URI, ""+db_id),
+                    cv, null, null);
+            mAdapter.notifyDataSetChanged();
+            Toast.makeText(getActivity(), getString(R.string.download_success, remote_path), Toast.LENGTH_SHORT).show();
+        } else {
+            if (local_path != null) {
+                KanBoxApi.getInstance().downloadFile(remote_path, local_path);
+                mAdapter.notifyDataSetChanged();
             }
         }
-        if (!flag_has_local) {
-            KanBoxApi.getInstance().downloadFile(remote_path, local_path);
-            mAdapter.notifyDataSetChanged();
-//            Toast.makeText(getActivity(), getString(R.string.download_start, remote_path), Toast.LENGTH_SHORT).show();
-        }
     }
+
+//    private void downloadCloudFile(String remote_path) {
+//        StorageManager manager = StorageManager.getInstance(getActivity());
+//        String[] storages = manager.getMountedStorages();
+//        String local_path = null;
+//        if(storages!=null) {
+//            int size = storages.length;
+//            int idx = 0;
+//            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//            String account_email = preferences.getString("KanBox_Account_Email", "").trim();
+//            while(idx<size){
+//                String stor = storages[idx];
+//                File kanbox_dir = new File(stor, KanBoxConfig.LOCAL_STORAGE_DIRECTORY+File.separator+account_email);
+//                if(local_path==null || new File(kanbox_dir.getAbsolutePath()+remote_path).exists()) {
+//                    local_path = kanbox_dir.getAbsolutePath()+remote_path;
+//                }
+//                idx++;
+//            }
+//        }
+//        boolean flag_has_local = false;
+//        if(new File(local_path).exists()){
+//            long size = new File(local_path).length();
+//            Cursor cursor = null;
+//            try{
+//                cursor = FileManager.getAppContext().getContentResolver().query(DataStructures.CloudBoxColumns.CONTENT_URI,
+//                        new String[]{DataStructures.CloudBoxColumns._ID,DataStructures.CloudBoxColumns.FILE_SIZE_FIELD, DataStructures.CloudBoxColumns.HASH_FIELD}, DataStructures.CloudBoxColumns.FILE_PATH_FIELD+"=?",
+//                        new String[]{remote_path}, null);
+//                if (cursor!=null && cursor.moveToNext()) {
+//                    int db_id = cursor.getInt(0);
+//                    long db_size = cursor.getLong(1);
+//                    String hash = cursor.getString(2);
+//                    if(db_size == size) {
+//                        flag_has_local = true;
+//                        ContentValues cv = new ContentValues();
+//                        cv.put(DataStructures.CloudBoxColumns.LOCAL_FILE_FIELD, local_path);
+//                        FileManager.getAppContext().getContentResolver().update(Uri.withAppendedPath(DataStructures.CloudBoxColumns.CONTENT_URI, ""+db_id),
+//                                cv, null, null);
+//                        mAdapter.notifyDataSetChanged();
+//                        Toast.makeText(getActivity(), getString(R.string.download_success, remote_path), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            } finally {
+//                if (cursor!=null) {
+//                    cursor.close();
+//                }
+//            }
+//        }
+//        if (!flag_has_local) {
+//            KanBoxApi.getInstance().downloadFile(remote_path, local_path);
+//            mAdapter.notifyDataSetChanged();
+////            Toast.makeText(getActivity(), getString(R.string.download_start, remote_path), Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {

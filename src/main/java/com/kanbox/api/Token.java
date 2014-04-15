@@ -45,7 +45,7 @@ public class Token {
     }
 
     public boolean isExpired() {
-        return System.currentTimeMillis() < expiresTill;
+        return System.currentTimeMillis() > expiresTill;
     }
 
     public void setCode(String code) {
@@ -55,7 +55,6 @@ public class Token {
     synchronized public static final Token getInstance() {
 		if(mToken == null) {
 			mToken = new Token();
-
 		}
 		return mToken;
 	}

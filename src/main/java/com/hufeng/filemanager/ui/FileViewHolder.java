@@ -1,6 +1,7 @@
 package com.hufeng.filemanager.ui;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ public class FileViewHolder {
         info  =(TextView) view.findViewById(R.id.info);
         status = (TextView) view.findViewById(R.id.status);
         progress = (ProgressBar) view.findViewById(R.id.progress);
+        check = (ImageView) view.findViewById(R.id.checked);
         clickListener = null;
     }
 
@@ -28,6 +30,7 @@ public class FileViewHolder {
         info  =(TextView) view.findViewById(R.id.info);
         status = (TextView) view.findViewById(R.id.status);
         progress = (ProgressBar) view.findViewById(R.id.progress);
+        check = (ImageView) view.findViewById(R.id.checked);
         clickListener = new View.OnClickListener(){
 
             @Override
@@ -47,6 +50,7 @@ public class FileViewHolder {
     public TextView info;
     public TextView status;
     public ProgressBar progress;
+    public ImageView check;
 
     public long position;
     public String path;

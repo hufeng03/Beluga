@@ -112,6 +112,7 @@ public class KanBoxBrowserAdapter extends CursorAdapter implements GridAdapter {
             holder.status.setVisibility(View.GONE);
             holder.info.setVisibility(View.VISIBLE);
             holder.info.setText(TimeUtil.getDateString(date));
+            holder.check.setVisibility(View.GONE);
         } else {
             holder.icon.setDefaultResource(IconLoaderHelper.getFileIcon(context, holder.path, GridFragment.DISPLAY_MODE.GRID.ordinal() == holder.display));
             if(!TextUtils.isEmpty(local_file)) {
@@ -120,7 +121,9 @@ public class KanBoxBrowserAdapter extends CursorAdapter implements GridAdapter {
                 holder.status.setVisibility(View.GONE);
                 holder.info.setVisibility(View.VISIBLE);
                 holder.info.setText(TimeUtil.getDateString(date));
+                holder.check.setVisibility(View.VISIBLE);
             } else {
+                holder.check.setVisibility(View.GONE);
                 holder.icon.requestDisplayKanboxThumbnail(holder.path, false);
 
                 if(KanBoxApi.isDownloading(holder.path)) {
@@ -162,7 +165,8 @@ public class KanBoxBrowserAdapter extends CursorAdapter implements GridAdapter {
                     holder.progress.setVisibility(View.GONE);
                     if (holder.display == GridFragment.DISPLAY_MODE.LIST.ordinal()) {
                         holder.status.setVisibility(View.VISIBLE);
-                        holder.status.setText(R.string.btn_txt_download);
+                        holder.status.setVisibility(View.GONE);
+//                        holder.status.setText(R.string.btn_txt_download);
                     } else {
                         holder.status.setVisibility(View.GONE);
                     }

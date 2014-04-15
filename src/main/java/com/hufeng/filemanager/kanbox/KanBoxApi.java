@@ -198,6 +198,7 @@ public class KanBoxApi implements RequestListener{
 //                }
 //                break;
             case OP_GET_ACCCOUNT_INFO:
+                KanBoxResponseHandler.handleHttpResult_GetAccountInfo(response);
                 break;
             case OP_GET_FILELIST:
                 KanBoxResponseHandler.handleHttpResult_GetFileList(path, response);

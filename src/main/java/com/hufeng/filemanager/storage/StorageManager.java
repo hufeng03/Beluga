@@ -328,21 +328,21 @@ public class StorageManager {
 		}
 
         if (mStorageUnits.size() == 0) {
-            File file = Environment.getExternalStorageDirectory();
-            String path = file.getAbsolutePath();
-            if (!TextUtils.isEmpty(path)) {
-                boolean flag = false;
-                for (StorageUnit unit : mStorageUnits) {
-                    if (unit.path.equals(path)) {
-                        flag = true;
-                    }
-                }
-                if (!flag) {
-                    long availableSize = StorageUtil.getAvailaleSize(path);
-                    long allSize = StorageUtil.getAllSize(path);
-                    mStorageUnits.add(new StorageUnit(path, null, false, Environment.getExternalStorageState(), availableSize, allSize));
-                }
-            }
+//            File file = Environment.getExternalStorageDirectory();
+//            String path = file.getAbsolutePath();
+//            if (!TextUtils.isEmpty(path)) {
+//                boolean flag = false;
+//                for (StorageUnit unit : mStorageUnits) {
+//                    if (unit.path.equals(path)) {
+//                        flag = true;
+//                    }
+//                }
+//                if (!flag) {
+//                    long availableSize = StorageUtil.getAvailaleSize(path);
+//                    long allSize = StorageUtil.getAllSize(path);
+//                    mStorageUnits.add(new StorageUnit(path, null, false, Environment.getExternalStorageState(), availableSize, allSize));
+//                }
+//            }
         }
 
         if(mStorageUnits.size()>0) {

@@ -612,8 +612,10 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="upload_failed">%s upload failed</string>
 <string name="kanbox_refresh_token_start">refreshing access token ...</string>
 <string name="kanbox_get_auth_start">getting authorization token ...</string>
+<string name="kanbox_get_account_info">getting account info ...</string>
 <string name="kanbox_load_auth_page">loading authorization page ...</string>
 <string name="kanbox_refresh_token_failed">refresh access token failed!</string>
+<string name="kanbox_get_account_info_failed">get account info failed!</string>
 <string name="kanbox_get_auth_failed">get authorization code failed!</string>
 <string name="kanbox_refresh_token_success">refresh access token success!</string>
 <string name="kanbox_refresh_file_list_error">get file list failed!</string>
