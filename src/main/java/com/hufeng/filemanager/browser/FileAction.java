@@ -1275,7 +1275,9 @@ public class FileAction {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} catch (Exception e) {
+                e.printStackTrace();
+            }
     	}
 	    Toast.makeText(FileManager.getAppContext(), R.string.set_wallpaper_fail, Toast.LENGTH_SHORT).show();    	
     }

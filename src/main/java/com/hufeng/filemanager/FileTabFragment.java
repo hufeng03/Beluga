@@ -3,6 +3,7 @@ package com.hufeng.filemanager;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -243,4 +244,13 @@ public abstract class FileTabFragment extends BaseFragment implements
 //                break;
 //        }
 //    }
+
+    public void clearSelection() {
+        if(mCurrentChildFragment!=null) {
+            if (!TextUtils.isEmpty(mCurrentChildFragment.mSearchString) ){
+                mCurrentChildFragment.mSearchString = null;
+                mCurrentChildFragment.reloadFiles();
+            }
+        }
+    }
 }

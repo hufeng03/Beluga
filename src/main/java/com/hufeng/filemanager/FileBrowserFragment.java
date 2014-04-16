@@ -240,7 +240,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(getFileOperation().isMovingOrCopying()) {
+        if(getFileOperation()!=null && getFileOperation().isMovingOrCopying()) {
             menu.clear();
             inflater.inflate(R.menu.file_browser_fragment_paste_menu,menu);
         } else {
@@ -317,7 +317,9 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
     @Override
     public void refreshUI() {
-        mAdapter.notifyDataSetChanged();
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

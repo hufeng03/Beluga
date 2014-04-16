@@ -2,7 +2,9 @@ package com.hufeng.filemanager.browser;
 
 import android.text.TextUtils;
 
+import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.mp3.Mp3ReadId3v2;
+import com.hufeng.filemanager.storage.StorageManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,8 +19,12 @@ public class InfoUtil {
         switch (type) {
             case FileUtils.FILE_TYPE_DIRECTORY: {
                 int count = getDirectoryChildrenCount(new File(path));
-                String date = FileUtils.getFileDate(new File(path));
-                info = "(" + count + ") " + date;
+                if (!StorageManager.getInstance(FileManager.getAppContext()).isStorage(path)) {
+                    String date = FileUtils.getFileDate(new File(path));
+                    info = "(" + count + ") " + date;
+                } else {
+                    info = "(" + count + ")";
+                }
                 break;
             }
             case FileUtils.FILE_TYPE_AUDIO: {

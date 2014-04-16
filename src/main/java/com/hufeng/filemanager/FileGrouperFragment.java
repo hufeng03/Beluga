@@ -18,6 +18,7 @@ import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileEntryFactory;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.provider.DataStructures;
+import com.hufeng.filemanager.services.IUiImpl;
 import com.hufeng.filemanager.services.UiServiceHelper;
 import com.hufeng.filemanager.ui.FileCursorAdapter;
 import com.hufeng.filemanager.ui.FileGridAdapterListener;
@@ -25,7 +26,7 @@ import com.hufeng.filemanager.ui.FileOperation;
 
 import java.lang.ref.WeakReference;
 
-public class FileGrouperFragment extends FileGridFragment implements LoaderManager.LoaderCallbacks<Cursor>, FileGridAdapterListener{
+public class FileGrouperFragment extends FileGridFragment implements LoaderManager.LoaderCallbacks<Cursor>, FileGridAdapterListener, IUiImpl.UiCallback{
 
     private static final String TAG = FileGrouperFragment.class.getSimpleName();
 
@@ -196,6 +197,18 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        UiServiceHelper.getInstance().addCallback(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        UiServiceHelper.getInstance().removeCallback(this);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (getFileOperation().getOperationMode() == FileOperation.OPERATION_MODE.ADD_CLOUD) {
@@ -291,5 +304,31 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
 	public void onLoaderReset(Loader<Cursor> arg0) {
 		mAdapter.swapCursor(null);
 	}
+
+    @Override
+    public void scanStarted() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setGridShown(false);
+            }
+        });
+    }
+
+    @Override
+    public void scanCompleted() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setGridShown(true);
+                reloadFiles();
+            }
+        });
+    }
+
+    @Override
+    public void changeMonitored(String dir) {
+
+    }
 	
 }

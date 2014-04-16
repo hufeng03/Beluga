@@ -253,7 +253,9 @@ public class DirectoryTabFragment extends FileTabFragment implements
     @Override
     public void refreshFiles() {
         mFileBrowserFragment.refreshUI();
-        getSherlockActivity().invalidateOptionsMenu();
+        if (getSherlockActivity() != null) {
+            getSherlockActivity().invalidateOptionsMenu();
+        }
     }
 
 //    @Override

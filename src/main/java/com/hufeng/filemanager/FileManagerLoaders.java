@@ -74,6 +74,18 @@ public class FileManagerLoaders {
 
             String search_constraint = null;
             if(!TextUtils.isEmpty(search_string)) {
+                search_string.replace("[","[[]");
+                search_string.replace("%","[%]");
+                search_string.replace("_","[_]");
+                search_string.replace("^","[^]");
+//                search_string = search_string.replace("[","/[");
+//                search_string = search_string.replace("]","/]");
+//                search_string = search_string.replace("%","/%");
+//                search_string = search_string.replace("&","/&");
+//                search_string = search_string.replace("_","/_");
+//                search_string = search_string.replace("(","/(");
+//                search_string = search_string.replace(")","/)");
+                search_string = search_string.replace("'", "''");
                 search_constraint = DataStructures.FileColumns.FILE_NAME_FIELD+" LIKE '%"+search_string+"%'";
             }
 

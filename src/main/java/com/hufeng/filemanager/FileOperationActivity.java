@@ -161,6 +161,12 @@ public abstract class FileOperationActivity extends BaseActivity implements
                         break;
                 }
 
+                if (Constants.PRODUCT_FLAVOR_NAME.equals("bodao")) {
+                    if (item2 !=null ) {
+                        item2.setVisible(false);
+                    }
+                }
+
                 MenuItem item3 = menu.findItem(R.id.file_operation_addcloud2);
                 if (item3 != null) {
                     File file = new File(path);
@@ -207,9 +213,15 @@ public abstract class FileOperationActivity extends BaseActivity implements
                 break;
             case R.id.file_operation_copy:
                 getFileOperation().onOperationCopy(this);
+                if (this instanceof FileManagerTabActivity) {
+                    ((FileManagerTabActivity) this).clearSelection();
+                }
                 break;
             case R.id.file_operation_move:
                 getFileOperation().onOperationMove(this);
+                if (this instanceof FileManagerTabActivity) {
+                    ((FileManagerTabActivity) this).clearSelection();
+                }
                 break;
             case R.id.file_operation_cancel:
                 getFileOperation().onOperationSelectCancel(this);
@@ -298,7 +310,10 @@ public abstract class FileOperationActivity extends BaseActivity implements
     }
 
     private boolean refreshActionMode() {
-        int selectedNum = getFileOperation().getFileSelectedSize();
+        int selectedNum = 0;
+        if (getFileOperation() != null) {
+            selectedNum = getFileOperation().getFileSelectedSize();
+        }
 
         if (mActionMode == null && selectedNum > 0) {
             mActionMode = startActionMode(this);

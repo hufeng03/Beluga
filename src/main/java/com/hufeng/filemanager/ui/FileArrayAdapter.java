@@ -173,8 +173,6 @@ public class FileArrayAdapter extends ArrayAdapter<FileEntry> implements GridAda
         return files.toArray(new String[files.size()]);
     }
 
-
-
     FileGridAdapterListener mFileGridAdapterListener;
 
     public void setFileGridAdapterListener(FileGridAdapterListener listener){

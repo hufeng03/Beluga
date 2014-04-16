@@ -51,7 +51,7 @@ import java.util.Map;
 
 public class FmDialogFragment extends SherlockDialogFragment{
     
-    private String CORRECT_FILENAME = "^[^*&%?!\\s]+$";
+    private String CORRECT_FILENAME = "^[^:*?\"/,|<>]+$";
 	
 	private int mDialogId = -1;
 
@@ -102,7 +102,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
 		Bundle data = new Bundle();
 		data.putParcelableArray("available_apps", apps);
 		final FmDialogFragment dialog = FmDialogFragment.newInstance(SELECT_SEND_APP_DIALOG, data);
-		dialog.show(fm, "FmDialogFragment");
+		dialog.show(fm.beginTransaction(), "FmDialogFragment");
 	}
 	
 	public static void showSelectSendAppDialog(FragmentManager fm, ResolveInfo[] apps, String file){
@@ -110,7 +110,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
 		data.putParcelableArray("available_apps", apps);
 		data.putString("file", file);
 		final FmDialogFragment dialog = FmDialogFragment.newInstance(SELECT_SEND_APP_DIALOG, data);
-		dialog.show(fm, "FmDialogFragment");
+		dialog.show(fm.beginTransaction(), "FmDialogFragment");
 	}
 	
 //	public static void showMultiSimRingtoneDialog(FragmentManager fm, String path){
@@ -124,14 +124,14 @@ public class FmDialogFragment extends SherlockDialogFragment{
 		Bundle data = new Bundle();
 		data.putString("path", path);
 		final FmDialogFragment dialog = FmDialogFragment.newInstance(RENAME_DIALOG, data);
-		dialog.show(fm, "FmDialogFragment");
+		dialog.show(fm.beginTransaction(), "FmDialogFragment");
 	}
 	
 	public static void showDetailDialog(FragmentManager fm, String path){
 		Bundle data = new Bundle();
 		data.putString("path", path);
 		final FmDialogFragment dialog = FmDialogFragment.newInstance(DETAIL_DIALOG, data);
-		dialog.show(fm, "FmDialogFragment");
+		dialog.show(fm.beginTransaction(), "FmDialogFragment");
 	}
 	
 	public static void showCreateDirectoryDialog(FragmentManager fm, String path){
@@ -139,7 +139,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
 		data.putString("path", path);
 		final FmDialogFragment dialog = FmDialogFragment.newInstance(NEW_DIRECTORY_DIALOG, data);
 //        dialog.setTargetFragment(fragment, 0);
-		dialog.show(fm, "FmDialogFragment");
+		dialog.show(fm.beginTransaction(), "FmDialogFragment");
 	}
 
     public static void showDownloadFromCloudConfirmDialog(FragmentManager fm, String remote_path){
@@ -147,7 +147,8 @@ public class FmDialogFragment extends SherlockDialogFragment{
         data.putString("path", remote_path);
         final FmDialogFragment dialog = FmDialogFragment.newInstance(DOWNLOAD_FROM_CLOUD_CONFIRM_DIALOG, data);
         //dialog.setTargetFragment(fragment, 0);
-        dialog.show(fm, "FmDialogFragment");
+
+        dialog.show(fm.beginTransaction(), "FmDialogFragment");
     }
 
     public static void showCreateCloudDirectoryDialog(FragmentManager fm, String path){
@@ -155,21 +156,21 @@ public class FmDialogFragment extends SherlockDialogFragment{
         data.putString("root", path);
         final FmDialogFragment dialog = FmDialogFragment.newInstance(NEW_CLOUD_DIRECTORY_DIALOG, data);
         //dialog.setTargetFragment(fragment, 0);
-        dialog.show(fm, "FmDialogFragment");
+        dialog.show(fm.beginTransaction(), "FmDialogFragment");
     }
 
     public static void showCloudLogoutDialog(FragmentManager fm){
         Bundle data = new Bundle();
         final FmDialogFragment dialog = FmDialogFragment.newInstance(CLOUD_LOGOUT_DIALOG, data);
         //dialog.setTargetFragment(fragment, 0);
-        dialog.show(fm, "FmDialogFragment");
+        dialog.show(fm.beginTransaction(), "FmDialogFragment");
     }
 	
 	public static void showImportContactDialog(FragmentManager fm, String path){
 		Bundle data = new Bundle();
 		data.putString("path", path);
 		final FmDialogFragment dialog = FmDialogFragment.newInstance(IMPORT_CONTACT_DIALOG, data);
-		dialog.show(fm, "FmDialogFragment");
+		dialog.show(fm.beginTransaction(), "FmDialogFragment");
 	}
 	
 	public static void showDeleteDialog(FragmentManager fm, int size, String first_path){
@@ -178,7 +179,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
 		data.putString("path_first", first_path);
 		final FmDialogFragment dialog = FmDialogFragment.newInstance(DELETE_DIALOG, data);
 //        dialog.setTargetFragment(fragment, 0);
-		dialog.show(fm, "FmDialogFragment");
+		dialog.show(fm.beginTransaction(), "FmDialogFragment");
 	}
 
     public static void showAddToSafeDialog(FragmentManager fm, int size, String first_path){
@@ -187,7 +188,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
         data.putString("path_first", first_path);
         final FmDialogFragment dialog = FmDialogFragment.newInstance(ADD_TO_SAFE_DIALOG, data);
 //        dialog.setTargetFragment(fragment, 0);
-        dialog.show(fm, "FmDialogFragment");
+        dialog.show(fm.beginTransaction(), "FmDialogFragment");
     }
 
     public static void showAddToCloudDialog(FragmentManager fm, int size, String first_path){
@@ -195,7 +196,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
         data.putInt("path_count", size);
         data.putString("path_first", first_path);
         final FmDialogFragment dialog = FmDialogFragment.newInstance(ADD_TO_CLOUD_DIALOG, data);
-        dialog.show(fm, "FmDialogFragment");
+        dialog.show(fm.beginTransaction(), "FmDialogFragment");
     }
 
     public static void showMoveFromSafeDialog(FragmentManager fm, int size, String first_path){
@@ -203,7 +204,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
         data.putInt("path_count", size);
         data.putString("path_first", first_path);
         final FmDialogFragment dialog = FmDialogFragment.newInstance(MOVE_FROM_SAFE_DIALOG, data);
-        dialog.show(fm, "FmDialogFragment");
+        dialog.show(fm.beginTransaction(), "FmDialogFragment");
     }
 
     public static void showDeleteFromSafeDialog(FragmentManager fm, int size, String first_path){
@@ -212,21 +213,21 @@ public class FmDialogFragment extends SherlockDialogFragment{
         data.putString("path_first", first_path);
         final FmDialogFragment dialog = FmDialogFragment.newInstance(DELETE_FROM_SAFE_DIALOG, data);
 //        dialog.setTargetFragment(fragment, 0);
-        dialog.show(fm, "FmDialogFragment");
+        dialog.show(fm.beginTransaction(), "FmDialogFragment");
     }
 
     public static void showCloudDetailDialog(FragmentManager fm, String path){
         Bundle data = new Bundle();
         data.putString("path", path);
         final FmDialogFragment dialog = FmDialogFragment.newInstance(CLOUD_DETAIL_DIALOG, data);
-        dialog.show(fm, "FmDialogFragment");
+        dialog.show(fm.beginTransaction(), "FmDialogFragment");
     }
 
     public static void showCloudRenameDialog(FragmentManager fm, String path){
         Bundle data = new Bundle();
         data.putString("path", path);
         final FmDialogFragment dialog = FmDialogFragment.newInstance(CLOUD_RENAME_DIALOG, data);
-        dialog.show(fm, "FmDialogFragment");
+        dialog.show(fm.beginTransaction(), "FmDialogFragment");
     }
 	
 	/**
@@ -501,7 +502,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
                     public void afterTextChanged(Editable s) {
                         if (s != null) {
                             String name = s.toString();
-                            if (!TextUtils.isEmpty(name) && !name.matches(CORRECT_FILENAME)) {
+                            if (!TextUtils.isEmpty(name) && (!name.matches(CORRECT_FILENAME) || name.contains("\\"))) {
                                 error.setVisibility(View.VISIBLE);
                                 return;
                             }
@@ -549,7 +550,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
                     public void afterTextChanged(Editable s) {
                         if (s != null) {
                             String name = s.toString();
-                            if (!TextUtils.isEmpty(name) && !name.matches(CORRECT_FILENAME)) {
+                            if (!TextUtils.isEmpty(name) && (!name.matches(CORRECT_FILENAME) || name.contains("\\"))) {
                                 error.setVisibility(View.VISIBLE);
                                 return;
                             }
@@ -821,7 +822,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
                     public void afterTextChanged(Editable s) {
                         if (s != null) {
                             String name = s.toString();
-                            if (!TextUtils.isEmpty(name) && !name.matches(CORRECT_FILENAME)) {
+                            if (!TextUtils.isEmpty(name) && (!name.matches(CORRECT_FILENAME) || name.contains("\\"))) {
                                 error.setVisibility(View.VISIBLE);
                                 return;
                             }
@@ -886,7 +887,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
                     public void afterTextChanged(Editable s) {
                         if (s != null) {
                             String name = s.toString();
-                            if (!TextUtils.isEmpty(name) && !name.matches(CORRECT_FILENAME)) {
+                            if (!TextUtils.isEmpty(name) && (!name.matches(CORRECT_FILENAME) || name.contains("\\"))) {
                                 error.setVisibility(View.VISIBLE);
                                 return;
                             }

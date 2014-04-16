@@ -544,8 +544,12 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 			}
 			case R.id.menu_settings:
 			{
-				Intent intent3 = new Intent(getSherlockActivity(), FileManagerPreferenceActivity.class);
-				startActivity(intent3);
+                try {
+                    Intent intent3 = new Intent(getSherlockActivity(), FileManagerPreferenceActivity.class);
+                    startActivity(intent3);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
 				flag = true;
 				break;
 			}
@@ -559,7 +563,7 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	boolean mRefreshing = false;
 	
 	private void refresh(){
-		if(!mRefreshing) {
+		if(!mRefreshing && getSherlockActivity()!=null) {
 			if(mRefreshItem!=null && mRefreshItem.isVisible()){				
 				if(mRefreshView == null){
 					LayoutInflater inflater = LayoutInflater.from(getSherlockActivity());

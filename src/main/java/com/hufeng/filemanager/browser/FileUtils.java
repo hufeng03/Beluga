@@ -187,6 +187,7 @@ public class FileUtils {
 	        FileManager.setCategoryMatch(".mmf", FileUtils.FILE_TYPE_AUDIO);
 	        FileManager.setCategoryMatch(".3gpp", FileUtils.FILE_TYPE_AUDIO);
             FileManager.setCategoryMatch(".awb", FileUtils.FILE_TYPE_AUDIO);
+            FileManager.setCategoryMatch(".mid", FileUtils.FILE_TYPE_AUDIO);
 
 	        FileManager.setCategoryMatch(".apk", FileUtils.FILE_TYPE_APK);
 

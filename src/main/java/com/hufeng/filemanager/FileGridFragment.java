@@ -112,10 +112,12 @@ public abstract class FileGridFragment extends GridFragment{
 
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem item) {
-                    if (navigation_mode == ActionBar.NAVIGATION_MODE_STANDARD) {
-                        navigation_mode = (getSherlockActivity()).getSupportActionBar().getNavigationMode();
+                    if(getSherlockActivity() != null && getSherlockActivity().getSupportActionBar()!=null) {
+                        if (navigation_mode == ActionBar.NAVIGATION_MODE_STANDARD) {
+                            navigation_mode = (getSherlockActivity()).getSupportActionBar().getNavigationMode();
+                        }
+                        (getSherlockActivity()).getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
                     }
-                    (getSherlockActivity()).getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
                     return true;
                 }
 
@@ -138,7 +140,7 @@ public abstract class FileGridFragment extends GridFragment{
 
             });
 
-            mSearchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener(){
+            mSearchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if (hasFocus) {
@@ -577,7 +579,9 @@ public abstract class FileGridFragment extends GridFragment{
     }
 
     public void refreshUI() {
-        ((BaseAdapter)getGridAdapter()).notifyDataSetChanged();
+        if (getGridAdapter() != null) {
+            ((BaseAdapter) getGridAdapter()).notifyDataSetChanged();
+        }
     }
 
     public abstract void reloadFiles();

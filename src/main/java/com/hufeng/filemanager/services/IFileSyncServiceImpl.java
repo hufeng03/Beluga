@@ -92,7 +92,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
     public void deleteUnexist(int type) throws RemoteException {
         if (!mIsScanning.get()) {
             mIsScanning.set(true);
-            new DeleteUnexistTask().execute(type);
+            new DeleteUnexistTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, type);
         }
         return;
     }
@@ -104,7 +104,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
             ServiceUiHelper.getInstance().scanStarted();
             FileManager.setPreference(FileManager.FILEMANAGER_LAST_SCAN, System.currentTimeMillis()+"");
 
-            new ScanTask().execute();
+            new ScanTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
 
         }
@@ -492,7 +492,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                 }
             }
         }
-
+        delete_selection.append(')');
         if (!isFirst) {
             try {
                 count = FileManager.getAppContext().getContentResolver().delete(uri, delete_selection.toString(), null);

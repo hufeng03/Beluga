@@ -235,6 +235,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
             @Override
             public void run() {
                 refreshFiles();
+                clearSelection();
             }
         });
     }
@@ -360,33 +361,12 @@ public class FileManagerTabActivity extends FileOperationActivity{
             int tab_pos = mActionBar.getSelectedNavigationIndex();
             if (tab_pos != position) {
                 int count = mActionBar.getNavigationItemCount();
-                if(position<count)
+                if(position<count) {
                     mActionBar.setSelectedNavigationItem(position);
+                    mActivity.get().refreshTabWithDelay();
+                }
             }
-            FileManagerTabActivity activity = mActivity.get();
-            if(activity!=null) {
-//                if(position == FRAGMENT_INDEX_CATEGORY){
-//                    CategoryTabFragment fragment = ((CategoryTabFragment)getFragment(position));
-//                    if(fragment!=null){
-//                        activity.getFileOperation().setFileOperationProvider(fragment);
-//                        fragment.refreshFiles();
-//                    }
-//                } else if(position==FRAGMENT_INDEX_DEVICE) {
-//                    DirectoryTabFragment fragment = ((DirectoryTabFragment)getFragment(position));
-//                    if(fragment!=null) {
-//                        activity.getFileOperation().setFileOperationProvider(fragment);
-//                        fragment.refreshFiles();
-//                    }
-//                } else {
-//                    activity.getFileOperation().setFileOperationProvider(null);
-//                }
-//                Fragment fragment = getFragment(position);
-//                if (fragment instanceof FileOperation.FileOperationProvider) {
-//                    activity.getGlobalFileOperation().setFileOperationProvider((FileOperation.FileOperationProvider)fragment);
-//                } else {
-//                    activity.getGlobalFileOperation().setFileOperationProvider(null);
-//                }
-            }
+
         }
 
         @Override
@@ -514,6 +494,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
     }
 
     public void gotoCloud() {
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         mViewPager.setCurrentItem(FRAGMENT_INDEX_CLOUD);
 //        mViewPager.setPagingEnabled(false);
     }
@@ -579,15 +560,22 @@ public class FileManagerTabActivity extends FileOperationActivity{
     @Override
     public void refreshUI() {
         super.refreshUI();
-//        if (getFileOperation().getOperationMode()== FileOperation.OPERATION_MODE.ADD_CLOUD || getFileOperation().isMovingOrCopying()) {
-//            mViewPager.setPagingEnabled(false);
-//        } else {
+        if (getFileOperation()!=null && (getFileOperation().getOperationMode()== FileOperation.OPERATION_MODE.ADD_CLOUD || getFileOperation().isMovingOrCopying())) {
+            mViewPager.setPagingEnabled(false);
+        } else {
             if (getActionMode() != null) {
                 mViewPager.setPagingEnabled(false);
             } else {
                 mViewPager.setPagingEnabled(true);
             }
-//        }
+        }
+    }
+
+    public void clearSelection() {
+        Fragment fragment = getCurrentFragment();
+        if (fragment instanceof FileTabFragment) {
+            ((FileTabFragment)fragment).clearSelection();
+        }
     }
 
     public void setPagingEnabled(boolean enabled) {
