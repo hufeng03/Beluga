@@ -123,17 +123,6 @@ public class FileOperation extends BaseFragment {
     		return false;
     }
 
-//    public boolean isUploading() {
-//        if(mUploadPaths.size()!=0) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-
-//    public String[] getUploadingFiles(){
-//        return mUploadPaths.toArray(new String[mUploadPaths.size()]);
-//    }
     
     public interface FileOperationProvider {
         public void refreshFiles();
@@ -229,9 +218,31 @@ public class FileOperation extends BaseFragment {
         }
 
         if (moving) {
-            FileOperationTask task = new FileMoveTask(mOperationActivity, mMovePaths.toArray(new String[mMovePaths.size()]));
-            task.executeSerial(provider.getParentFile());
-            mMovePaths.clear();
+            String uploading_path = null;
+            int uploading_count = 0;
+            ArrayList<String> deleted = new ArrayList<String>();
+            for (String path:mMovePaths) {
+                if (KanBoxApi.isUploading(path)){
+//                    mMovePaths.remove(path);
+                    deleted.add(path);
+                    uploading_count++;
+                    if (uploading_path == null) {
+                        uploading_path = path;
+                    }
+                }
+            }
+
+            if (uploading_count != 0) {
+                for (String path:deleted) {
+                    mMovePaths.remove(path);
+                }
+                Toast.makeText(context, getString(R.string.cannot_move_uploading, uploading_path, uploading_count), Toast.LENGTH_SHORT).show();
+            }
+            if (mMovePaths.size() != 0) {
+                FileOperationTask task = new FileMoveTask(mOperationActivity, mMovePaths.toArray(new String[mMovePaths.size()]));
+                task.executeSerial(provider.getParentFile());
+                mMovePaths.clear();
+            }
         }
 
         refresh();
@@ -293,10 +304,35 @@ public class FileOperation extends BaseFragment {
         refresh();
     }
 
-	public void onOperationDeleteConfirm()
+	public void onOperationDeleteConfirm(Context context)
 	{
-        FileDeleteTask task = new FileDeleteTask(mOperationActivity, mOperationPaths.toArray(new String[mOperationPaths.size()]));
-        task.executeSerial();
+
+        String uploading_path = null;
+        int uploading_count = 0;
+
+        ArrayList<String> deleted = new ArrayList<String>();
+        for (String path:mOperationPaths) {
+            if (KanBoxApi.isUploading(path)){
+//                    mMovePaths.remove(path);
+                deleted.add(path);
+                uploading_count++;
+                if (uploading_path == null) {
+                    uploading_path = path;
+                }
+            }
+        }
+
+        if (uploading_count != 0) {
+            for (String path:deleted) {
+                mOperationPaths.remove(path);
+            }
+            Toast.makeText(context, getString(R.string.cannot_move_uploading, uploading_path, uploading_count), Toast.LENGTH_SHORT).show();
+        }
+
+        if (mOperationPaths.size() > 0) {
+            FileDeleteTask task = new FileDeleteTask(mOperationActivity, mOperationPaths.toArray(new String[mOperationPaths.size()]));
+            task.executeSerial();
+        }
 
         mOperationPaths.clear();
 

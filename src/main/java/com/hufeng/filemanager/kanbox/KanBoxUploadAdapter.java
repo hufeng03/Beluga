@@ -88,7 +88,7 @@ public class KanBoxUploadAdapter extends ArrayAdapter<FileEntry> implements Grid
         holder.progress.setProgress(progress);
         holder.progress.setVisibility(View.GONE);
 
-        if (KanBoxApi.isUploading(holder.path)) {
+        if (KanBoxApi.isUploadWorking(holder.path)) {
             holder.progress.setVisibility(View.VISIBLE);
             holder.info.setVisibility(View.GONE);
             holder.status.setVisibility(View.VISIBLE);

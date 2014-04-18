@@ -660,4 +660,6 @@ or nonexistent.</string>
     <string name="kanbox_upload_info_success" formatted="false">上傳成功 %1$s</string>
     <string name="kanbox_upload_info_failed" formatted="false">上傳失敗 %1$s</string>
     <string name="kanbox_delete_local_failed">刪除本地文件失敗</string>
+    <string name="cannot_move_uploading">%1$s等%2$d個文件正在上傳，無法剪切</string>
+    <string name="cannot_delete_uploading">%1$s等%2$d個文件正在上傳，無法删除</string>
 </resources>

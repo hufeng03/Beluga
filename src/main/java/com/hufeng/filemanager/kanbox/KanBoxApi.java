@@ -495,6 +495,11 @@ public class KanBoxApi implements RequestListener{
 
     public static boolean isUploading(String path) {
         KanboxAsyncTask task =  mUploadingTasks.get(path);
+        return (task !=null);
+    }
+
+    public static boolean isUploadWorking(String path) {
+        KanboxAsyncTask task =  mUploadingTasks.get(path);
         return (task !=null && !task.isCancelled() && task.mStarted);
     }
 

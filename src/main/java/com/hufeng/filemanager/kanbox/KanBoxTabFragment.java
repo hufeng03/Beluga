@@ -342,15 +342,10 @@ public class KanBoxTabFragment extends FileTabFragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        if(getFileOperation() != null && getFileOperation().isUploading()) {
-//            menu.clear();
-//            inflater.inflate(R.menu.kanbox_fragment_upload_menu,menu);
-//        } else {
             SherlockFragment fragment = (SherlockFragment)getChildFragmentManager().findFragmentById(R.id.fragment_container);
             if(fragment!=null) {
                 fragment.onCreateOptionsMenu(menu, inflater);
             }
-//        }
     }
 
     @Override

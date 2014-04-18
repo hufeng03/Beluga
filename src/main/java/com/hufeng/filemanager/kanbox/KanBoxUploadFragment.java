@@ -102,7 +102,7 @@ public class KanBoxUploadFragment extends FileGridFragment
     private void clickGridItem(long position) {
         FileEntry entry = (FileEntry)getGridAdapter().getItem((int)position);
         if (TextUtils.isEmpty(entry.path)) return;
-        if ( KanBoxApi.isUploading(entry.path) || KanBoxApi.isUploadWaiting(entry.path)) {
+        if ( KanBoxApi.isUploadWorking(entry.path) || KanBoxApi.isUploadWaiting(entry.path)) {
 //            FmDialogFragment.showCreateCloudDirectoryDialog(getChildFragmentManager(), getParentFile());
             KanBoxApi.getInstance().pauseUploadFile(entry.path);
             refreshUI();

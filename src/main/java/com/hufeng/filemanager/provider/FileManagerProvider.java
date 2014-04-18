@@ -968,70 +968,84 @@ public class FileManagerProvider extends ContentProvider{
         int count  = 0;
         switch (URI_MATCHER.match(uri)) {
 	        case FILES:
+                values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            count = db.update(FileColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case FILE_ID:
+                values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
 	            count = db.update(FileColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case IMAGES:
+                values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            count = db.update(ImageColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case IMAGE_ID:
+                values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
 	            count = db.update(ImageColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case AUDIOS:
+                values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            count = db.update(AudioColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case AUDIO_ID:
+                values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
 	            count = db.update(AudioColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case VIDEOS:
+                values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            count = db.update(VideoColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case VIDEO_ID:
+                values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
 	            count = db.update(VideoColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case APKS:
+                values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            count = db.update(ApkColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case APK_ID:
+                values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
 	            count = db.update(ApkColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case DOCUMENTS:
+                values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            count = db.update(DocumentColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case DOCUMENT_ID:
+                values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
 	            count = db.update(DocumentColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case ZIPS:
+                values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            count = db.update(ZipColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case ZIP_ID:
+                values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
 	            count = db.update(ZipColumns.TABLE, values, selection,

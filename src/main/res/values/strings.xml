@@ -676,4 +676,6 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="kanbox_upload_info_success" formatted="false">Upload success %1$s</string>
 <string name="kanbox_upload_info_failed" formatted="false">Upload failed %1$s</string>
 <string name="kanbox_delete_local_failed">Delete local file failed</string>
+<string name="cannot_move_uploading">Can not move %2$d files (%1$s) when uploading</string>
+<string name="cannot_delete_uploading">Can not delete %2$d files (%1$s) when uploading</string>
 </resources>

@@ -288,7 +288,7 @@ public abstract class FileOperationActivity extends BaseActivity implements
     public void onDialogDone(DialogInterface dialog, int dialog_id, int button, Object param) {
         switch(dialog_id) {
             case FmDialogFragment.DELETE_DIALOG:
-                getFileOperation().onOperationDeleteConfirm();
+                getFileOperation().onOperationDeleteConfirm(this);
                 break;
             case FmDialogFragment.SELECT_SEND_APP_DIALOG:
                 getFileOperation().onOperationSendSelected(this, ((String[]) param)[0], ((String[]) param)[1]);

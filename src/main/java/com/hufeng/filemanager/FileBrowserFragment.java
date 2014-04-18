@@ -243,6 +243,13 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         if(getFileOperation()!=null && getFileOperation().isMovingOrCopying()) {
             menu.clear();
             inflater.inflate(R.menu.file_browser_fragment_paste_menu,menu);
+            MenuItem item_paste = menu.findItem(R.id.menu_paste_confirm);
+            if (item_paste != null)
+            if (mRootDir == null || !new File(mRootDir).canWrite()) {
+                item_paste.setEnabled(false);
+            } else {
+                item_paste.setEnabled(true);
+            }
         } else {
             super.onCreateOptionsMenu(menu, inflater);
 

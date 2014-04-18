@@ -237,7 +237,11 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
                //Cursor cursor = (Cursor)g.getAdapter().getItem(position);
                String path = cursor.getString(DataStructures.FileColumns.FILE_PATH_FIELD_INDEX);
                ImageView v_img =  (ImageView)v.findViewById(R.id.icon);
-               listener.onFileGrouperItemClick(v_img, FileEntryFactory.makeFileObject(path));
+                if (mFileOperation!=null && mFileOperation.getOperationMode() == FileOperation.OPERATION_MODE.ADD_CLOUD) {
+                    listener.onFileGrouperItemSelect(v_img, FileEntryFactory.makeFileObject(path));
+                } else {
+                    listener.onFileGrouperItemClick(v_img, FileEntryFactory.makeFileObject(path));
+                }
             }
         }
     }
@@ -320,8 +324,12 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                setGridShown(true);
-                reloadFiles();
+                try {
+                    setGridShown(true);
+                    reloadFiles();
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
