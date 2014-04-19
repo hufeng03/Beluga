@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.hufeng.filemanager.BuildConfig;
+import com.hufeng.filemanager.R;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -62,6 +63,17 @@ public class StorageManager {
         }
 		return result;
 	}
+
+    public String getStorageDescription(String path){
+        if (path != null) {
+            for (StorageUnit unit : mStorageUnits) {
+                if ( path.equalsIgnoreCase(unit.path) ) {
+                    return unit.description;
+                }
+            }
+        }
+        return null;
+    }
 	
 	public boolean isInternalStorage(String path){
 		boolean result = false;
@@ -280,6 +292,8 @@ public class StorageManager {
 					if(volumeList.getClass().isArray()){
 						int len = Array.getLength(volumeList);
 						mStorageUnits.clear();
+                        int internal_count = 0;
+                        int external_count = 0;
 						for(int i=0;i<len;i++){
 							Object volume = Array.get(volumeList, i);
 							Object real_volume = StorageVolume.cast(volume);
@@ -301,9 +315,41 @@ public class StorageManager {
 							if(!flag){
 								long availableSize = StorageUtil.getAvailaleSize(path);
 								long allSize = StorageUtil.getAllSize(path);
-								mStorageUnits.add(new StorageUnit(path, null, isRemovable, state, availableSize, allSize ));
+                                String description = null;
+                                if (isRemovable) {
+                                    external_count ++;
+                                    if (external_count > 1) {
+                                        description = context.getString(R.string.external_storage)+ external_count;
+                                    }
+                                } else {
+                                    internal_count ++;
+                                    if (internal_count > 1) {
+                                        description = context.getString(R.string.internal_storage)+internal_count;
+                                    }
+                                }
+                                mStorageUnits.add(new StorageUnit(path, description, isRemovable, state, availableSize, allSize ));
+
 							}
 						}
+                        for (int i=0; i<mStorageUnits.size(); i++) {
+                            StorageUnit unit = mStorageUnits.get(i);
+                            if (unit.description == null) {
+                                if (unit.isRemovable()) {
+                                    if (external_count <= 1) {
+                                        unit.description = context.getString(R.string.external_storage);
+                                    } else {
+                                        unit.description = context.getString(R.string.external_storage)+"1";
+                                    }
+                                } else {
+                                    if (external_count <= 1) {
+                                        unit.description = context.getString(R.string.internal_storage);
+                                    } else {
+                                        unit.description = context.getString(R.string.internal_storage)+"1";
+                                    }
+                                }
+                            }
+                        }
+
 					}
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();

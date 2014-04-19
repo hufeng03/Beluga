@@ -20,6 +20,7 @@ import com.hufeng.filemanager.browser.IconLoader;
 import com.hufeng.filemanager.browser.IconLoaderHelper;
 import com.hufeng.filemanager.browser.InfoLoader;
 import com.hufeng.filemanager.browser.InfoUtil;
+import com.hufeng.filemanager.storage.StorageManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -128,7 +129,16 @@ public class FileArrayAdapter extends ArrayAdapter<FileEntry> implements GridAda
             if (span != null) {
                 holder.name.setText(span);
             } else {
-                holder.name.setText(filename);
+                if (FileUtils.FILE_TYPE_DIRECTORY == type) {
+                    String description = StorageManager.getInstance(getContext()).getStorageDescription(holder.path);
+                    if (description != null) {
+                        holder.name.setText(description);
+                    } else {
+                        holder.name.setText(filename);
+                    }
+                } else {
+                    holder.name.setText(filename);
+                }
             }
 //            mInfoLoader.loadInfo(holder.info, holder.path);
             String info = InfoUtil.getFileInfo(holder.path, type);

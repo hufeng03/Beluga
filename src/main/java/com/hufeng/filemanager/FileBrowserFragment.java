@@ -256,16 +256,30 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
             MenuItem item_back = menu.findItem(R.id.menu_back);
             MenuItem item_create = menu.findItem(R.id.menu_create);
 
-            if(mRootDir == null) {
-                item_back.setVisible(false);
-            } else {
-                item_back.setVisible(true);
+            MenuItem item_search = menu.findItem(R.id.menu_search);
+
+            if(item_back != null) {
+                if (mRootDir == null) {
+                    item_back.setVisible(false);
+                } else {
+                    item_back.setVisible(true);
+                }
             }
 
-            if(mRootDir == null) {
-                item_create.setVisible(false);
-            } else {
-                item_create.setVisible(true);
+            if (item_search != null) {
+                if (mRootDir == null) {
+                    item_search.setVisible(false);
+                } else {
+                    item_search.setVisible(true);
+                }
+            }
+
+            if (item_create != null) {
+                if (mRootDir == null) {
+                    item_create.setVisible(false);
+                } else {
+                    item_create.setVisible(true);
+                }
             }
         }
     }

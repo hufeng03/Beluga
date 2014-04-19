@@ -481,7 +481,12 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
                     map.put(-1, all_size);
                     bar.refresh(map);
 
-                    label.setText(paths[i]);
+                    String self_description = StorageManager.getInstance(getSherlockActivity()).getStorageDescription(paths[i]);
+                    if (self_description != null) {
+                        label.setText(self_description);
+                    } else {
+                        label.setText(paths[i]);
+                    }
                     description.setText(getString(R.string.sdcard_description, FileUtil.normalize(available_size), FileUtil.normalize(all_size)));
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
                     mInformationLayout.addView(child, params);

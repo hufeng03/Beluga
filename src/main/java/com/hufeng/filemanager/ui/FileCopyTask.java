@@ -5,11 +5,17 @@ import android.content.Context;
 import com.hufeng.filemanager.FileOperationActivity;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileAction;
+import com.hufeng.filemanager.storage.StorageManager;
+import com.hufeng.filemanager.storage.StorageUtil;
+
+import java.io.File;
 
 /**
  * Created by feng on 14-2-15.
  */
 public class FileCopyTask extends FileOperationTask{
+
+    private String mDirectory;
 
     public FileCopyTask(FileOperationActivity act, String[] files) {
         super(act, files);
@@ -37,10 +43,25 @@ public class FileCopyTask extends FileOperationTask{
     public String getCompleteToastContent(Context context, boolean result) {
         int toast_info_id = 0;
 
-        if (result)
+        if (result) {
             toast_info_id = R.string.file_copy_finish;
-        else
-            toast_info_id = R.string.file_copy_failed;
+        } else {
+            String storage = StorageManager.getInstance(context).getStorageForPath(mDirectory);
+            if (storage != null) {
+                long available_size = StorageUtil.getAvailaleSize(storage);
+                long total_size = 0;
+                for(int i=0; i < mOperationFiles.length;i++) {
+                    total_size += new File(mOperationFiles[i]).length();
+                }
+                if (available_size < total_size) {
+                    toast_info_id = R.string.file_copy_full;
+                } else {
+                    toast_info_id = R.string.file_copy_failed;
+                }
+            } else {
+                toast_info_id = R.string.file_copy_failed;
+            }
+        }
 
         return toast_info_id == 0 ? "" : context.getResources().getString(toast_info_id);
     }
