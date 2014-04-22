@@ -10,7 +10,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -382,27 +381,27 @@ public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         }
         mGridShown = shown;
         if (shown) {
-            if (animate) {
-                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(
-                        getActivity(), android.R.anim.fade_out));
-                mGridContainer.startAnimation(AnimationUtils.loadAnimation(
-                        getActivity(), android.R.anim.fade_in));
-            } else {
+//            if (animate) {
+//                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(
+//                        getActivity(), android.R.anim.fade_out));
+//                mGridContainer.startAnimation(AnimationUtils.loadAnimation(
+//                        getActivity(), android.R.anim.fade_in));
+//            } else {
                 mProgressContainer.clearAnimation();
                 mGridContainer.clearAnimation();
-            }
+//            }
             mProgressContainer.setVisibility(View.GONE);
             mGridContainer.setVisibility(View.VISIBLE);
         } else {
-            if (animate) {
-                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(
-                        getActivity(), android.R.anim.fade_in));
-                mGridContainer.startAnimation(AnimationUtils.loadAnimation(
-                        getActivity(), android.R.anim.fade_out));
-            } else {
+//            if (animate) {
+//                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(
+//                        getActivity(), android.R.anim.fade_in));
+//                mGridContainer.startAnimation(AnimationUtils.loadAnimation(
+//                        getActivity(), android.R.anim.fade_out));
+//            } else {
                 mProgressContainer.clearAnimation();
                 mGridContainer.clearAnimation();
-            }
+//            }
             mProgressContainer.setVisibility(View.VISIBLE);
             mGridContainer.setVisibility(View.GONE);
         }

@@ -1,14 +1,12 @@
 package com.hufeng.filemanager;
 
 import android.app.Activity;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -127,6 +125,8 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
         }
         if(getArguments().getBoolean(FILE_GROUPER_ARGUMENT_SAFE) || getArguments().getBoolean(FILE_GROUPER_ARGUMENT_CLOUD)) {
             mMenuId = R.menu.file_grouper_fragment_search_menu;
+        } else {
+            mMenuId = R.menu.file_grouper_fragment_menu;
         }
 	}
 
@@ -218,13 +218,6 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
             }
         }
 //        unregisterForContextMenu(getGridView());
-    }
-
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

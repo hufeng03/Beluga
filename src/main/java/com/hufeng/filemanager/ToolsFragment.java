@@ -158,7 +158,7 @@ public class ToolsFragment extends BaseFragment implements OnClickListener, OnIt
 					mGridView.setVisibility(View.GONE);
 					mListView.setSelection(pos);
 				}
-				getActivity().invalidateOptionsMenu();
+				getActivity().supportInvalidateOptionsMenu();
 				break;
 			}
 			case R.id.menu_search:

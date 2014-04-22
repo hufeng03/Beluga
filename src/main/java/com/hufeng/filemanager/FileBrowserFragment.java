@@ -241,7 +241,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if(getFileOperation()!=null && getFileOperation().isMovingOrCopying()) {
-            menu.clear();
+            mMenuCreated = true;
             inflater.inflate(R.menu.file_browser_fragment_paste_menu,menu);
             MenuItem item_paste = menu.findItem(R.id.menu_paste_confirm);
             if (item_paste != null)
@@ -252,6 +252,9 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
             }
         } else {
             super.onCreateOptionsMenu(menu, inflater);
+
+            if (!mMenuCreated)
+                return;
 
             MenuItem item_back = menu.findItem(R.id.menu_back);
             MenuItem item_create = menu.findItem(R.id.menu_create);
@@ -348,13 +351,6 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         return mAdapter.getAllFiles();
     }
 
-//    public void showRootDirs(){
-//        mRootDir = null;
-//        mSelectedDir = null;
-//        reloadFiles();
-//        getSherlockActivity().invalidateOptionsMenu();
-//    }
-
     public void showDir(String path) {
         String[] initDirs = getArguments().getStringArray(ARGUMENT_INIT_DIR_LIST);
         if (path != null && initDirs != null) {
@@ -376,7 +372,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         }
         mRootDir = path;
         reloadFiles();
-        getActivity().invalidateOptionsMenu();
+        getActivity().supportInvalidateOptionsMenu();
     }
 
     @Override

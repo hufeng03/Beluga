@@ -6,7 +6,7 @@
         android:name=".FileManager"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/MyTheme.CustomBackground" >
+        android:theme="@android:style/Theme.Holo.Light" >
  
         <!--TODO: umeng-->
         <activity android:name="com.umeng.fb.ConversationActivity"/>

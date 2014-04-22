@@ -1,15 +1,12 @@
 package com.hufeng.filemanager;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.database.ContentObserver;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -114,32 +111,32 @@ public class CategoryTabFragment extends FileTabFragment implements
 		return false;
 	}
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (mCategoryFragment != null) {
-            mCategoryFragment.onCreateOptionsMenu(menu, inflater);
-        } else{
-            super.onCreateOptionsMenu(menu, inflater);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mCategoryFragment != null) {
-            return mCategoryFragment.onOptionsItemSelected(item);
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onDestroyOptionsMenu() {
-        if (mCategoryFragment != null) {
-            mCategoryFragment.onDestroyOptionsMenu();
-        } else {
-            super.onDestroyOptionsMenu();
-        }
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        if (mCategoryFragment != null) {
+//            mCategoryFragment.onCreateOptionsMenu(menu, inflater);
+//        } else{
+//            super.onCreateOptionsMenu(menu, inflater);
+//        }
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (mCategoryFragment != null) {
+//            return mCategoryFragment.onOptionsItemSelected(item);
+//        } else {
+//            return super.onOptionsItemSelected(item);
+//        }
+//    }
+//
+//    @Override
+//    public void onDestroyOptionsMenu() {
+//        if (mCategoryFragment != null) {
+//            mCategoryFragment.onDestroyOptionsMenu();
+//        } else {
+//            super.onDestroyOptionsMenu();
+//        }
+//    }
 
     public void showCategoryPanel() {
         final FragmentManager fm = getChildFragmentManager();
@@ -312,7 +309,7 @@ public class CategoryTabFragment extends FileTabFragment implements
         if(mCurrentChildFragment != null) {
             mCurrentChildFragment.refreshUI();
         }
-        getActivity().invalidateOptionsMenu();
+//        getActivity().supportInvalidateOptionsMenu();
     }
 
     @Override

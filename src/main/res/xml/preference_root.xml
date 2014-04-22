@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <PreferenceCategory android:title="@string/header_title_root" >
         <CheckBoxPreference
-            android:defaultValue="1"
+            android:defaultValue="true"
             android:key="SHOW_ROOT_DIR"
             android:summary="@string/settings_show_root_dir_summary"
-            android:title="@string/settings_show_root_dir" />
-    </PreferenceCategory>
+            android:title="@string/settings_show_root_dir" />\
 </PreferenceScreen>

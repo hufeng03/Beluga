@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -26,7 +23,7 @@ public abstract class FileTabFragment extends BaseFragment implements
         FileGrouperFragment.FileGrouperFragmentListener,
         FileBrowserFragment.FileBrowserFragmentListener{
 
-	private static final String LOG_TAG = FileTabFragment.class.getSimpleName();
+	private final String LOG_TAG = ((Object)this).getClass().getSimpleName();
 
     private AnimatorViewProvider mAnimatorViewProvider;
     private ImageScaleAnimationController mImageScaleAnimationController;
@@ -57,7 +54,7 @@ public abstract class FileTabFragment extends BaseFragment implements
 		if (Constants.RETAIN_FRAGMENT) {
 			setRetainInstance(true);
 		}
-		setHasOptionsMenu(true);
+//		setHasOptionsMenu(true);
 	}
 
     @Override
@@ -72,28 +69,28 @@ public abstract class FileTabFragment extends BaseFragment implements
         }
 	}
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(mCurrentChildFragment != null) {
-            mCurrentChildFragment.onCreateOptionsMenu(menu, inflater);
-        }
-    }
-
-    @Override
-    public void onDestroyOptionsMenu(){
-        if(mCurrentChildFragment != null) {
-            mCurrentChildFragment.onDestroyOptionsMenu();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mCurrentChildFragment != null) {
-            return mCurrentChildFragment.onOptionsItemSelected(item);
-        } else {
-            return false;
-        }
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        if(mCurrentChildFragment != null) {
+//            mCurrentChildFragment.onCreateOptionsMenu(menu, inflater);
+//        }
+//    }
+//
+//    @Override
+//    public void onDestroyOptionsMenu(){
+//        if(mCurrentChildFragment != null) {
+//            mCurrentChildFragment.onDestroyOptionsMenu();
+//        }
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (mCurrentChildFragment != null) {
+//            return mCurrentChildFragment.onOptionsItemSelected(item);
+//        } else {
+//            return false;
+//        }
+//    }
 
     @Override
     public boolean onBackPressed() {
@@ -251,6 +248,20 @@ public abstract class FileTabFragment extends BaseFragment implements
                 mCurrentChildFragment.mSearchString = null;
                 mCurrentChildFragment.reloadFiles();
             }
+        }
+    }
+
+    @Override
+    public void setMenuVisibility(boolean visible) {
+        super.setMenuVisibility(visible);
+    }
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (getActivity() != null) {
+            getActivity().supportInvalidateOptionsMenu();
         }
     }
 }

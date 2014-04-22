@@ -1,16 +1,13 @@
 package com.hufeng.filemanager.kanbox;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -337,36 +334,6 @@ public class KanBoxTabFragment extends FileTabFragment implements
     @Override
     public void onKanBoxAuthStart() {
         showKanBoxAuthFragment();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Fragment fragment = (Fragment)getChildFragmentManager().findFragmentById(R.id.fragment_container);
-            if(fragment!=null) {
-                fragment.onCreateOptionsMenu(menu, inflater);
-            }
-    }
-
-    @Override
-    public void onDestroyOptionsMenu(){
-        Fragment fragment = (Fragment)getChildFragmentManager().findFragmentById(R.id.fragment_container);
-        if(fragment!=null) {
-            fragment.onDestroyOptionsMenu();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-//        if(item.getItemId() == R.id.menu_cloud_upload_cancel) {
-//            if (getFileOperation() != null) {
-//                getFileOperation().clearOperationFiles();
-//            }
-//            getSherlockActivity().invalidateOptionsMenu();
-//            return true;
-//        } else {
-            Fragment fragment = (Fragment)getChildFragmentManager().findFragmentById(R.id.fragment_container);
-            return fragment.onOptionsItemSelected(item);
-//        }
     }
 
 

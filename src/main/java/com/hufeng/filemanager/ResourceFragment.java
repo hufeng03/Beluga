@@ -127,9 +127,13 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
         super.onCreateOptionsMenu(menu, inflater);
         MenuItem item = menu.findItem(R.id.menu_back);
         if(getParentFragment()==null) {
-            item.setVisible(false);
+            if (item != null) {
+                item.setVisible(false);
+            }
         } else {
-            item.setVisible(true);
+            if (item != null) {
+                item.setVisible(true);
+            }
         }
     }
 

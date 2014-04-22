@@ -2,12 +2,12 @@ package com.hufeng.filemanager;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -155,19 +155,14 @@ public class FileManagerTabActivity extends FileOperationActivity{
         super.onDestroy();
 
 	}
-	
-	@Override
-	public void invalidateOptionsMenu(){
-		super.invalidateOptionsMenu();
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add("");
-		return true;
-	}
-	
-	private void handleIntent(Intent intent) {
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void handleIntent(Intent intent) {
         boolean flag = false;
 //		if( Intent.ACTION_SEARCH.equals(intent.getAction()) ) {
 //			String query = intent.getStringExtra(SearchManager.QUERY);
@@ -189,7 +184,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
 //            ((KanBoxTabFragment)mTabAdapter.getFragment(FRAGMENT_INDEX_TOOLS)).getFileOperation().setUploadFiles(files);
 //        }
         refreshUI();
-        invalidateOptionsMenu();
+        supportInvalidateOptionsMenu();
 	}
 
     @Override
@@ -326,11 +321,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
 			if (obj instanceof Fragment) {
 	            TabInfo info = mTabs.get(position);
 				info.fragment = (Fragment)obj;
-				((Fragment) obj).setMenuVisibility(false);
-//                if (mViewPager.getCurrentItem() == position) {
-//                    if (obj instanceof FileOperation.FileOperationProvider)
-//                        activity.getGlobalFileOperation().setFileOperationProvider((FileOperation.FileOperationProvider)obj);
-//                }
+//				((Fragment) obj).setMenuVisibility(false);
 	        }
 	        return obj;
 		}
@@ -376,8 +367,6 @@ public class FileManagerTabActivity extends FileOperationActivity{
         public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
         	Log.i(LOG_TAG, "tab selected "+tab.getPosition());
 
-//            mActionBar.selectTab(mActionBar.getTabAt(0));
-
         	if(mViewPager.getCurrentItem() != tab.getPosition()) {
                 if(mViewPager.getPagingEnabled()) {
         		    mViewPager.setCurrentItem(tab.getPosition());
@@ -385,43 +374,8 @@ public class FileManagerTabActivity extends FileOperationActivity{
                 } else {
                     int position = mViewPager.getCurrentItem();
                     mActivity.get().selectTabWithDelay(position);
-                    //mActionBar.selectTab(mActionBar.getTabAt(mViewPager.getCurrentItem()));
-                    //mActionBar.setSelectedNavigationItem(mViewPager.getCurrentItem());
                 }
         	}
-
-//        	Object tag = tab.getTag();
-//            for (int i=0; i<mTabs.size(); i++) {
-//                if (mTabs.get(i) == tag) {
-//                    mViewPager.setCurrentItem(i);
-//                }
-//            }
-//            Activity activity = mActivity.get();
-//            if(activity!=null && !tab.getText().equals(activity.getString(R.string.tab_sd))) {
-//                ActionMode actionMode = ((FileManagerTabActivity) activity).getActionMode();
-//                if (actionMode != null) {
-//                    actionMode.finish();
-//                }
-//            }
-//        	int position = tab.getPosition();
-//        	if(position == FRAGMENT_INDEX_DEVICE) {
-//        		DirectoryTabFragment fragment = ((DirectoryTabFragment)getFragment(position));
-//        		if(fragment!=null) {
-//        			fragment.refreshAd();
-//        		}
-//        	}
-//        	else if(position == FRAGMENT_INDEX_TOOLS){
-//        		ToolsFragment fragment = ((ToolsFragment)getFragment(position));
-//        		if(fragment!=null) {
-//        			fragment.refreshAd();
-//        		}
-//        	}
-//        	if(position !=0){
-//        		CategoryFragment fragment = ((CategoryFragment)getFragment(0));
-//        		if(fragment!=null) {
-//        			fragment.completeRefresh();
-//        		}
-//        	}
         }
 
 		@Override
@@ -452,44 +406,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
                         ((KanBoxTabFragment)fragment).showBrowserRoot();
                     }
                 }
-            	Activity activity = mActivity.get();
-            	if( activity!=null ) activity.invalidateOptionsMenu();
-//				Toast.makeText(mActivity.get(), "reselect tab", Toast.LENGTH_SHORT).show();
 			}
-    }
-    
-    private void checkUpgradeSlient(){
-        if (Constants.USE_UMENG) {
-    	    UmengDelegate.update(this);
-        }
-
-//    	UmengUpdateAgent.setUpdateAutoPopup(false);
-////    	Toast.makeText(FileManagerTabActivity.this, R.string.about_us_activity_upgrade_check, Toast.LENGTH_SHORT).show();
-//    	UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
-//    	        @Override
-//    	        public void onUpdateReturned(int updateStatus,UpdateResponse updateInfo) {
-//    	            switch (updateStatus) {
-//    	            case 0: // has update
-//    	            	String new_version = updateInfo.version;
-//    	            	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(FileManagerTabActivity.this);
-//    	            	sp.edit().putString("new_version", new_version).commit();
-////    	                UmengUpdateAgent.showUpdateDialog(FileManagerTabActivity.this, updateInfo);
-//    	                break;
-//    	            case 1: // has no update
-////    	                Toast.makeText(FileManagerTabActivity.this, R.string.about_us_activity_upgrade_no_need, Toast.LENGTH_SHORT)
-////    	                        .show();
-//    	                break;
-//    	            case 2: // none wifi
-////    	                Toast.makeText(FileManagerTabActivity.this, R.string.about_us_activity_upgrade_no_wifi, Toast.LENGTH_SHORT)
-////    	                        .show();
-//    	                break;
-//    	            case 3: // time out
-////    	                Toast.makeText(FileManagerTabActivity.this, R.string.about_us_activity_upgrade_time_out, Toast.LENGTH_SHORT)
-////    	                        .show();
-//    	                break;
-//    	            }
-//    	        }
-//    	});
     }
 
     public void gotoCloud() {

@@ -128,10 +128,19 @@ public class BaseFragment extends Fragment {
     public void setMenuVisibility(final boolean visible) {
 //		boolean old_visible = getMenuVisibility();
 //		Log.i(this.getClass().getSimpleName(), "setMenuVisibility "+visible+ ", old="+old_visible);
+        if (DEBUG)
+            Log.i(((Object)this).getClass().getSimpleName(), "setMenuVisibility "+visible+" "+this.hashCode());
         super.setMenuVisibility(visible);
     }
 
-//	public boolean getMenuVisibility() {
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (DEBUG)
+            Log.i(((Object)this).getClass().getSimpleName(), "setUserVisibleHint "+isVisibleToUser+" "+this.hashCode());
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    //	public boolean getMenuVisibility() {
 //		boolean visible = true;
 //		Field field_visible;
 //		try {

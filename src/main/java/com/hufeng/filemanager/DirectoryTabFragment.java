@@ -21,7 +21,6 @@ import com.hufeng.filemanager.provider.UiProvider;
 
 import java.io.File;
 
-//import com.umeng.analytics.MobclickAgent;
 
 public class DirectoryTabFragment extends FileTabFragment implements
         FileTreeFragment.FileTreeFragmentListener{
@@ -254,16 +253,9 @@ public class DirectoryTabFragment extends FileTabFragment implements
     public void refreshFiles() {
         mFileBrowserFragment.refreshUI();
         if (getActivity() != null) {
-            getActivity().invalidateOptionsMenu();
+//            getActivity().supportInvalidateOptionsMenu();
         }
     }
-
-//    @Override
-//    public void reloadData() {
-//        mFileBrowserFragment.reloadData();
-////        mFileTreeFragment.reloadData();
-//        getSherlockActivity().invalidateOptionsMenu();
-//    }
 
     @Override
     public String[] getAllFiles() {

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -510,9 +511,15 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		menu.clear();
+        Log.i(LOG_TAG, "onCreateOptionsMenu");
+//		menu.clear();
 		completeRefresh();
 		mRefreshItem = null;
+
+        if (getParentFragment()!=null && !getParentFragment().getUserVisibleHint()) {
+            Log.i(LOG_TAG, "onCreateOptionsMenu invisible");
+            return;
+        }
 		inflater.inflate(R.menu.category_fragment_menu, menu);
 
 		mRefreshItem = menu.findItem(R.id.menu_refresh);
@@ -527,7 +534,6 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 				completeRefresh();
 			}
 		}
-		super.onCreateOptionsMenu(menu, inflater);
 	}
 	
 	@Override

@@ -37,7 +37,6 @@ import com.hufeng.filemanager.dialog.FmDialogFragment;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.ui.FileViewHolder;
-import com.hufeng.filemanager.utils.LogUtil;
 import com.kanbox.api.PushSharePreference;
 import com.kanbox.api.RequestListener;
 
@@ -295,7 +294,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             completeRefresh();
             reloadFiles();
             if ("/".equals(mRootDir)) {
-                getActivity().invalidateOptionsMenu();
+                getActivity().supportInvalidateOptionsMenu();
             }
             return true;
         }
@@ -361,11 +360,19 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
         MenuItem item_back = menu.findItem(R.id.menu_back);
         MenuItem item_logout = menu.findItem(R.id.menu_cloud_logout);
         if(mRootDir == null || "/".equals(mRootDir)) {
-            item_back.setVisible(false);
-            item_logout.setVisible(true);
+            if (item_back != null) {
+                item_back.setVisible(false);
+            }
+            if (item_logout != null) {
+                item_logout.setVisible(true);
+            }
         } else {
-            item_back.setVisible(true);
-            item_logout.setVisible(false);
+            if (item_back != null) {
+                item_back.setVisible(true);
+            }
+            if (item_logout != null) {
+                item_logout.setVisible(false);
+            }
         }
 
 //        mRefreshItem = menu.findItem(R.id.menu_cloud_refresh);
@@ -382,14 +389,6 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
 //        }
     }
 
-
-    @Override
-    public void onDestroyOptionsMenu(){
-        LogUtil.i(TAG, "onDestroyOptionsMenu");
-//        completeRefresh();
-//        mRefreshItem = null;
-        super.onDestroyOptionsMenu();
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -497,7 +496,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
         if(!"/".equals(mRootDir)) {
             mRootDir = "/";
             reloadFiles();
-            getActivity().invalidateOptionsMenu();
+            getActivity().supportInvalidateOptionsMenu();
         }
     }
 

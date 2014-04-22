@@ -26,7 +26,7 @@ import com.hufeng.filemanager.utils.GridViewUtils;
  */
 public abstract class FileGridFragment extends GridFragment{
 
-    private static final String TAG = FileGridFragment.class.getSimpleName();
+    private final String TAG = ((Object)this).getClass().getSimpleName();
 
     protected String mSearchString;
     protected int mCategory;
@@ -38,6 +38,7 @@ public abstract class FileGridFragment extends GridFragment{
     boolean mFakeSearch = true;
 
     protected int mMenuId;
+    protected boolean mMenuCreated = false;
 
     protected FileOperation mFileOperation = null;
 
@@ -78,12 +79,25 @@ public abstract class FileGridFragment extends GridFragment{
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        Log.i(TAG, "onPrepareOptionsMenu");
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.i(TAG, "onCreateOptionsMenu with menuId = "+mMenuId);
-        menu.clear();
+//        menu.clear();
+        mMenuCreated = false;
         if (mMenuId == 0) {
+            Log.i(TAG, "onCreateOptionsMenu with menuId = "+mMenuId);
             return;
         }
+        if (getParentFragment()!=null && !getParentFragment().getUserVisibleHint()) {
+            Log.i(TAG, "onCreateOptionsMenu invisible");
+            return;
+        }
+        mMenuCreated = true;
+        Log.i(TAG, "onCreateOptionsMenu with menuId = "+mMenuId);
         inflater.inflate(mMenuId, menu);
 
         if( getDisplayMode() == DISPLAY_MODE.LIST ) {
@@ -225,7 +239,7 @@ public abstract class FileGridFragment extends GridFragment{
             case R.id.menu_display:
                 GridViewUtils.stopScroll(getGridView());
                 switchDisplayMode();
-                getActivity().invalidateOptionsMenu();
+                getActivity().supportInvalidateOptionsMenu();
                 break;
             case R.id.menu_create:
 //                Fragment fragment = getParentFragment();

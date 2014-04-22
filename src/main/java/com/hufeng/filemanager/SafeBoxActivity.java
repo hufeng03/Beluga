@@ -245,7 +245,7 @@ public class SafeBoxActivity extends FileOperationActivity implements LockPatter
         if(mCurrentFragment != null && mCurrentFragment instanceof FileGridFragment) {
             mCurrentFragment.refreshUI();
         }
-        invalidateOptionsMenu();
+        supportInvalidateOptionsMenu();
     }
 
     @Override
