@@ -1,20 +1,19 @@
 package com.hufeng.filemanager;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.browser.AppAction;
 import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileUtils;
@@ -86,7 +85,6 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
     }
 
 
-    @TargetApi(11)
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -99,7 +97,7 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
         } else {
             setEmptyText(getResources().getString(R.string.empty_selected_resource));
         }
-        mAdapter = new ResourceListAdapter(getSherlockActivity());
+        mAdapter = new ResourceListAdapter(getActivity());
         setGridAdapter(mAdapter);
         setGridShownNoAnimation(false);
         registerForContextMenu(getGridView());
@@ -183,7 +181,7 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
 
     @Override
     public Loader<List<ResourceEntry>> onCreateLoader(int i, Bundle bundle) {
-        return new ResourceListLoader(getSherlockActivity(), mSearchString, mCategory);
+        return new ResourceListLoader(getActivity(), mSearchString, mCategory);
     }
 
     @Override

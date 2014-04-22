@@ -1,10 +1,12 @@
 package com.hufeng.filemanager;
 
-import android.annotation.TargetApi;
+import android.support.v4.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.support.v4.content.CursorLoader;
 import android.content.DialogInterface;
+import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -12,19 +14,15 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.dialog.FmDialogFragment;
 import com.hufeng.filemanager.provider.DataStructures;
@@ -78,7 +76,7 @@ public class SafeBoxGrouperFragment extends GridFragment implements LoaderManage
 
         setEmptyText(empty_text);
 
-        mAdapter = new SafeBoxGrouperAdapter(getSherlockActivity(),null, mOperationPaths);
+        mAdapter = new SafeBoxGrouperAdapter(getActivity(),null, mOperationPaths);
         setGridAdapter(mAdapter);
 
         setGridShownNoAnimation(false);
@@ -161,7 +159,7 @@ public class SafeBoxGrouperFragment extends GridFragment implements LoaderManage
         mAdapter.notifyDataSetChanged();
 
         if (getActivity()!=null && mActionMode == null) {
-            mActionMode = ((SherlockFragmentActivity) getActivity())
+            mActionMode = (getActivity())
                     .startActionMode(this);
         } else {
             mActionMode.invalidate();
@@ -297,7 +295,6 @@ public class SafeBoxGrouperFragment extends GridFragment implements LoaderManage
         FmDialogFragment.showMoveFromSafeDialog(getChildFragmentManager(), mOperationPaths.size(), mOperationPaths.get(0));
     }
 
-    @TargetApi(11)
     @Override
     public void onDialogDone(DialogInterface dialog, int dialog_id, int button, Object param) {
         if (dialog_id == FmDialogFragment.MOVE_FROM_SAFE_DIALOG) {
@@ -350,7 +347,7 @@ public class SafeBoxGrouperFragment extends GridFragment implements LoaderManage
         Uri baseUri = SafeDataStructs.SafeColumns.CONTENT_URI;
 
         if(baseUri!=null){
-            return new CursorLoader(this.getSherlockActivity(), baseUri,
+            return new CursorLoader(this.getActivity(), baseUri,
                     SafeDataStructs.SafeColumns.SAFE_PROJECTION, SafeDataStructs.SafeColumns.CATEGORY+"=?", new String[]{mCategory+""},
                     null);
         }

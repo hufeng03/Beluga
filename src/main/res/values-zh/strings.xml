@@ -150,8 +150,9 @@
     <string name="file_add_to_safe_single_failed">移动到保险箱失败</string>
     <string name="file_add_to_safe_failed">未全部移动到保险箱</string>
     <string name="file_delete_finish">删除成功</string>
-    <string name="file_delete_single_failed">因为无权限等原因而删除失败</string>
-    <string name="file_delete_failed">因权限等原因删除未全部完成</string>
+    <string name="file_delete_failed">删除失败</string>
+    <string name="file_delete_single_failed">无权限删除文件</string>
+    <string name="file_delete_has_failed">删除未全部成功</string>
     <string name="file_move_failed">剪切到当前文件夹未完成</string>
     <string name="file_copy_failed">复制到当前文件夹未完成</string>
     <string name="file_favorite_finish">成功添加到收藏夹</string>
@@ -609,10 +610,10 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="download_kanbox_android_client">下载使用酷盘手机版，送2T空间</string>
 <string name="downloading_kanbox_android_client">"酷盘客户端正在下载: %1$d%%"</string>
 <string name="install_kanbox_android_client">安装使用酷盘手机版，送2T空间</string>
-<string name="kanbox_uploading_files" formatted="false">正常上传%1$d个文件到酷盘</string>
-<string name="kanbox_uploading_files_with_success_and_failed" formatted="false">正常上传%1$d个文件(%2$d个已失败，%3$d个已成功)</string>
-<string name="kanbox_uploading_files_with_success" formatted="false">正常上传%1$d个文件(%2$d个已成功)</string>
-<string name="kanbox_uploading_files_with_failed" formatted="false">正常上传%1$d个文件(%2$d个已失败)</string>
+<string name="kanbox_uploading_files" formatted="false">正在上传%1$d个文件到酷盘</string>
+<string name="kanbox_uploading_files_with_success_and_failed" formatted="false">正在上传%1$d个文件(%2$d个已失败，%3$d个已成功)</string>
+<string name="kanbox_uploading_files_with_success" formatted="false">正在上传%1$d个文件(%2$d个已成功)</string>
+<string name="kanbox_uploading_files_with_failed" formatted="false">正在上传%1$d个文件(%2$d个已失败)</string>
 <string name="kanbox_uploading_files_all_failed" formatted="false">%1$d个文件上传失败</string>
 <string name="kanbox_uploading_files_all_failed_or_success" formatted="false">%1$d个文件上传失败, %2$d个已成功</string>
 <string name="kanbox_uploading_empty">没有正在上传的文件, 请后退</string>

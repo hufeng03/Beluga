@@ -1,10 +1,9 @@
 package com.hufeng.filemanager;
 
-import android.content.Intent;
+import android.app.ActionBar;
 import android.os.Bundle;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
 
 public class SettingsItemBaseActivity extends BaseActivity{
 	
@@ -12,7 +11,7 @@ public class SettingsItemBaseActivity extends BaseActivity{
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
 		super.onCreate(arg0);
-		ActionBar actionBar = getSupportActionBar();
+		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(true); 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 	}

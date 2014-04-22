@@ -1,5 +1,6 @@
 package com.hufeng.filemanager;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -7,7 +8,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.hufeng.filemanager.services.UiServiceHelper;
 
 public class SettingsScanActivity extends SettingsItemBaseActivity implements OnClickListener, OnCheckedChangeListener{
@@ -49,7 +49,7 @@ public class SettingsScanActivity extends SettingsItemBaseActivity implements On
 //		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.settings_scan_activity);
 		
-		ActionBar actionBar = getSupportActionBar();
+		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(true); 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		

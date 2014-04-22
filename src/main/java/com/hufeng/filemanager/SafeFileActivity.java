@@ -1,13 +1,13 @@
 package com.hufeng.filemanager;
 
 
-import android.os.Bundle;
+import android.app.ActionBar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.browser.FileUtils;
 
 
@@ -21,7 +21,7 @@ public class SafeFileActivity extends BaseActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		ActionBar actionBar = getSupportActionBar();
+		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(true); 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 

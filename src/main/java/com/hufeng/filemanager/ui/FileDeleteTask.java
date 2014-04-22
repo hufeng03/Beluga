@@ -6,6 +6,8 @@ import com.hufeng.filemanager.FileOperationActivity;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileAction;
 
+import java.io.File;
+
 /**
  * Created by feng on 14-2-15.
  */
@@ -39,10 +41,17 @@ public class FileDeleteTask extends FileOperationTask {
         }
         else
         {
-            if(mOperationFiles.length == 1)
-                toast_info_id = R.string.file_delete_single_failed;
-            else
+            if(mOperationFiles.length == 1) {
+                String path = mOperationFiles[0];
+                File parent = new File(path).getParentFile();
+                if (parent == null || !parent.canWrite()) {
+                    toast_info_id = R.string.file_delete_single_failed;
+                } else {
+                    toast_info_id = R.string.file_delete_failed;
+                }
+            } else {
                 toast_info_id = R.string.file_delete_failed;
+            }
         }
         return toast_info_id == 0 ? "" : context.getString(toast_info_id);
     }

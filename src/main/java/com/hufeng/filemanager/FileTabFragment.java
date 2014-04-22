@@ -2,16 +2,16 @@ package com.hufeng.filemanager;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileUtils;
@@ -63,7 +63,7 @@ public abstract class FileTabFragment extends BaseFragment implements
     @Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
-		SherlockFragmentActivity act = getSherlockActivity();
+		FragmentActivity act = getActivity();
         if (mAnimatorViewProvider == null && act instanceof AnimatorViewProvider) {
             setAnimatorViewProvider((AnimatorViewProvider)getActivity());
         }

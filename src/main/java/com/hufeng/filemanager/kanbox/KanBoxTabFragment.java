@@ -1,13 +1,16 @@
 package com.hufeng.filemanager.kanbox;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -16,10 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.FileGrouperFragment;
 import com.hufeng.filemanager.FileManager;
@@ -158,7 +157,7 @@ public class KanBoxTabFragment extends FileTabFragment implements
             TextView text = (TextView) mAdLayout.findViewById(R.id.kanbox_ad_ok);
             boolean flag_show_uploading = true;
             if (uploading_size > 0) {
-                if (uploading_failed_size > 0 && uploading_failed_size > 0) {
+                if (uploading_success_size > 0 && uploading_failed_size > 0) {
                     text.setText(getString(R.string.kanbox_uploading_files_with_success_and_failed, uploading_size, uploading_failed_size, uploading_success_size));
                 } else if (uploading_failed_size > 0) {
                     text.setText(getString(R.string.kanbox_uploading_files_with_failed, uploading_size, uploading_failed_size));
@@ -168,7 +167,7 @@ public class KanBoxTabFragment extends FileTabFragment implements
                     text.setText(getString(R.string.kanbox_uploading_files, uploading_size));
                 }
             } else {
-                if (uploading_failed_size > 0 && uploading_failed_size > 0) {
+                if (uploading_success_size > 0 && uploading_failed_size > 0) {
                     text.setText(getString(R.string.kanbox_uploading_files_all_failed_or_success, uploading_failed_size, uploading_success_size));
                 } else if (uploading_failed_size > 0) {
                     text.setText(getString(R.string.kanbox_uploading_files_all_failed, uploading_failed_size));
@@ -342,7 +341,7 @@ public class KanBoxTabFragment extends FileTabFragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-            SherlockFragment fragment = (SherlockFragment)getChildFragmentManager().findFragmentById(R.id.fragment_container);
+        Fragment fragment = (Fragment)getChildFragmentManager().findFragmentById(R.id.fragment_container);
             if(fragment!=null) {
                 fragment.onCreateOptionsMenu(menu, inflater);
             }
@@ -350,7 +349,7 @@ public class KanBoxTabFragment extends FileTabFragment implements
 
     @Override
     public void onDestroyOptionsMenu(){
-        SherlockFragment fragment = (SherlockFragment)getChildFragmentManager().findFragmentById(R.id.fragment_container);
+        Fragment fragment = (Fragment)getChildFragmentManager().findFragmentById(R.id.fragment_container);
         if(fragment!=null) {
             fragment.onDestroyOptionsMenu();
         }
@@ -365,7 +364,7 @@ public class KanBoxTabFragment extends FileTabFragment implements
 //            getSherlockActivity().invalidateOptionsMenu();
 //            return true;
 //        } else {
-            SherlockFragment fragment = (SherlockFragment)getChildFragmentManager().findFragmentById(R.id.fragment_container);
+            Fragment fragment = (Fragment)getChildFragmentManager().findFragmentById(R.id.fragment_container);
             return fragment.onOptionsItemSelected(item);
 //        }
     }

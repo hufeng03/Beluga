@@ -1,22 +1,20 @@
 package com.hufeng.filemanager;
 
+import android.app.ActionBar;
+import android.app.ListActivity;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.app.ListActivity;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListActivity;
-import com.actionbarsherlock.view.MenuItem;
-
-public class UpgradeActivity extends SherlockListActivity{
+public class UpgradeActivity extends ListActivity{
 
 
 
@@ -24,7 +22,7 @@ public class UpgradeActivity extends SherlockListActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		ActionBar actionBar = getSupportActionBar();
+		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(true); 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		

@@ -4,12 +4,12 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.hufeng.filemanager.skin.SkinManager;
 
-public class BaseActivity extends SherlockFragmentActivity{
+public class BaseActivity extends FragmentActivity {
 
     private static final boolean DEBUG = BuildConfig.DEBUG;
 

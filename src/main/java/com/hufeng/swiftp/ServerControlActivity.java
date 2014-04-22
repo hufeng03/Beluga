@@ -19,6 +19,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.hufeng.swiftp;
 
+import android.app.ActionBar;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -41,7 +42,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.hufeng.filemanager.AdmobDelegate;
 import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.FileManager;
@@ -111,7 +111,7 @@ public class ServerControlActivity extends SettingsItemBaseActivity {
         // Inflate our UI from its XML layout description.
         setContentView(R.layout.server_control_activity);
         
-		ActionBar actionBar = getSupportActionBar();
+		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(true); 
 		actionBar.setDisplayHomeAsUpEnabled(true);
         

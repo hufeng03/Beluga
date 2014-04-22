@@ -1,36 +1,17 @@
 package com.hufeng.filemanager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.hufeng.filemanager.skin.SkinManager;
-import com.hufeng.filemanager.utils.ChannelUtil;
-
-import android.app.Activity;
+import android.app.ActionBar;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter.ViewBinder;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+
+import com.hufeng.filemanager.skin.SkinManager;
+import com.hufeng.filemanager.utils.ChannelUtil;
 
 public class SkinManagerActivity extends SettingsItemBaseActivity implements OnClickListener{
 
@@ -60,7 +41,7 @@ public class SkinManagerActivity extends SettingsItemBaseActivity implements OnC
 //		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.skin_manager_activity);
 		
-		ActionBar actionBar = getSupportActionBar();
+		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(true); 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		

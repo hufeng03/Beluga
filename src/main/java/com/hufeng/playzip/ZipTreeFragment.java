@@ -110,7 +110,7 @@ public class ZipTreeFragment  extends TreeFragment implements LoaderManager.Load
     @Override
     public void onLoadFinished(Loader<InMemoryTreeStateManager<String>> loader, InMemoryTreeStateManager<String> data) {
         mTreeManager = data;
-        mAdapter = new FileTreeAdapter(getSherlockActivity(), mTreeManager, 1);
+        mAdapter = new FileTreeAdapter(getActivity(), mTreeManager, 1);
         setTreeAdapter(mAdapter);
         setTreeShown(true);
     }

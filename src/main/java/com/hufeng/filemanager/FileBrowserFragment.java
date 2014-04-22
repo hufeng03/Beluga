@@ -1,21 +1,21 @@
 package com.hufeng.filemanager;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileEntryFactory;
 import com.hufeng.filemanager.browser.FileUtils;
@@ -159,7 +159,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 //                break;
 //        }
         setEmptyText(empty_text);
-        mAdapter = new FileArrayAdapter(getSherlockActivity(), getFileOperation());
+        mAdapter = new FileArrayAdapter(getActivity(), getFileOperation());
         mAdapter.setFileGridAdapterListener(this);
         setGridAdapter(mAdapter);
         setGridShownNoAnimation(false);
@@ -376,7 +376,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         }
         mRootDir = path;
         reloadFiles();
-        getSherlockActivity().invalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override

@@ -5,23 +5,21 @@
         <item name="android:divider">@drawable/divider</item>
         <item name="indicator_gravity">right|center_vertical</item>
     </style>
-    <style name="MyTheme.CustomBackground" parent="Theme.Sherlock.Light">
+    <!--style name="MyTheme.CustomBackground" parent="Theme.Light">
         <item name="android:windowContentOverlay">@null</item>
         <item name="actionBarStyle">@style/Widget.MyTheme.ActionBar</item>
     	<item name="android:actionBarStyle">@style/Widget.MyTheme.ActionBar</item>
-        <!--item name="actionBarTabTextStyle">@style/Widget.MyTheme.ActionBarTabText</item-->
-        <!--item name="android:actionBarTabTextStyle">@style/Widget.MyTheme.ActionBarTabText</item-->
     </style>
-    <style name="Widget.MyTheme.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid">
+    <style name="Widget.MyTheme.ActionBar" parent="Widget.Light.ActionBar.Solid">
 	</style>
-    <style name="Widget.MyTheme.ActionBarTabText" parent="Widget.Sherlock.Light.ActionBar.TabView">
+    <style name="Widget.MyTheme.ActionBarTabText" parent="Widget.Light.ActionBar.TabView">
         <item name="android:textSize">10sp</item>
     </style>
-	<style name="Theme.White" parent="Theme.Sherlock.Light">
+	<style name="Theme.White" parent="Theme.Light">
 	    <item name="android:windowBackground">@null</item>
 	    <item name="android:preferenceScreenStyle">@color/white</item>
 	    <item name="android:colorBackground">@color/white</item>
-	</style>
+	</style!-->
     <style name="ShadowStyle">
         <item name="android:shadowColor">#ff6e6e6e</item>
         <item name="android:shadowDx">0.5</item>

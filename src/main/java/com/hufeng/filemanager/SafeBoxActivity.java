@@ -1,14 +1,14 @@
 package com.hufeng.filemanager;
 
-import android.content.DialogInterface;
-import android.os.Bundle;
+import android.app.ActionBar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.dialog.FmDialogFragment;
 import com.hufeng.filemanager.ui.FileOperation;
@@ -28,7 +28,7 @@ public class SafeBoxActivity extends FileOperationActivity implements LockPatter
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
 		super.onCreate(arg0);
-		ActionBar actionBar = getSupportActionBar();
+		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(true); 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle(R.string.tool_name_safe);

@@ -1,5 +1,6 @@
 package com.hufeng.filemanager;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
@@ -7,16 +8,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.SearchView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.SearchView;
 import com.hufeng.filemanager.browser.FileSorter;
 import com.hufeng.filemanager.ui.FileOperation;
 import com.hufeng.filemanager.utils.GridViewUtils;
@@ -95,16 +95,16 @@ public abstract class FileGridFragment extends GridFragment{
         }
 
         if(menu.findItem(R.id.menu_search)!=null) {
-            if (getSherlockActivity() == null) {
+            if (getActivity() == null) {
                 super.onCreateOptionsMenu(menu, inflater);
                 return;
             }
-            SearchManager searchManager = (SearchManager) getSherlockActivity()
+            SearchManager searchManager = (SearchManager) getActivity()
                     .getSystemService(Context.SEARCH_SERVICE);
             mSearchView = (SearchView) menu.findItem(R.id.menu_search)
                     .getActionView();
             mSearchView.setSearchableInfo(searchManager
-                    .getSearchableInfo(getSherlockActivity().getComponentName()));
+                    .getSearchableInfo(getActivity().getComponentName()));
             mSearchView.clearFocus();
             mSearchView.setQuery(mSearchString, false);
             mFakeSearch = true;
@@ -112,11 +112,11 @@ public abstract class FileGridFragment extends GridFragment{
 
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem item) {
-                    if(getSherlockActivity() != null && getSherlockActivity().getSupportActionBar()!=null) {
+                    if(getActivity() != null && getActivity().getActionBar()!=null) {
                         if (navigation_mode == ActionBar.NAVIGATION_MODE_STANDARD) {
-                            navigation_mode = (getSherlockActivity()).getSupportActionBar().getNavigationMode();
+                            navigation_mode = (getActivity()).getActionBar().getNavigationMode();
                         }
-                        (getSherlockActivity()).getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+                        (getActivity()).getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
                     }
                     return true;
                 }
@@ -130,7 +130,7 @@ public abstract class FileGridFragment extends GridFragment{
                         }
                     }
 
-                    (getSherlockActivity()).getSupportActionBar().setNavigationMode(navigation_mode);
+                    (getActivity()).getActionBar().setNavigationMode(navigation_mode);
                     navigation_mode = ActionBar.NAVIGATION_MODE_STANDARD;
                     mSearchString = null;
                     mSearchView.setQuery("",false);
@@ -200,8 +200,8 @@ public abstract class FileGridFragment extends GridFragment{
     @Override
     public void onDestroyView() {
         if (mSearchView != null && navigation_mode != ActionBar.NAVIGATION_MODE_STANDARD) {
-            if (getSherlockActivity() != null) {
-                (getSherlockActivity()).getSupportActionBar().setNavigationMode(navigation_mode);
+            if (getActivity() != null) {
+                (getActivity()).getActionBar().setNavigationMode(navigation_mode);
             }
         }
         super.onDestroyView();
@@ -220,12 +220,12 @@ public abstract class FileGridFragment extends GridFragment{
         Log.i(TAG, "onOptionsItemSelected");
         switch(item.getItemId()) {
             case R.id.menu_back:
-                getSherlockActivity().onBackPressed();
+                getActivity().onBackPressed();
                 break;
             case R.id.menu_display:
                 GridViewUtils.stopScroll(getGridView());
                 switchDisplayMode();
-                getSherlockActivity().invalidateOptionsMenu();
+                getActivity().invalidateOptionsMenu();
                 break;
             case R.id.menu_create:
 //                Fragment fragment = getParentFragment();

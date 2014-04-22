@@ -1,19 +1,19 @@
 package com.hufeng.filemanager;
 
 import android.app.Activity;
-import android.database.Cursor;
-import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.database.Cursor;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileEntryFactory;
 import com.hufeng.filemanager.browser.FileUtils;
@@ -175,7 +175,7 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
 
         setEmptyText(empty_text);
 
-        mAdapter = new FileCursorAdapter(getSherlockActivity(),null, getFileOperation());
+        mAdapter = new FileCursorAdapter(getActivity(), null, getFileOperation());
         mAdapter.setFileGridAdapterListener(this);
         setGridAdapter(mAdapter);
         if (FileUtils.FILE_TYPE_IMAGE == mCategory || FileUtils.FILE_TYPE_VIDEO == mCategory) {

@@ -20,7 +20,7 @@ android {
 
     defaultConfig {
         minSdkVersion 11
-        targetSdkVersion 17
+        targetSdkVersion 19
         versionCode 49
         versionName "4.9"
     }
@@ -71,11 +71,6 @@ android {
             signingConfig kanboxSigning
     	}
     	fanzhuo {
-    		packageName = 'com.kanbox.filemanager'
-            ukey = '52cf304456240bdbb705da99'
-            signingConfig kanboxSigning
-    	}
-    	fanzhuo2 {
     		packageName = 'com.kanbox.filemanager'
             ukey = '52cf304456240bdbb705da99'
             signingConfig kanboxSigning
@@ -143,7 +138,6 @@ android {
 }
 
 dependencies {
-    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     compile 'com.android.support:support-v4:19.1.+'
     compile 'com.jakewharton:butterknife:4.0.1'
     compile fileTree(dir: 'libs', include: '*.jar')

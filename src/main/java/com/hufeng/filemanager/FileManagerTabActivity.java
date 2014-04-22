@@ -1,21 +1,20 @@
 package com.hufeng.filemanager;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.support.v4.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
 import com.hufeng.filemanager.apprate.AppRate;
 import com.hufeng.filemanager.dialog.FmDialogFragment;
 import com.hufeng.filemanager.kanbox.KanBoxTabFragment;
@@ -71,7 +70,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
 		
 		mViewPager.setOffscreenPageLimit(FRAGMENT_COUNT-1);
 				
-		mActionBar = getSupportActionBar();
+		mActionBar = getActionBar();
 
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         mActionBar.setDisplayShowTitleEnabled(false);
@@ -79,13 +78,13 @@ public class FileManagerTabActivity extends FileOperationActivity{
 
 //        final Tab selectedTab = getSupportActionBar().newTab().setText(
 //                R.string.selected);
-		final Tab categoryTab = getSupportActionBar().newTab().setText(
+		final ActionBar.Tab categoryTab = mActionBar.newTab().setText(
                 R.string.category);
-        final Tab directoryTab = getSupportActionBar().newTab().setText(
+        final ActionBar.Tab directoryTab = mActionBar.newTab().setText(
                 R.string.directory);
-        final Tab toolsTab = getSupportActionBar().newTab().setText(
+        final ActionBar.Tab toolsTab = mActionBar.newTab().setText(
                 R.string.tools);
-        final Tab kanboxTab = getSupportActionBar().newTab().setText(R.string.kanbox);
+        final ActionBar.Tab kanboxTab = mActionBar.newTab().setText(R.string.kanbox);
         
         mTabAdapter = new TabAdapter(this, mViewPager);
 
@@ -286,7 +285,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
         public TabAdapter(FileManagerTabActivity activity, FileViewPager pager) {
             super(activity.getSupportFragmentManager());
             mActivity = new WeakReference<FileManagerTabActivity>(activity);
-            mActionBar = activity.getSupportActionBar();
+            mActionBar = activity.getActionBar();
             mViewPager = pager;
             mViewPager.setAdapter(this);
             mViewPager.setOnPageChangeListener(this);
@@ -316,7 +315,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
 			Object obj = null;
 			FileManagerTabActivity activity = mActivity.get();
 			if (activity != null) {
-				obj = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + position);
+				obj = activity.getFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + position);
 			}
 			if (obj == null) {
 				Log.i(LOG_TAG, "create new fragment with tag = " + "android:switcher:" + R.id.pager + ":" + position);
@@ -339,7 +338,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
         @Override
         public Fragment getItem(int position) {
             
-        	SherlockFragmentActivity activity = mActivity.get();
+        	Activity activity = mActivity.get();
             if(activity!=null){
 	            TabInfo info = mTabs.get(position);
 	            if(info.fragment==null)
@@ -374,7 +373,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
         }
 
         @Override
-        public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
         	Log.i(LOG_TAG, "tab selected "+tab.getPosition());
 
 //            mActionBar.selectTab(mActionBar.getTabAt(0));
@@ -426,12 +425,12 @@ public class FileManagerTabActivity extends FileOperationActivity{
         }
 
 		@Override
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
             Log.i(LOG_TAG, "tab unselected "+tab.getPosition());
 		}
 
 		@Override
-		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
             Log.i(LOG_TAG, "tab reselected "+tab.getPosition());
 			//if(mReSelect){
 				int position = tab.getPosition();
@@ -453,7 +452,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
                         ((KanBoxTabFragment)fragment).showBrowserRoot();
                     }
                 }
-            	SherlockFragmentActivity activity = mActivity.get();
+            	Activity activity = mActivity.get();
             	if( activity!=null ) activity.invalidateOptionsMenu();
 //				Toast.makeText(mActivity.get(), "reselect tab", Toast.LENGTH_SHORT).show();
 			}
@@ -494,7 +493,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
     }
 
     public void gotoCloud() {
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         mViewPager.setCurrentItem(FRAGMENT_INDEX_CLOUD);
 //        mViewPager.setPagingEnabled(false);
     }

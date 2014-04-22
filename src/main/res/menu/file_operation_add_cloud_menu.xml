@@ -6,5 +6,4 @@
     <item android:id="@+id/file_operation_addcloud"
         android:icon="@drawable/operation_button_addcloud"
         android:title="@string/operation_addcloud" />
-        <!--android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider" -->
 </menu>

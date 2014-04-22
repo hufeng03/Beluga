@@ -2,7 +2,7 @@ package com.hufeng.filemanager.kanbox;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
+import android.widget.CursorAdapter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;

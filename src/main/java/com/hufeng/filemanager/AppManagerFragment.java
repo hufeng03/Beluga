@@ -52,7 +52,7 @@ public class AppManagerFragment extends FileGridFragment implements LoaderManage
         super.onViewCreated(view, savedInstanceState);
 
         setEmptyText(getResources().getString(R.string.empty_apk));
-        mAdapter = new AppListAdapter(getSherlockActivity());
+        mAdapter = new AppListAdapter(getActivity());
         setGridAdapter(mAdapter);
         setGridShownNoAnimation(false);
         registerForContextMenu(getGridView());
@@ -97,7 +97,7 @@ public class AppManagerFragment extends FileGridFragment implements LoaderManage
     public Loader<List<AppEntry>> onCreateLoader(int arg0, Bundle arg1) {
         Log.i(LOG_TAG, "FileBrowserFragment onCreateLoader " + arg0);
         if(arg0 ==  LOADER_ID_APPS) {
-            return new AppListLoader(getSherlockActivity(), mSearchString);
+            return new AppListLoader(getActivity(), mSearchString);
         } else {
             return null;
         }

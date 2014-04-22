@@ -1,18 +1,18 @@
 package com.hufeng.filemanager;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.database.ContentObserver;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.provider.UiProvider;
@@ -25,7 +25,7 @@ public class CategoryTabFragment extends FileTabFragment implements
 
 	private static final String CATEGORY_TYPE = "category_type";
     private int mCategory = FileUtils.FILE_TYPE_ALL;
-    private SherlockFragment mCategoryFragment;
+    private Fragment mCategoryFragment;
     ContentObserver mContentObserver;
 
     @Override
@@ -312,7 +312,7 @@ public class CategoryTabFragment extends FileTabFragment implements
         if(mCurrentChildFragment != null) {
             mCurrentChildFragment.refreshUI();
         }
-        getSherlockActivity().invalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override

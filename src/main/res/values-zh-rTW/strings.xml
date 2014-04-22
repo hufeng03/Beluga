@@ -150,8 +150,9 @@
     <string name="file_add_to_safe_single_failed">移動到保險箱失敗</string>
     <string name="file_add_to_safe_failed">未全部移動到保險箱</string>
     <string name="file_delete_finish">刪除成功</string>
-    <string name="file_delete_single_failed">因為無權限等原因而刪除失敗</string>
-    <string name="file_delete_failed">因權限等原因刪除未全部完成</string>
+    <string name="file_delete_failed">删除失敗</string>
+    <string name="file_delete_single_failed">無權限刪除文件</string>
+    <string name="file_delete_has_failed">因權限等原因刪除未全部完成</string>
     <string name="file_move_failed">剪切到當前文件夾未完成</string>
     <string name="file_copy_failed">復制到當前文件夾未完成</string>
     <string name="file_favorite_finish">成功添加到收藏夾</string>
@@ -610,9 +611,9 @@ or nonexistent.</string>
     <string name="downloading_kanbox_android_client">"酷盤客戶端正在下載: %1$d%%"</string>
     <string name="install_kanbox_android_client">安裝使用酷盤手機版，送2T空間</string>
     <string name="kanbox_uploading_files" formatted="false">正常上傳%1$d個文件到酷盤</string>
-    <string name="kanbox_uploading_files_with_success_and_failed" formatted="false">正常上傳%1$d個文件(%2$d個已失敗，%3$d個已成功)</string>
-    <string name="kanbox_uploading_files_with_success" formatted="false">正常上傳%1$d個文件(%2$d個已成功)</string>
-    <string name="kanbox_uploading_files_with_failed" formatted="false">正常上傳%1$d個文件(%2$d個已失敗)</string>
+    <string name="kanbox_uploading_files_with_success_and_failed" formatted="false">正在上傳%1$d個文件(%2$d個已失敗，%3$d個已成功)</string>
+    <string name="kanbox_uploading_files_with_success" formatted="false">正在上傳%1$d個文件(%2$d個已成功)</string>
+    <string name="kanbox_uploading_files_with_failed" formatted="false">正在上傳%1$d個文件(%2$d個已失敗)</string>
     <string name="kanbox_uploading_files_all_failed" formatted="false">%1$d個文件上傳失敗</string>
     <string name="kanbox_uploading_files_all_failed_or_success" formatted="false">%1$d個文件上傳失敗, %2$d個已成功</string>
     <string name="kanbox_uploading_empty">沒有正在上傳的文件, 請後退</string>

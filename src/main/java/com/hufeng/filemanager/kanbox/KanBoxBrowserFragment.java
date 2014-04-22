@@ -17,6 +17,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -24,9 +27,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.FileGridFragment;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.R;
@@ -101,7 +101,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         KanBoxApi.getInstance().registerKanBoxApiListener(this);
-        mAdapter = new KanBoxBrowserAdapter(getSherlockActivity(), null, this);
+        mAdapter = new KanBoxBrowserAdapter(getActivity(), null, this);
         setGridAdapter(mAdapter);
         getGridView().setOnItemLongClickListener(null);
         registerForContextMenu(getGridView());
@@ -171,7 +171,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             //download/view cloud file
             String local_path=cursor.getString(DataStructures.CloudBoxColumns.LOCAL_FILE_FIELD_INDEX);
             if(!TextUtils.isEmpty(local_path) && new File(local_path).exists()) {
-                FileAction.viewFile(getSherlockActivity(),local_path);
+                FileAction.viewFile(getActivity(),local_path);
             } else {
                 FmDialogFragment.showDownloadFromCloudConfirmDialog(getChildFragmentManager(), path);
             }
@@ -295,7 +295,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             completeRefresh();
             reloadFiles();
             if ("/".equals(mRootDir)) {
-                getSherlockActivity().invalidateOptionsMenu();
+                getActivity().invalidateOptionsMenu();
             }
             return true;
         }
@@ -327,7 +327,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
                 sort_constraint += " DESC";
             }
         }
-        return new CursorLoader(this.getSherlockActivity(), DataStructures.CloudBoxColumns.CONTENT_URI,
+        return new CursorLoader(getActivity(), DataStructures.CloudBoxColumns.CONTENT_URI,
                 DataStructures.CloudBoxColumns.CLOUD_BOX_PROJECTION, DataStructures.CloudBoxColumns.PARENT_FOLDER_FIELD+"=?",
                 new String[]{mRootDir},
                 sort_constraint);
@@ -497,7 +497,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
         if(!"/".equals(mRootDir)) {
             mRootDir = "/";
             reloadFiles();
-            getSherlockActivity().invalidateOptionsMenu();
+            getActivity().invalidateOptionsMenu();
         }
     }
 
@@ -652,7 +652,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        android.view.MenuInflater inflater = getSherlockActivity().getMenuInflater();
+        android.view.MenuInflater inflater = getActivity().getMenuInflater();
         FileViewHolder viewHolder = (FileViewHolder)((AdapterView.AdapterContextMenuInfo)menuInfo).targetView.getTag();
         String path = viewHolder.path;
 

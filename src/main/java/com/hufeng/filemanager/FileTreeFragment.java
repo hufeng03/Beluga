@@ -218,7 +218,7 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
     @Override
     public void onLoadFinished(Loader<InMemoryTreeStateManager<String>> Loader, InMemoryTreeStateManager<String> treeManager) {
         mTreeManager = treeManager;
-        mAdapter = new FileTreeAdapter(getSherlockActivity(), mTreeManager, 1);
+        mAdapter = new FileTreeAdapter(getActivity(), mTreeManager, 1);
         setTreeAdapter(mAdapter);
         setTreeShown(true);
     }

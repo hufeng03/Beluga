@@ -1,13 +1,13 @@
 package com.hufeng.filemanager;
 
-import android.os.Bundle;
+import android.app.ActionBar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.ui.FileOperation;
 
 //import com.google.ads.AdView;
@@ -26,7 +26,7 @@ public class ResourceActivity extends FileOperationActivity{
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
 
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.tool_name_selected);

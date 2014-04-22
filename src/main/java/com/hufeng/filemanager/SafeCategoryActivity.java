@@ -1,14 +1,14 @@
 package com.hufeng.filemanager;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
-import com.hufeng.filemanager.browser.FileUtils;
-
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+
+import com.hufeng.filemanager.browser.FileUtils;
 
 public class SafeCategoryActivity extends BaseActivity implements OnClickListener{
 
@@ -19,7 +19,7 @@ public class SafeCategoryActivity extends BaseActivity implements OnClickListene
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
-		ActionBar actionBar = getSupportActionBar();
+		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(true); 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		

@@ -12,5 +12,4 @@
     <item android:id="@+id/file_operation_selectall"
           android:icon="@drawable/operation_button_selectall"
           android:title="@string/operation_selectall" />
-        <!--android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider" -->
 </menu>

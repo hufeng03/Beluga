@@ -151,8 +151,9 @@
     <string name="file_add_to_safe_single_failed">Add to safebox failed</string>
     <string name="file_add_to_safe_failed">Add to safebox failed</string>
     <string name="file_delete_finish">Delete success</string>
-    <string name="file_delete_single_failed">Delete failed</string>
     <string name="file_delete_failed">Delete failed</string>
+    <string name="file_delete_single_failed">Delete failed</string>
+    <string name="file_delete_has_failed">Delete failed</string>
     <string name="file_move_failed">Move failed</string>
     <string name="file_copy_failed">Copy failed</string>
     <string name="file_favorite_finish">Add to favorite success</string>

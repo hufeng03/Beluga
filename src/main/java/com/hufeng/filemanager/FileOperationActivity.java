@@ -1,18 +1,18 @@
 package com.hufeng.filemanager;
 
+import android.support.v4.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.dialog.FmDialogFragment;
 import com.hufeng.filemanager.ui.FileOperation;

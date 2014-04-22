@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -14,9 +17,6 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.tools.Tool;
 import com.hufeng.filemanager.tools.ToolsGridAdapter;
 import com.hufeng.filemanager.tools.ToolsListAdapter;
@@ -67,7 +67,7 @@ public class ToolsFragment extends BaseFragment implements OnClickListener, OnIt
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
         if (Constants.SHOW_AD) {
-            mAdView = AdmobDelegate.showAd(getSherlockActivity(), mRootView);
+            mAdView = AdmobDelegate.showAd(getActivity(), mRootView);
         }
 	}
 
@@ -94,13 +94,13 @@ public class ToolsFragment extends BaseFragment implements OnClickListener, OnIt
 		if(mRootView!=null){
 			mListView = (ListView)mRootView.findViewById(R.id.tools_list);
 			mGridView = (GridView)mRootView.findViewById(R.id.tools_grid);
-            mListAdapter = new ToolsListAdapter(getSherlockActivity());
-            mGridAdapter = new ToolsGridAdapter(getSherlockActivity());
+            mListAdapter = new ToolsListAdapter(getActivity());
+            mGridAdapter = new ToolsGridAdapter(getActivity());
 			mListView.setAdapter(mListAdapter);
 			mGridView.setAdapter(mGridAdapter);
 			mListView.setOnItemClickListener(this);
 			mGridView.setOnItemClickListener(this);
-			Tool[] tools = ToolsManager.getAllTools(getSherlockActivity());
+			Tool[] tools = ToolsManager.getAllTools(getActivity());
 			mListAdapter.setData(tools);
 			mGridAdapter.setData(tools);
 			if(mDisplayMode == 0){
@@ -158,7 +158,7 @@ public class ToolsFragment extends BaseFragment implements OnClickListener, OnIt
 					mGridView.setVisibility(View.GONE);
 					mListView.setSelection(pos);
 				}
-				getSherlockActivity().invalidateOptionsMenu();
+				getActivity().invalidateOptionsMenu();
 				break;
 			}
 			case R.id.menu_search:
@@ -208,7 +208,7 @@ public class ToolsFragment extends BaseFragment implements OnClickListener, OnIt
 	//				intent.setClassName(package_name, package_name+activity_name);
 					ComponentName cn = new ComponentName(package_name, activity_name);
 					intent.setComponent(cn);
-					getSherlockActivity().startActivity(intent);
+					getActivity().startActivity(intent);
 //				}
 			}
 		}

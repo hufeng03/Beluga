@@ -5,5 +5,4 @@
     <!--item android:id="@+id/menu_add_favorite" android:title="@string/menu_add_favorite" /-->
     <item android:id="@+id/menu_view_detail" android:title="@string/menu_view_detail" />
     <item android:id="@+id/menu_unzip" android:title="@string/menu_unzip" />
-    <!--item android:id="@+id/menu_add_safe" android:title="@string/menu_add_safe"/-->
 </menu>

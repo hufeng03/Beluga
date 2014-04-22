@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
@@ -32,7 +33,6 @@ import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileUtils;
@@ -49,7 +49,7 @@ import java.util.Map;
 
 //import com.hufeng.filemanager.CategoryTab;
 
-public class FmDialogFragment extends SherlockDialogFragment{
+public class FmDialogFragment extends DialogFragment{
     
     private String CORRECT_FILENAME = "^[^:*?\"/,|<>]+$";
 	
@@ -249,7 +249,7 @@ public class FmDialogFragment extends SherlockDialogFragment{
 		super.onCreate(savedInstanceState);
 		mDialogId = getArguments().getInt("dialog_id");
 		
-		int style = SherlockDialogFragment.STYLE_NORMAL, theme = 0;
+		int style = DialogFragment.STYLE_NORMAL, theme = 0;
 		
 		switch(mDialogId){
 		case IMPORT_CONTACT_DIALOG:

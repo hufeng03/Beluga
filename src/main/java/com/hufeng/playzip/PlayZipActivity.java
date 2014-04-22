@@ -1,18 +1,18 @@
 package com.hufeng.playzip;
 
-import android.app.ProgressDialog;
-import android.net.Uri;
-import android.os.Bundle;
+import android.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.BaseActivity;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileUtils;
@@ -42,7 +42,7 @@ public class PlayZipActivity extends BaseActivity implements
         root.setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(root);
-        mActionBar = getSupportActionBar();
+        mActionBar = getActionBar();
         mActionBar.setDisplayShowTitleEnabled(true);
         mActionBar.setDisplayHomeAsUpEnabled(true);
 

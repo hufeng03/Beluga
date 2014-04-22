@@ -6,5 +6,4 @@
     <item android:id="@+id/file_operation_addsafe"
         android:icon="@drawable/operation_button_addsafe"
         android:title="@string/operation_addsafe" />
-        <!--android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider" -->
 </menu>

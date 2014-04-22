@@ -3,13 +3,13 @@ package com.hufeng.filemanager.kanbox;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.hufeng.filemanager.BaseFragment;
 import com.hufeng.filemanager.R;
 import com.kanbox.api.Token;

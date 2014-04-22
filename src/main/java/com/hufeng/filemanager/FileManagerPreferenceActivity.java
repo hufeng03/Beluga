@@ -1,17 +1,17 @@
 package com.hufeng.filemanager;
 
+import android.app.ActionBar;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.root.RootHelper;
 
 import java.util.List;
 
 //import com.umeng.fb.UMFeedbackService;
 
-public class FileManagerPreferenceActivity extends SherlockPreferenceActivity{
+public class FileManagerPreferenceActivity extends PreferenceActivity {
 
 	private ActionBar mActionBar;
 	
@@ -20,7 +20,7 @@ public class FileManagerPreferenceActivity extends SherlockPreferenceActivity{
 		super.onCreate(savedInstanceState);
 //		UMFeedbackService.enableNewReplyNotification(this, NotificationType.NotificationBar);
         
-		mActionBar = getSupportActionBar();
+		mActionBar = getActionBar();
 		mActionBar.setDisplayShowTitleEnabled(true); 
 		mActionBar.setDisplayHomeAsUpEnabled(true);
 	}

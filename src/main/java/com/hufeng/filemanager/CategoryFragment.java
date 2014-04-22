@@ -8,6 +8,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -17,9 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.provider.DataStructures.CategoryColumns;
@@ -165,6 +165,7 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
                 ((ImageView)mCategoryZip.findViewById(R.id.category_zip_icon)).setImageResource(R.drawable.file_category_icon_kanbox);
                 ((TextView)mCategoryZip.findViewById(R.id.category_zip_name)).setText(R.string.kanbox);
                 mCategoryZip.setId(R.id.category_kanbox);
+                mCategoryZip.findViewById(R.id.category_zip_count).setVisibility(View.GONE);
             }
         } else {
             if (Constants.SHOW_KANBOX_CATEGORY) {
@@ -320,7 +321,7 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 			break;
 		}
 		if(baseUri!=null){
-			return new CursorLoader(this.getSherlockActivity(), baseUri,
+			return new CursorLoader(getActivity(), baseUri,
 	            projection, null, null,
 	            null);
 		}
@@ -470,8 +471,8 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
                                 total_size += size;
                         }
                     }
-                    long all_size = StorageManager.getInstance(getSherlockActivity()).getAllSize(path);
-                    long available_size = StorageManager.getInstance(getSherlockActivity()).getAvailableSize(path);
+                    long all_size = StorageManager.getInstance(getActivity()).getAllSize(path);
+                    long available_size = StorageManager.getInstance(getActivity()).getAvailableSize(path);
                     long other_size = all_size
                             - available_size
                             - total_size;
@@ -481,7 +482,7 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
                     map.put(-1, all_size);
                     bar.refresh(map);
 
-                    String self_description = StorageManager.getInstance(getSherlockActivity()).getStorageDescription(paths[i]);
+                    String self_description = StorageManager.getInstance(getActivity()).getStorageDescription(paths[i]);
                     if (self_description != null) {
                         label.setText(self_description);
                     } else {
@@ -550,7 +551,7 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 			case R.id.menu_settings:
 			{
                 try {
-                    Intent intent3 = new Intent(getSherlockActivity(), FileManagerPreferenceActivity.class);
+                    Intent intent3 = new Intent(getActivity(), FileManagerPreferenceActivity.class);
                     startActivity(intent3);
                 }catch (Exception e) {
                     e.printStackTrace();
@@ -568,14 +569,14 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	boolean mRefreshing = false;
 	
 	private void refresh(){
-		if(!mRefreshing && getSherlockActivity()!=null) {
+		if(!mRefreshing && getActivity()!=null) {
 			if(mRefreshItem!=null && mRefreshItem.isVisible()){				
 				if(mRefreshView == null){
-					LayoutInflater inflater = LayoutInflater.from(getSherlockActivity());
+					LayoutInflater inflater = LayoutInflater.from(getActivity());
 					mRefreshView = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
 				}				
 				if(mRefreshAnimation == null) {
-					mRefreshAnimation = AnimationUtils.loadAnimation(getSherlockActivity(), R.anim.clockwise_rotate);
+					mRefreshAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.clockwise_rotate);
 					mRefreshAnimation.setRepeatCount(Animation.INFINITE);
 				}
 				if(mRefreshView.getAnimation()==null){
