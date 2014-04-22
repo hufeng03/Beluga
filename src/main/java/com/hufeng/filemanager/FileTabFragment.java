@@ -69,29 +69,6 @@ public abstract class FileTabFragment extends BaseFragment implements
         }
 	}
 
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        if(mCurrentChildFragment != null) {
-//            mCurrentChildFragment.onCreateOptionsMenu(menu, inflater);
-//        }
-//    }
-//
-//    @Override
-//    public void onDestroyOptionsMenu(){
-//        if(mCurrentChildFragment != null) {
-//            mCurrentChildFragment.onDestroyOptionsMenu();
-//        }
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (mCurrentChildFragment != null) {
-//            return mCurrentChildFragment.onOptionsItemSelected(item);
-//        } else {
-//            return false;
-//        }
-//    }
-
     @Override
     public boolean onBackPressed() {
         if(closeImage()) {

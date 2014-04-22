@@ -357,6 +357,9 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
 //        mRefreshItem = null;
         super.onCreateOptionsMenu(menu, inflater);
 
+        if (!mMenuCreated) {
+            return;
+        }
         MenuItem item_back = menu.findItem(R.id.menu_back);
         MenuItem item_logout = menu.findItem(R.id.menu_cloud_logout);
         if(mRootDir == null || "/".equals(mRootDir)) {
@@ -392,6 +395,9 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (!mMenuCreated) {
+            return false;
+        }
         switch(item.getItemId()) {
 //            case R.id.menu_cloud_upload_confirm:
 //                Fragment fragment = getParentFragment();

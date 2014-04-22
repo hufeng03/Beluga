@@ -546,7 +546,7 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		boolean flag = true;
+		boolean flag = false;
 		switch(item.getItemId()){
 			case R.id.menu_refresh:
 			{

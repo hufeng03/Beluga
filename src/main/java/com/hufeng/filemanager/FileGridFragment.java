@@ -86,7 +86,6 @@ public abstract class FileGridFragment extends GridFragment{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        menu.clear();
         mMenuCreated = false;
         if (mMenuId == 0) {
             Log.i(TAG, "onCreateOptionsMenu with menuId = "+mMenuId);
@@ -231,6 +230,9 @@ public abstract class FileGridFragment extends GridFragment{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (!mMenuCreated) {
+            return false;
+        }
         Log.i(TAG, "onOptionsItemSelected");
         switch(item.getItemId()) {
             case R.id.menu_back:
