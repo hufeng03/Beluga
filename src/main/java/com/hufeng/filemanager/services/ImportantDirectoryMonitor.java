@@ -103,11 +103,13 @@ public class ImportantDirectoryMonitor {
     public void init() {
         mPersistentObservers.clear();
         String[] dirs = ServiceUtil.getAllImportantDirectory();
-        for(String dir : dirs) {
-            if (!mPersistentObservers.containsKey(dir)) {
-                SingleDirectoryObserver observer = new SingleDirectoryObserver(dir);
-                mPersistentObservers.put(dir, observer);
-                observer.startWatching();
+        if (dirs != null) {
+            for (String dir : dirs) {
+                if (!mPersistentObservers.containsKey(dir)) {
+                    SingleDirectoryObserver observer = new SingleDirectoryObserver(dir);
+                    mPersistentObservers.put(dir, observer);
+                    observer.startWatching();
+                }
             }
         }
     }

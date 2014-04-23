@@ -218,7 +218,9 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
     @Override
     public void onKanBoxApiFailed(int op_type, String path) {
         if (getActivity()!=null) {
-            if (op_type == KanBoxApi.OP_GET_TOKEN || op_type == KanBoxApi.OP_REFRESH_TOKEN) {
+            if (op_type == KanBoxApi.OP_GET_TOKEN) {
+                Toast.makeText(getActivity(), getString(R.string.kanbox_get_token_failed), Toast.LENGTH_SHORT).show();
+            } else if (op_type == KanBoxApi.OP_REFRESH_TOKEN) {
                 Toast.makeText(getActivity(), getString(R.string.kanbox_refresh_token_failed), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), getString(R.string.kanbox_get_account_info_failed), Toast.LENGTH_SHORT).show();

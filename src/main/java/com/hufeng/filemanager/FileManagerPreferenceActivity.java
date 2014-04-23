@@ -35,8 +35,13 @@ public class FileManagerPreferenceActivity extends PreferenceActivity {
             loadHeadersFromResource(R.xml.preference_headers, target);
         }
     }
-	
-//	private void initClick() {
+
+    @Override
+    protected boolean isValidFragment(String fragmentName) {
+        return true;
+    }
+
+    //	private void initClick() {
 //		Preference myPref =(Preference) findPreference(PreferenceKeys.FEEDBACK);
 //		if(myPref!=null){
 //			myPref.setOnPreferenceClickListener(this);

@@ -76,4 +76,10 @@ public class ResourceTabFragment extends FileTabFragment{
 //    public void onDialogDone(DialogInterface paramDialogInterface, int paramInt1, int paramInt2, Object param) {
 //
 //    }
+
+
+    @Override
+    public void onFileBrowserDirShown(String path) {
+
+    }
 }

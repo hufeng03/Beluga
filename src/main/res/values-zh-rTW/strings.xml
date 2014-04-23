@@ -601,7 +601,8 @@ or nonexistent.</string>
     <string name="kanbox_refresh_token_start">刷新授權令牌...</string>
     <string name="kanbox_get_auth_start">獲取授權令牌...</string>
     <string name="kanbox_get_account_info">獲取用戶信息...</string>
-    <string name="kanbox_load_auth_page">加載授權認證頁面...</string>
+    <string name="kanbox_load_auth_page">獲取授權認證頁面...</string>
+    <string name="kanbox_get_token_failed">获取授權令牌失敗</string>
     <string name="kanbox_refresh_token_failed">刷新授權令牌失敗</string>
     <string name="kanbox_get_account_info_failed">獲取用戶信息失敗</string>
     <string name="kanbox_get_auth_failed">獲取授權認證失敗</string>
@@ -666,4 +667,8 @@ or nonexistent.</string>
     <string name="external_storage">SD卡</string>
     <string name="internal_storage">手機存儲</string>
     <string name="file_copy_full">複制失敗，存儲空間不足</string>
+    <string name="no_app_to_share">沒有可以分享的應用</string>
+    <string name="no_app_to_view_pdf">手機尚未安裝pdf閱讀器，請安裝後再次嘗試打開</string>
+    <string name="dir_not_write_nor_read">当前目录无写入或读取权限</string>
+    <string name="dir_not_write">当前目录无写入权限</string>
 </resources>

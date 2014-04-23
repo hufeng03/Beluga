@@ -337,4 +337,10 @@ public class CategoryTabFragment extends FileTabFragment implements
 //            ((CategoryFragment)mCurrentChildFragment).setListener(this);
 //       }
 //    }
+
+
+    @Override
+    public void onFileBrowserDirShown(String path) {
+
+    }
 }

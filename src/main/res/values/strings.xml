@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-
     <string name="app_name">File Manager</string>
     <string name="selected">Selected</string>
 	<string name="category">Category</string>
@@ -615,6 +614,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="kanbox_get_auth_start">getting authorization token ...</string>
 <string name="kanbox_get_account_info">getting account info ...</string>
 <string name="kanbox_load_auth_page">loading authorization page ...</string>
+<string name="kanbox_get_token_failed">get access token failed</string>
 <string name="kanbox_refresh_token_failed">refresh access token failed!</string>
 <string name="kanbox_get_account_info_failed">get account info failed!</string>
 <string name="kanbox_get_auth_failed">get authorization code failed!</string>
@@ -682,4 +682,8 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="external_storage">SD Card</string>
 <string name="internal_storage">Phone Storage</string>
 <string name="file_copy_full">Copy failed, no enough space</string>
+<string name="no_app_to_share">No app found to share this file</string>
+<string name="no_app_to_view_pdf">No app found to view pdf file</string>
+<string name="dir_not_write_nor_read">No write or read right in this direcotry</string>
+<string name="dir_not_write">No write right in this directory</string>
 </resources>

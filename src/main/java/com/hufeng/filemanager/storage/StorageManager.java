@@ -90,13 +90,30 @@ public class StorageManager {
 
 	
 	public String[] getMountedStorages() {
-		List<String> stors = new ArrayList<String>();
+		List<String> stors_writable_unremovable = new ArrayList<String>();
+        List<String> stors_writable_removable = new ArrayList<String>();
+        List<String> stors_readable_unremovable = new ArrayList<String>();
+        List<String> stors_readable_removable = new ArrayList<String>();
 		for (StorageUnit unit : mStorageUnits) {
-			if( Environment.MEDIA_MOUNTED.equals(unit.state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(unit.state)){
-				stors.add(unit.path);
+			if( Environment.MEDIA_MOUNTED.equals(unit.state)){
+                if (!unit.removable) {
+                    stors_writable_unremovable.add(unit.path);
+                } else {
+                    stors_writable_removable.add(unit.path);
+                }
 			}
+            if( Environment.MEDIA_MOUNTED_READ_ONLY.equals(unit.state)){
+                if (!unit.removable) {
+                    stors_readable_unremovable.add(unit.path);
+                } else {
+                    stors_readable_removable.add(unit.path);
+                }
+            }
 		}
-		return stors.toArray(new String[stors.size()]);
+        stors_writable_unremovable.addAll(stors_writable_removable);
+        stors_writable_unremovable.addAll(stors_readable_unremovable);
+        stors_readable_unremovable.addAll(stors_readable_removable);
+		return stors_writable_unremovable.toArray(new String[stors_writable_unremovable.size()]);
 	}
 
     public String getPrimaryExternalStorage() {

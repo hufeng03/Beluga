@@ -60,11 +60,11 @@ public class FileManagerService extends Service{
                         mFileSyncServiceImpl.refresh();
                     }
 
+                } else if (Intent.ACTION_MEDIA_MOUNTED.equals(intent.getAction()) || Intent.ACTION_MEDIA_UNMOUNTED.equals(intent.getAction())) {
+                    StorageManager.clear();
                     if (mDirectoryMonitorServiceImpl != null) {
                         mDirectoryMonitorServiceImpl.refresh();
                     }
-                } else if (Intent.ACTION_MEDIA_MOUNTED.equals(intent.getAction()) || Intent.ACTION_MEDIA_UNMOUNTED.equals(intent.getAction())) {
-                    StorageManager.clear();
                     ServiceUiHelper.getInstance().storageChanged();
                 }
 

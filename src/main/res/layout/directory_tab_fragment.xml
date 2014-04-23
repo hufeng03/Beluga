@@ -9,8 +9,44 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    <FrameLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/device_ad_layout"
+            android:background="@color/gray"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+            <TextView
+                android:id="@+id/device_ad_tip"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_vertical"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:gravity="center"/>
+            <ImageButton
+                android:id="@+id/device_ad_close"
+                android:padding="5dip"
+                android:layout_weight="0"
+                android:src="@drawable/operation_button_cancel"
+                android:background="@null"
+                android:layout_gravity="right|center_vertical"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <FrameLayout
+            android:layout_above="@id/device_ad_layout"
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
+    </RelativeLayout>
+
 </com.hufeng.filemanager.ui.DirectoryViewGroup>

@@ -1,8 +1,10 @@
 package com.hufeng.filemanager.kanbox;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -91,12 +93,17 @@ public class KanBoxTabFragment extends FileTabFragment implements
 //                break;
 //        }
 
-        if (TextUtils.isEmpty(Token.getInstance().getAccessToken())) {
+        if (TextUtils.isEmpty(Token.getInstance().getAccessToken())
+                || TextUtils.isEmpty(Token.getInstance().getRefreshToken())) {
             showKanBoxIntroFragment();
-        } else if (Token.getInstance().isExpired()){
-            showKanBoxAuthFragment();
         } else {
-            showKanBoxBrowserFragment();
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
+            String email = preferences.getString("KanBox_Account_Email", "");
+            if (TextUtils.isEmpty(email)) {
+                showKanBoxIntroFragment();
+            } else {
+                showKanBoxBrowserFragment();
+            }
         }
 
         FileDownloader.addFileDownloaderListener(this);
@@ -472,4 +479,8 @@ public class KanBoxTabFragment extends FileTabFragment implements
         }
     }
 
+    @Override
+    public void onFileBrowserDirShown(String path) {
+
+    }
 }

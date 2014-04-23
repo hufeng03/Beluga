@@ -228,6 +228,7 @@ public class KanBoxApi implements RequestListener{
                 cv.put(DataStructures.CloudBoxColumns.FILE_PATH_FIELD, path);
                 cv.put(DataStructures.CloudBoxColumns.IS_FOLDER_FIELD, 1);
                 cv.put(DataStructures.CloudBoxColumns.FILE_NAME_FIELD, new File(path).getName());
+                cv.put(DataStructures.CloudBoxColumns.FILE_DATE_FIELD, System.currentTimeMillis());
                 String parent = new File(path).getParent();
                 if(parent.endsWith("/")) {
                     cv.put(DataStructures.CloudBoxColumns.PARENT_FOLDER_FIELD, parent);
@@ -254,6 +255,7 @@ public class KanBoxApi implements RequestListener{
                         entry.parent_path = parent2;
                         entry.local_file_path = path;
                         entry.is_directory = false;
+                        entry.lastModified = System.currentTimeMillis();
                         ContentValues cv2 = KanBoxResponseHandler.buildFullContentValueFromKanBoxFileEntry(entry);
                         Uri uri = FileManager.getAppContext().getContentResolver().insert(DataStructures.CloudBoxColumns.CONTENT_URI, cv2);
                     }

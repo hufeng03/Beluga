@@ -1,9 +1,9 @@
 package com.hufeng.filemanager.mp3;
 
+import org.mozilla.universalchardet.UniversalDetector;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.mozilla.universalchardet.UniversalDetector;
 
 /**
  * <b>MP3的ID3V2信息解析类</b>
@@ -59,52 +59,57 @@ public class Mp3ReadId3v2 {
 				info.setApic(imgb);
 			}
 			encoding = null;
+//            encoding = "GB18030";//"UTF-8","GBK";
+            byte[] tit2_buf = null, tpe1_buf = null, talb_buf = null;
+            int tit2_len = 0, tpe1_len = 0, talb_len = 0;
 			if (ByteUtil.indexOf("TIT2".getBytes(), buff, 1, 512) != -1) {
-				byte[] buf = readInfo(buff, "TIT2");
-				UniversalDetector detector = new UniversalDetector(null);
-				detector.handleData(buf, 0, buf.length);
-				detector.dataEnd();
-				encoding = detector.getDetectedCharset();
-				if (encoding == null) {
-//					encoding = "UTF-8";
-					encoding = "GBK";
-				}
-				info.setTit2(new String(buf, encoding));
-				System.out.println("info:" + info.getTit2());
-			}
-			if (ByteUtil.indexOf("TPE1".getBytes(), buff, 1, 512) != -1) {
-				byte[] buf = readInfo(buff, "TPE1");
-				if(encoding==null)
-				{
-					UniversalDetector detector = new UniversalDetector(null);
-					detector.handleData(buf, 0, buf.length);
-					detector.dataEnd();
-					encoding = detector.getDetectedCharset();
-					if (encoding == null) {
-//						encoding = "UTF-8";
-						encoding = "GBK";
-					}
-				}
-				info.setTpe1(new String(buf, encoding));
-				System.out.println("info:" + info.getTpe1());
+                tit2_buf = readInfo(buff, "TIT2");
+                tit2_len = tit2_buf.length;
+            }
 
-			}
+			if (ByteUtil.indexOf("TPE1".getBytes(), buff, 1, 512) != -1) {
+                tpe1_buf = readInfo(buff, "TPE1");
+                tpe1_len = tpe1_buf.length;
+            }
+
 			if (ByteUtil.indexOf("TALB".getBytes(), buff, 1, 512) != -1) {
-				byte[] buf = readInfo(buff, "TALB");
-				if(encoding==null)
-				{
-					UniversalDetector detector = new UniversalDetector(null);
-					detector.handleData(buf, 0, buf.length);
-					detector.dataEnd();
-					encoding = detector.getDetectedCharset();
-					if (encoding == null) {
-//						encoding = "UTF-8";
-						encoding = "GBK";
-					}
-				}
-				info.setTalb(new String(buf, encoding));
+                talb_buf = readInfo(buff, "TALB");
+                talb_len = talb_buf.length;
+            }
+
+            if(encoding==null)
+            {
+                byte[] data3 = new byte[tit2_len + tpe1_len + talb_len];
+                if (tit2_len != 0) System.arraycopy(tit2_buf,0,data3,0,tit2_len);
+                if (tpe1_len != 0) System.arraycopy(tpe1_buf,0,data3,tit2_len,tpe1_len);
+                if (talb_len != 0) System.arraycopy(talb_buf,0,data3,tit2_len+tpe1_len,talb_len);
+
+                UniversalDetector detector = new UniversalDetector(null);
+                detector.handleData(data3, 0, data3.length);
+                detector.dataEnd();
+                encoding = detector.getDetectedCharset();
+                if (encoding == null) {
+                    encoding = "GBK";
+                }
+            }
+
+
+            if (tpe1_buf != null) {
+                info.setTpe1(new String(tpe1_buf, encoding));
+                System.out.println("info:" + info.getTpe1());
+
+            }
+            if (tit2_buf != null) {
+                info.setTit2(new String(tit2_buf, encoding));
+                System.out.println("info:" + info.getTit2());
+            }
+            if (talb_buf != null) {
+				info.setTalb(new String(talb_buf, encoding));
 				System.out.println("info:" + info.getTalb());
 			}
+
+
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally{

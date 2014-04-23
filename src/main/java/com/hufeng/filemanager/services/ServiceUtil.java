@@ -37,9 +37,11 @@ public class ServiceUtil {
                     if (file.exists()) {
                         dirs.add(file.getAbsolutePath());
                         File[] childs = file.listFiles();
-                        for (File child : childs) {
-                            if (child.isDirectory() && !child.isHidden()) {
-                                dirs.add(child.getAbsolutePath());
+                        if (childs != null) {
+                            for (File child : childs) {
+                                if (child.isDirectory() && !child.isHidden()) {
+                                    dirs.add(child.getAbsolutePath());
+                                }
                             }
                         }
                     }

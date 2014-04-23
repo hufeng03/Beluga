@@ -1258,7 +1258,7 @@ public class FileAction {
 			if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "insert "+path+" return "+count);
 		}
     }
-    
+
     public static void setAsWallpaper(String  path)
     {
     	if(!TextUtils.isEmpty(path)){
@@ -1476,7 +1476,12 @@ public class FileAction {
         }
         intent.setType(mimeType);
         intent.putExtra(Intent.EXTRA_STREAM, u);
-        context.startActivity(intent);
+        try {
+            context.startActivity(intent);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, R.string.no_app_to_share, Toast.LENGTH_SHORT).show();
+        }
     }
     
     public static Intent buildSendFile(Context context, String... files)
@@ -1714,11 +1719,19 @@ public class FileAction {
                     try {
                         context.startActivity(myIntent);
                     } catch (Exception e2) {
-                        Toast.makeText(FileManager.getAppContext(), R.string.no_activity_found, Toast.LENGTH_SHORT).show();
+                        if (file.endsWith(".pdf")) {
+                            Toast.makeText(FileManager.getAppContext(), R.string.no_app_to_view_pdf, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(FileManager.getAppContext(), R.string.no_activity_found, Toast.LENGTH_SHORT).show();
+                        }
                         e2.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(FileManager.getAppContext(), R.string.no_activity_found, Toast.LENGTH_SHORT).show();
+                    if (file.endsWith(".pdf")) {
+                        Toast.makeText(FileManager.getAppContext(), R.string.no_app_to_view_pdf, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(FileManager.getAppContext(), R.string.no_activity_found, Toast.LENGTH_SHORT).show();
+                    }
                     e.printStackTrace();
                 }
             }

@@ -109,6 +109,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         public void onFileBrowserItemClick(View v, FileEntry entry);
         public void onFileBrowserItemSelect(View v, FileEntry entry);
         public void onFileBrowserItemClose(FileEntry entry);
+        public void onFileBrowserDirShown(String path);
     }
 
     public void setListener(FileBrowserFragmentListener listener) {
@@ -373,6 +374,12 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         mRootDir = path;
         reloadFiles();
         getActivity().supportInvalidateOptionsMenu();
+        if (mWeakListener != null) {
+            FileBrowserFragmentListener listener = mWeakListener.get();
+            if (listener != null) {
+                listener.onFileBrowserDirShown(mRootDir);
+            }
+        }
     }
 
     @Override

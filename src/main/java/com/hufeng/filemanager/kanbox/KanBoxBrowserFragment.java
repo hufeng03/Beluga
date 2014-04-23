@@ -111,7 +111,9 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             mRootDir = "/";
         }
 
-        if(true){
+        PushSharePreference preference = new PushSharePreference(FileManager.getAppContext(), KanBoxApi.PUSH_SHAREPREFERENCE_NAME);
+        String hash = preference.getStringValueByKey(mRootDir);
+        if (TextUtils.isEmpty(hash)) {
             mLoading = true;
             setEmptyText(getResources().getString(R.string.kanbox_getting_file_list));
             KanBoxApi.getInstance().getFileList(mRootDir);
@@ -154,12 +156,21 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
         int folder = cursor.getInt(DataStructures.CloudBoxColumns.IS_FOLDER_FIELD_INDEX);
         String path = cursor.getString(DataStructures.CloudBoxColumns.FILE_PATH_FIELD_INDEX);
         if (folder == 1) {
+            boolean flag = false;
+            if (mRootDir == null || mRootDir.endsWith("/")) {
+                flag = true;
+            }
             if(!path.endsWith("/")) {
                 mRootDir = path + "/";
             } else {
                 mRootDir = path;
             }
-            refresh();
+//            refresh();
+            completeRefresh();
+            reloadFiles();
+            if (flag) {
+                getActivity().supportInvalidateOptionsMenu();
+            }
         } else {
             if(KanBoxApi.isDownloading(path)) {
                 //we need to pause downloading here
@@ -335,8 +346,8 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         mAdapter.changeCursor(cursor);
-        if((cursor==null || cursor.getCount()==0) && !mLoading) {
-            mHandler.sendEmptyMessageDelayed(MESSAGE_SET_EMPTY_TEXT, 500);
+        if(/*(cursor==null || cursor.getCount()==0) && */!mLoading) {
+            mHandler.sendEmptyMessageDelayed(MESSAGE_SET_EMPTY_TEXT, 100);
         }
         setGridShown(true);
     }
@@ -832,13 +843,15 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
         mLoading = true;
         reloadFiles();
         setEmptyText(getResources().getString(R.string.kanbox_getting_file_list));
+//        mHandler.sendEmptyMessageDelayed(MESSAGE_SET_EMPTY_TEXT, 100);
         KanBoxApi.getInstance().getFileList(mRootDir);
         showSwipeProgress();
     }
 
     private void completeRefresh() {
         mLoading = false;
-        setEmptyText(getResources().getString(R.string.kanbox_empty_file));
+//        setEmptyText(getResources().getString(R.string.kanbox_empty_file));
+        mHandler.sendEmptyMessageDelayed(MESSAGE_SET_EMPTY_TEXT, 100);
         hideSwipeProgress();
     }
 }

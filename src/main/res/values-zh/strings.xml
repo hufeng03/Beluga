@@ -602,6 +602,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="kanbox_get_auth_start">获取授权令牌...</string>
 <string name="kanbox_get_account_info">获取用户信息...</string>
 <string name="kanbox_load_auth_page">加载授权认证页面...</string>
+<string name="kanbox_get_token_failed">获取授权令牌失败</string>
 <string name="kanbox_refresh_token_failed">刷新授权令牌失败</string>
 <string name="kanbox_get_account_info_failed">获取用户信息失败</string>
 <string name="kanbox_get_auth_failed">获取授权认证失败</string>
@@ -666,4 +667,8 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="external_storage">SD卡</string>
 <string name="internal_storage">手机存储</string>
 <string name="file_copy_full">复制失败，存储空间不足</string>
+<string name="no_app_to_share">没有可以分享的应用</string>
+<string name="no_app_to_view_pdf">手机尚未安装pdf阅读器，请安装后再次尝试打开</string>
+<string name="dir_not_write_nor_read">當前目錄無寫入或讀取權限</string>
+<string name="dir_not_write">當前目錄無寫入權限</string>
 </resources>

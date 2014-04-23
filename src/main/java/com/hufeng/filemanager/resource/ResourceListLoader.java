@@ -69,10 +69,11 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
 
         StorageManager manager = StorageManager.getInstance(getContext());
 
-        String[] storages = manager.getMountedStorages();
+//        String[] storages = manager.getMountedStorages();
 
+        String storage = manager.getPrimaryExternalStorage();
         List<ResourceEntry> entries = new ArrayList<ResourceEntry>();
-        for (String storage : storages) {
+ //       for (String storage : storages) {
 
             if (ResourceType.GAME == mResourceType || mResourceType == null) {
                 File game_dir = new File(storage, SELECTED_GAME_DIR_NAME);
@@ -81,11 +82,7 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
                         @Override
                         public boolean accept(File file, String s) {
                             if (s.endsWith(".apk") && (TextUtils.isEmpty(mSearch) || s.contains(mSearch) || s.toLowerCase().contains(mSearch.toLowerCase()))) {
-//                            if(!mGameOnly || s.startsWith("g_")) {
-//                                return true;
-//                            } else {
                                 return true;
-//                            }
                             } else {
                                 return false;
                             }
@@ -200,7 +197,7 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
                 }
 
             }
-        }
+ //       }
 
         //load the server push result
         Cursor cursor = getContext().getContentResolver().query(DataStructures.SelectedColumns.CONTENT_URI, DataStructures.SelectedColumns.SELECTED_PROJECTION, null, null, null);

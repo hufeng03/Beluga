@@ -141,6 +141,9 @@ public class KanboxAsyncTask extends AsyncTask<String, Long, String> {
                             return strResult;
                     }
                 } else {
+                    if (!isCancelled() && statusCode == 401) {
+                        Token.getInstance().refreshToken(sHttpClient);
+                    }
                     mException = new KanboxException(statusCode);
                     Log.i(TAG, "statusCode = "+statusCode);
                     return "error";

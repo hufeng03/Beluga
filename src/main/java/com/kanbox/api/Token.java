@@ -44,6 +44,10 @@ public class Token {
         return acceccToken;
     }
 
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
     public boolean isExpired() {
         return System.currentTimeMillis() > expiresTill;
     }
