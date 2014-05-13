@@ -41,7 +41,11 @@ import com.hufeng.filemanager.utils.FileUtil;
 import com.hufeng.filemanager.utils.NetworkUtil;
 import com.hufeng.filemanager.utils.TimeUtil;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -735,6 +739,39 @@ public class FmDialogFragment extends DialogFragment{
             location.setText(entry.getAbsolutePath());
             timestamp.setText(TimeUtil.getDateString(entry.lastModified()));
             size.setText(FileUtils.getFileSize(entry));
+
+//            long start = System.currentTimeMillis();
+            BufferedWriter out;
+            BufferedReader in;
+            String[] splits = null;
+            try {
+                Process proc = Runtime.getRuntime().exec((entry.isDirectory()?"ls -ld ":"ls -l ")+path);
+                out = new BufferedWriter(new OutputStreamWriter(proc.getOutputStream()));
+                in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+                String line = "";
+                if((line = in.readLine()) != null) {
+                    splits = line.split("\\s+");
+                }
+                proc.waitFor();
+                in.close();
+                out.close();
+                if (splits != null) {
+                    permission.setText(splits[0].substring(1));
+                    owner.setText(splits[1]);
+                    group.setText(splits[2]);
+                    contents.findViewById(R.id.file_group_label).setVisibility(View.VISIBLE);
+                    contents.findViewById(R.id.file_owner_label).setVisibility(View.VISIBLE);
+                    contents.findViewById(R.id.file_permissions_label).setVisibility(View.VISIBLE);
+                    permission.setVisibility(View.VISIBLE);
+                    owner.setVisibility(View.VISIBLE);
+                    group.setVisibility(View.VISIBLE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            long execTime = System.currentTimeMillis() - start;
+//            System.out.println(execTime);
+
 			return new AlertDialog.Builder(getActivity())
 			.setTitle(R.string.detail_dialog_title)
 			.setView(contents)

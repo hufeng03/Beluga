@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import com.hufeng.filemanager.Constants;
+import com.hufeng.filemanager.channel.DoovUtil;
 import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.utils.LogUtil;
 
@@ -20,6 +22,7 @@ public class FileManagerService extends Service{
     private IDirectoryMonitorServiceImpl mDirectoryMonitorServiceImpl = null;
 
     private BroadcastReceiver mMediaReceiver = null;
+    private BroadcastReceiver mDoovReceiver = null;
 	
 	@Override
 	public void onCreate() {
@@ -34,6 +37,9 @@ public class FileManagerService extends Service{
         mDirectoryMonitorServiceImpl.onCreate();
 
         registerMediaReceiver();
+        if ("doov".equals(Constants.PRODUCT_FLAVOR_NAME)) {
+            registerDoovReceiver();
+        }
 	}
 
 
@@ -43,6 +49,7 @@ public class FileManagerService extends Service{
 		super.onDestroy();
 		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "onDestroy");
         unregisterMediaReceiver();
+        unregisterDoovReceiver();
         mFileSyncServiceImpl.onDestroy();
         mDirectoryMonitorServiceImpl.onDestroy();
         mFileSyncServiceImpl = null;
@@ -85,6 +92,31 @@ public class FileManagerService extends Service{
         if (mMediaReceiver != null) {
             unregisterReceiver(mMediaReceiver);
             mMediaReceiver = null;
+        }
+    }
+
+    private void registerDoovReceiver(){
+        mDoovReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+
+                if (DoovUtil.ACTION_DOOV_VISTOR.equals(action)) {
+                    DoovUtil.changeDoovVistor();
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(DoovUtil.ACTION_DOOV_VISTOR);
+        registerReceiver(mDoovReceiver, filter);
+    }
+
+    private void unregisterDoovReceiver(){
+        if (mDoovReceiver != null) {
+            unregisterReceiver(mDoovReceiver);
+            mDoovReceiver = null;
         }
     }
 

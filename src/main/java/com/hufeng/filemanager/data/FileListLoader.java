@@ -12,6 +12,7 @@ import android.util.Log;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileSorter;
 import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.Constants;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,7 +56,9 @@ public class FileListLoader extends AsyncTaskLoader<List<FileEntry>> {
                     if (entry.path!=null && (!entry.isDirectory() || !mNoDirectory)) {
                         if (TextUtils.isEmpty(mSearch) || entry.getName().toLowerCase().contains(mSearch.toLowerCase())) {
                             Log.i(LOG_TAG, "add "+file+"!!!!!!!!!!"+entry);
-                            entries.add(entry);
+                            if (!Constants.PRODUCT_FLAVOR_NAME.equals("chenxiang") || !entry.hidden) {
+                                entries.add(entry);
+                            }
                         }
                     }
                 }

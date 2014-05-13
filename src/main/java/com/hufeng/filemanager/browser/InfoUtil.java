@@ -23,7 +23,7 @@ public class InfoUtil {
                     String date = FileUtils.getFileDate(new File(path));
                     info = "(" + count + ") " + date;
                 } else {
-                    info = "(" + count + ")";
+                    info = path;
                 }
                 break;
             }

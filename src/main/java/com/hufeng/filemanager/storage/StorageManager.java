@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.hufeng.filemanager.BuildConfig;
 import com.hufeng.filemanager.R;
+import com.hufeng.filemanager.browser.FileUtils;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -90,41 +91,57 @@ public class StorageManager {
 
 	
 	public String[] getMountedStorages() {
+
+        String state = Environment.getExternalStorageState();
+        String primary = null;
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            primary =  Environment.getExternalStorageDirectory().getAbsolutePath();
+            if (!FileUtils.isDirWritable(primary)) {
+                primary = null;
+            }
+        }
+
+        List<String> stors_primary = new ArrayList<String>();
 		List<String> stors_writable_unremovable = new ArrayList<String>();
         List<String> stors_writable_removable = new ArrayList<String>();
         List<String> stors_readable_unremovable = new ArrayList<String>();
         List<String> stors_readable_removable = new ArrayList<String>();
 		for (StorageUnit unit : mStorageUnits) {
-			if( Environment.MEDIA_MOUNTED.equals(unit.state)){
-                if (!unit.removable) {
-                    stors_writable_unremovable.add(unit.path);
-                } else {
-                    stors_writable_removable.add(unit.path);
+            if (primary != null && primary.equals(unit.path)) {
+                stors_primary.add(unit.path);
+            } else {
+                if (/*Environment.MEDIA_MOUNTED.equals(unit.state)*/FileUtils.isDirWritable(unit.path)) {
+                    if (!unit.removable) {
+                        stors_writable_unremovable.add(unit.path);
+                    } else {
+                        stors_writable_removable.add(unit.path);
+                    }
                 }
-			}
-            if( Environment.MEDIA_MOUNTED_READ_ONLY.equals(unit.state)){
-                if (!unit.removable) {
-                    stors_readable_unremovable.add(unit.path);
-                } else {
-                    stors_readable_removable.add(unit.path);
+                else if (/*Environment.MEDIA_MOUNTED_READ_ONLY.equals(unit.state)*/new File(unit.path).canRead()) {
+                    if (!unit.removable) {
+                        stors_readable_unremovable.add(unit.path);
+                    } else {
+                        stors_readable_removable.add(unit.path);
+                    }
                 }
             }
 		}
-        stors_writable_unremovable.addAll(stors_writable_removable);
-        stors_writable_unremovable.addAll(stors_readable_unremovable);
-        stors_readable_unremovable.addAll(stors_readable_removable);
-		return stors_writable_unremovable.toArray(new String[stors_writable_unremovable.size()]);
+        stors_primary.addAll(stors_writable_unremovable);
+        stors_primary.addAll(stors_writable_removable);
+        stors_primary.addAll(stors_readable_unremovable);
+        stors_primary.addAll(stors_readable_removable);
+		return stors_primary.toArray(new String[stors_primary.size()]);
 	}
 
     public String getPrimaryExternalStorage() {
-//        String state = Environment.getExternalStorageState();
-//        if (Environment.MEDIA_MOUNTED.equals(state)) {
-//            return Environment.getExternalStorageDirectory().getAbsolutePath();
-//        }
         String best_hit_storage = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String state = Environment.getExternalStorageState();
+        if (isStorage(best_hit_storage) && Environment.MEDIA_MOUNTED.equals(state) && FileUtils.isDirWritable(best_hit_storage)) {
+            return best_hit_storage;
+        }
         int best_hit_priority = -1;
         for (StorageUnit unit : mStorageUnits) {
-            if (Environment.MEDIA_MOUNTED.equals(unit.state)) {
+            if (/*Environment.MEDIA_MOUNTED.equals(unit.state)*/FileUtils.isDirWritable(unit.path)) {
                 if (!unit.removable) {
                     if (best_hit_priority < 4) {
                         best_hit_storage = unit.path;
@@ -136,7 +153,7 @@ public class StorageManager {
                         best_hit_priority = 3;
                     }
                 }
-            } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(unit.state)) {
+            } else if (/*Environment.MEDIA_MOUNTED_READ_ONLY.equals(unit.state)*/new File(unit.path).canRead()) {
                 if (!unit.removable) {
                     if (best_hit_priority < 2) {
                         best_hit_storage = unit.path;
@@ -355,13 +372,13 @@ public class StorageManager {
                                     if (external_count <= 1) {
                                         unit.description = context.getString(R.string.external_storage);
                                     } else {
-                                        unit.description = context.getString(R.string.external_storage)+"1";
+                                        unit.description = context.getString(R.string.external_storage);
                                     }
                                 } else {
                                     if (external_count <= 1) {
                                         unit.description = context.getString(R.string.internal_storage);
                                     } else {
-                                        unit.description = context.getString(R.string.internal_storage)+"1";
+                                        unit.description = context.getString(R.string.internal_storage);
                                     }
                                 }
                             }

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.provider.UiProvider;
@@ -241,11 +242,18 @@ public class DirectoryTabFragment extends FileTabFragment implements
         if (path != null) {
             boolean can_write = new File(path).canWrite();
             boolean can_read = new File(path).canRead();
+            if (can_write) {
+                if(new File(path, ".test_writable").mkdir()){
+                    new File(path, ".test_writable").delete();
+                } else {
+                    can_write = false;
+                }
+            }
             if (!can_write && !can_read) {
-                mAdLayout.findViewById(R.id.device_ad_tip).setTextAlignment(R.string.dir_not_write_nor_read);
+                ((TextView)mAdLayout.findViewById(R.id.device_ad_tip)).setText(R.string.dir_not_write_nor_read);
                 mAdLayout.setVisibility(View.VISIBLE);
             } else if (!can_write) {
-                mAdLayout.findViewById(R.id.device_ad_tip).setTextAlignment(R.string.dir_not_write);
+                ((TextView)mAdLayout.findViewById(R.id.device_ad_tip)).setText(R.string.dir_not_write);
                 mAdLayout.setVisibility(View.VISIBLE);
             } else {
                 mAdLayout.setVisibility(View.GONE);

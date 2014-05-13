@@ -3,6 +3,7 @@ package com.hufeng.filemanager.browser;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -20,6 +21,8 @@ import java.io.FileOutputStream;
  */
 public class IconUtil {
 
+    private static final String TAG = IconUtil.class.getSimpleName();
+
     private static final int MINI_KIND = 1;
 
     public static Bitmap getImageThumbnail(String path){
@@ -28,7 +31,9 @@ public class IconUtil {
     }
 
     public static Bitmap getVideoThumbnail(String path) {
+//        android.os.Debug.waitForDebugger();
         long id = getDbId(path, FileUtils.FILE_TYPE_VIDEO);
+//        Log.i(TAG, "video_"+path+" id in db is " + id);
         return getVideoThumbnail(path, id);
     }
 
@@ -71,7 +76,11 @@ public class IconUtil {
     }
     public static Bitmap getVideoThumbnail(String path, long id) {
         Bitmap bm = getVideoThumbnailFromDatabase(id);
+        if (bm == null) {
+            bm = getVideoThumbnailFromFile(path);
+        }
         return bm;
+
     }
     public static Bitmap getAudioThumbnail(String path, long id) {
         Bitmap bm = getAudioThumbnailFromDatabase(id);
@@ -93,6 +102,12 @@ public class IconUtil {
 
     private static Bitmap getAudioThumbnailFromDatabase(long id) {
         return null;
+    }
+
+    private static Bitmap getVideoThumbnailFromFile(String path) {
+        Bitmap bitmap =  ThumbnailUtils.createVideoThumbnail(path, MINI_KIND);
+//        Log.i(TAG, "video_"+path+" create thumbnail from file " + bitmap);
+        return bitmap;
     }
 
     private static Bitmap getImageThumbnailFromFile(String path)

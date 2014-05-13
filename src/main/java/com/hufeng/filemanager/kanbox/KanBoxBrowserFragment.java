@@ -37,6 +37,7 @@ import com.hufeng.filemanager.dialog.FmDialogFragment;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.ui.FileViewHolder;
+import com.hufeng.filemanager.utils.NetworkUtil;
 import com.kanbox.api.PushSharePreference;
 import com.kanbox.api.RequestListener;
 
@@ -271,6 +272,34 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
                 break;
         }
         if(!TextUtils.isEmpty(tip) && getActivity()!=null) {
+            if (!NetworkUtil.isNetworkConnected(getActivity())) {
+                tip = getString(R.string.kanbox_error_no_network);
+            } else {
+                if (op_type == KanBoxApi.OP_DOWNLOAD) {
+                    long db_size = 0;
+                    Cursor cursor = null;
+                    try{
+                        cursor = FileManager.getAppContext().getContentResolver().query(DataStructures.CloudBoxColumns.CONTENT_URI,
+                                new String[]{DataStructures.CloudBoxColumns._ID, DataStructures.CloudBoxColumns.FILE_SIZE_FIELD, DataStructures.CloudBoxColumns.HASH_FIELD}, DataStructures.CloudBoxColumns.FILE_PATH_FIELD+"=?",
+                                new String[]{path}, null);
+                        if (cursor!=null && cursor.moveToNext()) {
+                            db_size = cursor.getLong(1);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (cursor!=null) {
+                            cursor.close();
+                        }
+                    }
+                    StorageManager manager = StorageManager.getInstance(FileManager.getAppContext());
+                    String storage = manager.getPrimaryExternalStorage();
+                    long storage_size = manager.getAvailableSize(storage);
+                    if (storage_size < db_size) {
+                        tip = getString(R.string.file_download_full);
+                    }
+                }
+            }
             Toast.makeText(getActivity(), tip, Toast.LENGTH_SHORT).show();
         }
     }
@@ -572,6 +601,8 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
         String local_path = null;
         boolean flag_has_local = false;
         if(storages!=null) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String account_email = preferences.getString("KanBox_Account_Email", "").trim();
             int size = storages.length;
             int idx = 0;
             idx = remote_path.lastIndexOf("/");
@@ -580,21 +611,25 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             idx = 0;
             while(idx < size){
                 String stor = storages[idx];
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                String account_email = preferences.getString("KanBox_Account_Email", "").trim();
                 File kanbox_dir = new File(stor, KanBoxConfig.LOCAL_STORAGE_DIRECTORY+File.separator+account_email);
                 File kanbox_file = new File(kanbox_dir.getAbsolutePath()+dir, name);
                 if(kanbox_file.exists() && kanbox_file.length() == db_size) {
                     local_path = new File(kanbox_dir.getAbsolutePath()+dir, name).getAbsolutePath();
                     flag_has_local = true;
                     break;
-                } else {
-                    if (TextUtils.isEmpty(local_path)) {
-                        local_path = new File(kanbox_dir.getAbsolutePath()+dir, name).getAbsolutePath();
-                    }
                 }
+//                else {
+//                    if (TextUtils.isEmpty(local_path)) {
+//                        local_path = new File(kanbox_dir.getAbsolutePath()+dir, name).getAbsolutePath();
+//                    }
+//                }
                 idx++;
             }
+            if (TextUtils.isEmpty(local_path)) {
+                File kanbox_dir = new File(manager.getPrimaryExternalStorage(), KanBoxConfig.LOCAL_STORAGE_DIRECTORY+File.separator+account_email);
+                local_path = new File(kanbox_dir.getAbsolutePath()+dir, name).getAbsolutePath();
+            }
+
         }
         if (flag_has_local) {
             ContentValues cv = new ContentValues();
@@ -687,7 +722,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
                     new String[]{path}, null);
             if (cursor!=null && cursor.moveToNext()) {
                 String local_file = cursor.getString(0);
-                if (!TextUtils.isEmpty(local_file) && !new File(local_file).isDirectory()) {
+                if (!TextUtils.isEmpty(local_file) && !new File(local_file).isDirectory() && new File(local_file).exists()) {
                     has_local = true;
                 }
             }

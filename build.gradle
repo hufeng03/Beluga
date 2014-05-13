@@ -44,6 +44,9 @@ android {
             keyAlias "filemanager.doov"
             keyPassword "dycsr001"
         }
+        unsignedConfig{
+
+        }
     }
 
     lintOptions {
@@ -59,19 +62,26 @@ android {
     }
 
     productFlavors {
+        def unsignedSigning = signingConfigs.unsignedConfig
         def googleSigning = signingConfigs.googleConfig
         def kanboxSigning = signingConfigs.kanboxConfig
+        def doovSigning = signingConfigs.doovConfig
     	google {
             ukey = '4f7d5ca55270150f1a000105'
             signingConfig googleSigning
     	}
+        doov {
+            packageName = 'com.doov.filemanager'
+            ukey = '526f23e756240bdc42053628'
+            signingConfig doovSigning
+        }
     	kanbox {
     	    packageName = 'com.kanbox.filemanager'
             ukey = '52cf304456240bdbb705da99'
             signingConfig kanboxSigning
     	}
     	fanzhuo {
-    		packageName = 'com.kanbox.filemanager'
+            packageName = 'com.kanbox.filemanager'
             ukey = '52cf304456240bdbb705da99'
             signingConfig kanboxSigning
     	}

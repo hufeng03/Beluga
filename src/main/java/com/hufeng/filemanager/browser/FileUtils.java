@@ -473,5 +473,17 @@ public class FileUtils {
         }
         return file.getAbsolutePath();
     }
+
+    public static boolean isDirWritable(String path) {
+        boolean can_write = new File(path).canWrite();
+        if (can_write) {
+            if(new File(path, ".test_writable").mkdir()){
+                new File(path, ".test_writable").delete();
+            } else {
+                can_write = false;
+            }
+        }
+        return can_write;
+    }
     
 }

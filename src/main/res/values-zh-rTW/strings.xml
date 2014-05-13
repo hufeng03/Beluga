@@ -633,6 +633,8 @@ or nonexistent.</string>
     <string name="menu_cloud_upload_cancel">取消</string>
     <string name="kanbox_developer_name">北京雅觀科技有限公司</string>
     <string name="kanbox_website">http://www.kanbox.com</string>
+    <string name="doov_developer_name">深圳市朵唯誌遠科技有限公司</string>
+    <string name="doov_website">http://www.doov.com.cn</string>
     <string name="category_selected_game">熱門遊戲</string>
     <string name="category_selected_app">熱門應用</string>
     <string name="category_selected_doc">電子書</string>
@@ -667,8 +669,23 @@ or nonexistent.</string>
     <string name="external_storage">SD卡</string>
     <string name="internal_storage">手機存儲</string>
     <string name="file_copy_full">複制失敗，存儲空間不足</string>
+    <string name="file_move_full">移動失敗，存儲空間不足</string>
+    <string name="file_download_full">下載失敗，存儲空間不足</string>
     <string name="no_app_to_share">沒有可以分享的應用</string>
     <string name="no_app_to_view_pdf">手機尚未安裝pdf閱讀器，請安裝後再次嘗試打開</string>
-    <string name="dir_not_write_nor_read">当前目录无写入或读取权限</string>
-    <string name="dir_not_write">当前目录无写入权限</string>
+    <string name="dir_not_write_nor_read">當前目錄無寫入或讀取權限</string>
+    <string name="dir_not_write">當前目錄無寫入權限</string>
+    <string name="kanbox_error_no_network">無網絡連接</string>
+    <string name="file_name_label">名稱:</string>
+    <string name="file_content_label">內容:</string>
+    <string name="file_location_label">路徑:</string>
+    <string name="file_size_label">大小:</string>
+    <string name="file_timestamp_label">日期:</string>
+    <string name="file_permission_label">權限:</string>
+    <string name="file_owner_label">創建人:</string>
+    <string name="file_group_label">組:</string>
+    <string name="china_tip_dialog_title">系統提醒</string>
+    <string name="china_tip_dialog_quit">退出</string>
+    <string name="china_tip_dialog_known">不再提示</string>
+    <string name="china_tip_dialog_content">歡迎使用文件管理器軟件，本軟件使用完全免費，在使用過程中軟件需要連接網絡，以更好地為您提供完整的服務，其中聯網會產生數據流量費，請咨詢當地運營商。是否允許本軟件的以上操作？</string>
 </resources>

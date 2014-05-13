@@ -3,6 +3,7 @@ package com.hufeng.filemanager.kanbox;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -210,7 +211,7 @@ public class KanBoxApi implements RequestListener{
                 if ("pause".equals(response)) {
                     //say something
                 } else {
-                    String local_path2 = sPreference2.getStringValueByKey(path);
+                    final String local_path2 = sPreference2.getStringValueByKey(path);
 
                     if(!TextUtils.isEmpty(local_path2) && new File(local_path2).exists()) {
                         ContentValues cv2 = new ContentValues();
@@ -218,6 +219,15 @@ public class KanBoxApi implements RequestListener{
                         FileManager.getAppContext().getContentResolver().update(DataStructures.CloudBoxColumns.CONTENT_URI, cv2,
                                 DataStructures.CloudBoxColumns.FILE_PATH_FIELD+"=?",new String[]{path});
                         FileAction.add(local_path2);
+//                        Log.i(TAG, "try to scan into mediadb "+local_path2);
+                        MediaScannerConnection.scanFile(FileManager.getAppContext(),
+                                new String[]{local_path2}, null, null
+//                                new MediaScannerConnection.OnScanCompletedListener() {
+//                                    public void onScanCompleted(String path, Uri uri) {
+////                                        Log.i(TAG, "scanned into mediadb "+local_path2+"@@@"+uri);
+//                                    }
+//                                }
+                        );
                     }
                 }
                 sPreference2.removeSharePreferences(path);
@@ -446,6 +456,9 @@ public class KanBoxApi implements RequestListener{
         if (task == null) return;
         task.mOperationTime = System.currentTimeMillis();
         mUploadingSuccessTasks.put(path, task);
+        if (mUploadingTasks.size() == 0 && mUploadingFailedTasks.size() == 0) {
+            mUploadingSuccessTasks.clear();
+        }
     }
 
     public void moveUploadingTasktoFailed(String path) {

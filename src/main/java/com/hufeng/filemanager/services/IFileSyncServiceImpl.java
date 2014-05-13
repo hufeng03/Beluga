@@ -291,6 +291,9 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
 
         boolean filter_small_image = (FileManager.getPreference(SettingsScanActivity.IMAGE_FILTER_SMALL, "1") == "1");
         boolean filter_small_audio = (FileManager.getPreference(SettingsScanActivity.AUDIO_FILTER_SMALL, "1") == "1");
+        if (dirs == null) {
+            return;
+        }
         for (String dir : dirs) {
             if (new File(dir).exists()) {
                 File[] childs = new File(dir).listFiles();

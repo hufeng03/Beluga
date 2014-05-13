@@ -14,7 +14,9 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.channel.DoovUtil;
 import com.hufeng.filemanager.provider.DataStructures.ApkColumns;
 import com.hufeng.filemanager.provider.DataStructures.AudioColumns;
 import com.hufeng.filemanager.provider.DataStructures.CategoryColumns;
@@ -736,7 +738,10 @@ public class FileManagerProvider extends ContentProvider{
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
-		// TODO Auto-generated method stub
+        if ("doov".equals(Constants.PRODUCT_FLAVOR_NAME) && DoovUtil.isDoovVistor()) {
+            return null;
+        }
+
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		String orderBy;
         switch (URI_MATCHER.match(uri)) {

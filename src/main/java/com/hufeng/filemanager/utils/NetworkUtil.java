@@ -2,6 +2,7 @@ package com.hufeng.filemanager.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.provider.Settings;
 
 public class NetworkUtil {
@@ -11,6 +12,18 @@ public class NetworkUtil {
 		Settings.System.AIRPLANE_MODE_ON, 0) ;
 		return (isAirplaneMode == 1)?true:false;
 	}
+
+    public static boolean isNetworkConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            if (mNetworkInfo != null) {
+                return mNetworkInfo.isAvailable();
+            }
+        }
+        return false;
+    }
 
     public static boolean isWifiConnected(Context context) {
 //        WifiManager wifiMgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);

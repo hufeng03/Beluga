@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<PreferenceCategory 
+	<PreferenceCategory
         android:key="others_about"  
         android:title="@string/others_about_title" >  
-        <PreferenceScreen 
+        <PreferenceScreen
              android:key="others_about_developer"
              android:title="@string/others_about_developer">
-             <!--intent  
-            android:action="android.intent.action.MAIN"  
-            android:targetPackage="com.hufeng.filemanager"  
-            android:targetClass="com.hufeng.filemanager.AboutDeveloperActivity" /-->
 			<Preference
 	    		android:title="@string/developer_name"
 	    		android:summary="@string/kanbox_developer_name" />
@@ -21,25 +17,17 @@
     			android:summary="@string/kanbox_website" />
           
          </PreferenceScreen>
-         <!--PreferenceScreen
-             android:key="others_about_market"
-             android:title="@string/others_about_market"
-             android:summary="@string/others_about_market_summary">
-             <intent  
-	            android:action="android.intent.action.VIEW"  
-	            android:data="market://details?id=com.hufeng.filemanager" />            
-         </PreferenceScreen-->
-    </PreferenceCategory> 
+    </PreferenceCategory>
     
 	<PreferenceCategory 
         android:key="others_upgrade"  
         android:title="@string/others_upgrade_title" >  
             
         
-        <Preference
+        <!--Preference
     		android:title="@string/current_version_title"
     		android:summary="4.9"
-    		android:key="current_version" />
+    		android:key="current_version" /-->
 
 		<Preference
     		android:title="@string/new_version_title"

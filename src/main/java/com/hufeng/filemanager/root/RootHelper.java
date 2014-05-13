@@ -19,6 +19,9 @@ public class RootHelper {
         if (Constants.SHOW_KANBOX_CATEGORY) {
             return false;
         }
+        if ("doov".equals(Constants.PRODUCT_FLAVOR_NAME)) {
+            return false;
+        }
         if(systemRootState== sSystemRootStateEnable) {
             return true;
         }

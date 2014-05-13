@@ -2,6 +2,7 @@ package com.hufeng.filemanager.ui;
 
 import android.content.Context;
 
+import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.FileOperationActivity;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileAction;
@@ -15,7 +16,7 @@ import java.io.File;
  */
 public class FileCopyTask extends FileOperationTask{
 
-    private String mDirectory;
+    private String mDestinateStorage;
 
     public FileCopyTask(FileOperationActivity act, String[] files) {
         super(act, files);
@@ -25,6 +26,7 @@ public class FileCopyTask extends FileOperationTask{
     public boolean run(String[] params) {
         int rst = 0;
         String directory = params[0];
+        mDestinateStorage = StorageManager.getInstance(FileManager.getAppContext()).getStorageForPath(directory);
         boolean result = FileAction.copy(mOperationFiles, directory, cancel);
         return result;
     }
@@ -46,9 +48,8 @@ public class FileCopyTask extends FileOperationTask{
         if (result) {
             toast_info_id = R.string.file_copy_finish;
         } else {
-            String storage = StorageManager.getInstance(context).getStorageForPath(mDirectory);
-            if (storage != null) {
-                long available_size = StorageUtil.getAvailaleSize(storage);
+            if (mDestinateStorage != null) {
+                long available_size = StorageUtil.getAvailaleSize(mDestinateStorage);
                 long total_size = 0;
                 for(int i=0; i < mOperationFiles.length;i++) {
                     total_size += new File(mOperationFiles[i]).length();

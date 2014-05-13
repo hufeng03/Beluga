@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import com.hufeng.filemanager.channel.DoovUtil;
 import com.hufeng.filemanager.provider.DataStructures.MatchColumns;
 import com.hufeng.filemanager.provider.DataStructures.PreferenceColumns;
 import com.hufeng.filemanager.services.UiServiceHelper;
@@ -42,8 +43,10 @@ public class FileManager extends Application/* implements GalleryApp*/{
 		super.onCreate();
 		
 		mContext = this;
-		
-		//for play music ...............................
+
+        DoovUtil.initDoovVistor(this.getApplicationContext(), "FileManager", "onCreate");
+
+        //for play music ...............................
 		mUtils = new MediaUtils(this);
 		mServiceInterface = new ServiceInterface(this);
 		//..............................................

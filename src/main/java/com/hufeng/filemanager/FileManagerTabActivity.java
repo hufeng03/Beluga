@@ -2,17 +2,23 @@ package com.hufeng.filemanager;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.hufeng.filemanager.apprate.AppRate;
@@ -39,6 +45,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
     private static final int FRAGMENT_INDEX_DEVICE = 1;
     private static final int FRAGMENT_INDEX_TOOLS = 2;
     private static final int FRAGMENT_INDEX_CLOUD = 2;
+    private static final int FRAGMENT_INDEX_SEARCH = 2;
 
 	private FileViewPager mViewPager;
 	private TabAdapter mTabAdapter;
@@ -85,6 +92,8 @@ public class FileManagerTabActivity extends FileOperationActivity{
         final ActionBar.Tab toolsTab = mActionBar.newTab().setText(
                 R.string.tools);
         final ActionBar.Tab kanboxTab = mActionBar.newTab().setText(R.string.kanbox);
+
+        final ActionBar.Tab searchTab = mActionBar.newTab().setText(R.string.search);
         
         mTabAdapter = new TabAdapter(this, mViewPager);
 
@@ -94,12 +103,17 @@ public class FileManagerTabActivity extends FileOperationActivity{
         		CategoryTabFragment.class, null);
         mTabAdapter.addTab(directoryTab,
         		DirectoryTabFragment.class, null);
-        if(Constants.SHOW_KANBOX_CATEGORY) {
-            mTabAdapter.addTab(kanboxTab,
-                    KanBoxTabFragment.class, null);
+        if ("doov".equals(Constants.PRODUCT_FLAVOR_NAME)) {
+//            mTabAdapter.addTab(searchTab,
+//                    SearchTabFragment.class, null);
         } else {
-            mTabAdapter.addTab(toolsTab,
-                    ToolsFragment.class, null);
+            if (Constants.SHOW_KANBOX_CATEGORY) {
+                mTabAdapter.addTab(kanboxTab,
+                        KanBoxTabFragment.class, null);
+            } else {
+                mTabAdapter.addTab(toolsTab,
+                        ToolsFragment.class, null);
+            }
         }
 
         mViewPager.setCurrentItem(0);
@@ -111,6 +125,10 @@ public class FileManagerTabActivity extends FileOperationActivity{
         if (Constants.APP_RATE) {
             mAppRate = new AppRate(this);
             mAppRate.init();
+        }
+
+        if ("doov".equals(Constants.PRODUCT_FLAVOR_NAME)) {
+            showChinaTipDialog();
         }
 
 	}
@@ -511,4 +529,70 @@ public class FileManagerTabActivity extends FileOperationActivity{
             }
         }
     }
+
+
+
+    private void showChinaTipDialog() {
+        mChinaTipYes = false;
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        mChinaTipKnown = sp.getBoolean("china_tip_known", false);
+        if (!mChinaTipKnown) {
+            showDialog(0);
+        } else {
+        }
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        if (id == 0) {
+            View contents = View.inflate(this, R.layout.china_tip_dialog,
+                    null);
+            final CheckBox box = (CheckBox)contents.findViewById(R.id.china_tip_dialog_check);
+            box.setChecked(false);
+//			box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//				@Override
+//				public void onCheckedChanged(CompoundButton buttonView,
+//						boolean isChecked) {
+//					mChinaTipKnown = isChecked;
+//				}
+//			});
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle(R.string.china_tip_dialog_title)
+                    .setView(contents)
+                    .setNegativeButton(R.string.china_tip_dialog_quit,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int whichButton) {
+                                    mChinaTipYes = false;
+                                    finish();
+                                }
+                            })
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int whichButton) {
+                            mChinaTipYes = true;
+                        }
+                    }).setCancelable(false);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        mChinaTipKnown = box.isChecked();
+                        if(mChinaTipKnown) {
+                            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
+                            sp.edit().putBoolean("china_tip_known", mChinaTipKnown).commit();
+                        }
+                    }
+                });
+            }
+            return builder.create();
+        } else {
+            return super.onCreateDialog(id);
+        }
+    }
+
+
+    static boolean mChinaTipYes = false;
+    static boolean mChinaTipKnown = false;
 }

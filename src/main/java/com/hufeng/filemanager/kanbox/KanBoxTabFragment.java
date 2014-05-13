@@ -205,18 +205,22 @@ public class KanBoxTabFragment extends FileTabFragment implements
             //if(ChannelUtil.isKanBoxChannel(FileManager.getAppContext())) {
             if (Constants.SHOW_KANBOX_CATEGORY) {
                 String path = KanBoxUtil.getKanboxApkPath(FileManager.getAppContext());
-                TextView text = (TextView)mAdLayout.findViewById(R.id.kanbox_ad_ok);
-                if (new File(path).exists()) {
-                    text.setText(R.string.install_kanbox_android_client);
-                } else if (FileDownloader.isDownloading(Constants.KANBOX_APK_URL)) {
-                    int progress = FileDownloader.getDownloadProgress(Constants.KANBOX_APK_URL);
-                    text.setText(getResources().getString(R.string.downloading_kanbox_android_client, progress));
+                if (TextUtils.isEmpty(path)) {
+                    TextView text = (TextView) mAdLayout.findViewById(R.id.kanbox_ad_ok);
+                    if (new File(path).exists()) {
+                        text.setText(R.string.install_kanbox_android_client);
+                    } else if (FileDownloader.isDownloading(Constants.KANBOX_APK_URL)) {
+                        int progress = FileDownloader.getDownloadProgress(Constants.KANBOX_APK_URL);
+                        text.setText(getResources().getString(R.string.downloading_kanbox_android_client, progress));
+                    } else {
+                        text.setText(R.string.download_kanbox_android_client);
+                    }
+                    mAdLayout.setVisibility(View.VISIBLE);
+                    mAdLayout.findViewById(R.id.kanbox_ad_close).setVisibility(View.GONE);
+                    text.setTag("ad");
                 } else {
-                    text.setText(R.string.download_kanbox_android_client);
+                    mAdLayout.setVisibility(View.GONE);
                 }
-                mAdLayout.setVisibility(View.VISIBLE);
-                mAdLayout.findViewById(R.id.kanbox_ad_close).setVisibility(View.GONE);
-                text.setTag("ad");
             } else {
                 mAdLayout.setVisibility(View.GONE);
             }

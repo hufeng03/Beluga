@@ -176,12 +176,59 @@ public abstract class FileOperationActivity extends BaseActivity implements
                         item3.setVisible(false);
                     }
                 }
+
+                boolean can_write = new File(path).canWrite();
+                if (can_write) {
+                    if (new File(path).isDirectory()) {
+                        if (new File(path, ".test_writable").mkdir()) {
+                            new File(path, ".test_writable").delete();
+                        } else {
+                            can_write = false;
+                        }
+                    } else {
+                        if (new File(path).renameTo(new File(path+"_tmp"))) {
+                            new File(path+"_tmp").renameTo(new File(path));
+                        } else {
+                            can_write = false;
+                        }
+                    }
+                }
+                if (!can_write) {
+                    MenuItem item_delete = menu.findItem(R.id.file_operation_delete);
+                    if (item_delete != null) {
+                        item_delete.setVisible(false);
+                    }
+                    MenuItem item_rename = menu.findItem(R.id.file_operation_rename);
+                    if (item_rename != null) {
+                        item_rename.setVisible(false);
+                    }
+                    MenuItem item_move = menu.findItem(R.id.file_operation_move);
+                    if (item_move != null) {
+                        item_move.setVisible(false);
+                    }
+                }
+
             } else {
                 menu.setGroupVisible(R.id.file_operation_single, false);
                 MenuItem item1 = menu.findItem(R.id.file_operation_selectall);
                 if (item1 != null) item1.setVisible(!getFileOperation().isFileAllSelected());
 //                MenuItem item2 = menu.findItem(R.id.file_operation_addcloud);
 //                if (item2 != null) item2.setVisible(false);
+
+                if (getFileOperation().isSelectedAllCanNotWrite()) {
+                    MenuItem item_delete = menu.findItem(R.id.file_operation_delete);
+                    if (item_delete != null) {
+                        item_delete.setVisible(false);
+                    }
+                    MenuItem item_rename = menu.findItem(R.id.file_operation_rename);
+                    if (item_rename != null) {
+                        item_rename.setVisible(false);
+                    }
+                    MenuItem item_move = menu.findItem(R.id.file_operation_move);
+                    if (item_move != null) {
+                        item_move.setVisible(false);
+                    }
+                }
             }
 
             if ( getFileOperation().isSelectedAllFavorite() ){
@@ -307,6 +354,7 @@ public abstract class FileOperationActivity extends BaseActivity implements
 
     public void refreshUI() {
         refreshActionMode();
+        supportInvalidateOptionsMenu();
     }
 
     private boolean refreshActionMode() {

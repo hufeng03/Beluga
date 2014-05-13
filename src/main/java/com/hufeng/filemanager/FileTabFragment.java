@@ -87,6 +87,11 @@ public abstract class FileTabFragment extends BaseFragment implements
             selectFile((ImageView) v, entry);
         } else {
             if (entry.isDirectory()) {
+                if(mCurrentChildFragment!=null) {
+                    if (!TextUtils.isEmpty(mCurrentChildFragment.mSearchString)) {
+                        mCurrentChildFragment.mSearchString = null;
+                    }
+                }
                 showFile(entry.path);
             } else {
                 if (FileUtils.FILE_TYPE_IMAGE == entry.type) {

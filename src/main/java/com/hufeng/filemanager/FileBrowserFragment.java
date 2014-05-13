@@ -246,10 +246,22 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
             inflater.inflate(R.menu.file_browser_fragment_paste_menu,menu);
             MenuItem item_paste = menu.findItem(R.id.menu_paste_confirm);
             if (item_paste != null)
-            if (mRootDir == null || !new File(mRootDir).canWrite()) {
+            if (mRootDir == null) {
                 item_paste.setEnabled(false);
             } else {
-                item_paste.setEnabled(true);
+                boolean can_write = new File(mRootDir).canWrite();
+                if (can_write) {
+                    if(new File(mRootDir, ".test_writable").mkdir()){
+                        new File(mRootDir, ".test_writable").delete();
+                    } else {
+                        can_write = false;
+                    }
+                }
+                if (!can_write) {
+                    item_paste.setEnabled(false);
+                } else {
+                    item_paste.setEnabled(true);
+                }
             }
         } else {
             super.onCreateOptionsMenu(menu, inflater);
@@ -259,7 +271,6 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
             MenuItem item_back = menu.findItem(R.id.menu_back);
             MenuItem item_create = menu.findItem(R.id.menu_create);
-
             MenuItem item_search = menu.findItem(R.id.menu_search);
 
             if(item_back != null) {
@@ -282,7 +293,19 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
                 if (mRootDir == null) {
                     item_create.setVisible(false);
                 } else {
-                    item_create.setVisible(true);
+                    boolean can_write =  new File(mRootDir).canWrite();
+                    if (can_write) {
+                        if(new File(mRootDir, ".test_writable").mkdir()){
+                            new File(mRootDir, ".test_writable").delete();
+                        } else {
+                            can_write = false;
+                        }
+                    }
+                    if (!can_write) {
+                        item_create.setVisible(false);
+                    } else {
+                        item_create.setVisible(true);
+                    }
                 }
             }
         }

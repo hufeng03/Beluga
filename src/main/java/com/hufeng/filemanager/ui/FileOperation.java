@@ -277,7 +277,7 @@ public class FileOperation extends BaseFragment {
     public void onOperationAddToCloudConfirm(Context context) {
         String root = null;
         FileOperationProvider provider = getFileOperationProvider();
-        if (provider != null ) {
+        if (provider != null && OPERATION_MODE.ADD_CLOUD == mOperationMode) {
             root = provider.getParentFile();
         }
         if(TextUtils.isEmpty(root)) {
@@ -536,6 +536,17 @@ public class FileOperation extends BaseFragment {
 
     public boolean isSelectedAllFavorite() {
         return FileAction.isAllFavorite(mOperationPaths.toArray(new String[mOperationPaths.size()]));
+    }
+
+    public boolean isSelectedAllCanNotWrite() {
+        boolean flag = true;
+        for (String file:mOperationPaths) {
+            if (new File(file).canWrite()) {
+                flag = false;
+                break;
+            }
+        }
+        return flag;
     }
 
     public boolean isSelectedAllNotFavorite() {

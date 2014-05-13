@@ -647,6 +647,8 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="menu_cloud_upload_cancel">Cancel</string>
 <string name="kanbox_developer_name">Beijing Yanguan Technology Co., Ltd.</string>
 <string name="kanbox_website">http://www.kanbox.com</string>
+<string name="doov_developer_name">Shenzhen Doov Technology Co., Ltd. </string>
+<string name="doov_website">http://www.doov.com.cn</string>
 <string name="category_selected_game">Selected Game</string>
 <string name="category_selected_app">Selected App</string>
 <string name="category_selected_doc">Ebooks</string>
@@ -682,8 +684,34 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="external_storage">SD Card</string>
 <string name="internal_storage">Phone Storage</string>
 <string name="file_copy_full">Copy failed, no enough space</string>
+<string name="file_move_full">Move failed, no enough space</string>
+<string name="file_download_full">Download failed, no enough space</string>
 <string name="no_app_to_share">No app found to share this file</string>
 <string name="no_app_to_view_pdf">No app found to view pdf file</string>
 <string name="dir_not_write_nor_read">No write or read right in this direcotry</string>
 <string name="dir_not_write">No write right in this directory</string>
+<string name="kanbox_error_no_network">Network is unavailable</string>
+<string name="file_name_label">Name:</string>
+<string name="file_content_label">Content:</string>
+<string name="file_location_label">Location:</string>
+<string name="file_size_label">Size:</string>
+<string name="file_timestamp_label">Modified:</string>
+<string name="file_permission_label">Permission:</string>
+<string name="file_owner_label">Owner:</string>
+<string name="file_group_label">Group:</string>
+
+    <string name="china_tip_dialog_title">System Alert</string>
+    <string name="china_tip_dialog_quit">Quit</string>
+    <string name="china_tip_dialog_known">I know</string>
+    <string name="china_tip_dialog_content">Welcome to use File Manager. This app needs to connect to Internet to provide best service. Data connection will charger your money accorrding to your data plan with your Internet Provider. Do you allow it?</string>
+
+<string-array name="search_category">
+    <item>@string/category_all</item>
+    <item>@string/category_picture</item>
+    <item>@string/category_music</item>
+    <item>@string/category_video</item>
+    <item>@string/category_apk</item>
+    <item>@string/category_zip</item>
+    <item>@string/category_document</item>
+</string-array>
 </resources>
