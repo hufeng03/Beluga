@@ -688,4 +688,7 @@ or nonexistent.</string>
     <string name="china_tip_dialog_quit">退出</string>
     <string name="china_tip_dialog_known">不再提示</string>
     <string name="china_tip_dialog_content">歡迎使用文件管理器軟件，本軟件使用完全免費，在使用過程中軟件需要連接網絡，以更好地為您提供完整的服務，其中聯網會產生數據流量費，請咨詢當地運營商。是否允許本軟件的以上操作？</string>
+    <string name="action_settings">设置</string>
+    <string name="navigation_drawer_open">打开导航面板</string>
+    <string name="navigation_drawer_close">关闭导航面板</string>
 </resources>

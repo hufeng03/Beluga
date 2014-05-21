@@ -9,4 +9,5 @@
     <dimen name="grid_fragment_vertical_spacing">5dp</dimen>
     <dimen name="grid_fragment_horizontal_spacing">5dp</dimen>
     <dimen name="grid_fragment_padding">5dp</dimen>
+    <dimen name="navigation_drawer_width">240dp</dimen>
 </resources>

@@ -20,6 +20,8 @@ import java.io.File;
 public class CategoryTabFragment extends FileTabFragment implements
         CategoryFragment.CategoryFragmentListener {
 
+    public static final String TAG = "CategoryTabFragment";
+
 	private static final String CATEGORY_TYPE = "category_type";
     private int mCategory = FileUtils.FILE_TYPE_ALL;
     private Fragment mCategoryFragment;
@@ -38,7 +40,7 @@ public class CategoryTabFragment extends FileTabFragment implements
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-        outState.putInt(CATEGORY_TYPE, mCategory);
+//        outState.putInt(CATEGORY_TYPE, mCategory);
 	}
 
 	@Override
@@ -52,11 +54,9 @@ public class CategoryTabFragment extends FileTabFragment implements
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-//        getChildFragmentManager().addOnBackStackChangedListener(this);
-//        showCategoryPanel();
-        if (savedInstanceState != null) {
-            mCategory = savedInstanceState.getInt(CATEGORY_TYPE, FileUtils.FILE_TYPE_ALL);
-        }
+        //if (savedInstanceState != null) {
+        mCategory = getArguments() !=null ? getArguments().getInt(CATEGORY_TYPE, FileUtils.FILE_TYPE_ALL) : FileUtils.FILE_TYPE_ALL;
+        //}
         showChildCategoryPanel(mCategory);
 
         mContentObserver = new ContentObserver(null) {
@@ -72,13 +72,26 @@ public class CategoryTabFragment extends FileTabFragment implements
 
         getActivity().getContentResolver().registerContentObserver(DataStructures.FavoriteColumns.CONTENT_URI, true, mContentObserver);
 	}
-	
+
+
+    public void setCategory(int category) {
+        showChildCategoryPanel(category);
+    }
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
 	}
-	
+
+
+    public static CategoryTabFragment newCategoryTabFragment(int type) {
+        CategoryTabFragment fragment = new CategoryTabFragment();
+        Bundle data = new Bundle();
+        data.putInt(CATEGORY_TYPE, type);
+        fragment.setArguments(data);
+        return fragment;
+    }
 	
 	@Override
 	public void onResume(){
@@ -166,9 +179,7 @@ public class CategoryTabFragment extends FileTabFragment implements
             fragment = FileGrouperFragment.newCategoryGrouperInstance(category);
             ft.replace(R.id.fragment_container, fragment, FileGrouperFragment.class.getSimpleName());
         } else {
-            if (fragment.isDetached()) {
-                ft.attach(fragment);
-            }
+            fragment.setCategory(category);
         }
 //        ft.addToBackStack(null);
         ft.commit();

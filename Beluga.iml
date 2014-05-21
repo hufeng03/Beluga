@@ -8,54 +8,54 @@
     </facet>
     <facet type="android" name="Android">
       <configuration>
-        <option name="SELECTED_BUILD_VARIANT" value="doovDebug" />
-        <option name="ASSEMBLE_TASK_NAME" value="assembleDoovDebug" />
-        <option name="COMPILE_JAVA_TASK_NAME" value="compileDoovDebugJava" />
-        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleDoovDebugTest" />
-        <option name="SOURCE_GEN_TASK_NAME" value="generateDoovDebugSources" />
+        <option name="SELECTED_BUILD_VARIANT" value="googleDebug" />
+        <option name="ASSEMBLE_TASK_NAME" value="assembleGoogleDebug" />
+        <option name="COMPILE_JAVA_TASK_NAME" value="compileGoogleDebugJava" />
+        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleGoogleDebugTest" />
+        <option name="SOURCE_GEN_TASK_NAME" value="generateGoogleDebugSources" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
-        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/src/doov/res" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/src/google/res" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
       </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/build/classes/doov/debug" />
+    <output url="file://$MODULE_DIR$/build/classes/google/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/build/source/r/doov/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/aidl/doov/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/buildConfig/doov/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/rs/doov/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/res/rs/doov/debug" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/doovDebug/res" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/doovDebug/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/doovDebug/aidl" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/doovDebug/assets" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/doovDebug/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/doovDebug/jni" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/doovDebug/rs" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/r/test/doov/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/aidl/test/doov/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/buildConfig/test/doov/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/rs/test/doov/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/res/rs/test/doov/debug" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/doov/res" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/doov/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/doov/aidl" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/doov/assets" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/doov/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/doov/jni" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/doov/rs" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDoov/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDoov/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDoov/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDoov/assets" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDoov/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDoov/jni" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDoov/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/r/google/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/aidl/google/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/buildConfig/google/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/rs/google/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/res/rs/google/debug" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleDebug/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleDebug/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleDebug/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleDebug/assets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleDebug/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleDebug/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleDebug/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/r/test/google/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/aidl/test/google/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/buildConfig/test/google/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/rs/test/google/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/res/rs/test/google/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/google/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/google/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/google/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/google/assets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/google/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/google/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/google/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogle/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogle/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogle/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogle/assets" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogle/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogle/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogle/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/aidl" isTestSource="false" />
@@ -97,10 +97,12 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="ant_zip" level="project" />
     <orderEntry type="library" exported="" name="juniversalchardet-1.0.3" level="project" />
+    <orderEntry type="library" exported="" name="GoogleAdMobAdsSdk-6.4.1" level="project" />
     <orderEntry type="library" exported="" name="butterknife-4.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.1.0" level="project" />
     <orderEntry type="library" exported="" name="nineoldandroid" level="project" />
     <orderEntry type="library" exported="" name="lastfm-java" level="project" />
+    <orderEntry type="library" exported="" name="umeng_sdk" level="project" />
   </component>
 </module>
 

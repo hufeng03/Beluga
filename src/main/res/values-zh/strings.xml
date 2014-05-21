@@ -688,4 +688,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
     <string name="china_tip_dialog_quit">退出</string>
     <string name="china_tip_dialog_known">不再提示</string>
     <string name="china_tip_dialog_content">欢迎使用文件管理器软件，本软件使用完全免费，在使用过程中软件需要连接网络，以更好地为您提供完整的服务，其中联网会产生数据流量费，请咨询当地运营商。是否允许本软件的以上操作？</string>
+<string name="action_settings">设置</string>
+    <string name="navigation_drawer_open">打开导航面板</string>
+    <string name="navigation_drawer_close">关闭导航面板</string>
 </resources>

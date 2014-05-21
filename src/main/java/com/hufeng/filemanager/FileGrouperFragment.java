@@ -26,7 +26,8 @@ import java.lang.ref.WeakReference;
 
 public class FileGrouperFragment extends FileGridFragment implements LoaderManager.LoaderCallbacks<Cursor>, FileGridAdapterListener, IUiImpl.UiCallback{
 
-    private static final String TAG = FileGrouperFragment.class.getSimpleName();
+//    public static final String TAG = FileGrouperFragment.class.getSimpleName();
+    public static final String TAG = "FileGrouperFragment";
 
     public static final String FILE_GROUPER_ARGUMENT_CATEGORY = "file_grouper_argument_category";
 //    public static final String FILE_GROUPER_ARGUMENT_SELECTION = "file_grouper_argument_selection";
@@ -85,6 +86,11 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
 //        fragment.getChildFragmentManager().beginTransaction().add(fragment, "FileOperation").commit();
 //        fragment.setFileOperation(fileOperation);
         return fragment;
+    }
+
+    public void setCategory(int category) {
+        mCategory = category;
+        reloadFiles();
     }
 
 

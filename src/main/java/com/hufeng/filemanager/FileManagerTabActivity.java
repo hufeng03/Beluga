@@ -59,8 +59,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
     private boolean mSelection = false;
 
     private Handler mHandler = new Handler();
-	
-//	private boolean mFirst = true;
+
     AppRate mAppRate = null;
 	
 	@Override
@@ -83,8 +82,6 @@ public class FileManagerTabActivity extends FileOperationActivity{
         mActionBar.setDisplayShowTitleEnabled(false);
         mActionBar.setDisplayShowHomeEnabled(false);
 
-//        final Tab selectedTab = getSupportActionBar().newTab().setText(
-//                R.string.selected);
 		final ActionBar.Tab categoryTab = mActionBar.newTab().setText(
                 R.string.category);
         final ActionBar.Tab directoryTab = mActionBar.newTab().setText(
@@ -97,8 +94,6 @@ public class FileManagerTabActivity extends FileOperationActivity{
         
         mTabAdapter = new TabAdapter(this, mViewPager);
 
-//        mTabAdapter.addTab(selectedTab,
-//                SelectedFragment.class, null);
         mTabAdapter.addTab(categoryTab,
         		CategoryTabFragment.class, null);
         mTabAdapter.addTab(directoryTab,
@@ -136,42 +131,12 @@ public class FileManagerTabActivity extends FileOperationActivity{
     @Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-//		outState.putInt("CATEGORY", mCategory);
-//		outState.putBoolean(mFirst, true);
-//		outState.putBoolean("FIRST", false);
 	}
 	
 	@Override
 	public void onNewIntent(Intent intent){
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		handleIntent(intent);
-	}
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        if(mViewPager.getCurrentItem()==FRAGMENT_INDEX_CATEGORY)
-//            mFileOperation.setFileOperationProvider((CategoryTabFragment)getCurrentFragment());
-//        else if(mViewPager.getCurrentItem()==FRAGMENT_INDEX_DEVICE)
-//            mFileOperation.setFileOperationProvider((DirectoryTabFragment)getCurrentFragment());
-//        else
-//            mFileOperation.setFileOperationProvider(null);
-        //mFileOperation.setSelection(mSelection);
-//        mFileOperation.setOperationMode(FileOperation.OPERATION_MODE.SELECT);
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        mFileOperation.setListener(null);
-    }
-
-    @Override
-	public void onDestroy() {
-
-        super.onDestroy();
-
 	}
 
 
@@ -281,19 +246,6 @@ public class FileManagerTabActivity extends FileOperationActivity{
                 args = _args;
             }
         }
-        
-//    	public Fragment findOrCreateFragment(Context mContext, String name, Bundle args) {  
-//    		FragmentManager fm =  ((FileManagerTabActivity) mContext).getSupportFragmentManager(); 
-//            Fragment fragment = fm.findFragmentByTag(name);  
-//            if (fragment == null) {  
-//            	FragmentTransaction ft = fm.beginTransaction();
-//                fragment = Fragment.instantiate(mContext, name, args);  
-//                ft.add(fragment, name);
-//                ft.commit();
-//            }  
-////    		Fragment fragment = Fragment.instantiate(mContext, name, args);
-//            return fragment;  
-//        } 
 
         public TabAdapter(FileManagerTabActivity activity, FileViewPager pager) {
             super(activity.getSupportFragmentManager());
@@ -430,7 +382,6 @@ public class FileManagerTabActivity extends FileOperationActivity{
     public void gotoCloud() {
         getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         mViewPager.setCurrentItem(FRAGMENT_INDEX_CLOUD);
-//        mViewPager.setPagingEnabled(false);
     }
 
     public Fragment getCurrentFragment() {
@@ -448,12 +399,6 @@ public class FileManagerTabActivity extends FileOperationActivity{
             return super.getFileOperation();
         }
     }
-//
-//    @Override
-//    public void dismissCurrentFragment() {
-//        onBackPressed();
-//    }
-
 
     @Override
     public String getParentFile() {
@@ -463,14 +408,6 @@ public class FileManagerTabActivity extends FileOperationActivity{
         } else {
             return null;
         }
-//        int id = mViewPager.getCurrentItem();
-//        if (id == FRAGMENT_INDEX_CATEGORY) {
-//            return ((CategoryTabFragment)mTabAdapter.getFragment(FRAGMENT_INDEX_CATEGORY)).getParentFile();
-//        } else if (id == FRAGMENT_INDEX_DEVICE) {
-//            return ((DirectoryTabFragment)mTabAdapter.getFragment(FRAGMENT_INDEX_DEVICE)).getParentFile();
-//        } else {
-//            return null;
-//        }
     }
 
     @Override
@@ -549,13 +486,6 @@ public class FileManagerTabActivity extends FileOperationActivity{
                     null);
             final CheckBox box = (CheckBox)contents.findViewById(R.id.china_tip_dialog_check);
             box.setChecked(false);
-//			box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//				@Override
-//				public void onCheckedChanged(CompoundButton buttonView,
-//						boolean isChecked) {
-//					mChinaTipKnown = isChecked;
-//				}
-//			});
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setTitle(R.string.china_tip_dialog_title)
                     .setView(contents)
