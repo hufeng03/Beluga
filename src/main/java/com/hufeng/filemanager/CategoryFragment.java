@@ -184,6 +184,11 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
             getLoaderManager().initLoader(LOADER_ID_CATEGORY, null, this);
         }
 
+        if(Constants.PRODUCT_FLAVOR_NAME.equals("chenxiang")) {
+            mInformationLayout.setVisibility(View.INVISIBLE);
+            view.findViewById(R.id.information_label).setVisibility(View.INVISIBLE);
+        }
+
 	}
 
     @Override
