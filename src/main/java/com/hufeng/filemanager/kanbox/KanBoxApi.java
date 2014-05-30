@@ -44,9 +44,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class KanBoxApi implements RequestListener{
     private static final boolean DEBUG = BuildConfig.DEBUG;
 
-    public static HashMap<String, Integer> mDownloadingProgress = new HashMap<String, Integer>();
+    public static ConcurrentHashMap<String, Integer> mDownloadingProgress = new ConcurrentHashMap<String, Integer>();
 
-    public static HashMap<String, Integer> mUploadingProgress = new HashMap<String, Integer>();
+    public static ConcurrentHashMap<String, Integer> mUploadingProgress = new ConcurrentHashMap<String, Integer>();
 
     public static ConcurrentHashMap<String, KanboxAsyncTask> mDownloadingTasks = new ConcurrentHashMap<String, KanboxAsyncTask>();
 
