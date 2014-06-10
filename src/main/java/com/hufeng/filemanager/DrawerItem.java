@@ -6,5 +6,5 @@ package com.hufeng.filemanager;
 public abstract class DrawerItem {
     abstract void render(NavigationDrawerItem layout);
 
-    abstract void work(DrawerActivity activity);
+    abstract void work(FileDrawerActivity activity);
 }

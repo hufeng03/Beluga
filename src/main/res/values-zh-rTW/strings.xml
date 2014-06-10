@@ -5,6 +5,7 @@
     <string name="category">分類</string>
     <string name="directory">手機</string>
     <string name="directory2">文件夾</string>
+    <string name="cloud">云存储</string>
     <string name="kanbox">酷盤</string>
     <string name="added_favorite">收藏</string>
     <string name="cancel">取消</string>

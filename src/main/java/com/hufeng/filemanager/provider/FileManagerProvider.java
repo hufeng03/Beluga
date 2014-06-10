@@ -81,8 +81,7 @@ public class FileManagerProvider extends ContentProvider{
     private static final int SELECTEDS = 22;
     private static final int CLOUD_ID = 23;
     private static final int CLOUDS = 24;
-	
-	
+
 	private static final UriMatcher URI_MATCHER;
 	
 	static{

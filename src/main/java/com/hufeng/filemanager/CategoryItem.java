@@ -56,7 +56,7 @@ public class CategoryItem extends DrawerItem {
     }
 
     @Override
-    void work(DrawerActivity activity) {
-        activity.showCategoryFragment(mCategoryType);
+    void work(FileDrawerActivity activity) {
+        activity.showCategoryFragment(mCategoryType, mCategoryName);
     }
 }

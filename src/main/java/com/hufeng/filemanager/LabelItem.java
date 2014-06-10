@@ -18,7 +18,7 @@ public class LabelItem extends DrawerItem{
     }
 
     @Override
-    void work(DrawerActivity activity) {
+    void work(FileDrawerActivity activity) {
 
     }
 }

@@ -124,33 +124,6 @@ public class CategoryTabFragment extends FileTabFragment implements
 		return false;
 	}
 
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        if (mCategoryFragment != null) {
-//            mCategoryFragment.onCreateOptionsMenu(menu, inflater);
-//        } else{
-//            super.onCreateOptionsMenu(menu, inflater);
-//        }
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (mCategoryFragment != null) {
-//            return mCategoryFragment.onOptionsItemSelected(item);
-//        } else {
-//            return super.onOptionsItemSelected(item);
-//        }
-//    }
-//
-//    @Override
-//    public void onDestroyOptionsMenu() {
-//        if (mCategoryFragment != null) {
-//            mCategoryFragment.onDestroyOptionsMenu();
-//        } else {
-//            super.onDestroyOptionsMenu();
-//        }
-//    }
-
     public void showCategoryPanel() {
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();

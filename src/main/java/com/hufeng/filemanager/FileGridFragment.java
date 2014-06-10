@@ -87,6 +87,11 @@ public abstract class FileGridFragment extends GridFragment{
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         mMenuCreated = false;
+        if (getActivity() != null && getActivity() instanceof FileDrawerActivity) {
+            if ( ((FileDrawerActivity)getActivity()).isDrawerOpen() ) {
+                return;
+            }
+        }
         if (mMenuId == 0) {
             Log.i(TAG, "onCreateOptionsMenu with menuId = "+mMenuId);
             return;

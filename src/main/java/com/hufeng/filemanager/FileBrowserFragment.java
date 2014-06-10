@@ -140,6 +140,12 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         if (arguments != null) {
             mRootDir = arguments.getString(ARGUMENT_INIT_ROOT_DIR);
         }
+
+        if (getActivity() instanceof FileDrawerActivity) {
+            mMenuId = R.menu.file_browser_fragment_menu_for_drawer;
+        } else {
+            mMenuId = R.menu.file_browser_fragment_menu;
+        }
     }
 
 	@Override

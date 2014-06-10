@@ -42,7 +42,7 @@ public class KanBoxTabFragment extends FileTabFragment implements
         KanBoxIntroFragment.KanBoxIntroFragmentListener,
         View.OnClickListener, FileDownloader.FileDownloaderListener{
 
-    private static final String TAG = KanBoxTabFragment.class.getSimpleName();
+    public static final String TAG = "KanBoxTabFragment";
 
 //    private KanBoxBrowserFragment mBrowserFragment = null;
 
@@ -57,6 +57,10 @@ public class KanBoxTabFragment extends FileTabFragment implements
         mUploadFragment = null;
         mFileGrouperFragment = null;
         mCurrentChildFragment = null;
+    }
+
+    public static KanBoxTabFragment newKanBoxTabFragment() {
+        return new KanBoxTabFragment();
     }
 
     @Override

@@ -43,7 +43,7 @@ public class DirectoryItem extends DrawerItem{
     }
 
     @Override
-    void work(DrawerActivity activity) {
-        activity.showDirectoryFragment(mPath);
+    void work(FileDrawerActivity activity) {
+        activity.showDirectoryFragment(mPath, mName);
     }
 }

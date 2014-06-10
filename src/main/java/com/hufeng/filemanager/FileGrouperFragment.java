@@ -90,6 +90,7 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
 
     public void setCategory(int category) {
         mCategory = category;
+        refreshEmptyText();
         reloadFiles();
     }
 
@@ -132,7 +133,11 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
         if(getArguments().getBoolean(FILE_GROUPER_ARGUMENT_SAFE) || getArguments().getBoolean(FILE_GROUPER_ARGUMENT_CLOUD)) {
             mMenuId = R.menu.file_grouper_fragment_search_menu;
         } else {
-            mMenuId = R.menu.file_grouper_fragment_menu;
+            if (getActivity() instanceof FileDrawerActivity) {
+                mMenuId = R.menu.file_grouper_fragment_menu_for_drawer;
+            } else {
+                mMenuId = R.menu.file_grouper_fragment_menu;
+            }
         }
 	}
 
@@ -154,32 +159,7 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-        String empty_text;
-        switch(mCategory){
-            case FileUtils.FILE_TYPE_APK:
-                empty_text = getResources().getString(R.string.empty_apk);
-                break;
-            case FileUtils.FILE_TYPE_AUDIO:
-                empty_text = getResources().getString(R.string.empty_audio);
-                break;
-            case FileUtils.FILE_TYPE_IMAGE:
-                empty_text = getResources().getString(R.string.empty_image);
-                break;
-            case FileUtils.FILE_TYPE_VIDEO:
-                empty_text = getResources().getString(R.string.empty_video);
-                break;
-            case FileUtils.FILE_TYPE_DOCUMENT:
-                empty_text = getResources().getString(R.string.empty_document);
-                break;
-            case FileUtils.FILE_TYPE_ZIP:
-                empty_text = getResources().getString(R.string.empty_zip);
-                break;
-            default:
-                empty_text = "";
-                break;
-        }
-
-        setEmptyText(empty_text);
+        refreshEmptyText();
 
         mAdapter = new FileCursorAdapter(getActivity(), null, getFileOperation());
         mAdapter.setFileGridAdapterListener(this);
@@ -224,6 +204,35 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
             }
         }
 //        unregisterForContextMenu(getGridView());
+    }
+
+    private void refreshEmptyText() {
+        String empty_text;
+        switch(mCategory){
+            case FileUtils.FILE_TYPE_APK:
+                empty_text = getResources().getString(R.string.empty_apk);
+                break;
+            case FileUtils.FILE_TYPE_AUDIO:
+                empty_text = getResources().getString(R.string.empty_audio);
+                break;
+            case FileUtils.FILE_TYPE_IMAGE:
+                empty_text = getResources().getString(R.string.empty_image);
+                break;
+            case FileUtils.FILE_TYPE_VIDEO:
+                empty_text = getResources().getString(R.string.empty_video);
+                break;
+            case FileUtils.FILE_TYPE_DOCUMENT:
+                empty_text = getResources().getString(R.string.empty_document);
+                break;
+            case FileUtils.FILE_TYPE_ZIP:
+                empty_text = getResources().getString(R.string.empty_zip);
+                break;
+            default:
+                empty_text = "";
+                break;
+        }
+
+        setEmptyText(empty_text);
     }
 
     @Override

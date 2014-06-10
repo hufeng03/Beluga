@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_search"
+        android:icon="@drawable/ic_menu_search_holo_light"
+        android:title="@string/menu_search"
+        android:showAsAction="collapseActionView|always"
+        android:actionViewClass="android.widget.SearchView" />
+    <item android:id="@+id/menu_display"
+          android:icon="@drawable/ic_menu_display_holo_light"
+          android:title="@string/menu_display"
+          android:showAsAction="always" />
+    <item android:id="@+id/menu_sort"
+          android:icon="@drawable/ic_menu_sort_asc_holo_light"
+          android:title="@string/menu_sort"
+          android:showAsAction="never">
+        <menu>
+            <item android:id="@+id/menu_sort_by_date_asc"
+                  android:icon="@drawable/ic_menu_sort_asc_holo_light"
+                  android:title="@string/menu_sort_date_asc"
+                    />
+            <item android:id="@+id/menu_sort_by_date_desc"
+                  android:icon="@drawable/ic_menu_sort_desc_holo_light"
+                  android:title="@string/menu_sort_date_desc"
+                    />
+            <item android:id="@+id/menu_sort_by_name_asc"
+                  android:icon="@drawable/ic_menu_sort_asc_holo_light"
+                  android:title="@string/menu_sort_name_asc"
+                    />
+            <item android:id="@+id/menu_sort_by_name_desc"
+                  android:icon="@drawable/ic_menu_sort_desc_holo_light"
+                  android:title="@string/menu_sort_name_desc"
+                    />
+            <item android:id="@+id/menu_sort_by_size_asc"
+                  android:icon="@drawable/ic_menu_sort_asc_holo_light"
+                  android:title="@string/menu_sort_size_asc"
+                    />
+            <item android:id="@+id/menu_sort_by_size_desc"
+                  android:icon="@drawable/ic_menu_sort_desc_holo_light"
+                  android:title="@string/menu_sort_size_desc"
+                    />
+            <item android:id="@+id/menu_sort_by_extension_asc"
+                  android:icon="@drawable/ic_menu_sort_asc_holo_light"
+                  android:title="@string/menu_sort_extension_asc"
+                    />
+            <item android:id="@+id/menu_sort_by_extension_desc"
+                  android:icon="@drawable/ic_menu_sort_desc_holo_light"
+                  android:title="@string/menu_sort_extension_desc"
+                    />
+        </menu>
+    </item>
+
+</menu>

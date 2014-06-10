@@ -114,6 +114,9 @@ public class NavigationDrawerFragment extends BaseFragment {
         adapter.add(new LabelItem(getString(R.string.directory)));
         adapter.addAll(DirectoryItem.getAllDirectoryItems(getActivity()));
 
+        adapter.add(new LabelItem(getString(R.string.cloud)));
+        adapter.addAll(CloudItem.getAllCloudItems(getActivity()));
+
         adapter.add(new LabelItem(getString(R.string.tools)));
         adapter.addAll(ToolItem.getAllToolItems(getActivity()));
 
@@ -164,7 +167,6 @@ public class NavigationDrawerFragment extends BaseFragment {
                 }
 
                 ((FragmentActivity)getActivity()).supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
-//                getActivity().invalidateOptionsMenu();
             }
 
             @Override
@@ -184,7 +186,6 @@ public class NavigationDrawerFragment extends BaseFragment {
                 }
 
                 ((FragmentActivity)getActivity()).supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
-//                getActivity().invalidateOptionsMenu();
             }
         };
 
@@ -252,7 +253,7 @@ public class NavigationDrawerFragment extends BaseFragment {
         // If the drawer is open, show the global app actions in the action bar. See also
         // showGlobalContextActionBar, which controls the top-left area of the action bar.
         if (mDrawerLayout != null && isDrawerOpen()) {
-            inflater.inflate(R.menu.drawer_global, menu);
+            inflater.inflate(R.menu.menu_global, menu);
             showGlobalContextActionBar();
         }
         super.onCreateOptionsMenu(menu, inflater);
