@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.+'
+        classpath 'com.android.tools.build:gradle:0.11.+'
     }
 }
 apply plugin: 'android'
@@ -111,6 +111,11 @@ android {
             signingConfig kanboxSigning
     	}
         bodao {
+            packageName = 'com.kanbox.filemanager'
+            ukey = '52cf304456240bdbb705da99'
+            signingConfig kanboxSigning
+        }
+        goinee {
             packageName = 'com.kanbox.filemanager'
             ukey = '52cf304456240bdbb705da99'
             signingConfig kanboxSigning
