@@ -2,7 +2,6 @@ package com.hufeng.filemanager.resource;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import com.hufeng.filemanager.GridFragment;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.IconLoader;
 import com.hufeng.filemanager.ui.FileViewHolder;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.util.List;
 
@@ -114,7 +114,7 @@ public class ResourceListAdapter extends ArrayAdapter<ResourceEntry> implements 
             if(FileDownloader.isDownloading(entry.download_url)) {
                 holder.progress.setVisibility(View.VISIBLE);
                 int progress = FileDownloader.getDownloadProgress(entry.download_url);
-                Log.i(LOG_TAG, "apk download progress is "+progress);
+                LogUtil.i(LOG_TAG, "apk download progress is " + progress);
                 if (progress == 0) {
                     holder.progress.setIndeterminate(true);
                 } else {
@@ -132,7 +132,11 @@ public class ResourceListAdapter extends ArrayAdapter<ResourceEntry> implements 
             if(entry.isInstalled()) {
                 holder.status.setText(R.string.btn_txt_open);
             } else {
-                holder.status.setText(R.string.btn_txt_install);
+                if (entry.resource_category == 2) {
+                    holder.status.setText(R.string.btn_txt_read);
+                } else {
+                    holder.status.setText(R.string.btn_txt_install);
+                }
             }
             holder.progress.setVisibility(View.GONE);
             holder.info.setVisibility(View.VISIBLE);

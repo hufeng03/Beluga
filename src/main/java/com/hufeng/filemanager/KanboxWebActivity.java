@@ -12,6 +12,6 @@ public class KanboxWebActivity extends BaseActivity {
         super.onCreate(arg0);
         WebView web = new WebView(this);
         setContentView(web);
-        web.loadUrl("http://hufeng.info/kanbox/");
+        web.loadUrl("http://belugamobile.com/kanbox/");
     }
 }

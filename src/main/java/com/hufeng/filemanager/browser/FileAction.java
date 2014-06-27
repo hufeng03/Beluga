@@ -20,7 +20,6 @@ import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.hufeng.filemanager.FileManager;
@@ -229,7 +228,7 @@ public class FileAction {
     }
 
     private static boolean add_to_safe(String path, Boolean cancel) {
-        Log.i(LOG_TAG, "add_to_safe " + (path == null ? "null" : path));
+        LogUtil.i(LOG_TAG, "add_to_safe " + (path == null ? "null" : path));
         File safeFile = new File(path);
         if(safeFile.isDirectory())
             return addToSafeBox_Dir(safeFile, cancel);
@@ -756,7 +755,7 @@ public class FileAction {
                 String filter = FileManager.getPreference(SettingsScanActivity.IMAGE_FILTER_SMALL, "1");
                 if (filter.equals("1")) {
                     if (LogUtil.IDBG) {
-                        Log.i(LOG_TAG, "image filter small "+size+" of "+file.getAbsolutePath());
+                        LogUtil.i(LOG_TAG, "image filter small "+size+" of "+file.getAbsolutePath());
                     }
                     return;
                 }
@@ -767,7 +766,7 @@ public class FileAction {
                 String filter = FileManager.getPreference(SettingsScanActivity.AUDIO_FILTER_SMALL, "1");
                 if (filter.equals("1")) {
                     if (LogUtil.IDBG) {
-                        Log.i(LOG_TAG, "audio filter small "+size+" of "+file.getAbsolutePath());
+                        LogUtil.i(LOG_TAG, "audio filter small "+size+" of "+file.getAbsolutePath());
                     }
                     return;
                 }
@@ -853,7 +852,7 @@ public class FileAction {
 
         int category = FileUtils.getFileType(oldFile);
 //        FileEntry old_entry = new FileEntry(oldFile);
-//        Log.i(LOG_TAG, "save new entry: "+new_entry);
+//        LogUtil.i(LOG_TAG, "save new entry: "+new_entry);
         ContentValues cv = new ContentValues();
         Uri uri = null;
         switch(category)
@@ -947,6 +946,16 @@ public class FileAction {
 //        };
 
         ContentValues cvs = new ContentValues();
+        String name = null;
+        if (!TextUtils.isEmpty(new_path)) {
+            int i = new_path.lastIndexOf("/");
+            if (i>0) {
+                name = new_path.substring(i+1);
+            }
+        }
+        if (!TextUtils.isEmpty(name)) {
+            cvs.put(MediaStore.Files.FileColumns.DISPLAY_NAME, name);
+        }
         cvs.put(MediaStore.Files.FileColumns.DATA, new_path);
         
         int count = 0;

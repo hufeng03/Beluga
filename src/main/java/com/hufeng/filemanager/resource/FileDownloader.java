@@ -4,10 +4,10 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 
 import com.hufeng.filemanager.filedownload.impl.SmartDownloadProgressListener;
 import com.hufeng.filemanager.filedownload.impl.SmartFileDownloader;
+import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.utils.ZipUtil;
 
 import java.io.File;
@@ -136,7 +136,7 @@ public class FileDownloader extends AsyncTask<String, Integer, String>{
     @Override
     protected String doInBackground(String... params) {
 //        android.os.Debug.waitForDebugger();
-        Log.i(LOG_TAG, "do in background download"+params[0]+", "+params[1]+", "+params[2]);
+        LogUtil.i(LOG_TAG, "do in background download" + params[0] + ", " + params[1] + ", " + params[2]);
         mUrl = params[0];
         try{
             boolean append = params[1].endsWith(DOWNLOAING_FILENAME_SURFFIX);
@@ -162,7 +162,7 @@ public class FileDownloader extends AsyncTask<String, Integer, String>{
             mDownloader.download(new SmartDownloadProgressListener() {
                     @Override
                     public void onDownloadSize(int size) {
-                        Log.i(LOG_TAG, "apk download size is "+size+"/"+file_size);
+                        LogUtil.i(LOG_TAG, "apk download size is "+size+"/"+file_size);
                         if(size>=0) {
                             publishProgress(size * 100 / file_size);
                         }

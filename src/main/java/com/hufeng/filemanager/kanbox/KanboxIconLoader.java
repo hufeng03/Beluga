@@ -15,7 +15,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -24,6 +23,7 @@ import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.browser.IconLoaderHelper;
 import com.hufeng.filemanager.provider.DataStructures;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
@@ -415,7 +415,7 @@ public class KanboxIconLoader implements Handler.Callback{
 
         public void loadIconsFromDatabase() {
             obtainUrlsToLoad(mUrls);
-            Log.i(LOG_TAG, "urls to load from database"+mUrls);
+            LogUtil.i(LOG_TAG, "urls to load from database" + mUrls);
             int count = mUrls.size();
             mStringBuilder.setLength(0);
             mStringBuilder.append(DataStructures.CloudBoxColumns.FILE_PATH_FIELD + " IN(");
@@ -440,12 +440,12 @@ public class KanboxIconLoader implements Handler.Callback{
                         String path = cursor.getString(0);
                         byte[] bytes = cursor.getBlob(1);
                         if (bytes!=null  && bytes.length>10 && cacheBitmap(path, bytes)) {
-                            Log.i(LOG_TAG, "load from db success "+path+" "+bytes.length+" ");
+                            LogUtil.i(LOG_TAG, "load from db success "+path+" "+bytes.length+" ");
                             mUrls.remove(path);
                         } else {
                             // load from server in a sync Thread, so must delete
                             // load request.will reload after save in database;
-                            Log.i(LOG_TAG, "load from db failed, try to load from server "+path);
+                            LogUtil.i(LOG_TAG, "load from db failed, try to load from server "+path);
                             if (!TextUtils.isEmpty(path)) {
                                 boolean flag = hasServerRequest(path);
                                 removeServerRequest(path);
@@ -538,7 +538,7 @@ public class KanboxIconLoader implements Handler.Callback{
 
 
     public void iconDownloaded(String url, byte[] data){
-        Log.i(LOG_TAG, "iconDownloaded for " + url + (data == null ? "null" : data));
+        LogUtil.i(LOG_TAG, "iconDownloaded for " + url + (data == null ? "null" : data));
         if (data == null || TextUtils.isEmpty(url)) {
             return;
         }

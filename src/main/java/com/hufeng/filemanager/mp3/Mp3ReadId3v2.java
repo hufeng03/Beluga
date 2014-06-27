@@ -4,6 +4,7 @@ import org.mozilla.universalchardet.UniversalDetector;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 /**
  * <b>MP3的ID3V2信息解析类</b>
@@ -60,6 +61,7 @@ public class Mp3ReadId3v2 {
 			}
 			encoding = null;
 //            encoding = "GB18030";//"UTF-8","GBK";
+//            encoding = "GBK";
             byte[] tit2_buf = null, tpe1_buf = null, talb_buf = null;
             int tit2_len = 0, tpe1_len = 0, talb_len = 0;
 			if (ByteUtil.indexOf("TIT2".getBytes(), buff, 1, 512) != -1) {
@@ -88,7 +90,16 @@ public class Mp3ReadId3v2 {
                 detector.handleData(data3, 0, data3.length);
                 detector.dataEnd();
                 encoding = detector.getDetectedCharset();
+//                Log.i("Mp3ReadId3v2", "encoding is " + ((encoding == null)?"null":encoding));
                 if (encoding == null) {
+                    encoding = "GBK";
+                }
+            }
+
+            String locale = Locale.getDefault().getLanguage();
+            if (locale.equals(Locale.CHINESE.getLanguage()) /*&& Locale.getDefault().getCountry().equals(Locale.CHINA)*/) {
+                if (!encoding.startsWith("UTF") && !encoding.startsWith("GB")) {
+//                    Log.i("Mp3ReadId3v2", "change encoding from " + encoding +" to GBK");
                     encoding = "GBK";
                 }
             }

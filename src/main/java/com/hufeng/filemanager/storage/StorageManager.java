@@ -1,13 +1,16 @@
 package com.hufeng.filemanager.storage;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hufeng.filemanager.BuildConfig;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -23,7 +26,7 @@ import java.util.List;
  * @author feng
  *
  */
-public class StorageManager {
+public class StorageManager extends BroadcastReceiver{
 
     private static final String LOG_TAG = StorageManager.class.getSimpleName();
 	
@@ -31,8 +34,10 @@ public class StorageManager {
 	
 	private static StorageManager instance;
 
-    private StorageManager() {
+    private Context mContext;
 
+    private StorageManager(Context context) {
+        mContext = context;
     }
 	
 	/**
@@ -42,15 +47,26 @@ public class StorageManager {
 	 */
 	public static StorageManager getInstance(Context context) {
 		if ( instance == null ) {
-			instance = new StorageManager();
-			instance.refreshStorageVolume(context);
+			StorageManager new_instance = new StorageManager(context.getApplicationContext());
+            new_instance.registerReceiver();
+            new_instance.refreshStorageVolume(context);
             if (BuildConfig.DEBUG) {
                 EnvironmentUtil.test();
                 EnvironmentUtil.test2(context);
             }
+            instance = new_instance;
 		}
 		return instance;
 	}
+
+    private void registerReceiver() {
+        IntentFilter intent = new IntentFilter(Intent.ACTION_LOCALE_CHANGED);
+        mContext.registerReceiver(this, intent);
+    }
+
+    private void unregisterReceiver() {
+        mContext.unregisterReceiver(this);
+    }
 	
 	public boolean isStorage(String path){
 		boolean result = false;
@@ -304,6 +320,9 @@ public class StorageManager {
 	 * 
 	 */
 	public static void clear() {
+        if (instance != null) {
+            instance.unregisterReceiver();
+        }
 		instance = null;
 	}	
 	
@@ -434,13 +453,19 @@ public class StorageManager {
             });
             int idx = 0;
             for(StorageUnit storage:mStorageUnits) {
-                Log.i(LOG_TAG, "storage unit "+idx+":"+storage.toString());
+                LogUtil.i(LOG_TAG, "storage unit " + idx + ":" + storage.toString());
                 idx ++;
             }
         } else {
-            Log.i(LOG_TAG, "opps, no storage unit");
+            LogUtil.i(LOG_TAG, "opps, no storage unit");
         }
 
 		return;
 	}
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        clear();
+        getInstance(context);
+    }
 }

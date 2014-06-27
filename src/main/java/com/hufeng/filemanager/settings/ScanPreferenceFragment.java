@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.services.UiServiceHelper;
 
@@ -45,6 +46,10 @@ public class ScanPreferenceFragment extends PreferenceFragment implements Shared
       pref_scan_hidden = (CheckBoxPreference)findPreference(PreferenceKeys.SCAN_HIDDEN);
       pref_scan_game = (CheckBoxPreference)findPreference(PreferenceKeys.SCAN_GAME);
 
+      if (Constants.PRODUCT_FLAVOR_NAME.equals("fanzhuo")) {
+          getPreferenceScreen().removePreference(pref_scan_hidden);
+          getPreferenceScreen().removePreference(pref_scan_game);
+      }
 
 	}
 

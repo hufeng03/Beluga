@@ -3,7 +3,6 @@ package com.hufeng.filemanager;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 
@@ -12,6 +11,7 @@ import com.hufeng.filemanager.app.AppListAdapter;
 import com.hufeng.filemanager.app.AppListLoader;
 import com.hufeng.filemanager.browser.AppAction;
 import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.util.List;
 
@@ -95,7 +95,7 @@ public class AppManagerFragment extends FileGridFragment implements LoaderManage
 
     @Override
     public Loader<List<AppEntry>> onCreateLoader(int arg0, Bundle arg1) {
-        Log.i(LOG_TAG, "FileBrowserFragment onCreateLoader " + arg0);
+        LogUtil.i(LOG_TAG, "FileBrowserFragment onCreateLoader " + arg0);
         if(arg0 ==  LOADER_ID_APPS) {
             return new AppListLoader(getActivity(), mSearchString);
         } else {
@@ -106,7 +106,7 @@ public class AppManagerFragment extends FileGridFragment implements LoaderManage
     @Override
     public void onLoadFinished(Loader<List<AppEntry>> arg0,
                                List<AppEntry> arg1) {
-        Log.i(LOG_TAG, "onLoadFinished with length =  " + (arg1==null?0:arg1.size()));
+        LogUtil.i(LOG_TAG, "onLoadFinished with length =  " + (arg1 == null ? 0 : arg1.size()));
         mAdapter.setData(arg1);
         setGridShown(true);
     }

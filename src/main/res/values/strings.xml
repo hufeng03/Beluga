@@ -359,6 +359,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="add_to_safe_confirm_dialog_text">move \n<xliff:g id="count">%2$d</xliff:g>(<xliff:g id="name">%1$s</xliff:g> &#8230;)\nfiles into safebox? (Please do not delete /mnt/sdcard/.safebox/)</string>
 <string name="add_to_safe_confirm_dialog_title">SafeBox</string>
 <string name="add_to_cloud_confirm_dialog_text">Upload \n<xliff:g id="count">%2$d</xliff:g>(<xliff:g id="name">%1$s</xliff:g> &#8230;)\nfiles into cloud box?</string>
+<string name="add_to_cloud_confirm_dialog_text_no_dir">Upload \n<xliff:g id="count">%2$d</xliff:g>(<xliff:g id="name">%1$s</xliff:g> &#8230;)\nfiles into cloud box?\n<xliff:g id="count">%4$d</xliff:g>(<xliff:g id="name">%3$s</xliff:g> &#8230;) will not be uploaded.</string>
 <string name="add_to_cloud_confirm_dialog_title">Cloud Box</string>
 <string name="delete_from_safe_confirm_dialog_text">delete <xliff:g id="count">%2$d</xliff:g> files from safebox and do not recover? </string>
 <string name="delete_from_safe_confirm_dialog_title">SafeBox</string>
@@ -649,10 +650,11 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="kanbox_website">http://www.kanbox.com</string>
 <string name="doov_developer_name">Shenzhen Doov Technology Co., Ltd. </string>
 <string name="doov_website">http://www.doov.com.cn</string>
-<string name="category_selected_game">Selected Game</string>
-<string name="category_selected_app">Selected App</string>
+<string name="category_selected_game">Game</string>
+<string name="category_selected_app">App</string>
 <string name="category_selected_doc">Ebooks</string>
 <string name="please_select_copy_or_cancel">Please select copy or cancel</string>
+<string name="btn_txt_read">Read</string>
 <string name="btn_txt_install">Install</string>
 <string name="btn_txt_pause">Cancel</string>
 <string name="btn_txt_upload">Upload</string>
@@ -703,8 +705,8 @@ changed later by pressing the <b>Setup</b> button.</string> -->
     <string name="china_tip_dialog_title">System Alert</string>
     <string name="china_tip_dialog_quit">Quit</string>
     <string name="china_tip_dialog_known">I know</string>
-    <string name="china_tip_dialog_content">Welcome to use File Manager. This app needs to connect to Internet to provide best service. Data connection will charger your money accorrding to your data plan with your Internet Provider. Do you allow it?</string>
-
+    <string name="china_tip_dialog_content">Welcome to use File Manager. This app needs to connect to Internet to provide best service. Data connection will charge your money accorrding to your data plan with Internet Provider. Do you allow it?</string>
+    <string name="chinese_goverment_tip"></string>
 <string-array name="search_category">
     <item>@string/category_all</item>
     <item>@string/category_picture</item>

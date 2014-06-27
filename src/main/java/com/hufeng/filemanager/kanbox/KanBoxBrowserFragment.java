@@ -14,7 +14,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,6 +36,7 @@ import com.hufeng.filemanager.dialog.FmDialogFragment;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.ui.FileViewHolder;
+import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.utils.NetworkUtil;
 import com.kanbox.api.PushSharePreference;
 import com.kanbox.api.RequestListener;
@@ -715,19 +715,25 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
         inflater.inflate(R.menu.cloud_file_menu, menu);
 
         boolean has_local = false;
+        boolean is_folder = false;
         Cursor cursor = null;
         try{
             cursor = FileManager.getAppContext().getContentResolver().query(DataStructures.CloudBoxColumns.CONTENT_URI,
-                    new String[]{DataStructures.CloudBoxColumns.LOCAL_FILE_FIELD}, DataStructures.CloudBoxColumns.FILE_PATH_FIELD+"=?",
+                    new String[]{DataStructures.CloudBoxColumns.LOCAL_FILE_FIELD, DataStructures.CloudBoxColumns.IS_FOLDER_FIELD}, DataStructures.CloudBoxColumns.FILE_PATH_FIELD+"=?",
                     new String[]{path}, null);
             if (cursor!=null && cursor.moveToNext()) {
                 String local_file = cursor.getString(0);
                 if (!TextUtils.isEmpty(local_file) && !new File(local_file).isDirectory() && new File(local_file).exists()) {
                     has_local = true;
                 }
+                is_folder = (cursor.getInt(1) == 1);
             }
         }catch(Exception e) {
             e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
 
         if(has_local) {
@@ -737,13 +743,17 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             menu.findItem(R.id.menu_cloud_share).setVisible(false);
         }
 
+        if (is_folder) {
+            menu.findItem(R.id.menu_cloud_download).setVisible(false);
+        }
+
         return;
         //super.onCreateContextMenu(menu, v, menuInfo);
     }
 
     @Override
     public boolean onContextItemSelected(android.view.MenuItem item) {
-        Log.i(TAG, "onContextItemSelected");
+        LogUtil.i(TAG, "onContextItemSelected");
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
                 .getMenuInfo();
         FileViewHolder view = (FileViewHolder) info.targetView.getTag();

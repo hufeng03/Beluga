@@ -1,6 +1,7 @@
 package com.hufeng.filemanager;
 
 public class Constants {
+    public static final boolean TRY_TO_TEST_WRITE = false;
 	public static final boolean RETAIN_FRAGMENT = false;
 	public static final boolean SHOW_AD = false;
 	public static final boolean USE_UMENG = false;

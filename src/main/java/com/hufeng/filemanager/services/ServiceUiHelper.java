@@ -35,6 +35,8 @@ public class ServiceUiHelper {
                 mIUi.scanStarted();
             } catch (RemoteException e) {
                 e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -44,6 +46,8 @@ public class ServiceUiHelper {
             try {
                 mIUi.scanCompleted();
             } catch (RemoteException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -55,6 +59,8 @@ public class ServiceUiHelper {
                 mIUi.changeMonitored(dir);
             } catch (RemoteException e) {
                 e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -64,6 +70,8 @@ public class ServiceUiHelper {
             try {
                 mIUi.storageChanged();
             } catch (RemoteException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

@@ -250,8 +250,11 @@ public class FileOperation extends BaseFragment {
 	}
 	
 	public void onOperationPasteCancel(Context context){
-		mCopyPaths.clear();
-    	mMovePaths.clear();
+        Intent intent = new Intent(FileManagerTabActivity.ACTION_CANCEL_PASTE_FILES);
+        intent.setClassName(context.getPackageName(), FileManagerTabActivity.class.getName());
+        context.startActivity(intent);
+        mCopyPaths.clear();
+        mMovePaths.clear();
         mOperationPaths.clear();
         refresh();
 	}
@@ -442,8 +445,19 @@ public class FileOperation extends BaseFragment {
 
     public void onOperationAddToCloud(Context context) {
         FileOperationProvider provider = getFileOperationProvider();
+        int directory_count = 0;
+        String directory_path = null;
+        for(String path:mOperationPaths) {
+            if (new File(path).isDirectory()) {
+                mOperationPaths.remove(path);
+                if (directory_path == null) {
+                    directory_path = path;
+                }
+                directory_count ++;
+            }
+        }
         if(mOperationPaths!=null && mOperationPaths.size()>0 ) {
-            FmDialogFragment.showAddToCloudDialog(provider.getHostFragmentManager(), mOperationPaths.size(), mOperationPaths.get(0));
+            FmDialogFragment.showAddToCloudDialog(provider.getHostFragmentManager(), mOperationPaths.size(), mOperationPaths.get(0), directory_count, directory_path);
         }
     }
 

@@ -297,51 +297,53 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
         for (String dir : dirs) {
             if (new File(dir).exists()) {
                 File[] childs = new File(dir).listFiles();
-                for(File child : childs) {
-                    if (child.isDirectory()) {
-                        continue;
-                    } else if (child.isHidden()) {
-                        continue;
-                    } else if (child.length() == 0) {
-                        continue;
-                    } else {
-                        int type = FileUtils.getFileType(child);
-                        String name = child.getAbsolutePath();
-                        switch (type) {
-                            case FileUtils.FILE_TYPE_IMAGE:
-                                if (!images.contains(name)) {
-                                    if (!filter_small_image || new File(name).length() > 30720) {
-                                        images.add(name);
+                if (childs != null && childs.length > 0) {
+                    for (File child : childs) {
+                        if (child.isDirectory()) {
+                            continue;
+                        } else if (child.isHidden()) {
+                            continue;
+                        } else if (child.length() == 0) {
+                            continue;
+                        } else {
+                            int type = FileUtils.getFileType(child);
+                            String name = child.getAbsolutePath();
+                            switch (type) {
+                                case FileUtils.FILE_TYPE_IMAGE:
+                                    if (!images.contains(name)) {
+                                        if (!filter_small_image || new File(name).length() > 30720) {
+                                            images.add(name);
+                                        }
                                     }
-                                }
-                                break;
-                            case FileUtils.FILE_TYPE_AUDIO:
-                                if (!audios.contains(name)) {
-                                    if (!filter_small_audio || new File(name).length() > 102400) {
-                                        audios.add(name);
+                                    break;
+                                case FileUtils.FILE_TYPE_AUDIO:
+                                    if (!audios.contains(name)) {
+                                        if (!filter_small_audio || new File(name).length() > 102400) {
+                                            audios.add(name);
+                                        }
                                     }
-                                }
-                                break;
-                            case FileUtils.FILE_TYPE_VIDEO:
-                                if (!videos.contains(name)) {
-                                    videos.add(name);
-                                }
-                                break;
-                            case FileUtils.FILE_TYPE_APK:
-                                if (!apks.contains(name)) {
-                                    apks.add(name);
-                                }
-                                break;
-                            case FileUtils.FILE_TYPE_DOCUMENT:
-                                if (!documents.contains(name)) {
-                                    documents.add(name);
-                                }
-                                break;
-                            case FileUtils.FILE_TYPE_ZIP:
-                                if (!zips.contains(name)) {
-                                    zips.add(name);
-                                }
-                                break;
+                                    break;
+                                case FileUtils.FILE_TYPE_VIDEO:
+                                    if (!videos.contains(name)) {
+                                        videos.add(name);
+                                    }
+                                    break;
+                                case FileUtils.FILE_TYPE_APK:
+                                    if (!apks.contains(name)) {
+                                        apks.add(name);
+                                    }
+                                    break;
+                                case FileUtils.FILE_TYPE_DOCUMENT:
+                                    if (!documents.contains(name)) {
+                                        documents.add(name);
+                                    }
+                                    break;
+                                case FileUtils.FILE_TYPE_ZIP:
+                                    if (!zips.contains(name)) {
+                                        zips.add(name);
+                                    }
+                                    break;
+                            }
                         }
                     }
                 }
@@ -530,13 +532,18 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                     cv.put(DataStructures.FileColumns.FILE_SIZE_FIELD, cursor.getLong(1));
                     cv.put(DataStructures.FileColumns.FILE_DATE_FIELD, cursor.getLong(2));
                     cv.put(DataStructures.FileColumns.FILE_SYNC_FIELD, 1);
-                    String name = cursor.getString(3);
-                    if (TextUtils.isEmpty(name)) {
+                    String name = null;
+                    if (!TextUtils.isEmpty(path)) {
                         int i = path.lastIndexOf("/");
                         if (i>0) {
                             name = path.substring(i+1);
                         }
                     }
+
+                    if (TextUtils.isEmpty(name)) {
+                        name = cursor.getString(3);
+                    }
+
                     if(!TextUtils.isEmpty(name)) {
                         cv.put(DataStructures.FileColumns.FILE_NAME_FIELD, name);
                         int i = name.lastIndexOf(".");

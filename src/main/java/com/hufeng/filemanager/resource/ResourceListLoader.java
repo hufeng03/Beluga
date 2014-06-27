@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hufeng.filemanager.ResourceType;
 import com.hufeng.filemanager.app.PackageIntentReceiver;
@@ -15,6 +14,7 @@ import com.hufeng.filemanager.browser.FileSorter;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.storage.StorageManager;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -109,7 +109,7 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
                                 entries.add(entry);
                             }
                         }
-                        Log.i(LOG_TAG, "game path is " + entry.path);
+                        LogUtil.i(LOG_TAG, "game path is " + entry.path);
                     }
 
                 }
@@ -152,7 +152,7 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
                                 entries.add(entry);
                             }
                         }
-                        Log.i(LOG_TAG, "app path is " + entry.path);
+                        LogUtil.i(LOG_TAG, "app path is " + entry.path);
                     }
 
                 }
@@ -191,7 +191,7 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
                                 entries.add(entry);
                             }
                         }
-                        Log.i(LOG_TAG, "doc path is " + entry.path);
+                        LogUtil.i(LOG_TAG, "doc path is " + entry.path);
                     }
 
                 }
@@ -204,7 +204,7 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
         if(cursor!=null) {
             while(cursor.moveToNext()) {
                 ResourceEntry entry = buildResourceEntry(cursor);
-                Log.i(LOG_TAG, "entry is "+entry);
+                LogUtil.i(LOG_TAG, "entry is "+entry);
                 if(ResourceType.GAME == mResourceType && entry.resource_category != 1) {
                     continue;
                 }
@@ -405,7 +405,7 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
             entry.installed = false;
         }
 
-        Log.i(LOG_TAG, "build entry from database cursor:"+entry);
+        LogUtil.i(LOG_TAG, "build entry from database cursor:"+entry);
         return entry;
 
     }

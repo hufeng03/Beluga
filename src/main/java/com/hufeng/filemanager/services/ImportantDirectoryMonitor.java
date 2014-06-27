@@ -8,10 +8,10 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hufeng.filemanager.BuildConfig;
 import com.hufeng.filemanager.browser.FileAction;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.io.File;
 import java.util.Iterator;
@@ -164,7 +164,7 @@ public class ImportantDirectoryMonitor {
                 super.startWatching();
                 watching = true;
                 if (DEBUG)
-                    Log.i(LOG_TAG, this.hashCode()+" start observe "+ dir);
+                    LogUtil.i(LOG_TAG, this.hashCode() + " start observe " + dir);
             }
         }
 
@@ -174,7 +174,7 @@ public class ImportantDirectoryMonitor {
                 super.stopWatching();
                 watching = false;
                 if (DEBUG)
-                    Log.i(LOG_TAG, this.hashCode()+" stop  observe "+ dir);
+                    LogUtil.i(LOG_TAG, this.hashCode()+" stop  observe "+ dir);
             }
         }
 
@@ -207,7 +207,7 @@ public class ImportantDirectoryMonitor {
                     break;
             }
             if (DEBUG)
-                Log.i(LOG_TAG, this.hashCode()+" on  event "+ path+" of "+dir+" "+event_str+"("+event+")");
+                LogUtil.i(LOG_TAG, this.hashCode()+" on  event "+ path+" of "+dir+" "+event_str+"("+event+")");
             String full_path = new File(dir, path).getAbsolutePath();
             Message msg = new Message();
             msg.what = 1;

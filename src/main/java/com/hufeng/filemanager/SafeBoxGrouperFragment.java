@@ -1,12 +1,9 @@
 package com.hufeng.filemanager;
 
-import android.support.v4.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.support.v4.content.CursorLoader;
 import android.content.DialogInterface;
-import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -14,8 +11,10 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +27,7 @@ import com.hufeng.filemanager.dialog.FmDialogFragment;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.scan.ImageObject;
 import com.hufeng.filemanager.scan.VideoObject;
+import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.safebox.CryptUtil;
 import com.hufeng.safebox.SafeBoxGrouperAdapter;
 import com.hufeng.safebox.SafeDataStructs;
@@ -484,14 +484,14 @@ public class SafeBoxGrouperFragment extends GridFragment implements LoaderManage
                         switch (category){
                             case FileUtils.FILE_TYPE_VIDEO:
                                 VideoObject vo = new VideoObject(path);
-                                Log.i(TAG, "New VideoObject is " + vo);
+                                LogUtil.i(TAG, "New VideoObject is " + vo);
                                 ContentValues vcv = new ContentValues();
                                 vo.toContentValues(vcv);
                                 uri = FileManager.getAppContext().getContentResolver().insert(DataStructures.VideoColumns.CONTENT_URI, vcv);
                                 break;
                             case FileUtils.FILE_TYPE_IMAGE:
                                 ImageObject io = new ImageObject(path);
-                                Log.i(TAG, "New ImageObject is " + io);
+                                LogUtil.i(TAG, "New ImageObject is " + io);
                                 ContentValues icv = new ContentValues();
                                 io.toContentValues(icv);
                                 uri = FileManager.getAppContext().getContentResolver().insert(DataStructures.ImageColumns.CONTENT_URI, icv);
@@ -504,7 +504,7 @@ public class SafeBoxGrouperFragment extends GridFragment implements LoaderManage
                                 break;
                         }
                         if(uri!=null) {
-                            Log.i(TAG, "inserted uri is " + uri );
+                            LogUtil.i(TAG, "inserted uri is " + uri );
                             FileManager.getAppContext().getContentResolver().delete(SafeDataStructs.SafeColumns.CONTENT_URI,
                                     SafeDataStructs.SafeColumns.SAFE_PATH+"=?",
                                     new String[]{safe_path});

@@ -3,9 +3,9 @@ package com.hufeng.filemanager.channel;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.provider.Settings;
-import android.util.Log;
 
 import com.hufeng.filemanager.FileManager;
+import com.hufeng.filemanager.utils.LogUtil;
 
 /**
  * Created by feng on 13-11-28.
@@ -22,7 +22,7 @@ public class DoovUtil {
     {
         String isVistor = Settings.System.getString(context.getContentResolver(), "doov_vistor");
 
-        Log.i("doov_vistor", "called by " + javafile + ".java  function: " + function + "isVistor :" + isVistor);
+        LogUtil.i("doov_vistor", "called by " + javafile + ".java  function: " + function + "isVistor :" + isVistor);
 
         boolean result = false;
         if ((isVistor == null) || (isVistor.equals("no")))
@@ -33,22 +33,22 @@ public class DoovUtil {
         }
 
         mbVistor = result;
-        Log.i("doov_vistor", "result :" + result);
+        LogUtil.i("doov_vistor", "result :" + result);
 
         return result;
     }
 
     public static boolean isDoovVistor()
     {
-        Log.i("doov_vistor", "mbVistor :" + mbVistor);
-        Log.i("DoovUtils", "mbVistor :" + mbVistor);
+        LogUtil.i("doov_vistor", "mbVistor :" + mbVistor);
+        LogUtil.i("DoovUtils", "mbVistor :" + mbVistor);
         return mbVistor;
     }
 
     public static void changeDoovVistor()
     {
         mbVistor = (!mbVistor);
-        Log.i("DoovUtils", "changeDoovVistor to "+mbVistor);
+        LogUtil.i("DoovUtils", "changeDoovVistor to "+mbVistor);
         ActivityManager manager = (ActivityManager) FileManager.getAppContext().getSystemService(Context.ACTIVITY_SERVICE);
         manager.killBackgroundProcesses("com.doov.filemanager");
     }

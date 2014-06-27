@@ -62,7 +62,7 @@ public class CategoryTabFragment extends FileTabFragment implements
         mContentObserver = new ContentObserver(null) {
             @Override
             public void onChange(boolean selfChange) {
-//                Log.i(TAG, "receive onChange");
+//                LogUtil.i(TAG, "receive onChange");
                 super.onChange(selfChange);
                 if (mCategory == FileUtils.FILE_TYPE_FAVORITE && mCurrentChildFragment!=null) {
                     ((FileBrowserFragment)mCurrentChildFragment).setInitDirs( UiProvider.getFavoriteFiles() );
@@ -343,4 +343,5 @@ public class CategoryTabFragment extends FileTabFragment implements
     public void onFileBrowserDirShown(String path) {
 
     }
+
 }

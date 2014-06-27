@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import com.hufeng.filemanager.services.UiServiceHelper;
 import com.hufeng.filemanager.ui.FileCursorAdapter;
 import com.hufeng.filemanager.ui.FileGridAdapterListener;
 import com.hufeng.filemanager.ui.FileOperation;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.lang.ref.WeakReference;
 
@@ -116,7 +116,7 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        Log.i(TAG, "FileGrouperFragment onCreate  with menuId = "+mMenuId);
+        LogUtil.i(TAG, "FileGrouperFragment onCreate  with menuId = " + mMenuId);
         Bundle data = getArguments();
         if (data == null) {
             mCategory = FileUtils.FILE_TYPE_IMAGE;

@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
+import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.provider.DataStructures.MatchColumns;
 import com.hufeng.filemanager.storage.MediaContentUtil;
@@ -476,7 +477,7 @@ public class FileUtils {
 
     public static boolean isDirWritable(String path) {
         boolean can_write = new File(path).canWrite();
-        if (can_write) {
+        if (can_write && Constants.TRY_TO_TEST_WRITE) {
             if(new File(path, ".test_writable").mkdir()){
                 new File(path, ".test_writable").delete();
             } else {

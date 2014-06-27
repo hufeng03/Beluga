@@ -44,8 +44,6 @@ public class KanBoxTabFragment extends FileTabFragment implements
 
     private static final String TAG = KanBoxTabFragment.class.getSimpleName();
 
-//    private KanBoxBrowserFragment mBrowserFragment = null;
-
     private Fragment mIntroFragment, mAuthFragment, mBrowserFragment, mUploadFragment, mFileGrouperFragment;
 
     private LinearLayout mAdLayout;
@@ -199,13 +197,17 @@ public class KanBoxTabFragment extends FileTabFragment implements
         } catch(PackageManager.NameNotFoundException e) {
 //            e.printStackTrace();
         }
+        if (mAdLayout == null) {
+            return;
+        }
         if(info!=null) {
             mAdLayout.setVisibility(View.GONE);
         } else {
             //if(ChannelUtil.isKanBoxChannel(FileManager.getAppContext())) {
             if (Constants.SHOW_KANBOX_CATEGORY) {
-                String path = KanBoxUtil.getKanboxApkPath(FileManager.getAppContext());
-                if (TextUtils.isEmpty(path)) {
+                String path = null;
+                path = KanBoxUtil.getKanboxApkPath(FileManager.getAppContext());
+                if (!TextUtils.isEmpty(path)) {
                     TextView text = (TextView) mAdLayout.findViewById(R.id.kanbox_ad_ok);
                     if (new File(path).exists()) {
                         text.setText(R.string.install_kanbox_android_client);
@@ -243,7 +245,7 @@ public class KanBoxTabFragment extends FileTabFragment implements
             }
         }
         fragment.setListener(this);
-        ft.commit();
+        ft.commitAllowingStateLoss();
         clearFragmentInstance();
         mIntroFragment = fragment;
     }

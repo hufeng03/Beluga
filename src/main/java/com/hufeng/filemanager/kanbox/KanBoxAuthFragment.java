@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +26,7 @@ import com.hufeng.filemanager.BaseFragment;
 import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.kanbox.view.KanBoxLoginWebView;
+import com.hufeng.filemanager.utils.LogUtil;
 import com.kanbox.api.Token;
 
 import java.lang.ref.WeakReference;
@@ -132,7 +132,7 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int progress) {
-                Log.i(TAG, "onProgressChanged:"+progress);
+                LogUtil.i(TAG, "onProgressChanged:" + progress);
                 if (progress > 0) {
 //                    mProgressLayout.setVisibility(View.GONE);
 //                    mWebLoadingProgressBar.setVisibility(View.VISIBLE);
@@ -147,7 +147,7 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
         mWebLayout.setVisibility(View.GONE);
 
 
-//        Log.i(TAG, "token status is "+token);
+//        LogUtil.i(TAG, "token status is "+token);
 //        switch (token) {
 //            case VALID:
 //                if(mWeakListener!=null) {
@@ -256,19 +256,19 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
-            Log.i(TAG, "shouldOverrideUrlLoaing:"+url);
+            LogUtil.i(TAG, "shouldOverrideUrlLoaing:"+url);
             return true;
         }
 
         private void onProgressFinished() {
-            Log.i(TAG, "onProgressFinished");
+            LogUtil.i(TAG, "onProgressFinished");
             mProgressNumber.setText("");
 //            mWebLoadingProgressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onPageFinished(WebView wv, String url) {
-            Log.i(TAG, "onPageFinished:"+url);
+            LogUtil.i(TAG, "onPageFinished:"+url);
             mProgressNumber.setText("");
             handlUrlEnd(url);
         }
@@ -277,12 +277,12 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
         public void onPageStarted(WebView wv, String url, Bitmap favicon) {
 //            mWebLoadingProgressBar.setVisibility(View.VISIBLE);
             handleUrlStart(url);
-            Log.i(TAG, "onPageStarted:"+url);
+            LogUtil.i(TAG, "onPageStarted:"+url);
         }
 
         @Override
         public void onReceivedError(WebView wv, int errorCode, String description, String failingUrl) {
-            Log.i(TAG, "onReceivedError:"+errorCode);
+            LogUtil.i(TAG, "onReceivedError:"+errorCode);
             onProgressFinished();
             onKanBoxApiFailed(0, null);
             mWebError = true;
@@ -290,7 +290,7 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            Log.i(TAG, "onReceivedSslError:"+error);
+            LogUtil.i(TAG, "onReceivedSslError:"+error);
             mProgressNumber.setText("");
             handler.proceed();
         }

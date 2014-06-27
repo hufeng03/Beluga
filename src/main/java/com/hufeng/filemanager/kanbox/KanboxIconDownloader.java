@@ -3,8 +3,8 @@ package com.hufeng.filemanager.kanbox;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 
+import com.hufeng.filemanager.utils.LogUtil;
 import com.kanbox.api.Kanbox;
 import com.kanbox.api.KanboxAsyncTask;
 import com.kanbox.api.Token;
@@ -72,34 +72,34 @@ public class KanboxIconDownloader extends AsyncTask<Void, Void, byte[]> {
 
         HttpClient sHttpClient = KanboxAsyncTask.createHttpClient();
         ByteArrayOutputStream bos = null;
-        Log.i(TAG, "get thumbnail from "+thumbnailUrl+" for "+path);
+        LogUtil.i(TAG, "get thumbnail from " + thumbnailUrl + " for " + path);
         try {
             HttpResponse sHttpResponse = sHttpClient.execute(httpRequest);
             int statusCode = sHttpResponse.getStatusLine().getStatusCode();
             if (statusCode == 200) {
                 HttpEntity entity = sHttpResponse.getEntity();
                 long length = entity.getContentLength();
-                Log.i(TAG, "return thumbnail length "+length);
+                LogUtil.i(TAG, "return thumbnail length "+length);
                 InputStream is = entity.getContent();
                 Bitmap bm = BitmapFactory.decodeStream(is);
 
                 if(bm!=null) {
-                    Log.i(TAG, "decode as bitmap");
+                    LogUtil.i(TAG, "decode as bitmap");
                     bos = new ByteArrayOutputStream();
                     bm.compress(Bitmap.CompressFormat.PNG, 100, bos);
                     data = bos.toByteArray();
                 } else {
-                    Log.i(TAG, "cannot decode as bitmap");
+                    LogUtil.i(TAG, "cannot decode as bitmap");
                 }
             } else {
-                Log.i(TAG, "getthumbnail return statuscode="+statusCode);
+                LogUtil.i(TAG, "getthumbnail return statuscode="+statusCode);
             }
         } catch (ClientProtocolException e) {
             e.printStackTrace();
-            Log.i(TAG, "getthumbnail return error");
+            LogUtil.i(TAG, "getthumbnail return error");
         } catch (IOException e) {
             e.printStackTrace();
-            Log.i(TAG, "getthumbnail return error");
+            LogUtil.i(TAG, "getthumbnail return error");
         } finally {
             if(bos!=null) {
                 try {

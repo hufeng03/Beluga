@@ -14,11 +14,12 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hufeng.filemanager.apprate.AppRate;
@@ -26,6 +27,7 @@ import com.hufeng.filemanager.dialog.FmDialogFragment;
 import com.hufeng.filemanager.kanbox.KanBoxTabFragment;
 import com.hufeng.filemanager.ui.FileOperation;
 import com.hufeng.filemanager.ui.FileViewPager;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -38,7 +40,8 @@ public class FileManagerTabActivity extends FileOperationActivity{
 	public static final String ACTION_MOVE_FILES = "action_move_files";
 	public static final String ACTION_COPY_FILES = "action_copy_files";
     public static final String ACTION_UPLOAD_FILES = "action_upload_files";
-	
+    public static final String ACTION_CANCEL_PASTE_FILES = "action_cancel_paste_files";
+
 	private static final int FRAGMENT_COUNT = 3;
     private static final int FRAGMENT_INDEX_SELECTED = -1;
     private static final int FRAGMENT_INDEX_CATEGORY = 0;
@@ -62,6 +65,21 @@ public class FileManagerTabActivity extends FileOperationActivity{
 	
 //	private boolean mFirst = true;
     AppRate mAppRate = null;
+
+    private int mOldItemId = -1;
+
+    private TextView createTab(int titleTextId)
+    {
+        TextView tv = new TextView(this);
+        //set caption and caption appearance
+        tv.setText(titleTextId);
+        tv.setTextColor(getResources().getColor(R.color.black));
+        //set appearance of tab
+        tv.setGravity(Gravity.CENTER);
+        tv.setLayoutParams(new android.view.ViewGroup.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        //Make sure all tabs have the same height
+        return tv;
+    }
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,15 +103,21 @@ public class FileManagerTabActivity extends FileOperationActivity{
 
 //        final Tab selectedTab = getSupportActionBar().newTab().setText(
 //                R.string.selected);
-		final ActionBar.Tab categoryTab = mActionBar.newTab().setText(
-                R.string.category);
-        final ActionBar.Tab directoryTab = mActionBar.newTab().setText(
-                R.string.directory);
-        final ActionBar.Tab toolsTab = mActionBar.newTab().setText(
-                R.string.tools);
-        final ActionBar.Tab kanboxTab = mActionBar.newTab().setText(R.string.kanbox);
+		final ActionBar.Tab categoryTab = mActionBar.newTab().
+                setCustomView(createTab(R.string.category));
+//                setText(R.string.category);
+        final ActionBar.Tab directoryTab = mActionBar.newTab().
+                setCustomView(createTab(R.string.directory));
+//                setText(R.string.directory);
+        final ActionBar.Tab toolsTab = mActionBar.newTab().
+                setCustomView(createTab(R.string.tools));
+//                setText(R.string.tools);
+        final ActionBar.Tab kanboxTab = mActionBar.newTab().
+                setCustomView(createTab(R.string.kanbox));
+//                setText(R.string.kanbox);
 
-        final ActionBar.Tab searchTab = mActionBar.newTab().setText(R.string.search);
+        final ActionBar.Tab searchTab = mActionBar.newTab().
+                setText(R.string.search);
         
         mTabAdapter = new TabAdapter(this, mViewPager);
 
@@ -127,9 +151,9 @@ public class FileManagerTabActivity extends FileOperationActivity{
             mAppRate.init();
         }
 
-        if ("doov".equals(Constants.PRODUCT_FLAVOR_NAME)) {
+        //if ("doov".equals(Constants.PRODUCT_FLAVOR_NAME)) {
             showChinaTipDialog();
-        }
+        //}
 
 	}
 
@@ -188,11 +212,18 @@ public class FileManagerTabActivity extends FileOperationActivity{
 //            mViewPager.setCurrentItem(FRAGMENT_INDEX_DEVICE);
 //            flag = true;
 //		} else
-        if( ACTION_MOVE_FILES.equals(intent.getAction()) ) {
+        if (ACTION_CANCEL_PASTE_FILES.equals(intent.getAction())) {
+            int id = mViewPager.getCurrentItem();
+            if (mOldItemId >= 0 && id != mOldItemId) {
+                mViewPager.setCurrentItem(mOldItemId);
+            }
+        } else if( ACTION_MOVE_FILES.equals(intent.getAction()) ) {
+            mOldItemId = mViewPager.getCurrentItem();
 			String[] files = intent.getStringArrayExtra("files");
             getFileOperation().setMoveFiles(files);
             mViewPager.setCurrentItem(FRAGMENT_INDEX_DEVICE);
 		} else if( ACTION_COPY_FILES.equals(intent.getAction()) ) {
+            mOldItemId = mViewPager.getCurrentItem();
 			String[] files = intent.getStringArrayExtra("files");
             getFileOperation().setCopyFiles(files);
             mViewPager.setCurrentItem(FRAGMENT_INDEX_DEVICE);
@@ -331,10 +362,10 @@ public class FileManagerTabActivity extends FileOperationActivity{
 				obj = activity.getFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + position);
 			}
 			if (obj == null) {
-				Log.i(LOG_TAG, "create new fragment with tag = " + "android:switcher:" + R.id.pager + ":" + position);
+				LogUtil.i(LOG_TAG, "create new fragment with tag = " + "android:switcher:" + R.id.pager + ":" + position);
 				obj =  super.instantiateItem(container, position);
 			}else{
-				Log.i(LOG_TAG, "use previous fragment with tag = "+"android:switcher:" + R.id.pager + ":" + position);
+				LogUtil.i(LOG_TAG, "use previous fragment with tag = "+"android:switcher:" + R.id.pager + ":" + position);
 			}
 			if (obj instanceof Fragment) {
 	            TabInfo info = mTabs.get(position);
@@ -365,7 +396,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
         
         @Override
         public void onPageSelected(int position) {
-        	Log.i(LOG_TAG, "page selected " + position);
+        	LogUtil.i(LOG_TAG, "page selected " + position);
             int tab_pos = mActionBar.getSelectedNavigationIndex();
             if (tab_pos != position) {
                 int count = mActionBar.getNavigationItemCount();
@@ -383,7 +414,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
 
         @Override
         public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-        	Log.i(LOG_TAG, "tab selected "+tab.getPosition());
+        	LogUtil.i(LOG_TAG, "tab selected "+tab.getPosition());
 
         	if(mViewPager.getCurrentItem() != tab.getPosition()) {
                 if(mViewPager.getPagingEnabled()) {
@@ -398,12 +429,12 @@ public class FileManagerTabActivity extends FileOperationActivity{
 
 		@Override
 		public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            Log.i(LOG_TAG, "tab unselected "+tab.getPosition());
+            LogUtil.i(LOG_TAG, "tab unselected "+tab.getPosition());
 		}
 
 		@Override
 		public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            Log.i(LOG_TAG, "tab reselected "+tab.getPosition());
+            LogUtil.i(LOG_TAG, "tab reselected "+tab.getPosition());
 			//if(mReSelect){
 				int position = tab.getPosition();
             	if(position==FRAGMENT_INDEX_CATEGORY){

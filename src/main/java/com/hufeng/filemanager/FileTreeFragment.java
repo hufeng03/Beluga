@@ -6,7 +6,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.hufeng.filemanager.browser.FileEntry;
@@ -17,6 +16,7 @@ import com.hufeng.filemanager.treeview.TreeBuilder;
 import com.hufeng.filemanager.treeview.TreeNodeInfo;
 import com.hufeng.filemanager.treeview.TreeViewList;
 import com.hufeng.filemanager.ui.FileTreeAdapter;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -241,7 +241,7 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
                 addRecursively(manager, id, dir);
             }
             final int level = manager.getLevel(dir);
-            Log.i(TAG, "Root Dir level is :" + level);
+            LogUtil.i(TAG, "Root Dir level is :" + level);
             final String[] hierarchy = new String[level+1];
 
             int currentLevel = level;
@@ -256,7 +256,7 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
             while(currentLevel<level) {
                 current = hierarchy[++currentLevel];
                 manager.expandDirectChildren(current);
-                Log.i(TAG, "expand direct children:" + current);
+                LogUtil.i(TAG, "expand direct children:" + current);
             }
         }
     }
@@ -391,7 +391,7 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
             treeFiles.clear();
             treeDepth.clear();
 
-            Log.i(TAG, "Root Dir is :" + mRoot);
+            LogUtil.i(TAG, "Root Dir is :" + mRoot);
             showTreeDir(mTreeManager, mRoot);
 
 

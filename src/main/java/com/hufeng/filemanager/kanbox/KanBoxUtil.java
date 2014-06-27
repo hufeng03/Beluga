@@ -16,6 +16,9 @@ public class KanBoxUtil {
 
     public static String getKanboxApkPath(Context context) {
         StorageManager manager = StorageManager.getInstance(context);
+        if (manager == null) {
+            return null;
+        }
         String[] storages = manager.getMountedStorages();
         String local_path = null;
         String name =  MD5Util.getMD5HexForString(Constants.KANBOX_APK_URL);
@@ -25,10 +28,6 @@ public class KanBoxUtil {
             int idx = 0;
             while(idx<size){
                 String stor = storages[idx];
-//                File kanbox_dir = new File(stor, KanBoxConfig.LOCAL_STORAGE_DIRECTORY);
-//                if(local_path==null || kanbox_dir.exists()) {
-//                    local_path = kanbox_dir.getAbsolutePath();
-//                }
                 if (new File(stor, KanBoxConfig.LOCAL_STORAGE_DIRECTORY+File.separator+name+".apk").exists()) {
                     flag_local_exist = true;
                     local_path = stor;

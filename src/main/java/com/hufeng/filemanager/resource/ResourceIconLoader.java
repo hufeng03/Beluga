@@ -15,7 +15,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,6 +25,7 @@ import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.browser.IconLoaderHelper;
 import com.hufeng.filemanager.provider.DataStructures;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
@@ -530,7 +530,7 @@ public class ResourceIconLoader implements Handler.Callback{
 
 
     public void iconDownloaded(String url, byte[] data){
-        Log.i(LOG_TAG, "iconDownloaded for " + url + (data==null?"null":data));
+        LogUtil.i(LOG_TAG, "iconDownloaded for " + url + (data == null ? "null" : data));
         if (data == null || TextUtils.isEmpty(url)) {
             return;
         }

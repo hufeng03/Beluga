@@ -316,7 +316,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="file_info_yes">是</string>
 <string name="file_info_no">否</string>
 <string name="menu_wallpaper">设为桌面背景</string>
-<string name="no_activity_found">找不到关联的应用</string>
+<string name="no_activity_found">不支持此格式</string>
 <string name="settings_scan">扫描设置</string>
 <string name="settings_scan_title">扫描设置</string>
 <string name="settings_scan_hidden">隐藏文件(夹)</string>
@@ -358,6 +358,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="add_to_safe_confirm_dialog_text">确认将\n<xliff:g id="name">%1$s</xliff:g>\n等<xliff:g id="count">%2$d</xliff:g>个文件移到保险箱? (请勿删除或随意操作/mnt/sdcard/.safebox/)</string>
 <string name="add_to_safe_confirm_dialog_title">保险箱</string>
 <string name="add_to_cloud_confirm_dialog_text">确认将\n<xliff:g id="name">%1$s</xliff:g>\n等<xliff:g id="count">%2$d</xliff:g>个文件上传到酷盘?</string>
+<string name="add_to_cloud_confirm_dialog_text_no_dir">确认将\n<xliff:g id="name">%1$s</xliff:g>\n等<xliff:g id="count">%2$d</xliff:g>个文件上传到酷盘?\n(<xliff:g id="name">%3$s</xliff:g>\n等<xliff:g id="count">%4$d</xliff:g>个文件夹不会被上传)</string>
 <string name="add_to_cloud_confirm_dialog_title">酷盘</string>
 <string name="delete_from_safe_confirm_dialog_text">确认将<xliff:g id="count">%2$d</xliff:g>个文件从保险箱删除，文件不会被恢复?</string>
 <string name="delete_from_safe_confirm_dialog_title">保险箱</string>
@@ -391,7 +392,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="new_directory_failed">创建新目录失败</string>
 <string name="new_directory_success">创建新目录成功</string>
 <string name="no_send_app_available">无法发送选中文件或文件夹</string>
-<string name="file_type_not_recognized">找不到关联的应用</string>
+<string name="file_type_not_recognized">不支持此格式</string>
 <string name="directory_cannot_send">文件夹不能被发送</string>
 <string name="cancel_set_default_one">系统默认</string>
 <string name="select_image_file_not_match">请选择图片文件</string>
@@ -488,7 +489,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="menu_create">新建文件夹</string>
 <string name="menu_cloud_add">上传文件</string>
 <string name="menu_cloud_add_image">上传图片</string>
-<string name="menu_cloud_add_audio">上传语音</string>
+<string name="menu_cloud_add_audio">上传音频</string>
 <string name="menu_cloud_add_video">上传视频</string>
 <string name="menu_cloud_add_apk">上传应用包</string>
 <string name="menu_cloud_add_document">上传文档</string>
@@ -628,6 +629,8 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="kanbox_getting_file_list">正在加载...</string>
 <string name="empty_selected_game">暂无推荐游戏</string>
 <string name="empty_selected_app">暂无推荐应用</string>
+<string name="empty_selected_doc">暂无推荐电子书</string>
+<string name="empty_selected_resource">暂无推荐资源</string>
 <string name="menu_add_cloud">上传到酷盘</string>
 <string name="menu_cloud_upload_confirm">上传</string>
 <string name="menu_cloud_upload_cancel">取消</string>
@@ -639,6 +642,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="category_selected_app">热门应用</string>
 <string name="category_selected_doc">电子书</string>
 <string name="please_select_copy_or_cancel">请选择粘贴或取消</string>
+<string name="btn_txt_read">阅读</string>
 <string name="btn_txt_install">安装</string>
 <string name="btn_txt_pause">取消</string>
 <string name="btn_txt_upload">上传</string>
@@ -684,8 +688,9 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="file_permission_label">权限:</string>
 <string name="file_owner_label">创建人:</string>
 <string name="file_group_label">所属组:</string>
-    <string name="china_tip_dialog_title">系统提醒</string>
-    <string name="china_tip_dialog_quit">退出</string>
-    <string name="china_tip_dialog_known">不再提示</string>
-    <string name="china_tip_dialog_content">欢迎使用文件管理器软件，本软件使用完全免费，在使用过程中软件需要连接网络，以更好地为您提供完整的服务，其中联网会产生数据流量费，请咨询当地运营商。是否允许本软件的以上操作？</string>
+<string name="china_tip_dialog_title">数据流量提醒</string>
+<string name="china_tip_dialog_quit">退出</string>
+<string name="china_tip_dialog_known">不再提示</string>
+<string name="china_tip_dialog_content">本软件需要连接网络，以更好地为您提供完整服务。联网可能产生数据流量费，该费用由运营商收取。</string>
+<string name="chinese_goverment_tip">郑重提醒：国家秘密受法律保护。请严格遵守保密法律法规，严禁在互联网上存储、处理、传输、发布涉密信息。任何危害国家秘密安全的行为，都必须受到法律追究。</string>
 </resources>

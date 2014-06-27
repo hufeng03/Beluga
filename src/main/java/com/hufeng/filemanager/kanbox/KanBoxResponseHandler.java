@@ -7,11 +7,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.storage.StorageManager;
+import com.hufeng.filemanager.utils.LogUtil;
 import com.kanbox.api.PushSharePreference;
 
 import org.json.JSONArray;
@@ -61,7 +61,7 @@ public class KanBoxResponseHandler {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                Log.i(TAG, "getFileList return "+response);
+                LogUtil.i(TAG, "getFileList return " + response);
                 try {
                     JSONObject sData = new JSONObject(response);
                     String status = sData.getString("status");
@@ -80,7 +80,7 @@ public class KanBoxResponseHandler {
                             while(i<len) {
                                 JSONObject obj = array.getJSONObject(i);
                                 KanBoxFileEntry entry = new KanBoxFileEntry(hash, obj);
-                                Log.i(TAG, "kanboxfileentry "+i+": "+entry);
+                                LogUtil.i(TAG, "kanboxfileentry "+i+": "+entry);
 //                                if (i==0) {
 //                                    parent_path = entry.parent_path;
 //                                }
@@ -170,7 +170,7 @@ public class KanBoxResponseHandler {
                             if(!TextUtils.isEmpty(parent_path)) {
                                 int count = FileManager.getAppContext().getContentResolver().delete(DataStructures.CloudBoxColumns.CONTENT_URI, DataStructures.CloudBoxColumns.PARENT_FOLDER_FIELD+"=? AND "+DataStructures.CloudBoxColumns.HASH_FIELD+"!=?",
                                         new String[]{parent_path, hash});
-                                Log.i(TAG, "delete cloudbox count " + count);
+                                LogUtil.i(TAG, "delete cloudbox count " + count);
                             }
 
 //                            FileManager.getAppContext().getContentResolver().bulkInsert(DataStructures.CloudBoxColumns.CONTENT_URI, cvs);
@@ -181,7 +181,7 @@ public class KanBoxResponseHandler {
                         } else {
                             if(!TextUtils.isEmpty(parent_path)) {
                                 int count = FileManager.getAppContext().getContentResolver().delete(DataStructures.CloudBoxColumns.CONTENT_URI, DataStructures.CloudBoxColumns.PARENT_FOLDER_FIELD + "=?", new String[]{parent_path});
-                                Log.i(TAG, "delete cloudbox count " + count);
+                                LogUtil.i(TAG, "delete cloudbox count " + count);
                                 PushSharePreference preference = new PushSharePreference(FileManager.getAppContext(), KanBoxApi.PUSH_SHAREPREFERENCE_NAME);
                                 preference.saveStringValueToSharePreferences(parent_path, hash);
                             }

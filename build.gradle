@@ -15,8 +15,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.1"
-
+    buildToolsVersion "19.1.0"
 
     defaultConfig {
         minSdkVersion 11
@@ -133,10 +132,10 @@ android {
 	        println "${variant.productFlavors[0].name}"
 	    variant.processManifest.doLast{
 	        copy{
-	            from("${buildDir}/manifests"){
+	            from("${buildDir}/intermediates/manifests"){
 	                include "${variant.dirName}/AndroidManifest.xml"
 	            }
-	            into("${buildDir}/manifests/$variant.name")
+	            into("${buildDir}/intermediates/manifests/$variant.name")
 
 	            filter{
 	                String line -> line.replaceAll("UMENG_CHANNEL_VALUE", "${variant.productFlavors[0].name}")
@@ -146,7 +145,7 @@ android {
                     String line -> line.replaceAll("UMENG_APPKEY_VALUE", "${variant.productFlavors[0].ukey}")
                 }
 
-	            variant.processResources.manifestFile = file("${buildDir}/manifests/${variant.name}/${variant.dirName}/AndroidManifest.xml")
+	            variant.processResources.manifestFile = file("${buildDir}/intermediates/manifests/${variant.name}/${variant.dirName}/AndroidManifest.xml")
 	        }
 	   }
 	}

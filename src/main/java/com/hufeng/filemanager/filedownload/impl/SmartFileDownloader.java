@@ -1,9 +1,9 @@
 package com.hufeng.filemanager.filedownload.impl;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.hufeng.filemanager.filedownload.db.FileService;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -264,7 +264,7 @@ public class SmartFileDownloader {
                     SmartDownloadThread thread = threads[i];
                     if (thread != null && !thread.isFinish()) {
                         notFinish = true;//下载没有完成
-                        Log.i(TAG, "thread "+(i+1)+" downLength "+this.threads[i].getDownLength()+" ("+this.block+")");
+                        LogUtil.i(TAG, "thread " + (i + 1) + " downLength " + this.threads[i].getDownLength() + " (" + this.block + ")");
                         if (thread.getDownLength() == -1) {//如果下载失败，不再自动重新下载
 //                              LogUtil.i(TAG, "smartfiledownloader reset download thread "+i);
 //                              this.threads[i] = new SmartDownloadThread(this, url, this.saveFile, this.block, this.data.get(i+1), i+1);
@@ -342,7 +342,7 @@ public class SmartFileDownloader {
 	}
 	//打印日志־
 	private static void print(String msg){
-		Log.i(TAG, msg);
+		LogUtil.i(TAG, msg);
 	}
 	
 	

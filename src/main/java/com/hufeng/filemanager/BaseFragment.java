@@ -1,13 +1,13 @@
 package com.hufeng.filemanager;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hufeng.filemanager.utils.LogUtil;
 
 
 public class BaseFragment extends Fragment {
@@ -21,42 +21,42 @@ public class BaseFragment extends Fragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onSaveInstanceState "+this.hashCode());
+    		LogUtil.i(((Object) this).getClass().getSimpleName(), "onSaveInstanceState " + this.hashCode());
 		super.onSaveInstanceState(outState);
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onViewCreated "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onViewCreated "+this.hashCode());
 		super.onViewCreated(view, savedInstanceState);
 	}
 
 	@Override
 	public void onViewStateRestored(Bundle savedInstanceState) {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onViewStateRestored "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onViewStateRestored "+this.hashCode());
 		super.onViewStateRestored(savedInstanceState);
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onActivityCreated "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onActivityCreated "+this.hashCode());
 		super.onActivityCreated(savedInstanceState);
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onAttach "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onAttach "+this.hashCode());
 		super.onAttach(activity);
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onCreate "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onCreate "+this.hashCode());
 		super.onCreate(savedInstanceState);
 	}
 
@@ -64,79 +64,79 @@ public class BaseFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onCreateView "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onCreateView "+this.hashCode());
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
 	@Override
 	public void onDestroy() {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onDestroy "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onDestroy "+this.hashCode());
 		super.onDestroy();
 	}
 
 	@Override
 	public void onDestroyView() {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onDestroyView "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onDestroyView "+this.hashCode());
 		super.onDestroyView();
 	}
 
 	@Override
 	public void onDetach() {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onDetach "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onDetach "+this.hashCode());
 		super.onDetach();
 	}
 
 	@Override
 	public void onPause() {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onPause "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onPause "+this.hashCode());
 		super.onPause();
 	}
 
 	@Override
 	public void onResume() {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onResume "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onResume "+this.hashCode());
 		super.onResume();
 	}
 
 	@Override
 	public void onStart() {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onStart "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onStart "+this.hashCode());
 		super.onStart();
 	}
 
 	@Override
 	public void onStop() {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onStop "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onStop "+this.hashCode());
 		super.onStop();
 	}
 	
 	@Override
 	public void onHiddenChanged(boolean hidden) {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onHiddenChanged "+hidden+" "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onHiddenChanged "+hidden+" "+this.hashCode());
 		super.onHiddenChanged(hidden);
 	}
 	
 	@Override
     public void setMenuVisibility(final boolean visible) {
 //		boolean old_visible = getMenuVisibility();
-//		Log.i(this.getClass().getSimpleName(), "setMenuVisibility "+visible+ ", old="+old_visible);
+//		LogUtil.i(this.getClass().getSimpleName(), "setMenuVisibility "+visible+ ", old="+old_visible);
         if (DEBUG)
-            Log.i(((Object)this).getClass().getSimpleName(), "setMenuVisibility "+visible+" "+this.hashCode());
+            LogUtil.i(((Object)this).getClass().getSimpleName(), "setMenuVisibility "+visible+" "+this.hashCode());
         super.setMenuVisibility(visible);
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (DEBUG)
-            Log.i(((Object)this).getClass().getSimpleName(), "setUserVisibleHint "+isVisibleToUser+" "+this.hashCode());
+            LogUtil.i(((Object)this).getClass().getSimpleName(), "setUserVisibleHint "+isVisibleToUser+" "+this.hashCode());
         super.setUserVisibleHint(isVisibleToUser);
     }
 

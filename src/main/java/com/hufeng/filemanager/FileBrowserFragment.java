@@ -1,11 +1,10 @@
 package com.hufeng.filemanager;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +24,7 @@ import com.hufeng.filemanager.services.IUiImpl;
 import com.hufeng.filemanager.services.UiServiceHelper;
 import com.hufeng.filemanager.ui.FileArrayAdapter;
 import com.hufeng.filemanager.ui.FileGridAdapterListener;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -135,7 +135,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-        Log.i(LOG_TAG, "FileBrowserFragment onCreate  with menuId = "+mMenuId);
+        LogUtil.i(LOG_TAG, "FileBrowserFragment onCreate  with menuId = "+mMenuId);
         Bundle arguments = getArguments();
         if (arguments != null) {
             mRootDir = arguments.getString(ARGUMENT_INIT_ROOT_DIR);
@@ -146,7 +146,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
-        Log.i(LOG_TAG, "FileBrowserFragment onViewCreated");
+        LogUtil.i(LOG_TAG, "FileBrowserFragment onViewCreated");
         String empty_text = getResources().getString(R.string.empty_file);
 //        switch (mBrowserType) {
 //            case FAVORITE:
@@ -194,7 +194,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i(LOG_TAG, "FileBrowserFragment onActivityCreated");
+        LogUtil.i(LOG_TAG, "FileBrowserFragment onActivityCreated");
 
         getLoaderManager().initLoader(LOADER_ID_BROWSER_FILES, null, this);
     }
@@ -242,6 +242,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if(getFileOperation()!=null && getFileOperation().isMovingOrCopying()) {
+            menu.clear();
             mMenuCreated = true;
             inflater.inflate(R.menu.file_browser_fragment_paste_menu,menu);
             MenuItem item_paste = menu.findItem(R.id.menu_paste_confirm);
@@ -250,7 +251,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
                 item_paste.setEnabled(false);
             } else {
                 boolean can_write = new File(mRootDir).canWrite();
-                if (can_write) {
+                if (can_write && Constants.TRY_TO_TEST_WRITE) {
                     if(new File(mRootDir, ".test_writable").mkdir()){
                         new File(mRootDir, ".test_writable").delete();
                     } else {
@@ -294,7 +295,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
                     item_create.setVisible(false);
                 } else {
                     boolean can_write =  new File(mRootDir).canWrite();
-                    if (can_write) {
+                    if (can_write && Constants.TRY_TO_TEST_WRITE) {
                         if(new File(mRootDir, ".test_writable").mkdir()){
                             new File(mRootDir, ".test_writable").delete();
                         } else {
@@ -315,7 +316,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
     public void onGridItemClick(GridView g, View v, int position, long id) {
         super.onGridItemSelect(g,v,position,id);
         FileEntry entry = (FileEntry)g.getAdapter().getItem(position);
-        Log.i(LOG_TAG, "onItemClick " + entry.toString());
+        LogUtil.i(LOG_TAG, "onItemClick " + entry.toString());
 
         if (mWeakListener != null) {
             FileBrowserFragmentListener listener = mWeakListener.get();
@@ -330,7 +331,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
     public void onGridItemSelect(GridView g, View v, int position, long id) {
         super.onGridItemSelect(g,v,position,id);
         FileEntry entry = (FileEntry)g.getAdapter().getItem(position);
-        Log.i(LOG_TAG, "onItemSelect " + entry.toString());
+        LogUtil.i(LOG_TAG, "onItemSelect " + entry.toString());
 
         if (mWeakListener != null) {
             FileBrowserFragmentListener listener = mWeakListener.get();
@@ -354,7 +355,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
     @Override
     public void reloadFiles() {
-        Log.i(LOG_TAG, "reloadFiles");
+        LogUtil.i(LOG_TAG, "reloadFiles");
         getLoaderManager().restartLoader(LOADER_ID_BROWSER_FILES, null, this);
     }
 
@@ -407,7 +408,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
     @Override
 	public Loader<List<FileEntry>> onCreateLoader(int arg0, Bundle arg1) {
-        Log.i(LOG_TAG, "FileBrowserFragment onCreateLoader " + arg0);
+        LogUtil.i(LOG_TAG, "FileBrowserFragment onCreateLoader " + arg0);
         if(arg0 ==  LOADER_ID_BROWSER_FILES) {
             String[] initDirs = getArguments().getStringArray(ARGUMENT_INIT_DIR_LIST);
             return new FileListLoader(getActivity(), mRootDir, initDirs, mSearchString, mWorkWithTree);
@@ -419,7 +420,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 	@Override
 	public void onLoadFinished(Loader<List<FileEntry>> arg0,
 			List<FileEntry> arg1) {
-        Log.i(LOG_TAG, "onLoadFinished with length =  " + (arg1 == null ? 0 : arg1.size()));
+        LogUtil.i(LOG_TAG, "onLoadFinished with length =  " + (arg1 == null ? 0 : arg1.size()));
 
         UiServiceHelper.getInstance().clearMonitor();
 

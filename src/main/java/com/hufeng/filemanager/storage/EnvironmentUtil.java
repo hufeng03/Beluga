@@ -2,7 +2,8 @@ package com.hufeng.filemanager.storage;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
+
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.io.File;
 
@@ -85,7 +86,7 @@ public class EnvironmentUtil {
     }
 
     private static void print(File file, String tag_info){
-        Log.i(TAG, tag_info+": "+((file == null)?"":file.getAbsolutePath()));
+        LogUtil.i(TAG, tag_info + ": " + ((file == null) ? "" : file.getAbsolutePath()));
     }
 
 }

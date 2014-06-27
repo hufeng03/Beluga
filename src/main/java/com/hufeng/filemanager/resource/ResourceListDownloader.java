@@ -7,12 +7,12 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.browser.FileSorter;
 import com.hufeng.filemanager.provider.DataStructures;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,7 +42,7 @@ public class ResourceListDownloader extends AsyncTask<Void, Void, List<ResourceE
 
     private Context mContext;
 
-    private static final String HTTP_URL = "http://hufeng.info/fileapi/selected/";
+    private static final String HTTP_URL = "http://belugamobile.com/fileapi/selected/";
     private static final int CONNECTION_TIMEOUT = 5000;
     private static final int SOCKET_TIMEOUT = 5000;
 
@@ -64,7 +64,7 @@ public class ResourceListDownloader extends AsyncTask<Void, Void, List<ResourceE
 
     private ResourceEntry buildGameEntry(JSONObject obj) {
         ResourceEntry entry = new ResourceEntry();
-        Log.i(LOG_TAG, "download game entry json:"+obj);
+        LogUtil.i(LOG_TAG, "download game entry json:"+obj);
         try {
             entry.resource_description = obj.getString("ds");
             entry.package_name = obj.getString("pk");
@@ -109,9 +109,9 @@ public class ResourceListDownloader extends AsyncTask<Void, Void, List<ResourceE
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.i(LOG_TAG, "download game entry error: " + e.getMessage());
+            LogUtil.i(LOG_TAG, "download game entry error: " + e.getMessage());
         }
-        Log.i(LOG_TAG, "download game entry: " + entry);
+        LogUtil.i(LOG_TAG, "download game entry: " + entry);
         return entry;
     }
 
@@ -142,7 +142,7 @@ public class ResourceListDownloader extends AsyncTask<Void, Void, List<ResourceE
 
     @Override
     protected List<ResourceEntry> doInBackground(Void... voids) {
-        Log.i(LOG_TAG, "doInBackground");
+        LogUtil.i(LOG_TAG, "doInBackground");
         long time = Long.parseLong(FileManager.getPreference(FETCH_GAME_LIST_LAST_TIME_KEY, "0"));
         if(Math.abs(System.currentTimeMillis()-time)<24*60*60*1000) {
             return null;
@@ -182,7 +182,7 @@ public class ResourceListDownloader extends AsyncTask<Void, Void, List<ResourceE
                 if(obj.getString("status").equals("OK"))
                 {
                     JSONArray rst = obj.getJSONArray("result");
-                    Log.i(LOG_TAG, "result of gamelistdownloader is "+rst);
+                    LogUtil.i(LOG_TAG, "result of gamelistdownloader is "+rst);
                     if (rst != null) {
                         int count = rst.length();
                         if (count>0) {
@@ -211,18 +211,18 @@ public class ResourceListDownloader extends AsyncTask<Void, Void, List<ResourceE
                             mContext.getContentResolver().delete(DataStructures.SelectedColumns.CONTENT_URI, null, null);
                             ContentValues[] cvs = buildSelectedContentValue(games);
                             int insertNum = mContext.getContentResolver().bulkInsert(DataStructures.SelectedColumns.CONTENT_URI, cvs);
-                            Log.i(LOG_TAG, "insert selected games: "+insertNum);
+                            LogUtil.i(LOG_TAG, "insert selected games: "+insertNum);
                             return games;
                         }
                     }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                Log.i(LOG_TAG, e.getMessage());
+                LogUtil.i(LOG_TAG, e.getMessage());
             }
         } catch (IOException e) {
             e.printStackTrace();
-            Log.i(LOG_TAG, e.getMessage());
+            LogUtil.i(LOG_TAG, e.getMessage());
         } finally {
             if(reader!=null) {
                 try {

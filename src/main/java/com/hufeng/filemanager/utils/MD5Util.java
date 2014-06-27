@@ -1,7 +1,5 @@
 package com.hufeng.filemanager.utils;
 
-import android.util.Log;
-
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.security.MessageDigest;
@@ -31,10 +29,10 @@ public class MD5Util {
             for (int i = 0; i < array.length; ++i) {
                 sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
             }
-            Log.i(TAG, "md5sum: " + sb.toString());
+            LogUtil.i(TAG, "md5sum: " + sb.toString());
             return sb.toString();
         } catch (Exception e) {
-            Log.i(TAG, "" + e);
+            LogUtil.i(TAG, "" + e);
         }
         return "md5bad";
     }
@@ -49,10 +47,10 @@ public class MD5Util {
             for (int i = 0; i < array.length; ++i) {
                 sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
             }
-            Log.i(TAG, "md5sum: " + sb.toString());
+            LogUtil.i(TAG, "md5sum: " + sb.toString());
             return sb.toString();
         } catch (Exception e) {
-            Log.i(TAG, "" + e);
+            LogUtil.i(TAG, "" + e);
         }
         return "md5bad";
     }
