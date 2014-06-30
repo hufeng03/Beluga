@@ -41,6 +41,9 @@ import com.hufeng.filemanager.utils.NetworkUtil;
 import com.kanbox.api.PushSharePreference;
 import com.kanbox.api.RequestListener;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 
@@ -75,7 +78,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             switch (msg.what) {
                 case MESSAGE_SET_EMPTY_TEXT:
                     if(isAdded()) {
-                        setEmptyText(getResources().getString(R.string.kanbox_empty_file));
+                        setEmptyText(getResources().getString(R.string.kanbox_empty_file)+((mRootDir == null)? "":mRootDir));
                     }
                     break;
                 default:
@@ -229,11 +232,57 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
                 }
                 break;
             case KanBoxApi.OP_GET_FILELIST:
+                checkListEmpty(path, response);
+
+
                 completeRefresh();
                 break;
         }
         if(!TextUtils.isEmpty(tip) && getActivity()!=null) {
             Toast.makeText(getActivity(), tip, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void checkListEmpty(String path, String response) {
+        if (getActivity() != null) {
+            boolean result = false;
+            try {
+                JSONObject sData = new JSONObject(response);
+                String status = sData.getString("status");
+                if (status.equals("ok")) {
+//                    String hash = sData.getString("hash");
+                    JSONArray array = sData.getJSONArray("contents");
+                    int len = array.length();
+//                    LogUtil.i(TAG, "path compare="+mRootDir+" "+path);
+                    if (!TextUtils.isEmpty(path) && !path.endsWith("/")) {
+                        path += "/";
+                    }
+                    if (len ==0 && mRootDir.equals(path)) {
+//                        LogUtil.i(TAG, "!!equal");
+                        result = true;
+                    }
+                }
+//                else {
+//                    LogUtil.i(TAG, "path compare="+mRootDir+" "+path);
+//                    if (mRootDir.equals(path)) {
+//                        LogUtil.i(TAG, "equal");
+//                        if (getGridView()== null || getGridView().getCount() == 0){
+//                            LogUtil.i(TAG, "empty");
+//                            mResult = true;
+//                        } else {
+//                            mResult = false;
+//                        }
+//                    } else {
+//                        LogUtil.i(TAG, "not equal");
+//                        mResult = false;
+//                    }
+//                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (result) {
+                Toast.makeText(getActivity(), R.string.kanbox_getting_file_list_empty, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

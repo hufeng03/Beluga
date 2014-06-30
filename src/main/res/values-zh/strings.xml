@@ -546,7 +546,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="empty_download">下载列表为空</string>
 <string name="empty_device">目录为空</string>
 <string name="empty_file">没有文件</string>
-<string name="kanbox_empty_file">没有文件\n\n下拉刷新</string>
+<string name="kanbox_empty_file">下拉刷新</string>
 <string name="app_storage_external">SD卡</string>
 
 <string name="tool_name_recommend">精品推荐</string>
@@ -627,6 +627,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="kanbox_intro_slogan">阿里巴巴旗下个人云存储</string>
 <string name="kanbox_intro_tip">酷盘中的文件，可以在电脑、手机等不同设备同步</string>
 <string name="kanbox_getting_file_list">正在加载...</string>
+<string name="kanbox_getting_file_list_empty">此文件夹为空</string>
 <string name="empty_selected_game">暂无推荐游戏</string>
 <string name="empty_selected_app">暂无推荐应用</string>
 <string name="empty_selected_doc">暂无推荐电子书</string>

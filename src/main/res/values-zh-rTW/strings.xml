@@ -546,7 +546,7 @@ or nonexistent.</string>
     <string name="empty_download">下載列表為空</string>
     <string name="empty_device">目錄為空</string>
     <string name="empty_file">沒有文件</string>
-    <string name="kanbox_empty_file">沒有文件\n\n下拉刷新</string>
+    <string name="kanbox_empty_file">下拉刷新</string>
     <string name="app_storage_external">SD卡</string>
 
     <string name="tool_name_recommend">精品推薦</string>
@@ -627,6 +627,7 @@ or nonexistent.</string>
     <string name="kanbox_intro_slogan">阿裏巴巴旗下個人雲存儲</string>
     <string name="kanbox_intro_tip">酷盤中的文件，可以在電腦、手機等不同設備同步</string>
     <string name="kanbox_getting_file_list">正在加載...</string>
+    <string name="kanbox_getting_file_list_empty">此文件夹为空</string>
     <string name="empty_selected_game">暫無推薦遊戲</string>
     <string name="empty_selected_app">暫無推薦應用</string>
     <string name="empty_selected_doc">暫無推薦電子書</string>

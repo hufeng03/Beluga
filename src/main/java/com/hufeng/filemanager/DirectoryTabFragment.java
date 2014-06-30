@@ -42,9 +42,39 @@ public class DirectoryTabFragment extends FileTabFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                LogUtil.i(LOG_TAG, "mReceiver receive" + intent.getAction());
+                String[] files = UiProvider.getStorageDirs();
+                LogUtil.i(LOG_TAG, "files " + files == null?"null":(String.valueOf(files.length)));
+                if (mFileBrowserFragment != null) {
+                    mFileBrowserFragment.setInitDirs(files);
+                }
+                if (mFileTreeFragment != null) {
+                    mFileTreeFragment.setInitDirs(files);
+                }
+            }
+        };
 	}
 
-	@Override
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("SHOW_ROOT_FILES_ACTION");
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mReceiver != null) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
+        }
+    }
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -71,23 +101,6 @@ public class DirectoryTabFragment extends FileTabFragment implements
         }
         showFileBrowser(dir);
 
-        mReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                LogUtil.i(LOG_TAG, "mReceiver receive" + intent.getAction());
-                String[] files = UiProvider.getStorageDirs();
-                if (mFileBrowserFragment != null) {
-                    mFileBrowserFragment.setInitDirs(files);
-                }
-                if (mFileTreeFragment != null) {
-                    mFileTreeFragment.setInitDirs(files);
-                }
-            }
-        };
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("SHOW_ROOT_FILES_ACTION");
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, filter);
     }
 	
 
@@ -116,9 +129,6 @@ public class DirectoryTabFragment extends FileTabFragment implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (mReceiver != null) {
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
-        }
     }
 
     public void showFileTree(String dir) {

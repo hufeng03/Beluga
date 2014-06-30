@@ -554,7 +554,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="empty_document">No document</string>
 <string name="empty_apk">No APK</string>
 <string name="empty_file">No File</string>
-<string name="kanbox_empty_file">No file\n\nPull down to refresh</string>
+<string name="kanbox_empty_file">Pull down to refresh</string>
 <string name="empty_secrect_audio">No secrect audio</string>
 <string name="empty_secrect_image">No secrect image</string>
 <string name="empty_secrect_video">No secrect video</string>
@@ -639,6 +639,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="kanbox_intro_slogan">Alibaba\'s Personal Cloud Service</string>
 <string name="kanbox_intro_tip"></string>
 <string name="kanbox_getting_file_list">Loading ...</string>
+<string name="kanbox_getting_file_list_empty">Empty directory</string>
 <string name="empty_selected_game">No selected games</string>
 <string name="empty_selected_app">No selected apps</string>
 <string name="empty_selected_doc">No selected ebooks</string>

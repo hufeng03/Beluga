@@ -18,16 +18,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hufeng.filemanager.BusProvider;
 import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.FileGrouperFragment;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.FileTabFragment;
+import com.hufeng.filemanager.KanboxAuthResultEvent;
+import com.hufeng.filemanager.KanboxAuthStartEvent;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.resource.FileDownloader;
 import com.kanbox.api.Token;
+import com.squareup.otto.Subscribe;
 
 import java.io.File;
 import java.util.List;
@@ -36,10 +40,8 @@ import java.util.List;
  * Created by feng on 13-11-21.
  */
 public class KanBoxTabFragment extends FileTabFragment implements
-        KanBoxAuthFragment.KanBoxAuthFragmentListener,
         FileGrouperFragment.FileGrouperFragmentListener,
         KanBoxBrowserFragment.KanBoxBrowserListener,
-        KanBoxIntroFragment.KanBoxIntroFragmentListener,
         View.OnClickListener, FileDownloader.FileDownloaderListener{
 
     private static final String TAG = KanBoxTabFragment.class.getSimpleName();
@@ -126,7 +128,28 @@ public class KanBoxTabFragment extends FileTabFragment implements
     @Override
     public void onResume() {
         super.onResume();
+        BusProvider.getInstance().register(this);
         refreshAdLayout();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        BusProvider.getInstance().unregister(this);
+    }
+
+    @Subscribe
+    public void onAuthFailedHappened(KanboxAuthResultEvent event) {
+        if (event.success) {
+            showKanBoxBrowserFragment();
+        } else {
+            showKanBoxIntroFragment();
+        }
+    }
+//
+    @Subscribe
+    public void onAuthStartClicked(KanboxAuthStartEvent event) {
+        showKanBoxAuthFragment();
     }
 
     @Override
@@ -244,8 +267,8 @@ public class KanBoxTabFragment extends FileTabFragment implements
                 ft.attach(fragment);
             }
         }
-        fragment.setListener(this);
-        ft.commitAllowingStateLoss();
+//        fragment.setListener(this);
+        ft.commit();
         clearFragmentInstance();
         mIntroFragment = fragment;
     }
@@ -264,7 +287,7 @@ public class KanBoxTabFragment extends FileTabFragment implements
                 ft.attach(fragment);
             }
         }
-        fragment.setListener(this);
+//        fragment.setListener(this);
         ft.commit();
         clearFragmentInstance();
         mAuthFragment = fragment;
@@ -332,21 +355,6 @@ public class KanBoxTabFragment extends FileTabFragment implements
         clearFragmentInstance();
         mFileGrouperFragment = fragment;
         mCurrentChildFragment = fragment;
-    }
-
-    @Override
-    public void onKanBoxAuthSuccess() {
-        showKanBoxBrowserFragment();
-    }
-
-    @Override
-    public void onKanBoxAuthFailed() {
-        showKanBoxIntroFragment();
-    }
-
-    @Override
-    public void onKanBoxAuthStart() {
-        showKanBoxAuthFragment();
     }
 
 

@@ -41,12 +41,12 @@ public class StorageManager extends BroadcastReceiver{
     }
 	
 	/**
-	 * 
 	 * @param context
 	 * @return
 	 */
-	public static StorageManager getInstance(Context context) {
+	public static synchronized StorageManager getInstance(Context context) {
 		if ( instance == null ) {
+            LogUtil.i(LOG_TAG, "getInstance "+System.currentTimeMillis());
 			StorageManager new_instance = new StorageManager(context.getApplicationContext());
             new_instance.registerReceiver();
             new_instance.refreshStorageVolume(context);
@@ -125,20 +125,33 @@ public class StorageManager extends BroadcastReceiver{
 		for (StorageUnit unit : mStorageUnits) {
             if (primary != null && primary.equals(unit.path)) {
                 stors_primary.add(unit.path);
+                LogUtil.i(LOG_TAG, "add primary: "+unit);
             } else {
+                if (Environment.MEDIA_BAD_REMOVAL.equals(unit.state)
+                        || Environment.MEDIA_NOFS.equals(unit.state)
+                        || Environment.MEDIA_UNMOUNTABLE.equals(unit.state)
+                        || Environment.MEDIA_UNMOUNTABLE.equals(unit.state)) {
+                    continue;
+                }
                 if (/*Environment.MEDIA_MOUNTED.equals(unit.state)*/FileUtils.isDirWritable(unit.path)) {
                     if (!unit.removable) {
+                        LogUtil.i(LOG_TAG, "unremovable writable: "+unit);
                         stors_writable_unremovable.add(unit.path);
                     } else {
+                        LogUtil.i(LOG_TAG, "removable writable: "+unit);
                         stors_writable_removable.add(unit.path);
                     }
                 }
                 else if (/*Environment.MEDIA_MOUNTED_READ_ONLY.equals(unit.state)*/new File(unit.path).canRead()) {
                     if (!unit.removable) {
+                        LogUtil.i(LOG_TAG, "unremovable readable: "+unit);
                         stors_readable_unremovable.add(unit.path);
                     } else {
+                        LogUtil.i(LOG_TAG, "removable readable: "+unit);
                         stors_readable_removable.add(unit.path);
                     }
+                } else {
+                    LogUtil.i(LOG_TAG, "not mounted: "+unit);
                 }
             }
 		}
@@ -319,8 +332,9 @@ public class StorageManager extends BroadcastReceiver{
 	/**
 	 * 
 	 */
-	public static void clear() {
+	public static synchronized void clear() {
         if (instance != null) {
+            LogUtil.i(LOG_TAG, "clear "+System.currentTimeMillis());
             instance.unregisterReceiver();
         }
 		instance = null;

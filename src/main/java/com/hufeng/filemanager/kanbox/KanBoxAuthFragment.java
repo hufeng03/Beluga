@@ -22,14 +22,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hufeng.filemanager.KanboxAuthResultEvent;
 import com.hufeng.filemanager.BaseFragment;
+import com.hufeng.filemanager.BusProvider;
 import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.kanbox.view.KanBoxLoginWebView;
 import com.hufeng.filemanager.utils.LogUtil;
 import com.kanbox.api.Token;
-
-import java.lang.ref.WeakReference;
+import com.squareup.otto.Produce;
 
 /**
  * Created by feng on 13-11-21.
@@ -44,18 +45,19 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
     private TextView mProgressText;
     private TextView mProgressNumber;
     private KanBoxLoginWebView mWebView;
+    private boolean mAuthResult;
 //    private ProgressBar mWebLoadingProgressBar;
 
-    WeakReference<KanBoxAuthFragmentListener> mWeakListener;
+//    WeakReference<KanBoxAuthFragmentListener> mWeakListener;
 
-    public static interface KanBoxAuthFragmentListener {
-        public void onKanBoxAuthSuccess();
-        public void onKanBoxAuthFailed();
-    }
+//    public static interface KanBoxAuthFragmentListener {
+//        public void onKanBoxAuthSuccess();
+//        public void onKanBoxAuthFailed();
+//    }
 
-    public void setListener(KanBoxAuthFragmentListener listener) {
-        mWeakListener = new WeakReference<KanBoxAuthFragmentListener>(listener);
-    }
+//    public void setListener(KanBoxAuthFragmentListener listener) {
+//        mWeakListener = new WeakReference<KanBoxAuthFragmentListener>(listener);
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -179,14 +181,33 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
             KanBoxApi.getInstance().refreshToken();
         } else {
             mProgressText.setText("");
-            if(mWeakListener!=null) {
-                KanBoxAuthFragmentListener listener = mWeakListener.get();
-                if (listener != null) {
-                    listener.onKanBoxAuthSuccess();
-                }
-            }
+//            if(mWeakListener!=null) {
+//                KanBoxAuthFragmentListener listener = mWeakListener.get();
+//                if (listener != null) {
+//                    listener.onKanBoxAuthSuccess();
+//                }
+//            }
+            mAuthResult = true;
+            BusProvider.getInstance().post(new KanboxAuthResultEvent(System.currentTimeMillis(), mAuthResult));
+//            BusProvider.getInstance().post(produceKanboxAuthResultEvent());
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+//        BusProvider.getInstance().unregister(this);
+    }
+
+//    @Produce public KanboxAuthResultEvent produceKanboxAuthResultEvent() {
+//        return new KanboxAuthResultEvent(System.currentTimeMillis(), mAuthResult);
+//    }
 
     @Override
     public void onDestroyView() {
@@ -206,12 +227,15 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
             mProgressNumber.setVisibility(View.GONE);
             mProgressText.setText(R.string.kanbox_get_account_info);
         } else if (op_type == KanBoxApi.OP_GET_ACCCOUNT_INFO) {
-            if(mWeakListener!=null) {
-                KanBoxAuthFragmentListener listener = mWeakListener.get();
-                if (listener != null) {
-                    listener.onKanBoxAuthSuccess();
-                }
-            }
+//            if(mWeakListener!=null) {
+//                KanBoxAuthFragmentListener listener = mWeakListener.get();
+//                if (listener != null) {
+//                    listener.onKanBoxAuthSuccess();
+//                }
+//            }
+            mAuthResult = true;
+            BusProvider.getInstance().post(new KanboxAuthResultEvent(System.currentTimeMillis(), mAuthResult));
+//            BusProvider.getInstance().post(produceKanboxAuthResultEvent());
         }
     }
 
@@ -238,12 +262,15 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
             mProgressText.setText(R.string.network_error);
         }
 
-        if(mWeakListener!=null) {
-            KanBoxAuthFragmentListener listener = mWeakListener.get();
-            if (listener != null) {
-                listener.onKanBoxAuthFailed();
-            }
-        }
+//        if(mWeakListener!=null) {
+//            KanBoxAuthFragmentListener listener = mWeakListener.get();
+//            if (listener != null) {
+//                listener.onKanBoxAuthFailed();
+//            }
+//        }
+        mAuthResult = false;
+        BusProvider.getInstance().post(new KanboxAuthResultEvent(System.currentTimeMillis(), mAuthResult));
+//        BusProvider.getInstance().post(produceKanboxAuthResultEvent());
     }
 
     @Override

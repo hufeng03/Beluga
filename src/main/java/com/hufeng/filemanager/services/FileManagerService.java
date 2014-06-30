@@ -66,7 +66,6 @@ public class FileManagerService extends Service{
                     if (mFileSyncServiceImpl != null) {
                         mFileSyncServiceImpl.refresh();
                     }
-
                 } else if (Intent.ACTION_MEDIA_MOUNTED.equals(intent.getAction()) || Intent.ACTION_MEDIA_UNMOUNTED.equals(intent.getAction())) {
                     StorageManager.clear();
                     if (mDirectoryMonitorServiceImpl != null) {

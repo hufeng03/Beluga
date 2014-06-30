@@ -213,7 +213,6 @@ public class KanBoxResponseHandler {
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
-
     }
 
     public static ContentValues buildFullContentValueFromKanBoxFileEntry(KanBoxFileEntry entry) {

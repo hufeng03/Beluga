@@ -1,7 +1,10 @@
 package com.hufeng.filemanager.services;
 
+import android.content.Intent;
 import android.os.RemoteException;
+import android.support.v4.content.LocalBroadcastManager;
 
+import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.storage.StorageManager;
 
 import java.util.ArrayList;
@@ -53,5 +56,7 @@ public class IUiImpl extends IUi.Stub {
     @Override
     public void storageChanged() throws RemoteException {
         StorageManager.clear();
+        Intent intent = new Intent("SHOW_ROOT_FILES_ACTION");
+        LocalBroadcastManager.getInstance(FileManager.getAppContext()).sendBroadcast(intent);
     }
 }
