@@ -1,5 +1,6 @@
 package com.hufeng.filemanager.kanbox;
 
+import android.app.DownloadManager;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.hufeng.filemanager.BusProvider;
 import com.hufeng.filemanager.Constants;
+import com.hufeng.filemanager.FileDownloadEvent;
 import com.hufeng.filemanager.FileGrouperFragment;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.FileTabFragment;
@@ -30,6 +32,7 @@ import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.resource.FileDownloader;
+import com.hufeng.filemanager.utils.NetworkUtil;
 import com.kanbox.api.Token;
 import com.squareup.otto.Subscribe;
 
@@ -42,7 +45,7 @@ import java.util.List;
 public class KanBoxTabFragment extends FileTabFragment implements
         FileGrouperFragment.FileGrouperFragmentListener,
         KanBoxBrowserFragment.KanBoxBrowserListener,
-        View.OnClickListener, FileDownloader.FileDownloaderListener{
+        View.OnClickListener{
 
     private static final String TAG = KanBoxTabFragment.class.getSimpleName();
 
@@ -106,13 +109,11 @@ public class KanBoxTabFragment extends FileTabFragment implements
             }
         }
 
-        FileDownloader.addFileDownloaderListener(this);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        FileDownloader.removeFileDownloaderListener(this);
     }
 
     @Override
@@ -144,6 +145,31 @@ public class KanBoxTabFragment extends FileTabFragment implements
             showKanBoxBrowserFragment();
         } else {
             showKanBoxIntroFragment();
+        }
+    }
+
+    @Subscribe
+    public void onFileDownloadEvent(FileDownloadEvent event) {
+        refreshAdLayout();
+        if (!event.url.startsWith("http://www.kanbox.com/")) {
+            return;
+        }
+
+        if (event.status == DownloadManager.STATUS_SUCCESSFUL) {
+            //success
+            if (new File(event.path).exists()) {
+                FileAction.viewFile(getActivity(), event.path);
+            }
+        } else if (event.status == DownloadManager.STATUS_PAUSED) {
+            //paused网络原因
+//            if (!NetworkUtil.isNetworkConnected(getActivity())) {
+//                Toast.makeTe
+//            }
+        } else if (event.status == DownloadManager.STATUS_FAILED) {
+            //failed
+            Toast.makeText(getActivity(), R.string.kanbox_apk_download_failed, Toast.LENGTH_SHORT).show();
+        } else {
+            //progress
         }
     }
 //
@@ -236,7 +262,15 @@ public class KanBoxTabFragment extends FileTabFragment implements
                         text.setText(R.string.install_kanbox_android_client);
                     } else if (FileDownloader.isDownloading(Constants.KANBOX_APK_URL)) {
                         int progress = FileDownloader.getDownloadProgress(Constants.KANBOX_APK_URL);
-                        text.setText(getResources().getString(R.string.downloading_kanbox_android_client, progress));
+                        if (progress == -100) {
+                            String test = getResources().getString(R.string.file_download_paused);
+                            if (!NetworkUtil.isNetworkConnected(FileManager.getAppContext())) {
+                                test+=", "+getResources().getString(R.string.check_network);
+                            }
+                            text.setText(test);
+                        } else {
+                            text.setText(getResources().getString(R.string.downloading_kanbox_android_client, progress));
+                        }
                     } else {
                         text.setText(R.string.download_kanbox_android_client);
                     }
@@ -469,29 +503,28 @@ public class KanBoxTabFragment extends FileTabFragment implements
     }
 
 
-    @Override
-    public void onFileDownloading(String url, String path, int progress) {
-        refreshAdLayout();
-    }
-
-    @Override
-    public void onFileDownloaded(String url, String path, int status) {
-        refreshAdLayout();
-        if (url.startsWith("http://www.kanbox.com/")) {
-            if (status == FileDownloader.STATUS.FAILED.ordinal()) {
-                Toast.makeText(getActivity(), R.string.kanbox_apk_download_failed, Toast.LENGTH_SHORT).show();
-            } else if (status == FileDownloader.STATUS.PAUSED.ordinal()) {
-                Toast.makeText(getActivity(), R.string.kanbox_apk_download_paused, Toast.LENGTH_SHORT).show();
-            } else if (status == FileDownloader.STATUS.SUCCESS.ordinal()) {
-                if (new File(path).exists()) {
-//                    Intent intent = new Intent(Intent.ACTION_VIEW);
-//                    intent.setData(Uri.fromFile(new File(path)));
-//                    startActivity(intent);
-                    FileAction.viewFile(getActivity(), path);
-                }
-            }
-        }
-    }
+//    @Override
+//    public void onFileDownloading(String url, String path, int progress) {
+//        refreshAdLayout();
+//    }
+//
+//    @Override
+//    public void onFileDownloaded(String url, String path, int status) {
+//        refreshAdLayout();
+//        if (url.startsWith("http://www.kanbox.com/")) {
+//            if (status == FileDownloader.STATUS.FAILED.ordinal()) {
+//                Toast.makeText(getActivity(), R.string.kanbox_apk_download_failed, Toast.LENGTH_SHORT).show();
+//            }
+////            else if (status == FileDownloader.STATUS.PAUSED.ordinal()) {
+////                Toast.makeText(getActivity(), R.string.kanbox_apk_download_paused, Toast.LENGTH_SHORT).show();
+////            }
+//            else if (status == FileDownloader.STATUS.SUCCESS.ordinal()) {
+//                if (new File(path).exists()) {
+//                    FileAction.viewFile(getActivity(), path);
+//                }
+//            }
+//        }
+//    }
 
     @Override
     public void onFileBrowserDirShown(String path) {

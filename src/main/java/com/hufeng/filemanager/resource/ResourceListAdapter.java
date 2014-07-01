@@ -112,17 +112,26 @@ public class ResourceListAdapter extends ArrayAdapter<ResourceEntry> implements 
         }
         if (entry.needDownload()) {
             if(FileDownloader.isDownloading(entry.download_url)) {
-                holder.progress.setVisibility(View.VISIBLE);
                 int progress = FileDownloader.getDownloadProgress(entry.download_url);
                 LogUtil.i(LOG_TAG, "apk download progress is " + progress);
                 if (progress == 0) {
+                    holder.progress.setProgress(progress);
                     holder.progress.setIndeterminate(true);
+                    holder.progress.setVisibility(View.VISIBLE);
+                    holder.info.setVisibility(View.GONE);
+                    holder.status.setText(R.string.btn_txt_pause);
+                } else if (progress == -100) {
+                    holder.progress.setVisibility(View.GONE);
+                    holder.info.setVisibility(View.VISIBLE);
+                    holder.info.setText(R.string.file_download_paused);
+                    holder.status.setText(R.string.btn_txt_pause);
                 } else {
+                    holder.progress.setProgress(progress);
                     holder.progress.setIndeterminate(false);
+                    holder.progress.setVisibility(View.VISIBLE);
+                    holder.info.setVisibility(View.GONE);
+                    holder.status.setText(R.string.btn_txt_pause);
                 }
-                holder.progress.setProgress(progress);
-                holder.info.setVisibility(View.GONE);
-                holder.status.setText(R.string.btn_txt_pause);
             } else {
                 holder.progress.setVisibility(View.GONE);
                 holder.info.setVisibility(View.VISIBLE);

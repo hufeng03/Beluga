@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -554,6 +555,9 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 		switch(item.getItemId()){
 			case R.id.menu_refresh:
 			{
+                StorageManager.clear();
+                Intent intent = new Intent("SHOW_ROOT_FILES_ACTION");
+                LocalBroadcastManager.getInstance(FileManager.getAppContext()).sendBroadcast(intent);
                 UiServiceHelper.getInstance().startScan();
 				flag = true;
 				break;

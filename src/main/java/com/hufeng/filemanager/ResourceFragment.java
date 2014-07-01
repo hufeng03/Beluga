@@ -1,6 +1,6 @@
 package com.hufeng.filemanager;
 
-import android.app.Activity;
+import android.app.DownloadManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.os.AsyncTask;
@@ -23,6 +23,7 @@ import com.hufeng.filemanager.resource.ResourceListAdapter;
 import com.hufeng.filemanager.resource.ResourceListDownloader;
 import com.hufeng.filemanager.resource.ResourceListLoader;
 import com.hufeng.filemanager.storage.StorageManager;
+import com.squareup.otto.Subscribe;
 
 import java.io.File;
 import java.util.List;
@@ -31,8 +32,7 @@ import java.util.List;
 /**
  * Created by feng on 13-9-29.
  */
-public class ResourceFragment extends FileGridFragment implements LoaderManager.LoaderCallbacks<List<ResourceEntry>>,
-        FileDownloader.FileDownloaderListener {
+public class ResourceFragment extends FileGridFragment implements LoaderManager.LoaderCallbacks<List<ResourceEntry>> {
 
     public static final String RESOURCE_FRAGMENT_ARGUMENT_TYPE = "resource_fragment_argument_type";
 
@@ -68,6 +68,19 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
     }
 
     private ResourceListAdapter mAdapter;
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        BusProvider.getInstance().unregister(this);
+    }
 
     @Override
     public boolean onBackPressed() {
@@ -112,13 +125,13 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
             }
         }
 
-        FileDownloader.addFileDownloaderListener(this);
+//        FileDownloader.addFileDownloaderListener(this);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        FileDownloader.removeFileDownloaderListener(this);
+//        FileDownloader.removeFileDownloaderListener(this);
         unregisterForContextMenu(getGridView());
     }
 
@@ -146,7 +159,7 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
         ResourceEntry entry = (ResourceEntry)g.getAdapter().getItem(position);
         if(entry.needDownload()) {
             if(FileDownloader.isDownloading(entry.download_url)) {
-                FileDownloader.pauseDownloader(entry.download_url);
+                FileDownloader.cancelDownloader(entry.download_url);
             } else {
                 String name = entry.getName();
                 if (ResourceType.valueOf(entry.resource_category) == ResourceType.DOC) {
@@ -202,14 +215,13 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
         mAdapter.setData(null);
     }
 
-    @Override
-    public void onFileDownloading(String url, String path, int progress) {
-        mAdapter.notifyDataSetChanged();
-    }
 
-    @Override
-    public void onFileDownloaded(String url, String path, int status) {
-        Activity act = getActivity();
+    @Subscribe
+    public void onFileDownloadEvent(FileDownloadEvent event) {
+        if (event.url.startsWith("http://www.kanbox.com/")) {
+            return;
+        }
+        String path = event.path;
         String name = "";
         if(!TextUtils.isEmpty(path)) {
             name = new File(path).getName();
@@ -217,16 +229,56 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
                 name = name.substring(0,name.length()-4);
             }
         }
-        if(act!=null) {
-            if(status == FileDownloader.STATUS.SUCCESS.ordinal()) {
-                Toast.makeText(act, getResources().getString(R.string.apk_download_success, name),Toast.LENGTH_SHORT).show();
-            } else if(status == FileDownloader.STATUS.PAUSED.ordinal()){
-                Toast.makeText(act, getResources().getString(R.string.apk_download_paused, name),Toast.LENGTH_SHORT).show();
-            } else if(status == FileDownloader.STATUS.FAILED.ordinal()) {
-                Toast.makeText(act, getResources().getString(R.string.apk_download_failed, name),Toast.LENGTH_SHORT).show();
+        if (event.status == DownloadManager.STATUS_SUCCESSFUL) {
+            //success
+            if (!TextUtils.isEmpty(name)) {
+                Toast.makeText(getActivity(), getResources().getString(R.string.apk_download_success, name), Toast.LENGTH_SHORT).show();
             }
+            reloadFiles();
+        } else if (event.status == DownloadManager.STATUS_PAUSED) {
+            //paused网络原因
+            mAdapter.notifyDataSetChanged();
+        } else if (event.status == DownloadManager.STATUS_FAILED) {
+            //failed
+            if (!TextUtils.isEmpty(name)) {
+                if (event.progress == -100) {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.apk_download_cancelled, name), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.apk_download_failed, name), Toast.LENGTH_SHORT).show();
+                }
+            }
+            reloadFiles();
+        } else {
+            //progress
+            mAdapter.notifyDataSetChanged();
         }
-        reloadFiles();
     }
+
+//    @Override
+//    public void onFileDownloading(String url, String path, int progress) {
+//
+//    }
+//
+//    @Override
+//    public void onFileDownloaded(String url, String path, int status) {
+//        Activity act = getActivity();
+//        String name = "";
+//        if(!TextUtils.isEmpty(path)) {
+//            name = new File(path).getName();
+//            if(name.endsWith("_tmp")) {
+//                name = name.substring(0,name.length()-4);
+//            }
+//        }
+//        if(act!=null) {
+//            if(status == FileDownloader.STATUS.SUCCESS.ordinal()) {
+//
+//            } else if(status == FileDownloader.STATUS.PAUSED.ordinal()){
+//                Toast.makeText(act, getResources().getString(R.string.apk_download_paused, name),Toast.LENGTH_SHORT).show();
+//            } else if(status == FileDownloader.STATUS.FAILED.ordinal()) {
+//
+//            }
+//        }
+//        reloadFiles();
+//    }
 
 }

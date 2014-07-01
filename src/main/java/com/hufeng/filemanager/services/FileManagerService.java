@@ -5,7 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.os.RemoteException;
 
 import com.hufeng.filemanager.Constants;
@@ -23,6 +27,7 @@ public class FileManagerService extends Service{
 
     private BroadcastReceiver mMediaReceiver = null;
     private BroadcastReceiver mDoovReceiver = null;
+    private Handler mHandler;
 	
 	@Override
 	public void onCreate() {
@@ -30,7 +35,13 @@ public class FileManagerService extends Service{
 		super.onCreate();
 		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "onCreate");
 		mBinder = new IFileManagerServiceImpl().asBinder();
-		
+
+
+        HandlerThread thread = new HandlerThread("FileManagerServiceHandlerThread", android.os.Process.THREAD_PRIORITY_BACKGROUND);
+        thread.start();
+        Looper serviceLooper = thread.getLooper();
+        mHandler = new OurHandler(serviceLooper);
+
 		mFileSyncServiceImpl = new IFileSyncServiceImpl(this.getApplicationContext());
 		mFileSyncServiceImpl.onCreate();
         mDirectoryMonitorServiceImpl = new IDirectoryMonitorServiceImpl(this.getApplicationContext());
@@ -57,6 +68,30 @@ public class FileManagerService extends Service{
         ServiceUiHelper.getInstance().removeUiIBinder();
 	}
 
+    public class OurHandler extends Handler {
+
+        public static final int HANDLER_MESSAGE_MOUNTED = 1;
+
+        public OurHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    StorageManager.clear();
+                    if (mDirectoryMonitorServiceImpl != null) {
+                        mDirectoryMonitorServiceImpl.refresh();
+                    }
+                    ServiceUiHelper.getInstance().storageChanged();
+                    break;
+            }
+        }
+    }
+
+
     private void registerMediaReceiver() {
         mMediaReceiver = new BroadcastReceiver(){
             @Override
@@ -67,11 +102,7 @@ public class FileManagerService extends Service{
                         mFileSyncServiceImpl.refresh();
                     }
                 } else if (Intent.ACTION_MEDIA_MOUNTED.equals(intent.getAction()) || Intent.ACTION_MEDIA_UNMOUNTED.equals(intent.getAction())) {
-                    StorageManager.clear();
-                    if (mDirectoryMonitorServiceImpl != null) {
-                        mDirectoryMonitorServiceImpl.refresh();
-                    }
-                    ServiceUiHelper.getInstance().storageChanged();
+                    mHandler.sendEmptyMessageDelayed(OurHandler.HANDLER_MESSAGE_MOUNTED, 1000);
                 }
 
             }

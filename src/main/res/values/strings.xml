@@ -594,7 +594,9 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="menu_back">Back</string>
 <string name="apk_download_success">%s download success</string>
 <string name="apk_download_failed">%s download failed</string>
-<string name="apk_download_paused">%s download paused</string>
+<string name="apk_download_cancelled">%s download canceled</string>
+<string name="file_download_paused">download stopped</string>
+<string name="check_network">Please check network</string>
 <string name="download_start">%s download start</string>
 <string name="download_success">%s download success</string>
 <string name="download_paused">%s download cancelled</string>

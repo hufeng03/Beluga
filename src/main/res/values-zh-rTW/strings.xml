@@ -582,7 +582,9 @@ or nonexistent.</string>
     <string name="tool_description_kanbox">阿裏巴巴旗下個人雲存儲服務</string>
     <string name="apk_download_success">%s下載成功</string>
     <string name="apk_download_failed">%s下載失敗</string>
-    <string name="apk_download_paused">%s下載暫停</string>
+    <string name="apk_download_cancelled">%s下載被暫停</string>
+    <string name="file_download_paused">下載已停止</string>
+    <string name="check_network">請檢查網絡</string>
     <string name="download_start">%s開始下載</string>
     <string name="download_success">%s下載成功</string>
     <string name="download_paused">%s下載已取消</string>
