@@ -269,7 +269,11 @@ public class KanBoxTabFragment extends FileTabFragment implements
                             }
                             text.setText(test);
                         } else {
-                            text.setText(getResources().getString(R.string.downloading_kanbox_android_client, progress));
+                            if (progress == 0 || progress == -1) {
+                                text.setText(getResources().getString(R.string.downloading_kanbox_android_client_wait));
+                            } else {
+                                text.setText(getResources().getString(R.string.downloading_kanbox_android_client, progress));
+                            }
                         }
                     } else {
                         text.setText(R.string.download_kanbox_android_client);
@@ -489,7 +493,11 @@ public class KanBoxTabFragment extends FileTabFragment implements
     //                    startActivity(intent);
                         FileAction.viewFile(getActivity(), path);
                     } else  {
-                        FileDownloader.downloadFile(getActivity(), Constants.KANBOX_APK_URL, new File(path).getParent() , new File(path).getName());
+                        if (!NetworkUtil.isNetworkConnected(v.getContext())) {
+                            Toast.makeText(getActivity(), R.string.no_network_check_network, Toast.LENGTH_SHORT).show();
+                        } else {
+                            FileDownloader.downloadFile(getActivity(), Constants.KANBOX_APK_URL, new File(path).getParent(), new File(path).getName());
+                        }
                     }
                 }
                 break;

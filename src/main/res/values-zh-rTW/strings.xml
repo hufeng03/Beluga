@@ -585,6 +585,7 @@ or nonexistent.</string>
     <string name="apk_download_cancelled">%s下載被暫停</string>
     <string name="file_download_paused">下載已停止</string>
     <string name="check_network">請檢查網絡</string>
+    <string name="no_network_check_network">網絡連接不可用，請檢查</string>
     <string name="download_start">%s開始下載</string>
     <string name="download_success">%s下載成功</string>
     <string name="download_paused">%s下載已取消</string>
@@ -613,6 +614,7 @@ or nonexistent.</string>
     <string name="kanbox_refresh_file_list_error">刷新文件列表失敗!</string>
     <string name="download_kanbox_android_client">下載使用酷盤手機版，送2T空間</string>
     <string name="downloading_kanbox_android_client">"酷盤客戶端正在下載: %1$d%%"</string>
+    <string name="downloading_kanbox_android_client_wait">酷盤客戶端正在等待下載</string>
     <string name="install_kanbox_android_client">安裝使用酷盤手機版，送2T空間</string>
     <string name="kanbox_uploading_files" formatted="false">正常上傳%1$d個文件到酷盤</string>
     <string name="kanbox_uploading_files_with_success_and_failed" formatted="false">正在上傳%1$d個文件(%2$d個已失敗，%3$d個已成功)</string>

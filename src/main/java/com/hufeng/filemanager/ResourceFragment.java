@@ -23,6 +23,7 @@ import com.hufeng.filemanager.resource.ResourceListAdapter;
 import com.hufeng.filemanager.resource.ResourceListDownloader;
 import com.hufeng.filemanager.resource.ResourceListLoader;
 import com.hufeng.filemanager.storage.StorageManager;
+import com.hufeng.filemanager.utils.NetworkUtil;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -173,7 +174,12 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
                     dir_name = ResourceListLoader.SELECTED_DOC_DIR_NAME;
                 }
                 String primary_stor = StorageManager.getInstance(FileManager.getAppContext()).getPrimaryExternalStorage();
-                FileDownloader.downloadFile(g.getContext(), entry.download_url, new File(primary_stor, dir_name).getAbsolutePath(), name);
+                String dir_path = new File(primary_stor, dir_name).getAbsolutePath();
+                if (!NetworkUtil.isNetworkConnected(g.getContext())) {
+                    Toast.makeText(getActivity(), R.string.no_network_check_network, Toast.LENGTH_SHORT).show();
+                } else {
+                    FileDownloader.downloadFile(g.getContext(), entry.download_url, dir_path, name);
+                }
             }
         } else if(entry.isInstalled()) {
                 AppAction.launchApp(g.getContext(), entry.package_name);

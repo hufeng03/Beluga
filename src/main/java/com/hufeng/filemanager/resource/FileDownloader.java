@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -56,29 +57,29 @@ public class FileDownloader extends BroadcastReceiver{
     //-100: cancelled
     //-200: paused
 
-//    private static ScheduledThreadPoolExecutor mScheduledExecutorService = null;
+    private static ScheduledExecutorService mScheduledExecutorService = null;
 
-    private static HandlerThread mHandlerThread;
-    private static Handler mHandler;
-
-    private static class MyHandler extends Handler {
-
-        public MyHandler(Looper looper) {
-            super(looper);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    mUpdateCommand.run();
-                    if (mHandler != null) {
-                        mHandler.sendEmptyMessageDelayed(0, 1000 * 2);
-                    }
-                    break;
-            }
-        }
-    }
+//    private static HandlerThread mHandlerThread;
+//    private static Handler mHandler;
+//
+//    private static class MyHandler extends Handler {
+//
+//        public MyHandler(Looper looper) {
+//            super(looper);
+//        }
+//
+//        @Override
+//        public void handleMessage(Message msg) {
+//            switch (msg.what) {
+//                case 0:
+//                    mUpdateCommand.run();
+//                    if (mHandler != null) {
+//                        mHandler.sendEmptyMessageDelayed(0, 1000 * 2);
+//                    }
+//                    break;
+//            }
+//        }
+//    }
 
 //    private final Handler mHandler = new Handler(Looper.getMainLooper());
 
@@ -112,6 +113,9 @@ public class FileDownloader extends BroadcastReceiver{
                             LogUtil.i(LOG_TAG, "mUpdateCommand post success "+System.currentTimeMillis()+", "+event);
                         }
                     }
+                } else {
+                    //TODO:ui was destroyed, do something
+
                 }
                 if (!TextUtils.isEmpty(url)) {
                     mDownloadingUrl.remove(url);
@@ -124,14 +128,14 @@ public class FileDownloader extends BroadcastReceiver{
 
             //stop it
             if (mDownloadingIdUrlMap.isEmpty() || mDownloadingUrl.isEmpty()) {
-//                if (mScheduledExecutorService != null) {
-//                    mScheduledExecutorService.shutdownNow();
-//                    mScheduledExecutorService = null;
-//                }
-                if (mHandler!= null) {
-                    mHandlerThread.quitSafely();
-                    mHandler = null;
+                if (mScheduledExecutorService != null) {
+                    mScheduledExecutorService.shutdownNow();
+                    mScheduledExecutorService = null;
                 }
+//                if (mHandler!= null) {
+//                    mHandlerThread.quitSafely();
+//                    mHandler = null;
+//                }
             }
         }
     }
@@ -157,15 +161,14 @@ public class FileDownloader extends BroadcastReceiver{
                 }
             }
             if (ids == null || ids.length == 0) {
-//                if (mScheduledExecutorService != null) {
-//                    mScheduledExecutorService.shutdownNow();
-//                    mScheduledExecutorService = null;
-//                }
-                if (mHandler!= null) {
-                    mHandlerThread.quitSafely();
-                    mHandler = null;
+                if (mScheduledExecutorService != null) {
+                    mScheduledExecutorService.shutdownNow();
+                    mScheduledExecutorService = null;
                 }
-//                throw new Exception("empty");
+//                if (mHandler!= null) {
+//                    mHandlerThread.quitSafely();
+//                    mHandler = null;
+//                }
                 return;
             } else {
 
@@ -227,6 +230,9 @@ public class FileDownloader extends BroadcastReceiver{
         if(isDownloading(url)) {
             return false;
         } else {
+            if (!new File(path).exists()) {
+                new File(path).mkdirs();
+            }
             int idx_1 = url.lastIndexOf("/");
             if (idx_1>0 && url.charAt(idx_1-1) != '/' ) {
                 int idx_2 = url.substring(idx_1).indexOf(".");
@@ -265,12 +271,17 @@ public class FileDownloader extends BroadcastReceiver{
             mDownloadingIdUrlMap.put(downloadId, url);
             mDownloadingIdPathMap.put(downloadId, real_path);
 
-            if (mHandler == null) {
-                mHandlerThread = new HandlerThread("FileDownloader-HandlerThread");
-                mHandlerThread.start();
-                mHandler = new MyHandler(mHandlerThread.getLooper());
+//            if (mHandler == null) {
+//                mHandlerThread = new HandlerThread("FileDownloader-HandlerThread");
+//                mHandlerThread.start();
+//                mHandler = new MyHandler(mHandlerThread.getLooper());
+//
+//                mHandler.sendEmptyMessageDelayed(0, 1000);
+//            }
 
-                mHandler.sendEmptyMessageDelayed(0, 1000);
+            if (mScheduledExecutorService == null) {
+                mScheduledExecutorService = Executors.newScheduledThreadPool(2);
+                mScheduledExecutorService.scheduleAtFixedRate(mUpdateCommand, 1, 2, TimeUnit.SECONDS);
             }
 
             return true;
@@ -320,14 +331,14 @@ public class FileDownloader extends BroadcastReceiver{
 
         //stop it
         if (mDownloadingIdUrlMap.isEmpty() || mDownloadingUrl.isEmpty()) {
-//            if (mScheduledExecutorService != null) {
-//                mScheduledExecutorService.shutdownNow();
-//                mScheduledExecutorService = null;
-//            }
-            if (mHandler!= null) {
-                mHandlerThread.quitSafely();
-                mHandler = null;
+            if (mScheduledExecutorService != null) {
+                mScheduledExecutorService.shutdownNow();
+                mScheduledExecutorService = null;
             }
+//            if (mHandler!= null) {
+//                mHandlerThread.quitSafely();
+//                mHandler = null;
+//            }
         }
     }
 

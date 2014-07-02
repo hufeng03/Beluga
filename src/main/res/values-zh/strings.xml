@@ -585,6 +585,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="apk_download_cancelled">%s下载被取消</string>
 <string name="file_download_paused">下载已停止</string>
 <string name="check_network">请检查网络</string>
+<string name="no_network_check_network">网络连接不可用，请检查</string>
 <string name="download_start">%s开始下载</string>
 <string name="download_success">%s下载成功</string>
 <string name="download_paused">%s下载已取消</string>
@@ -613,6 +614,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="kanbox_refresh_file_list_error">刷新文件列表失败!</string>
 <string name="download_kanbox_android_client">下载使用酷盘手机版，送2T空间</string>
 <string name="downloading_kanbox_android_client">"酷盘客户端正在下载: %1$d%%"</string>
+<string name="downloading_kanbox_android_client_wait">"酷盘客户端正在等待下载"</string>
 <string name="install_kanbox_android_client">安装使用酷盘手机版，送2T空间</string>
 <string name="kanbox_uploading_files" formatted="false">正在上传%1$d个文件到酷盘</string>
 <string name="kanbox_uploading_files_with_success_and_failed" formatted="false">正在上传%1$d个文件(%2$d个已失败，%3$d个已成功)</string>
