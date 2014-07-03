@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">文件管理</string>
+    <string name="select_file_title">选择文件</string>
     <string name="selected">必备</string>
 	<string name="category">分类</string>
 	<string name="directory">手机</string>
@@ -698,4 +699,6 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="china_tip_dialog_known">不再提示</string>
 <string name="china_tip_dialog_content">本软件需要连接网络，以更好地为您提供完整服务。联网可能产生数据流量费，该费用由运营商收取。</string>
 <string name="chinese_goverment_tip">郑重提醒：国家秘密受法律保护。请严格遵守保密法律法规，严禁在互联网上存储、处理、传输、发布涉密信息。任何危害国家秘密安全的行为，都必须受到法律追究。</string>
+    <string name="can_not_select_dir">不支持选择文件夹</string>
+    <string name="long_press_to_select">请长按文件进行选择</string>
 </resources>

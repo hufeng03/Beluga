@@ -92,9 +92,6 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (getArguments().getBoolean(FILE_GROUPER_ARGUMENT_CLOUD) || getArguments().getBoolean(FILE_GROUPER_ARGUMENT_SAFE)) {
-//            FileOperation fileOperation = new FileOperation();
-//            fileOperation.setOperationMode(FileOperation.OPERATION_MODE.ADD_CLOUD);
-
             FileOperation fileOperation = (FileOperation) getChildFragmentManager().findFragmentByTag("FileGrouper-FileOperation");
             if (fileOperation == null) {
                 if (getArguments().getBoolean(FILE_GROUPER_ARGUMENT_SAFE)) {

@@ -57,15 +57,40 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
+        </activity>
+        <activity android:name=".FileManagerSelectActivity"
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:label="@string/select_file_title">
             <!--intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter-->
+            <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
-                <data android:mimeType="*/*" android:scheme="file" />
-                <data android:mimeType="image/*" android:scheme="content" />
+                <data android:mimeType="resource/folder" />
+                <!--data android:mimeType="image/*" android:scheme="content" />
+                <data android:mimeType="video/*" android:scheme="content" />
+                <data android:mimeType="audio/*" android:scheme="content" /-->
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+            </intent-filter>
+            <intent-filter >
+                <action android:name="com.mediatek.filemanager.ADD_FILE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
             <intent-filter>
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="resource/folder" />
+            </intent-filter>
+
+            <!--intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
                 <data android:mimeType="image/*" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -97,10 +122,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="video/*" />
             </intent-filter-->
-          	<intent-filter>
-				<action android:name="android.intent.action.SEARCH" />
-			</intent-filter>
-            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
         </activity>
         
         <activity android:name=".FileManagerPreferenceActivity"

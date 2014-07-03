@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -128,8 +129,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
         mTabAdapter.addTab(directoryTab,
         		DirectoryTabFragment.class, null);
         if ("doov".equals(Constants.PRODUCT_FLAVOR_NAME)) {
-//            mTabAdapter.addTab(searchTab,
-//                    SearchTabFragment.class, null);
+
         } else {
             if (Constants.SHOW_KANBOX_CATEGORY) {
                 mTabAdapter.addTab(kanboxTab,
@@ -228,6 +228,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
             getFileOperation().setCopyFiles(files);
             mViewPager.setCurrentItem(FRAGMENT_INDEX_DEVICE);
 		}
+
 //        else if( ACTION_UPLOAD_FILES.equals(intent.getAction())) {
 //            String[] files = intent.getStringArrayExtra("files");
 //            ((KanBoxTabFragment)mTabAdapter.getFragment(FRAGMENT_INDEX_TOOLS)).getFileOperation().setUploadFiles(files);
@@ -434,7 +435,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
 
 		@Override
 		public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            LogUtil.i(LOG_TAG, "tab reselected "+tab.getPosition());
+            LogUtil.i(LOG_TAG, "tab reselected " + tab.getPosition());
 			//if(mReSelect){
 				int position = tab.getPosition();
             	if(position==FRAGMENT_INDEX_CATEGORY){

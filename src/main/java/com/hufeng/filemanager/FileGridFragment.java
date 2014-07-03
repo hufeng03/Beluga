@@ -51,7 +51,9 @@ public abstract class FileGridFragment extends GridFragment{
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mOperationActivity = (FileOperationActivity)activity;
+        if (activity instanceof FileOperationActivity) {
+            mOperationActivity = (FileOperationActivity) activity;
+        }
     }
 
     @Override

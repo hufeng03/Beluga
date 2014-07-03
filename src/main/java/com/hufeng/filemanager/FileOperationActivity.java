@@ -280,6 +280,9 @@ public abstract class FileOperationActivity extends BaseActivity implements
             case R.id.file_operation_cancel:
                 getFileOperation().onOperationSelectCancel(this);
                 break;
+            case R.id.file_operation_selectok:
+                getFileOperation().onOperationSelectOK(this);
+                break;
             case R.id.file_operation_selectall:
                 getFileOperation().onOperationSelectAll(this);
                 break;

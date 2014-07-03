@@ -24,6 +24,7 @@ import com.hufeng.filemanager.services.IUiImpl;
 import com.hufeng.filemanager.services.UiServiceHelper;
 import com.hufeng.filemanager.ui.FileArrayAdapter;
 import com.hufeng.filemanager.ui.FileGridAdapterListener;
+import com.hufeng.filemanager.ui.FileOperation;
 import com.hufeng.filemanager.utils.LogUtil;
 
 import java.io.File;
@@ -36,6 +37,8 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         FileGridAdapterListener{
 
     private static final String LOG_TAG = FileBrowserFragment.class.getSimpleName();
+
+    public static final String FILE_BROWSER_ARGUMENT_SELECT = "file_browser_argumnet_select";
 
     private FileArrayAdapter mAdapter;
 
@@ -92,6 +95,18 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         return fragment;
     }
 
+    public static FileBrowserFragment newSelectionBrowser() {
+        FileBrowserFragment fragment = new FileBrowserFragment();
+        Bundle data = new Bundle();
+        data.putBoolean(FILE_BROWSER_ARGUMENT_SELECT, true);
+        String[] files = UiProvider.getStorageDirs();
+        if (files != null && files.length > 0) {
+            data.putStringArray(ARGUMENT_INIT_DIR_LIST, files);
+        }
+        fragment.setArguments(data);
+        return fragment;
+    }
+
     public void setInitDirs(String[] dirs) {
         getArguments().putStringArray(ARGUMENT_INIT_DIR_LIST, dirs);
         reloadFiles();
@@ -124,6 +139,14 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        if (getArguments().getBoolean(FILE_BROWSER_ARGUMENT_SELECT)) {
+            FileOperation fileOperation = (FileOperation) getChildFragmentManager().findFragmentByTag("FileBrowser-FileOperation");
+            if (fileOperation == null) {
+                fileOperation = FileOperation.newInstance(FileOperation.OPERATION_MODE.SELECT.ordinal());
+                getChildFragmentManager().beginTransaction().add(fileOperation, "FileBrowser-FileOperation").commit();
+            }
+            setFileOperation(fileOperation);
+        }
     }
 
     @Override
@@ -322,7 +345,11 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
             FileBrowserFragmentListener listener = mWeakListener.get();
             if (listener != null) {
                ImageView v_img =  (ImageView)v.findViewById(R.id.icon);
-               listener.onFileBrowserItemClick(v_img, FileEntryFactory.makeFileObject(entry.path));
+               if (mFileOperation != null && mFileOperation.getFileSelectedSize() > 0) {
+                   listener.onFileBrowserItemSelect(v_img, FileEntryFactory.makeFileObject(entry.path));
+               } else {
+                   listener.onFileBrowserItemClick(v_img, FileEntryFactory.makeFileObject(entry.path));
+               }
             }
         }
     }
