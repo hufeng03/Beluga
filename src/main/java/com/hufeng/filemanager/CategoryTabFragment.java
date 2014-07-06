@@ -13,12 +13,12 @@ import android.view.ViewGroup;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.provider.UiProvider;
+import com.squareup.otto.Subscribe;
 
 import java.io.File;
 
 
-public class CategoryTabFragment extends FileTabFragment implements
-        CategoryFragment.CategoryFragmentListener {
+public class CategoryTabFragment extends FileTabFragment {
 
 	private static final String CATEGORY_TYPE = "category_type";
     private int mCategory = FileUtils.FILE_TYPE_ALL;
@@ -29,7 +29,9 @@ public class CategoryTabFragment extends FileTabFragment implements
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 	}
-	
+
+
+
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
@@ -83,12 +85,22 @@ public class CategoryTabFragment extends FileTabFragment implements
 	@Override
 	public void onResume(){
 		super.onResume();
+        BusProvider.getInstance().register(this);
 	}
 	
 	@Override
 	public void onPause(){
 		super.onPause();
+        BusProvider.getInstance().unregister(this);
 	}
+
+    @Subscribe
+    public void onCategorySelected(CategorySelectEvent event) {
+        if (event != null) {
+            mCategory = event.category;
+            showChildCategoryPanel(mCategory);
+        }
+    }
 
     @Override
     public void onDestroyView() {
@@ -151,7 +163,6 @@ public class CategoryTabFragment extends FileTabFragment implements
             }
         }
         ft.commit();
-        fragment.setListener(this);
         mCategory = FileUtils.FILE_TYPE_ALL;
         mCategoryFragment = fragment;
         mCurrentChildFragment = null;
@@ -245,11 +256,11 @@ public class CategoryTabFragment extends FileTabFragment implements
         mCategoryFragment = null;
     }
 
-    @Override
-    public void onCategorySelected(int category) {
-        mCategory = category;
-        showChildCategoryPanel(category);
-    }
+//    @Override
+//    public void onCategorySelected(int category) {
+//        mCategory = category;
+//        showChildCategoryPanel(category);
+//    }
 
     private boolean showChildCategoryPanel(int category) {
         boolean result = true;
