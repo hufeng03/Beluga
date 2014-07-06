@@ -11,15 +11,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.hufeng.filemanager.BaseFragment;
+import com.hufeng.filemanager.BusProvider;
+import com.hufeng.filemanager.KanboxAuthStartEvent;
 import com.hufeng.filemanager.R;
 import com.kanbox.api.Token;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Created by feng on 13-11-26.
  */
 public class KanBoxIntroFragment extends BaseFragment implements View.OnClickListener {
+
+    private static final String TAG = KanBoxIntroFragment.class.getSimpleName();
 
     private Button mStartButton;
     private TextView mStartTip;
@@ -63,32 +65,52 @@ public class KanBoxIntroFragment extends BaseFragment implements View.OnClickLis
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+//        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+//        BusProvider.getInstance().unregister(this);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
     }
 
 
-    WeakReference<KanBoxIntroFragmentListener> mWeakListener;
+//    WeakReference<KanBoxIntroFragmentListener> mWeakListener;
 
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.kanbox_start:
-                if(mWeakListener!=null) {
-                    KanBoxIntroFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-                        listener.onKanBoxAuthStart();
-                    }
-                }
+//                if(mWeakListener!=null) {
+//                    KanBoxIntroFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+//                        listener.onKanBoxAuthStart();
+//                    }
+//                }
+//                BusProvider.getInstance().post(produceKanboxAuthStartEvent());
+                BusProvider.getInstance().post(new KanboxAuthStartEvent(System.currentTimeMillis()));
                 break;
         }
     }
 
-    public static interface KanBoxIntroFragmentListener {
-        public void onKanBoxAuthStart();
-    }
+//    @Produce
+//    public KanboxAuthStartEvent produceKanboxAuthStartEvent() {
+//        LogUtil.i(TAG, "produceKanboxAuthStartFragment()");
+//        return new KanboxAuthStartEvent(System.currentTimeMillis());
+//    }
 
-    public void setListener(KanBoxIntroFragmentListener listener) {
-        mWeakListener = new WeakReference<KanBoxIntroFragmentListener>(listener);
-    }
+//    public static interface KanBoxIntroFragmentListener {
+//        public void onKanBoxAuthStart();
+//    }
+
+//    public void setListener(KanBoxIntroFragmentListener listener) {
+//        mWeakListener = new WeakReference<KanBoxIntroFragmentListener>(listener);
+//    }
 }

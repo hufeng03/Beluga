@@ -4,7 +4,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hufeng.filemanager.ResourceType;
 import com.hufeng.filemanager.browser.FileEntry;
@@ -65,7 +64,6 @@ public class ResourceEntry extends FileEntry{
     }
 
     public boolean needDownload() {
-        Log.i(LOG_TAG, "resource_icon_url, path, server_version_code, version_code" + resource_icon_url + " " + path + " " + server_version_code + " " + version_code);
         return (!TextUtils.isEmpty(download_url) && (TextUtils.isEmpty(path) || server_version_code>version_code));
     }
 

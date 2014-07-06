@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import android.widget.TextView;
 
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.provider.UiProvider;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.io.File;
 
@@ -27,7 +27,7 @@ import java.io.File;
 public class DirectoryTabFragment extends FileTabFragment implements
         FileTreeFragment.FileTreeFragmentListener{
 
-    public static final String TAG = "DirectoryTabFragment";
+    public static final String LOG_TAG = "DirectoryTabFragment";
 
     private FileBrowserFragment mFileBrowserFragment;
     private FileTreeFragment mFileTreeFragment;
@@ -55,9 +55,39 @@ public class DirectoryTabFragment extends FileTabFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                LogUtil.i(LOG_TAG, "mReceiver receive" + intent.getAction());
+                String[] files = UiProvider.getStorageDirs();
+                LogUtil.i(LOG_TAG, "files " + files == null?"null":(String.valueOf(files.length)));
+                if (mFileBrowserFragment != null) {
+                    mFileBrowserFragment.setInitDirs(files);
+                }
+                if (mFileTreeFragment != null) {
+                    mFileTreeFragment.setInitDirs(files);
+                }
+            }
+        };
 	}
 
-	@Override
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("SHOW_ROOT_FILES_ACTION");
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mReceiver != null) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
+        }
+    }
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -83,24 +113,6 @@ public class DirectoryTabFragment extends FileTabFragment implements
             showFileTree(dir);
         }
         showFileBrowser(dir);
-
-        mReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.i(TAG, "mReceiver receive" + intent.getAction());
-                String[] files = UiProvider.getStorageDirs();
-                if (mFileBrowserFragment != null) {
-                    mFileBrowserFragment.setInitDirs(files);
-                }
-                if (mFileTreeFragment != null) {
-                    mFileTreeFragment.setInitDirs(files);
-                }
-            }
-        };
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("SHOW_ROOT_FILES_ACTION");
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, filter);
     }
 	
 
@@ -130,13 +142,10 @@ public class DirectoryTabFragment extends FileTabFragment implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (mReceiver != null) {
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
-        }
     }
 
     public void showFileTree(String dir) {
-        Log.i(TAG, "showFileTree:"+((dir!=null)?dir:"null"));
+        LogUtil.i(LOG_TAG, "showFileTree:"+((dir!=null)?dir:"null"));
         String parent_dir = null;
         if(!TextUtils.isEmpty(dir)) {
             FileEntry entry = new FileEntry(dir);
@@ -148,7 +157,7 @@ public class DirectoryTabFragment extends FileTabFragment implements
         final FragmentTransaction ft = fm.beginTransaction();
         mFileTreeFragment = (FileTreeFragment) fm.findFragmentByTag(FileTreeFragment.class.getSimpleName());
         if (mFileTreeFragment == null) {
-            Log.i(TAG, "showFileTree: create new");
+            LogUtil.i(LOG_TAG, "showFileTree: create new");
 //            mFileTreeFragment = new FileTreeFragment();
 //            Bundle data = new Bundle();
 //            if (!TextUtils.isEmpty(dir)) {
@@ -159,7 +168,7 @@ public class DirectoryTabFragment extends FileTabFragment implements
             ft.replace(R.id.fragment_container_tree, mFileTreeFragment, FileTreeFragment.class.getSimpleName());
         } else {
             if (mFileTreeFragment.isDetached()) {
-                Log.i(TAG, "showFileTree: attach old");
+                LogUtil.i(LOG_TAG, "showFileTree: attach old");
                 ft.attach(mFileTreeFragment);
             }
             if (!TextUtils.isEmpty(dir)) {
@@ -172,12 +181,12 @@ public class DirectoryTabFragment extends FileTabFragment implements
 
 
     public void showFileBrowser(String dir) {
-        Log.i(TAG, "showFileBrowser:"+((dir!=null)?dir:"null"));
+        LogUtil.i(LOG_TAG, "showFileBrowser:"+((dir!=null)?dir:"null"));
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
         mFileBrowserFragment = (FileBrowserFragment) fm.findFragmentByTag(FileBrowserFragment.class.getSimpleName());
         if (mFileBrowserFragment == null) {
-            Log.i(TAG, "showFileBrowser: create new");
+            LogUtil.i(LOG_TAG, "showFileBrowser: create new");
             mFileBrowserFragment = FileBrowserFragment.newStorageBrowser(dir);
             if (mFileTreeFragment != null) {
                 mFileBrowserFragment.workWithTree(true);
@@ -187,7 +196,7 @@ public class DirectoryTabFragment extends FileTabFragment implements
             ft.replace(R.id.fragment_container, mFileBrowserFragment, FileBrowserFragment.class.getSimpleName());
         } else {
             if (mFileBrowserFragment.isDetached()) {
-                Log.i(TAG, "showFileBrowser: attach old");
+                LogUtil.i(LOG_TAG, "showFileBrowser: attach old");
                 ft.attach(mFileBrowserFragment);
             }
             if (!TextUtils.isEmpty(dir)) {
@@ -256,7 +265,7 @@ public class DirectoryTabFragment extends FileTabFragment implements
         if (path != null) {
             boolean can_write = new File(path).canWrite();
             boolean can_read = new File(path).canRead();
-            if (can_write) {
+            if (can_write && Constants.TRY_TO_TEST_WRITE) {
                 if(new File(path, ".test_writable").mkdir()){
                     new File(path, ".test_writable").delete();
                 } else {

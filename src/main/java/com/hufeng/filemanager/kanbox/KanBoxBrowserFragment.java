@@ -14,7 +14,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,9 +36,13 @@ import com.hufeng.filemanager.dialog.FmDialogFragment;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.ui.FileViewHolder;
+import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.utils.NetworkUtil;
 import com.kanbox.api.PushSharePreference;
 import com.kanbox.api.RequestListener;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -75,7 +78,7 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             switch (msg.what) {
                 case MESSAGE_SET_EMPTY_TEXT:
                     if(isAdded()) {
-                        setEmptyText(getResources().getString(R.string.kanbox_empty_file));
+                        setEmptyText(getResources().getString(R.string.kanbox_empty_file)+((mRootDir == null)? "":mRootDir));
                     }
                     break;
                 default:
@@ -229,11 +232,57 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
                 }
                 break;
             case KanBoxApi.OP_GET_FILELIST:
+                checkListEmpty(path, response);
+
+
                 completeRefresh();
                 break;
         }
         if(!TextUtils.isEmpty(tip) && getActivity()!=null) {
             Toast.makeText(getActivity(), tip, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void checkListEmpty(String path, String response) {
+        if (getActivity() != null) {
+            boolean result = false;
+            try {
+                JSONObject sData = new JSONObject(response);
+                String status = sData.getString("status");
+                if (status.equals("ok")) {
+//                    String hash = sData.getString("hash");
+                    JSONArray array = sData.getJSONArray("contents");
+                    int len = array.length();
+//                    LogUtil.i(TAG, "path compare="+mRootDir+" "+path);
+                    if (!TextUtils.isEmpty(path) && !path.endsWith("/")) {
+                        path += "/";
+                    }
+                    if (len ==0 && mRootDir.equals(path)) {
+//                        LogUtil.i(TAG, "!!equal");
+                        result = true;
+                    }
+                }
+//                else {
+//                    LogUtil.i(TAG, "path compare="+mRootDir+" "+path);
+//                    if (mRootDir.equals(path)) {
+//                        LogUtil.i(TAG, "equal");
+//                        if (getGridView()== null || getGridView().getCount() == 0){
+//                            LogUtil.i(TAG, "empty");
+//                            mResult = true;
+//                        } else {
+//                            mResult = false;
+//                        }
+//                    } else {
+//                        LogUtil.i(TAG, "not equal");
+//                        mResult = false;
+//                    }
+//                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (result) {
+                Toast.makeText(getActivity(), R.string.kanbox_getting_file_list_empty, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -715,19 +764,25 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
         inflater.inflate(R.menu.cloud_file_menu, menu);
 
         boolean has_local = false;
+        boolean is_folder = false;
         Cursor cursor = null;
         try{
             cursor = FileManager.getAppContext().getContentResolver().query(DataStructures.CloudBoxColumns.CONTENT_URI,
-                    new String[]{DataStructures.CloudBoxColumns.LOCAL_FILE_FIELD}, DataStructures.CloudBoxColumns.FILE_PATH_FIELD+"=?",
+                    new String[]{DataStructures.CloudBoxColumns.LOCAL_FILE_FIELD, DataStructures.CloudBoxColumns.IS_FOLDER_FIELD}, DataStructures.CloudBoxColumns.FILE_PATH_FIELD+"=?",
                     new String[]{path}, null);
             if (cursor!=null && cursor.moveToNext()) {
                 String local_file = cursor.getString(0);
                 if (!TextUtils.isEmpty(local_file) && !new File(local_file).isDirectory() && new File(local_file).exists()) {
                     has_local = true;
                 }
+                is_folder = (cursor.getInt(1) == 1);
             }
         }catch(Exception e) {
             e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
 
         if(has_local) {
@@ -737,13 +792,17 @@ public class KanBoxBrowserFragment extends FileGridFragment implements
             menu.findItem(R.id.menu_cloud_share).setVisible(false);
         }
 
+        if (is_folder) {
+            menu.findItem(R.id.menu_cloud_download).setVisible(false);
+        }
+
         return;
         //super.onCreateContextMenu(menu, v, menuInfo);
     }
 
     @Override
     public boolean onContextItemSelected(android.view.MenuItem item) {
-        Log.i(TAG, "onContextItemSelected");
+        LogUtil.i(TAG, "onContextItemSelected");
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
                 .getMenuInfo();
         FileViewHolder view = (FileViewHolder) info.targetView.getTag();

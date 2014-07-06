@@ -195,10 +195,12 @@ public class FmDialogFragment extends DialogFragment{
         dialog.show(fm.beginTransaction(), "FmDialogFragment");
     }
 
-    public static void showAddToCloudDialog(FragmentManager fm, int size, String first_path){
+    public static void showAddToCloudDialog(FragmentManager fm, int size, String first_path, int dir_count, String dir_first){
         Bundle data = new Bundle();
         data.putInt("path_count", size);
         data.putString("path_first", first_path);
+        data.putInt("dir_count", dir_count);
+        data.putString("dir_first", dir_first);
         final FmDialogFragment dialog = FmDialogFragment.newInstance(ADD_TO_CLOUD_DIALOG, data);
         dialog.show(fm.beginTransaction(), "FmDialogFragment");
     }
@@ -626,7 +628,14 @@ public class FmDialogFragment extends DialogFragment{
             View contents = View.inflate(getActivity(), R.layout.add_to_cloud_confirm_dialog, null);
             final String path_first = getArguments().getString("path_first");
             final int path_count = getArguments().getInt("path_count");
-            final String info = getString(R.string.add_to_cloud_confirm_dialog_text,path_first, path_count);
+            final int dir_count = getArguments().getInt("dir_count");
+            final String dir_first = getArguments().getString("dir_first");
+            String info = "";
+            if (dir_count == 0 || TextUtils.isEmpty(dir_first)) {
+                info = getString(R.string.add_to_cloud_confirm_dialog_text, path_first, path_count);
+            } else {
+                info = getString(R.string.add_to_cloud_confirm_dialog_text_no_dir, path_first, path_count, dir_first, dir_count);
+            }
             final TextView text = (TextView)contents.findViewById(R.id.add_to_cloud_confirm_dialog_info);
             text.setText(info);
             return new AlertDialog.Builder(getActivity())

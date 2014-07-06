@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
@@ -81,7 +82,7 @@ public class FileOperation extends BaseFragment {
         super.onCreate(savedInstanceState);
         int mode = getArguments().getInt(FILE_OPERATION_MODE_ARGUMENT);
         mOperationMode = OPERATION_MODE.valueOf(mode);
-        if (mOperationMode == OPERATION_MODE.ADD_CLOUD || mOperationMode == OPERATION_MODE.ADD_SAFE) {
+        if (mOperationMode == OPERATION_MODE.ADD_CLOUD || mOperationMode == OPERATION_MODE.ADD_SAFE || mOperationMode == OPERATION_MODE.SELECT) {
             setRetainInstance(false);
         } else {
             setRetainInstance(true);
@@ -144,6 +145,16 @@ public class FileOperation extends BaseFragment {
             provider = mOperationActivity;
         }
         return provider;
+    }
+
+    public void setSelection(String path) {
+        if (mOperationPaths.contains(path)) {
+            mOperationPaths.remove(path);
+        } else {
+            mOperationPaths.clear();
+            mOperationPaths.add(path);
+        }
+        refresh();
     }
 
     public void toggleSelection(String path) {
@@ -250,8 +261,11 @@ public class FileOperation extends BaseFragment {
 	}
 	
 	public void onOperationPasteCancel(Context context){
-		mCopyPaths.clear();
-    	mMovePaths.clear();
+        Intent intent = new Intent(FileManagerTabActivity.ACTION_CANCEL_PASTE_FILES);
+        intent.setClassName(context.getPackageName(), FileManagerTabActivity.class.getName());
+        context.startActivity(intent);
+        mCopyPaths.clear();
+        mMovePaths.clear();
         mOperationPaths.clear();
         refresh();
 	}
@@ -402,7 +416,26 @@ public class FileOperation extends BaseFragment {
     	mOperationPaths.clear();
         refresh();
 	}
-	
+
+    public void onOperationSelectOK(Context context) {
+        if (mOperationPaths.size() > 0) {
+//            Intent intent = FileAction.buildSendFile(context, mOperationPaths.toArray(new String[mOperationPaths.size()]));
+            Intent intent = new Intent();
+            if (mOperationPaths.size() == 1) {
+                intent.setData(Uri.fromFile(new File(mOperationPaths.get(0))));
+            }
+//            else {
+//                intent.setData();
+//            }
+            if (intent != null) {
+//                context.startActivity(intent);
+                mOperationActivity.setResult(Activity.RESULT_OK, intent);
+                mOperationActivity.finish();
+            }
+        }
+    }
+
+
 	public void onOperationSelectAll(Context context){
         FileOperationProvider provider = getFileOperationProvider();
         String[] all = provider.getAllFiles();
@@ -442,8 +475,19 @@ public class FileOperation extends BaseFragment {
 
     public void onOperationAddToCloud(Context context) {
         FileOperationProvider provider = getFileOperationProvider();
+        int directory_count = 0;
+        String directory_path = null;
+        for(String path:mOperationPaths) {
+            if (new File(path).isDirectory()) {
+                mOperationPaths.remove(path);
+                if (directory_path == null) {
+                    directory_path = path;
+                }
+                directory_count ++;
+            }
+        }
         if(mOperationPaths!=null && mOperationPaths.size()>0 ) {
-            FmDialogFragment.showAddToCloudDialog(provider.getHostFragmentManager(), mOperationPaths.size(), mOperationPaths.get(0));
+            FmDialogFragment.showAddToCloudDialog(provider.getHostFragmentManager(), mOperationPaths.size(), mOperationPaths.get(0), directory_count, directory_path);
         }
     }
 

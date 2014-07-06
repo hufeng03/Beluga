@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">File Manager</string>
+    <string name="select_file_title">Select File</string>
     <string name="selected">Selected</string>
 	<string name="category">Category</string>
 	<string name="directory">Device</string>	
@@ -360,6 +361,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="add_to_safe_confirm_dialog_text">move \n<xliff:g id="count">%2$d</xliff:g>(<xliff:g id="name">%1$s</xliff:g> &#8230;)\nfiles into safebox? (Please do not delete /mnt/sdcard/.safebox/)</string>
 <string name="add_to_safe_confirm_dialog_title">SafeBox</string>
 <string name="add_to_cloud_confirm_dialog_text">Upload \n<xliff:g id="count">%2$d</xliff:g>(<xliff:g id="name">%1$s</xliff:g> &#8230;)\nfiles into cloud box?</string>
+<string name="add_to_cloud_confirm_dialog_text_no_dir">Upload \n<xliff:g id="count">%2$d</xliff:g>(<xliff:g id="name">%1$s</xliff:g> &#8230;)\nfiles into cloud box?\n<xliff:g id="count">%4$d</xliff:g>(<xliff:g id="name">%3$s</xliff:g> &#8230;) will not be uploaded.</string>
 <string name="add_to_cloud_confirm_dialog_title">Cloud Box</string>
 <string name="delete_from_safe_confirm_dialog_text">delete <xliff:g id="count">%2$d</xliff:g> files from safebox and do not recover? </string>
 <string name="delete_from_safe_confirm_dialog_title">SafeBox</string>
@@ -554,7 +556,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="empty_document">No document</string>
 <string name="empty_apk">No APK</string>
 <string name="empty_file">No File</string>
-<string name="kanbox_empty_file">No file\n\nPull down to refresh</string>
+<string name="kanbox_empty_file">Pull down to refresh</string>
 <string name="empty_secrect_audio">No secrect audio</string>
 <string name="empty_secrect_image">No secrect image</string>
 <string name="empty_secrect_video">No secrect video</string>
@@ -594,7 +596,10 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="menu_back">Back</string>
 <string name="apk_download_success">%s download success</string>
 <string name="apk_download_failed">%s download failed</string>
-<string name="apk_download_paused">%s download paused</string>
+<string name="apk_download_cancelled">%s download canceled</string>
+<string name="file_download_paused">download stopped</string>
+<string name="check_network">Please check network</string>
+<string name="no_network_check_network">No network connection, please check</string>
 <string name="download_start">%s download start</string>
 <string name="download_success">%s download success</string>
 <string name="download_paused">%s download cancelled</string>
@@ -623,6 +628,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="kanbox_refresh_file_list_error">get file list failed!</string>
 <string name="download_kanbox_android_client">Download and install Kanbox client app</string>
 <string name="downloading_kanbox_android_client">Kanbox client app is downloading: %1$d%%</string>
+<string name="downloading_kanbox_android_client_wait">Kanbox client app is waiting for download</string>
 <string name="install_kanbox_android_client">Kanbox apk is ready to be installed</string>
 <string name="kanbox_uploading_files" formatted="false">Kanbox is uploading %1$d files</string>
 <string name="kanbox_uploading_files_with_success_and_failed" formatted="false">Uploading %1$d files (%2$d failed, %3$d success)</string>
@@ -639,6 +645,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="kanbox_intro_slogan">Alibaba\'s Personal Cloud Service</string>
 <string name="kanbox_intro_tip"></string>
 <string name="kanbox_getting_file_list">Loading ...</string>
+<string name="kanbox_getting_file_list_empty">Empty directory</string>
 <string name="empty_selected_game">No selected games</string>
 <string name="empty_selected_app">No selected apps</string>
 <string name="empty_selected_doc">No selected ebooks</string>
@@ -650,10 +657,11 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="kanbox_website">http://www.kanbox.com</string>
 <string name="doov_developer_name">Shenzhen Doov Technology Co., Ltd. </string>
 <string name="doov_website">http://www.doov.com.cn</string>
-<string name="category_selected_game">Selected Game</string>
-<string name="category_selected_app">Selected App</string>
+<string name="category_selected_game">Game</string>
+<string name="category_selected_app">App</string>
 <string name="category_selected_doc">Ebooks</string>
 <string name="please_select_copy_or_cancel">Please select copy or cancel</string>
+<string name="btn_txt_read">Read</string>
 <string name="btn_txt_install">Install</string>
 <string name="btn_txt_pause">Cancel</string>
 <string name="btn_txt_upload">Upload</string>
@@ -700,11 +708,14 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="file_permission_label">Permission:</string>
 <string name="file_owner_label">Owner:</string>
 <string name="file_group_label">Group:</string>
+    <string name="can_not_select_dir">Directory selection is not supported</string>
+    <string name="long_press_to_select">Long press on file to select</string>
 
     <string name="china_tip_dialog_title">System Alert</string>
     <string name="china_tip_dialog_quit">Quit</string>
     <string name="china_tip_dialog_known">I know</string>
-    <string name="china_tip_dialog_content">Welcome to use File Manager. This app needs to connect to Internet to provide best service. Data connection will charger your money accorrding to your data plan with your Internet Provider. Do you allow it?</string>
+    <string name="china_tip_dialog_content">Welcome to use File Manager. This app needs to connect to Internet to provide best service. Data connection will charge your money accorrding to your data plan with Internet Provider. Do you allow it?</string>
+    <string name="chinese_goverment_tip"></string>
     <string name="action_settings">Settings</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

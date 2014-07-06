@@ -76,7 +76,8 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-            <LinearLayout 
+            <LinearLayout
+                android:id="@+id/information_layout"
                 android:orientation="horizontal" 
                 android:background="@drawable/information_bg" 
                 android:paddingTop="10dip"
@@ -93,6 +94,7 @@
                     
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/information_label"
                     android:orientation ="vertical"
 	                android:layout_width="0.0dip"
 	                android:layout_weight="1.0" 

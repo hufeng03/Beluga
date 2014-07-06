@@ -5,9 +5,9 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import com.hufeng.filemanager.skin.SkinManager;
+import com.hufeng.filemanager.utils.LogUtil;
 
 public class BaseActivity extends FragmentActivity {
 
@@ -18,7 +18,7 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle arg0) {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onCreate");
+    		LogUtil.i(((Object) this).getClass().getSimpleName(), "onCreate");
 		super.onCreate(arg0);
         if (!Constants.ENABLE_LANDSCAPE) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -28,14 +28,14 @@ public class BaseActivity extends FragmentActivity {
     @Override
     protected void onStart() {
         if (DEBUG)
-            Log.i(((Object)this).getClass().getSimpleName(), "onStart");
+            LogUtil.i(((Object)this).getClass().getSimpleName(), "onStart");
         super.onStart();
     }
 
     @Override
 	protected void onResume() {
 		if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onResume");
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onResume");
 		super.onResume();
 		changeSkinIfNeeded();
         if (Constants.USE_UMENG) {
@@ -46,7 +46,7 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onPause() {
 		if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onPause");
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onPause");
 		super.onPause();
         if (Constants.USE_UMENG) {
             UmengDelegate.umengAnalysisPause(this);
@@ -55,21 +55,21 @@ public class BaseActivity extends FragmentActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        Log.i(((Object)this).getClass().getSimpleName(), "onSaveInstanceState");
+        LogUtil.i(((Object)this).getClass().getSimpleName(), "onSaveInstanceState");
         super.onSaveInstanceState(outState);
     }
 	
 	@Override
 	protected void onStop() {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onStop");
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onStop");
 		super.onStop();
 	}
 	
 	@Override
 	protected void onDestroy() {
         if (DEBUG)
-    		Log.i(((Object)this).getClass().getSimpleName(), "onDestroy");
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onDestroy");
 		super.onDestroy();
 	}
 	

@@ -7,12 +7,12 @@ package com.hufeng.filemanager.data;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
-import android.util.Log;
 
+import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileSorter;
 import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.Constants;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class FileListLoader extends AsyncTaskLoader<List<FileEntry>> {
     @Override
     public List<FileEntry> loadInBackground() {
 //        android.os.Debug.waitForDebugger();
-        Log.i(LOG_TAG, this.hashCode()+" FileListLoader loadinbackground()");
+        LogUtil.i(LOG_TAG, this.hashCode() + " FileListLoader loadinbackground()");
         List<FileEntry> entries = new ArrayList<FileEntry>();
         if (!TextUtils.isEmpty(mRoot) && new File(mRoot).exists() && new File(mRoot).isDirectory()) {
             String[] files = new File(mRoot).list();
@@ -55,7 +55,7 @@ public class FileListLoader extends AsyncTaskLoader<List<FileEntry>> {
                     entry = new FileEntry(mRoot, file);
                     if (entry.path!=null && (!entry.isDirectory() || !mNoDirectory)) {
                         if (TextUtils.isEmpty(mSearch) || entry.getName().toLowerCase().contains(mSearch.toLowerCase())) {
-                            Log.i(LOG_TAG, "add "+file+"!!!!!!!!!!"+entry);
+                            LogUtil.i(LOG_TAG, "add "+file+"!!!!!!!!!!"+entry);
                             if (!Constants.PRODUCT_FLAVOR_NAME.equals("chenxiang") || !entry.hidden) {
                                 entries.add(entry);
                             }
@@ -102,7 +102,7 @@ public class FileListLoader extends AsyncTaskLoader<List<FileEntry>> {
 
     @Override
     public void deliverResult(List<FileEntry> data) {
-        Log.i(LOG_TAG, this.hashCode()+" FileListLoader deliverResult with "+(data==null?0:data.size()));
+        LogUtil.i(LOG_TAG, this.hashCode()+" FileListLoader deliverResult with "+(data==null?0:data.size()));
         if (isReset()) {
             if (data != null) {
                 releaseResources(data);
@@ -126,7 +126,7 @@ public class FileListLoader extends AsyncTaskLoader<List<FileEntry>> {
 
     @Override
     protected void onStartLoading() {
-        Log.i(LOG_TAG, this.hashCode()+" FileListLoader onStartLoading");
+        LogUtil.i(LOG_TAG, this.hashCode()+" FileListLoader onStartLoading");
         if (mFiles != null ) {
             deliverResult(mFiles);
         }
@@ -162,14 +162,14 @@ public class FileListLoader extends AsyncTaskLoader<List<FileEntry>> {
 
     @Override
     protected void onStopLoading() {
-        Log.i(LOG_TAG, this.hashCode()+" FileListLoader onStopLoading");
+        LogUtil.i(LOG_TAG, this.hashCode()+" FileListLoader onStopLoading");
         cancelLoad();
     }
 
 
     @Override
     protected void onReset() {
-        Log.i(LOG_TAG, this.hashCode()+" FileListLoader onReset");
+        LogUtil.i(LOG_TAG, this.hashCode()+" FileListLoader onReset");
         onStopLoading();
 
         if (mFiles != null) {
@@ -188,14 +188,14 @@ public class FileListLoader extends AsyncTaskLoader<List<FileEntry>> {
 
     @Override
     public void onCanceled(List<FileEntry> data) {
-        Log.i(LOG_TAG, this.hashCode()+" FileListLoader onCanceled");
+        LogUtil.i(LOG_TAG, this.hashCode()+" FileListLoader onCanceled");
         super.onCanceled(data);
         releaseResources(data);
     }
 
     @Override
     public void forceLoad() {
-        Log.i(LOG_TAG, this.hashCode()+" FileListLoader forceLoad");
+        LogUtil.i(LOG_TAG, this.hashCode()+" FileListLoader forceLoad");
         super.forceLoad();
     }
 

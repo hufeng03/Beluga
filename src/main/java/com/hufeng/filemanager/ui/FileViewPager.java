@@ -3,8 +3,9 @@ package com.hufeng.filemanager.ui;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
+
+import com.hufeng.filemanager.utils.LogUtil;
 
 /**
  * Created by feng on 13-12-9.
@@ -40,7 +41,7 @@ public class FileViewPager extends ViewPager {
 
     public void setPagingEnabled(boolean enabled) {
         this.enabled = enabled;
-        Log.i(TAG, "setPagingEnabled " + enabled);
+        LogUtil.i(TAG, "setPagingEnabled " + enabled);
     }
 
     public boolean getPagingEnabled() {

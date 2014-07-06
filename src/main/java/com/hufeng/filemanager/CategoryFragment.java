@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -75,15 +75,15 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	
 	private static final int LOADER_ID_CATEGORY = 1;
 
-    private WeakReference<CategoryFragmentListener> mWeakListener;
+//    private WeakReference<CategoryFragmentListener> mWeakListener;
 
-    public static interface CategoryFragmentListener {
-        public void onCategorySelected(int category);
-    }
+//    public static interface CategoryFragmentListener {
+//        public void onCategorySelected(int category);
+//    }
 
-    public void setListener(CategoryFragmentListener listener) {
-        mWeakListener = new WeakReference<CategoryFragmentListener>(listener);
-    }
+//    public void setListener(CategoryFragmentListener listener) {
+//        mWeakListener = new WeakReference<CategoryFragmentListener>(listener);
+//    }
 	
 
 	@Override
@@ -184,6 +184,11 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
             getLoaderManager().initLoader(LOADER_ID_CATEGORY, null, this);
         }
 
+        if(Constants.PRODUCT_FLAVOR_NAME.equals("chenxiang")) {
+            mInformationLayout.setVisibility(View.INVISIBLE);
+            view.findViewById(R.id.information_label).setVisibility(View.INVISIBLE);
+        }
+
 	}
 
     @Override
@@ -195,116 +200,129 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	public void onClick(View v) {
 		switch(v.getId()){
 			case R.id.category_music:
-                if (mWeakListener != null) {
-                    CategoryFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-                        listener.onCategorySelected(FileUtils.FILE_TYPE_AUDIO);
-                    }
-                }
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_AUDIO));
+//                if (mWeakListener != null) {
+//                    CategoryFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+//                        listener.onCategorySelected(FileUtils.FILE_TYPE_AUDIO);
+//                    }
+//                }
 				break;
 			case R.id.category_video:
-                if (mWeakListener != null) {
-                    CategoryFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-                        listener.onCategorySelected(FileUtils.FILE_TYPE_VIDEO);
-                    }
-                }
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_VIDEO));
+//                if (mWeakListener != null) {
+//                    CategoryFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+//                        listener.onCategorySelected(FileUtils.FILE_TYPE_VIDEO);
+//                    }
+//                }
 				break;
 			case R.id.category_picture:
-                if (mWeakListener != null) {
-                    CategoryFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-                        listener.onCategorySelected(FileUtils.FILE_TYPE_IMAGE);
-                    }
-                }
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_IMAGE));
+//                if (mWeakListener != null) {
+//                    CategoryFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+//                        listener.onCategorySelected(FileUtils.FILE_TYPE_IMAGE);
+//                    }
+//                }
 				break;
 			case R.id.category_document:
-                if (mWeakListener != null) {
-                    CategoryFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-                        listener.onCategorySelected(FileUtils.FILE_TYPE_DOCUMENT);
-                    }
-                }
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_DOCUMENT));
+//                if (mWeakListener != null) {
+//                    CategoryFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+//                        listener.onCategorySelected(FileUtils.FILE_TYPE_DOCUMENT);
+//                    }
+//                }
 				break;
 			case R.id.category_zip:
-                if (mWeakListener != null) {
-                    CategoryFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-//                        if(ChannelUtil.isKanBoxChannel(getActivity())) {
-//                            listener.onCategorySelected(FileUtils.FILE_TYPE_CLOUD);
-//                        } else {
-                            listener.onCategorySelected(FileUtils.FILE_TYPE_ZIP);
-//                        }
-                    }
-                }
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_ZIP));
+//                if (mWeakListener != null) {
+//                    CategoryFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+////                        if(ChannelUtil.isKanBoxChannel(getActivity())) {
+////                            listener.onCategorySelected(FileUtils.FILE_TYPE_CLOUD);
+////                        } else {
+//                            listener.onCategorySelected(FileUtils.FILE_TYPE_ZIP);
+////                        }
+//                    }
+//                }
 				break;
 			case R.id.category_apk:
-                if (mWeakListener != null) {
-                    CategoryFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-                        listener.onCategorySelected(FileUtils.FILE_TYPE_APK);
-                    }
-                }
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_APK));
+//                if (mWeakListener != null) {
+//                    CategoryFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+//                        listener.onCategorySelected(FileUtils.FILE_TYPE_APK);
+//                    }
+//                }
 				break;
 			case R.id.category_app:
-                if (mWeakListener != null) {
-                    CategoryFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-//                        if(ChannelUtil.isKanBoxChannel(getActivity())) {
-//                            listener.onCategorySelected(FileUtils.FILE_TYPE_CLOUD);
-//                        } else {
-                            listener.onCategorySelected(FileUtils.FILE_TYPE_APP);
-//                        }
-                    }
-                }
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_APP));
+//                if (mWeakListener != null) {
+//                    CategoryFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+////                        if(ChannelUtil.isKanBoxChannel(getActivity())) {
+////                            listener.onCategorySelected(FileUtils.FILE_TYPE_CLOUD);
+////                        } else {
+//                            listener.onCategorySelected(FileUtils.FILE_TYPE_APP);
+////                        }
+//                    }
+//                }
 			    break;
             case R.id.category_kanbox:
-                if (mWeakListener != null) {
-                    CategoryFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-                        listener.onCategorySelected(FileUtils.FILE_TYPE_CLOUD);
-                    }
-                }
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_CLOUD));
+//                if (mWeakListener != null) {
+//                    CategoryFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+//                        listener.onCategorySelected(FileUtils.FILE_TYPE_CLOUD);
+//                    }
+//                }
                 break;
 			case R.id.category_download:
-                if (mWeakListener != null) {
-                    CategoryFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-                        listener.onCategorySelected(FileUtils.FILE_TYPE_DOWNLOAD);
-                    }
-                }
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_DOWNLOAD));
+//                if (mWeakListener != null) {
+//                    CategoryFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+//                        listener.onCategorySelected(FileUtils.FILE_TYPE_DOWNLOAD);
+//                    }
+//                }
 				break;
 			case R.id.category_favorite:
-                if (mWeakListener != null) {
-                    CategoryFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-                        listener.onCategorySelected(FileUtils.FILE_TYPE_FAVORITE);
-                    }
-                }
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_FAVORITE));
+//                if (mWeakListener != null) {
+//                    CategoryFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+//                        listener.onCategorySelected(FileUtils.FILE_TYPE_FAVORITE);
+//                    }
+//                }
                 break;
             case R.id.category_selected_game:
-                if (mWeakListener != null) {
-                    CategoryFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-                        listener.onCategorySelected(FileUtils.FILE_TYPE_RESOURCE_GAME);
-                    }
-                }
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_GAME));
+//                if (mWeakListener != null) {
+//                    CategoryFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+//                        listener.onCategorySelected(FileUtils.FILE_TYPE_RESOURCE_GAME);
+//                    }
+//                }
                 break;
             case R.id.category_selected_app:
-                if (mWeakListener != null) {
-                    CategoryFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-                        listener.onCategorySelected(FileUtils.FILE_TYPE_RESOURCE_APP);
-                    }
-                }
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_APP));
+//                if (mWeakListener != null) {
+//                    CategoryFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+//                        listener.onCategorySelected(FileUtils.FILE_TYPE_RESOURCE_APP);
+//                    }
+//                }
                 break;
             case R.id.category_selected_doc:
-                if (mWeakListener != null) {
-                    CategoryFragmentListener listener = mWeakListener.get();
-                    if (listener != null) {
-                        listener.onCategorySelected(FileUtils.FILE_TYPE_RESOURCE_DOC);
-                    }
-                }
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_DOC));
+//                if (mWeakListener != null) {
+//                    CategoryFragmentListener listener = mWeakListener.get();
+//                    if (listener != null) {
+//                        listener.onCategorySelected(FileUtils.FILE_TYPE_RESOURCE_DOC);
+//                    }
+//                }
                 break;
 			}
 	}
@@ -511,13 +529,13 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.i(LOG_TAG, "onCreateOptionsMenu");
+        LogUtil.i(LOG_TAG, "onCreateOptionsMenu");
 //		menu.clear();
 		completeRefresh();
 		mRefreshItem = null;
 
         if (getParentFragment()!=null && !getParentFragment().getUserVisibleHint()) {
-            Log.i(LOG_TAG, "onCreateOptionsMenu invisible");
+            LogUtil.i(LOG_TAG, "onCreateOptionsMenu invisible");
             return;
         }
 		inflater.inflate(R.menu.category_fragment_menu, menu);
@@ -550,6 +568,9 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 		switch(item.getItemId()){
 			case R.id.menu_refresh:
 			{
+                StorageManager.clear();
+                Intent intent = new Intent("SHOW_ROOT_FILES_ACTION");
+                LocalBroadcastManager.getInstance(FileManager.getAppContext()).sendBroadcast(intent);
                 UiServiceHelper.getInstance().startScan();
 				flag = true;
 				break;
@@ -631,4 +652,5 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
     public void changeMonitored(String dir) {
 
     }
+
 }

@@ -161,7 +161,9 @@ public class FileManager extends Application/* implements GalleryApp*/{
                         });
         }catch(IllegalArgumentException e){
         	e.printStackTrace();
-        	System.exit(0);
+//        	System.exit(0);
+        }catch(Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -175,7 +177,9 @@ public class FileManager extends Application/* implements GalleryApp*/{
                         PreferenceColumns.NAME + "=?", new String[] { name });
         }catch(IllegalArgumentException e){
         	e.printStackTrace();
-        	System.exit(0);
+//        	System.exit(0);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -223,7 +227,9 @@ public class FileManager extends Application/* implements GalleryApp*/{
                         });
         }catch(IllegalArgumentException e){
         	e.printStackTrace();
-        	System.exit(0);
+//        	System.exit(0);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -237,7 +243,9 @@ public class FileManager extends Application/* implements GalleryApp*/{
                         MatchColumns.EXTENSION_FIELD + "=?", new String[] { name });
         }catch(IllegalArgumentException e){
         	e.printStackTrace();
-        	System.exit(0);
+//        	System.exit(0);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

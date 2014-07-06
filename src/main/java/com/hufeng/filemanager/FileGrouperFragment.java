@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import com.hufeng.filemanager.services.UiServiceHelper;
 import com.hufeng.filemanager.ui.FileCursorAdapter;
 import com.hufeng.filemanager.ui.FileGridAdapterListener;
 import com.hufeng.filemanager.ui.FileOperation;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.lang.ref.WeakReference;
 
@@ -99,9 +99,6 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (getArguments().getBoolean(FILE_GROUPER_ARGUMENT_CLOUD) || getArguments().getBoolean(FILE_GROUPER_ARGUMENT_SAFE)) {
-//            FileOperation fileOperation = new FileOperation();
-//            fileOperation.setOperationMode(FileOperation.OPERATION_MODE.ADD_CLOUD);
-
             FileOperation fileOperation = (FileOperation) getChildFragmentManager().findFragmentByTag("FileGrouper-FileOperation");
             if (fileOperation == null) {
                 if (getArguments().getBoolean(FILE_GROUPER_ARGUMENT_SAFE)) {
@@ -123,7 +120,7 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        Log.i(TAG, "FileGrouperFragment onCreate  with menuId = "+mMenuId);
+        LogUtil.i(TAG, "FileGrouperFragment onCreate  with menuId = " + mMenuId);
         Bundle data = getArguments();
         if (data == null) {
             mCategory = FileUtils.FILE_TYPE_IMAGE;

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/file_operation_cancel"
+    <!--item android:id="@+id/file_operation_cancel"
         android:icon="@drawable/operation_button_cancel"
-        android:title="@string/operation_cancel" />
+        android:title="@string/operation_cancel" /-->
     <item android:id="@+id/file_operation_selectok"
-        android:icon="@drawable/operation_button_addsafe"
         android:title="@string/operation_selectok" />
  </menu>

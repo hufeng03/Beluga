@@ -7,7 +7,6 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -44,9 +43,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class KanBoxApi implements RequestListener{
     private static final boolean DEBUG = BuildConfig.DEBUG;
 
-    public static HashMap<String, Integer> mDownloadingProgress = new HashMap<String, Integer>();
+    public static ConcurrentHashMap<String, Integer> mDownloadingProgress = new ConcurrentHashMap<String, Integer>();
 
-    public static HashMap<String, Integer> mUploadingProgress = new HashMap<String, Integer>();
+    public static ConcurrentHashMap<String, Integer> mUploadingProgress = new ConcurrentHashMap<String, Integer>();
 
     public static ConcurrentHashMap<String, KanboxAsyncTask> mDownloadingTasks = new ConcurrentHashMap<String, KanboxAsyncTask>();
 
@@ -109,7 +108,7 @@ public class KanBoxApi implements RequestListener{
 //                Token.getInstance().setRefreshToken(sPreference.getStringValueByKey("refresh_token"));
 //                Token.getInstance().setExpires(sPreference.getLongValueByKey("expries"));
 //                Token.getInstance().setExpiresTill(expiresTill);
-//                Log.i(TAG, "token expires at " + TimeUtil.getDateString(expiresTill) + ", current is " + TimeUtil.getDateString(current));
+//                LogUtil.i(TAG, "token expires at " + TimeUtil.getDateString(expiresTill) + ", current is " + TimeUtil.getDateString(current));
 //                if(current<expiresTill) {
 //                    return TOKEN_STATUS.VALID;
 //                } else {
@@ -145,7 +144,7 @@ public class KanBoxApi implements RequestListener{
 
     @Override
     public void onComplete(String path, String response, int operationType) {
-        Log.i(TAG, "onComplete "+path+" "+operationType+" "+response);
+        LogUtil.i(TAG, "onComplete "+path+" "+operationType+" "+response);
         KanBoxApiListener listener = getListener();
         switch (operationType) {
             case OP_GET_THUMBNAIL:
@@ -191,7 +190,7 @@ public class KanBoxApi implements RequestListener{
 //            case OP_GET_TOKEN:
 //            case OP_REFRESH_TOKEN:
 //                try {
-//                    Log.i(TAG, "token return "+response);
+//                    LogUtil.i(TAG, "token return "+response);
 //                    Token.getInstance().parseToken(response);
 //                    KanBoxApi.getInstance().saveToken(Token.getInstance());
 //                } catch (JSONException e) {
@@ -219,12 +218,12 @@ public class KanBoxApi implements RequestListener{
                         FileManager.getAppContext().getContentResolver().update(DataStructures.CloudBoxColumns.CONTENT_URI, cv2,
                                 DataStructures.CloudBoxColumns.FILE_PATH_FIELD+"=?",new String[]{path});
                         FileAction.add(local_path2);
-//                        Log.i(TAG, "try to scan into mediadb "+local_path2);
+//                        LogUtil.i(TAG, "try to scan into mediadb "+local_path2);
                         MediaScannerConnection.scanFile(FileManager.getAppContext(),
                                 new String[]{local_path2}, null, null
 //                                new MediaScannerConnection.OnScanCompletedListener() {
 //                                    public void onScanCompleted(String path, Uri uri) {
-////                                        Log.i(TAG, "scanned into mediadb "+local_path2+"@@@"+uri);
+////                                        LogUtil.i(TAG, "scanned into mediadb "+local_path2+"@@@"+uri);
 //                                    }
 //                                }
                         );
@@ -281,7 +280,7 @@ public class KanBoxApi implements RequestListener{
     @Override
     public void onError(String path, KanboxException error, int operationType) {
         if (DEBUG) {
-            Log.i(TAG, "onError " + path + " " + operationType + " ");
+            LogUtil.i(TAG, "onError " + path + " " + operationType + " ");
         }
         KanBoxApiListener listener = getListener();
         switch (operationType) {
@@ -640,7 +639,7 @@ public class KanBoxApi implements RequestListener{
 
 
     public void uploadFile(String localPath, String root) {
-        Log.i(TAG, "upload File from "+localPath+" to "+root);
+        LogUtil.i(TAG, "upload File from "+localPath+" to "+root);
         mUploadingProgress.put(localPath, 0);
         String name = new File(localPath).getName();
         String destPath = new File(root, name).getAbsolutePath();

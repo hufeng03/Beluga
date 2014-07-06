@@ -2,7 +2,7 @@
 <resources>
     <string name="header_summary_defaultview">多媒體文件的默認播放應用</string>
     <string name="header_title_defaultview">默認應用</string>
-    <string name="header_summary_scan">掃描小圖標，短音頻，隱藏文件等</string>
+    <string name="header_summary_scan">掃描小圖標，短音頻等</string>
     <string name="header_title_scan">掃描設置</string>
     <string name="header_summary_others">其他</string>
     <string name="others_aboutus_title">關於我們</string>

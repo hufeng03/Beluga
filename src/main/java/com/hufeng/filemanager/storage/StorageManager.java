@@ -1,13 +1,16 @@
 package com.hufeng.filemanager.storage;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hufeng.filemanager.BuildConfig;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.utils.LogUtil;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -23,7 +26,7 @@ import java.util.List;
  * @author feng
  *
  */
-public class StorageManager {
+public class StorageManager extends BroadcastReceiver{
 
     private static final String LOG_TAG = StorageManager.class.getSimpleName();
 	
@@ -31,26 +34,39 @@ public class StorageManager {
 	
 	private static StorageManager instance;
 
-    private StorageManager() {
+    private Context mContext;
 
+    private StorageManager(Context context) {
+        mContext = context;
     }
 	
 	/**
-	 * 
 	 * @param context
 	 * @return
 	 */
-	public static StorageManager getInstance(Context context) {
+	public static synchronized StorageManager getInstance(Context context) {
 		if ( instance == null ) {
-			instance = new StorageManager();
-			instance.refreshStorageVolume(context);
+            LogUtil.i(LOG_TAG, "getInstance "+System.currentTimeMillis());
+			StorageManager new_instance = new StorageManager(context.getApplicationContext());
+            new_instance.registerReceiver();
+            new_instance.refreshStorageVolume(context);
             if (BuildConfig.DEBUG) {
                 EnvironmentUtil.test();
                 EnvironmentUtil.test2(context);
             }
+            instance = new_instance;
 		}
 		return instance;
 	}
+
+    private void registerReceiver() {
+        IntentFilter intent = new IntentFilter(Intent.ACTION_LOCALE_CHANGED);
+        mContext.registerReceiver(this, intent);
+    }
+
+    private void unregisterReceiver() {
+        mContext.unregisterReceiver(this);
+    }
 	
 	public boolean isStorage(String path){
 		boolean result = false;
@@ -109,20 +125,33 @@ public class StorageManager {
 		for (StorageUnit unit : mStorageUnits) {
             if (primary != null && primary.equals(unit.path)) {
                 stors_primary.add(unit.path);
+                LogUtil.i(LOG_TAG, "add primary: "+unit);
             } else {
+                if (Environment.MEDIA_BAD_REMOVAL.equals(unit.state)
+                        || Environment.MEDIA_NOFS.equals(unit.state)
+                        || Environment.MEDIA_UNMOUNTABLE.equals(unit.state)
+                        || Environment.MEDIA_UNMOUNTABLE.equals(unit.state)) {
+                    continue;
+                }
                 if (/*Environment.MEDIA_MOUNTED.equals(unit.state)*/FileUtils.isDirWritable(unit.path)) {
                     if (!unit.removable) {
+                        LogUtil.i(LOG_TAG, "unremovable writable: "+unit);
                         stors_writable_unremovable.add(unit.path);
                     } else {
+                        LogUtil.i(LOG_TAG, "removable writable: "+unit);
                         stors_writable_removable.add(unit.path);
                     }
                 }
                 else if (/*Environment.MEDIA_MOUNTED_READ_ONLY.equals(unit.state)*/new File(unit.path).canRead()) {
                     if (!unit.removable) {
+                        LogUtil.i(LOG_TAG, "unremovable readable: "+unit);
                         stors_readable_unremovable.add(unit.path);
                     } else {
+                        LogUtil.i(LOG_TAG, "removable readable: "+unit);
                         stors_readable_removable.add(unit.path);
                     }
+                } else {
+                    LogUtil.i(LOG_TAG, "not mounted: "+unit);
                 }
             }
 		}
@@ -303,7 +332,11 @@ public class StorageManager {
 	/**
 	 * 
 	 */
-	public static void clear() {
+	public static synchronized void clear() {
+        if (instance != null) {
+            LogUtil.i(LOG_TAG, "clear "+System.currentTimeMillis());
+            instance.unregisterReceiver();
+        }
 		instance = null;
 	}	
 	
@@ -434,13 +467,19 @@ public class StorageManager {
             });
             int idx = 0;
             for(StorageUnit storage:mStorageUnits) {
-                Log.i(LOG_TAG, "storage unit "+idx+":"+storage.toString());
+                LogUtil.i(LOG_TAG, "storage unit " + idx + ":" + storage.toString());
                 idx ++;
             }
         } else {
-            Log.i(LOG_TAG, "opps, no storage unit");
+            LogUtil.i(LOG_TAG, "opps, no storage unit");
         }
 
 		return;
 	}
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        clear();
+        getInstance(context);
+    }
 }

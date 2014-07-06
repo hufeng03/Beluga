@@ -7,7 +7,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +19,7 @@ import android.widget.SearchView;
 import com.hufeng.filemanager.browser.FileSorter;
 import com.hufeng.filemanager.ui.FileOperation;
 import com.hufeng.filemanager.utils.GridViewUtils;
+import com.hufeng.filemanager.utils.LogUtil;
 
 /**
  * Created by feng on 13-9-9.
@@ -51,7 +51,9 @@ public abstract class FileGridFragment extends GridFragment{
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mOperationActivity = (FileOperationActivity)activity;
+        if (activity instanceof FileOperationActivity) {
+            mOperationActivity = (FileOperationActivity) activity;
+        }
     }
 
     @Override
@@ -80,7 +82,7 @@ public abstract class FileGridFragment extends GridFragment{
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        Log.i(TAG, "onPrepareOptionsMenu");
+        LogUtil.i(TAG, "onPrepareOptionsMenu");
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -93,15 +95,15 @@ public abstract class FileGridFragment extends GridFragment{
             }
         }
         if (mMenuId == 0) {
-            Log.i(TAG, "onCreateOptionsMenu with menuId = "+mMenuId);
+            LogUtil.i(TAG, "onCreateOptionsMenu with menuId = "+mMenuId);
             return;
         }
         if (getParentFragment()!=null && !getParentFragment().getUserVisibleHint()) {
-            Log.i(TAG, "onCreateOptionsMenu invisible");
+            LogUtil.i(TAG, "onCreateOptionsMenu invisible");
             return;
         }
         mMenuCreated = true;
-        Log.i(TAG, "onCreateOptionsMenu with menuId = "+mMenuId);
+        LogUtil.i(TAG, "onCreateOptionsMenu with menuId = "+mMenuId);
         inflater.inflate(mMenuId, menu);
 
         if( getDisplayMode() == DISPLAY_MODE.LIST ) {
@@ -238,7 +240,7 @@ public abstract class FileGridFragment extends GridFragment{
         if (!mMenuCreated) {
             return false;
         }
-        Log.i(TAG, "onOptionsItemSelected");
+        LogUtil.i(TAG, "onOptionsItemSelected");
         switch(item.getItemId()) {
             case R.id.menu_back:
                 getActivity().onBackPressed();
@@ -313,7 +315,7 @@ public abstract class FileGridFragment extends GridFragment{
 
     //    @Override
 //    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-//        Log.i(TAG, "onCreateContextMenu");
+//        LogUtil.i(TAG, "onCreateContextMenu");
 //        android.view.MenuInflater inflater = getSherlockActivity().getMenuInflater();
 //        FileViewHolder viewHolder = (FileViewHolder)((AdapterView.AdapterContextMenuInfo)menuInfo).targetView.getTag();
 //        String path = viewHolder.path;
@@ -463,7 +465,7 @@ public abstract class FileGridFragment extends GridFragment{
 //
 //    @Override
 //    public boolean onContextItemSelected(android.view.MenuItem item) {
-//        Log.i(TAG, "onContextItemSelected");
+//        LogUtil.i(TAG, "onContextItemSelected");
 //
 //        int group_id = item.getGroupId();
 //        if(group_id == R.id.menu_cloud_group) {

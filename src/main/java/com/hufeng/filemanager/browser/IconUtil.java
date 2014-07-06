@@ -6,7 +6,6 @@ import android.graphics.Matrix;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Base64;
 
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.mp3.Mp3ReadId3v2;
@@ -33,7 +32,7 @@ public class IconUtil {
     public static Bitmap getVideoThumbnail(String path) {
 //        android.os.Debug.waitForDebugger();
         long id = getDbId(path, FileUtils.FILE_TYPE_VIDEO);
-//        Log.i(TAG, "video_"+path+" id in db is " + id);
+//        LogUtil.i(TAG, "video_"+path+" id in db is " + id);
         return getVideoThumbnail(path, id);
     }
 
@@ -106,7 +105,7 @@ public class IconUtil {
 
     private static Bitmap getVideoThumbnailFromFile(String path) {
         Bitmap bitmap =  ThumbnailUtils.createVideoThumbnail(path, MINI_KIND);
-//        Log.i(TAG, "video_"+path+" create thumbnail from file " + bitmap);
+//        LogUtil.i(TAG, "video_"+path+" create thumbnail from file " + bitmap);
         return bitmap;
     }
 
@@ -129,9 +128,10 @@ public class IconUtil {
                 Mp3ReadId3v2 mp3Id3v2 = new Mp3ReadId3v2(new FileInputStream(path));
                 mp3Id3v2.readId3v2(1024 * 100);
                 if (mp3Id3v2.getImg() != null) {
-                    String name = Base64.encodeToString(path.getBytes(), Base64.DEFAULT);
-                    File imgFile = new File(FileManager.getAppContext().getFilesDir().getPath(),
-									/* mp3Id3v2.getAuthor() +"_"+mp3Id3v2.getSpecial()*/ name + ".jpg");
+//                    String name = Base64.encodeToString(path.getBytes(), Base64.DEFAULT);
+                    String name = "album_icon_"+new File(path).getName()+".jpg";
+                    File imgFile = new File(FileManager.getAppContext().getExternalCacheDir().getAbsolutePath(),
+									/* mp3Id3v2.getAuthor() +"_"+mp3Id3v2.getSpecial()*/ name);
                     if (!imgFile.exists()) {
                         imgFile.createNewFile();
                         FileOutputStream fout = new FileOutputStream(imgFile);

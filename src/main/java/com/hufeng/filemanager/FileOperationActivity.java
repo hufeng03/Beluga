@@ -178,7 +178,7 @@ public abstract class FileOperationActivity extends BaseActivity implements
                 }
 
                 boolean can_write = new File(path).canWrite();
-                if (can_write) {
+                if (can_write && Constants.TRY_TO_TEST_WRITE) {
                     if (new File(path).isDirectory()) {
                         if (new File(path, ".test_writable").mkdir()) {
                             new File(path, ".test_writable").delete();
@@ -248,6 +248,13 @@ public abstract class FileOperationActivity extends BaseActivity implements
                 if (item2 != null) item2.setVisible(true);
             }
 
+            if ("fanzhuo".equals(Constants.PRODUCT_FLAVOR_NAME)) {
+                MenuItem item1 = menu.findItem(R.id.file_operation_removefavorite);
+                if (item1 != null) item1.setVisible(false);
+                MenuItem item2 = menu.findItem(R.id.file_operation_addfavorite);
+                if (item2 != null) item2.setVisible(false);
+            }
+
         }
         return true;
     }
@@ -272,6 +279,9 @@ public abstract class FileOperationActivity extends BaseActivity implements
                 break;
             case R.id.file_operation_cancel:
                 getFileOperation().onOperationSelectCancel(this);
+                break;
+            case R.id.file_operation_selectok:
+                getFileOperation().onOperationSelectOK(this);
                 break;
             case R.id.file_operation_selectall:
                 getFileOperation().onOperationSelectAll(this);

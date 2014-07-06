@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">文件管理</string>
+    <string name="select_file_title">选择文件</string>
     <string name="selected">必備</string>
     <string name="category">分類</string>
     <string name="directory">手機</string>
@@ -317,7 +318,7 @@ or nonexistent.</string>
     <string name="file_info_yes">是</string>
     <string name="file_info_no">否</string>
     <string name="menu_wallpaper">設為桌面背景</string>
-    <string name="no_activity_found">找不到關聯的應用</string>
+    <string name="no_activity_found">不支持此格式</string>
     <string name="settings_scan">掃描設置</string>
     <string name="settings_scan_title">掃描設置</string>
     <string name="settings_scan_hidden">隱藏文件(夾)</string>
@@ -359,6 +360,7 @@ or nonexistent.</string>
     <string name="add_to_safe_confirm_dialog_text">確認將\n<xliff:g id="name">%1$s</xliff:g>\n等<xliff:g id="count">%2$d</xliff:g>個文件移到保險箱? (請勿刪除或隨意操作/mnt/sdcard/.safebox/)</string>
     <string name="add_to_safe_confirm_dialog_title">保險箱</string>
     <string name="add_to_cloud_confirm_dialog_text">確認將\n<xliff:g id="name">%1$s</xliff:g>\n等<xliff:g id="count">%2$d</xliff:g>個文件上傳到酷盤?</string>
+    <string name="add_to_cloud_confirm_dialog_text_no_dir">確認將\n<xliff:g id="name">%1$s</xliff:g>\n等<xliff:g id="count">%2$d</xliff:g>個文件上傳到酷盤?\n(<xliff:g id="name">%3$s</xliff:g>\n等<xliff:g id="count">%4$d</xliff:g>個文件夾不會被上傳)</string>
     <string name="add_to_cloud_confirm_dialog_title">酷盤</string>
     <string name="delete_from_safe_confirm_dialog_text">確認將<xliff:g id="count">%2$d</xliff:g>個文件從保險箱刪除，文件不會被恢復?</string>
     <string name="delete_from_safe_confirm_dialog_title">保險箱</string>
@@ -392,7 +394,7 @@ or nonexistent.</string>
     <string name="new_directory_failed">創建新目錄失敗</string>
     <string name="new_directory_success">創建新目錄成功</string>
     <string name="no_send_app_available">無法發送選中文件或文件夾</string>
-    <string name="file_type_not_recognized">找不到關聯的應用</string>
+    <string name="file_type_not_recognized">不支持此格式</string>
     <string name="directory_cannot_send">文件夾不能被發送</string>
     <string name="cancel_set_default_one">系統默認</string>
     <string name="select_image_file_not_match">請選擇圖片文件</string>
@@ -489,7 +491,7 @@ or nonexistent.</string>
     <string name="menu_create">新建文件夾</string>
     <string name="menu_cloud_add">上傳文件</string>
     <string name="menu_cloud_add_image">上傳圖片</string>
-    <string name="menu_cloud_add_audio">上傳語音</string>
+    <string name="menu_cloud_add_audio">上傳音頻</string>
     <string name="menu_cloud_add_video">上傳視頻</string>
     <string name="menu_cloud_add_apk">上傳應用包</string>
     <string name="menu_cloud_add_document">上傳文檔</string>
@@ -546,7 +548,7 @@ or nonexistent.</string>
     <string name="empty_download">下載列表為空</string>
     <string name="empty_device">目錄為空</string>
     <string name="empty_file">沒有文件</string>
-    <string name="kanbox_empty_file">沒有文件\n\n下拉刷新</string>
+    <string name="kanbox_empty_file">下拉刷新</string>
     <string name="app_storage_external">SD卡</string>
 
     <string name="tool_name_recommend">精品推薦</string>
@@ -582,7 +584,10 @@ or nonexistent.</string>
     <string name="tool_description_kanbox">阿裏巴巴旗下個人雲存儲服務</string>
     <string name="apk_download_success">%s下載成功</string>
     <string name="apk_download_failed">%s下載失敗</string>
-    <string name="apk_download_paused">%s下載暫停</string>
+    <string name="apk_download_cancelled">%s下載被暫停</string>
+    <string name="file_download_paused">下載已停止</string>
+    <string name="check_network">請檢查網絡</string>
+    <string name="no_network_check_network">網絡連接不可用，請檢查</string>
     <string name="download_start">%s開始下載</string>
     <string name="download_success">%s下載成功</string>
     <string name="download_paused">%s下載已取消</string>
@@ -611,6 +616,7 @@ or nonexistent.</string>
     <string name="kanbox_refresh_file_list_error">刷新文件列表失敗!</string>
     <string name="download_kanbox_android_client">下載使用酷盤手機版，送2T空間</string>
     <string name="downloading_kanbox_android_client">"酷盤客戶端正在下載: %1$d%%"</string>
+    <string name="downloading_kanbox_android_client_wait">酷盤客戶端正在等待下載</string>
     <string name="install_kanbox_android_client">安裝使用酷盤手機版，送2T空間</string>
     <string name="kanbox_uploading_files" formatted="false">正常上傳%1$d個文件到酷盤</string>
     <string name="kanbox_uploading_files_with_success_and_failed" formatted="false">正在上傳%1$d個文件(%2$d個已失敗，%3$d個已成功)</string>
@@ -627,8 +633,11 @@ or nonexistent.</string>
     <string name="kanbox_intro_slogan">阿裏巴巴旗下個人雲存儲</string>
     <string name="kanbox_intro_tip">酷盤中的文件，可以在電腦、手機等不同設備同步</string>
     <string name="kanbox_getting_file_list">正在加載...</string>
+    <string name="kanbox_getting_file_list_empty">此文件夹为空</string>
     <string name="empty_selected_game">暫無推薦遊戲</string>
     <string name="empty_selected_app">暫無推薦應用</string>
+    <string name="empty_selected_doc">暫無推薦電子書</string>
+    <string name="empty_selected_resource">暫無推薦資源</string>
     <string name="menu_add_cloud">上傳到酷盤</string>
     <string name="menu_cloud_upload_confirm">上傳</string>
     <string name="menu_cloud_upload_cancel">取消</string>
@@ -640,6 +649,7 @@ or nonexistent.</string>
     <string name="category_selected_app">熱門應用</string>
     <string name="category_selected_doc">電子書</string>
     <string name="please_select_copy_or_cancel">請選擇粘貼或取消</string>
+    <string name="btn_txt_read">阅读</string>
     <string name="btn_txt_install">安裝</string>
     <string name="btn_txt_pause">取消</string>
     <string name="btn_txt_upload">上傳</string>
@@ -685,11 +695,16 @@ or nonexistent.</string>
     <string name="file_permission_label">權限:</string>
     <string name="file_owner_label">創建人:</string>
     <string name="file_group_label">組:</string>
-    <string name="china_tip_dialog_title">系統提醒</string>
+    <string name="china_tip_dialog_title">數據流量提醒</string>
     <string name="china_tip_dialog_quit">退出</string>
     <string name="china_tip_dialog_known">不再提示</string>
-    <string name="china_tip_dialog_content">歡迎使用文件管理器軟件，本軟件使用完全免費，在使用過程中軟件需要連接網絡，以更好地為您提供完整的服務，其中聯網會產生數據流量費，請咨詢當地運營商。是否允許本軟件的以上操作？</string>
+
     <string name="action_settings">设置</string>
     <string name="navigation_drawer_open">打开导航面板</string>
     <string name="navigation_drawer_close">关闭导航面板</string>
+
+    <string name="china_tip_dialog_content">本軟件需要連接網絡，以更好地為您提供完整服務。聯網可能產生數據流量費，該費用由運營商收取。</string>
+    <string name="chinese_goverment_tip">鄭重提醒：國家秘密受法律保護。請嚴格遵守保密法律法規，嚴禁在互聯網上存儲、處理、傳輸、發布涉密信息。任何危害國家秘密安全的行為，都必須受到法律追究。</string>
+    <string name="can_not_select_dir">不支持选择文件夹</string>
+    <string name="long_press_to_select">请长按文件进行选择</string>
 </resources>

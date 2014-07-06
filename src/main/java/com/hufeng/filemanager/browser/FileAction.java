@@ -20,7 +20,6 @@ import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.hufeng.filemanager.FileManager;
@@ -179,24 +178,6 @@ public class FileAction {
         }
     }
 
-    public static String getTempSafeBoxFile(final String path){
-        Cursor cursor = FileManager.getAppContext().getContentResolver().query(SafeDataStructs.SafeColumns.CONTENT_URI, SafeDataStructs.SafeColumns.SAFE_PROJECTION, SafeDataStructs.SafeColumns.SAFE_PATH+"=?", new String[]{path}, null);
-        String temp_path = path;
-        if (cursor!=null && cursor.moveToFirst()) {
-            String original_path = cursor.getString(SafeDataStructs.SafeColumns.FIELD_INDEX_ORIGINAL_PATH);
-            String original_extension = cursor.getString(SafeDataStructs.SafeColumns.FIELD_INDEX_ORIGIANL_EXTENSION);
-            if (TextUtils.isEmpty(original_extension)) {
-                int idx = original_path.lastIndexOf(".");
-                if(idx>0){
-                    original_extension = original_path.substring(idx+1);
-                }
-            }
-            temp_path = path+"."+original_extension;
-            new File(path).renameTo(new File(temp_path));
-        }
-        return temp_path;
-    }
-
     private static boolean addToSafeBox_Dir(File safeDir, Boolean cancel){
         if(!safeDir.exists())
             return true;
@@ -229,7 +210,7 @@ public class FileAction {
     }
 
     private static boolean add_to_safe(String path, Boolean cancel) {
-        Log.i(LOG_TAG, "add_to_safe " + (path == null ? "null" : path));
+        LogUtil.i(LOG_TAG, "add_to_safe " + (path == null ? "null" : path));
         File safeFile = new File(path);
         if(safeFile.isDirectory())
             return addToSafeBox_Dir(safeFile, cancel);
@@ -697,8 +678,11 @@ public class FileAction {
 //        String[] columns = new String[] {
 //                FileColumns._ID, FileColumns.DATA
 //        };
-
-        int count = FileManager.getAppContext().getContentResolver().delete(uri, selection, selectionArgs);
+        try {
+            FileManager.getAppContext().getContentResolver().delete(uri, selection, selectionArgs);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
     
@@ -736,8 +720,14 @@ public class FileAction {
     	if(uri!=null)
     	{
     		String path = file.getPath();
-            int favorite_count = FileManager.getAppContext().getContentResolver().delete(FavoriteColumns.CONTENT_URI, DataStructures.FileColumns.FILE_PATH_FIELD+"=?", new String[]{path});
-            int count = FileManager.getAppContext().getContentResolver().delete(uri, DataStructures.FileColumns.FILE_PATH_FIELD+"=?", new String[]{path});
+            int favorite_count = 0;
+            int count =0;
+            try {
+                favorite_count = FileManager.getAppContext().getContentResolver().delete(FavoriteColumns.CONTENT_URI, DataStructures.FileColumns.FILE_PATH_FIELD + "=?", new String[]{path});
+                count = FileManager.getAppContext().getContentResolver().delete(uri, DataStructures.FileColumns.FILE_PATH_FIELD + "=?", new String[]{path});
+            } catch (Exception e){
+                e.printStackTrace();
+            }
     		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "delete "+path+" return "+count+","+favorite_count);
     	}
     	
@@ -756,7 +746,7 @@ public class FileAction {
                 String filter = FileManager.getPreference(SettingsScanActivity.IMAGE_FILTER_SMALL, "1");
                 if (filter.equals("1")) {
                     if (LogUtil.IDBG) {
-                        Log.i(LOG_TAG, "image filter small "+size+" of "+file.getAbsolutePath());
+                        LogUtil.i(LOG_TAG, "image filter small "+size+" of "+file.getAbsolutePath());
                     }
                     return;
                 }
@@ -767,7 +757,7 @@ public class FileAction {
                 String filter = FileManager.getPreference(SettingsScanActivity.AUDIO_FILTER_SMALL, "1");
                 if (filter.equals("1")) {
                     if (LogUtil.IDBG) {
-                        Log.i(LOG_TAG, "audio filter small "+size+" of "+file.getAbsolutePath());
+                        LogUtil.i(LOG_TAG, "audio filter small "+size+" of "+file.getAbsolutePath());
                     }
                     return;
                 }
@@ -853,7 +843,7 @@ public class FileAction {
 
         int category = FileUtils.getFileType(oldFile);
 //        FileEntry old_entry = new FileEntry(oldFile);
-//        Log.i(LOG_TAG, "save new entry: "+new_entry);
+//        LogUtil.i(LOG_TAG, "save new entry: "+new_entry);
         ContentValues cv = new ContentValues();
         Uri uri = null;
         switch(category)
@@ -882,12 +872,21 @@ public class FileAction {
                 break;
         }
         if(uri != null) {
-            Cursor cursor = FileManager.getAppContext().getContentResolver().query(uri, FileColumns.FILE_PROJECTION, FileColumns.FILE_PATH_FIELD+"=?", new String[]{oldFile.getAbsolutePath()}, null);
-            if (cursor!=null && cursor.moveToFirst()) {
-                cv.put(SafeDataStructs.SafeColumns.ORIGINAL_PATH, cursor.getString(FileColumns.FILE_PATH_FIELD_INDEX));
-                cv.put(SafeDataStructs.SafeColumns.ORIGINAL_DATE, cursor.getLong(FileColumns.FILE_DATE_FIELD_INDEX));
-                cv.put(SafeDataStructs.SafeColumns.ORIGINAL_SIZE, cursor.getLong(FileColumns.FILE_SIZE_FIELD_INDEX));
-                cv.put(SafeDataStructs.SafeColumns.ORIGINAL_EXTENSION, cursor.getString(FileColumns.FILE_EXTENSION_FIELD_INDEX));
+            Cursor cursor = null;
+            try {
+                cursor = FileManager.getAppContext().getContentResolver().query(uri, FileColumns.FILE_PROJECTION, FileColumns.FILE_PATH_FIELD + "=?", new String[]{oldFile.getAbsolutePath()}, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    cv.put(SafeDataStructs.SafeColumns.ORIGINAL_PATH, cursor.getString(FileColumns.FILE_PATH_FIELD_INDEX));
+                    cv.put(SafeDataStructs.SafeColumns.ORIGINAL_DATE, cursor.getLong(FileColumns.FILE_DATE_FIELD_INDEX));
+                    cv.put(SafeDataStructs.SafeColumns.ORIGINAL_SIZE, cursor.getLong(FileColumns.FILE_SIZE_FIELD_INDEX));
+                    cv.put(SafeDataStructs.SafeColumns.ORIGINAL_EXTENSION, cursor.getString(FileColumns.FILE_EXTENSION_FIELD_INDEX));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
             }
         }
         cv.put(SafeDataStructs.SafeColumns.CATEGORY, category);
@@ -947,6 +946,16 @@ public class FileAction {
 //        };
 
         ContentValues cvs = new ContentValues();
+        String name = null;
+        if (!TextUtils.isEmpty(new_path)) {
+            int i = new_path.lastIndexOf("/");
+            if (i>0) {
+                name = new_path.substring(i+1);
+            }
+        }
+        if (!TextUtils.isEmpty(name)) {
+            cvs.put(MediaStore.Files.FileColumns.DISPLAY_NAME, name);
+        }
         cvs.put(MediaStore.Files.FileColumns.DATA, new_path);
         
         int count = 0;
@@ -1135,8 +1144,13 @@ public class FileAction {
 		fo.toContentValues(values);
 
     	Uri uri = FavoriteColumns.CONTENT_URI;
-		int count = FileManager.getAppContext().getContentResolver().delete(uri, DataStructures.FileColumns.FILE_PATH_FIELD+"=?", new String[]{path});
-		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "remove favorite "+path+" return "+count);
+		int count = 0;
+        try {
+            count = FileManager.getAppContext().getContentResolver().delete(uri, DataStructures.FileColumns.FILE_PATH_FIELD + "=?", new String[]{path});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+            if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "remove favorite "+path+" return "+count);
     }
 
     public static boolean isAllFavorite(String[] paths) {
@@ -1370,41 +1384,48 @@ public class FileAction {
 	    	ContentValues values = new ContentValues();
 	    	Uri newUri = null;
 	    	Uri uri = MediaStore.Audio.Media.getContentUriForPath(path);
-	    	Cursor cursor = FileManager.getAppContext().getContentResolver().query(uri, null, MediaStore.MediaColumns.DATA + "=?", new String[] { path },null);
-	    	if (cursor!=null && cursor.moveToFirst() && cursor.getCount() > 0) {
-	    		String _id = cursor.getString(0);
-	    		values.put(MediaStore.Audio.Media.IS_RINGTONE, true);//設置來電鈴聲為true
-	    		values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);//設置通知鈴聲為false
-	    		values.put(MediaStore.Audio.Media.IS_ALARM, false);//設置鬧鐘鈴聲為false
-	    		values.put(MediaStore.Audio.Media.IS_MUSIC, false);
-	    		// 把需要設為鈴聲的歌曲更新鈴聲庫
-                try {
-                    FileManager.getAppContext().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?", new String[]{path});
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-                newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
-	    	}
-	    	else
-	    	{    	
-	    	   values.put(MediaStore.MediaColumns.DATA, path);
-	    	   values.put(MediaStore.MediaColumns.TITLE, "my ringtone");
-	    	   values.put(MediaStore.MediaColumns.MIME_TYPE, FileUtils.getMIMEType(soundFile));
-	    	   values.put(MediaStore.MediaColumns.SIZE, soundFile.length());
-	    	   values.put(MediaStore.Audio.Media.ARTIST, "");
-	    	   values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
-	    	   values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true);
-	    	   values.put(MediaStore.Audio.Media.IS_ALARM, true);
-	    	   values.put(MediaStore.Audio.Media.IS_MUSIC, false);
+	    	Cursor cursor = null;
+            try {
+                cursor = FileManager.getAppContext().getContentResolver().query(uri, null, MediaStore.MediaColumns.DATA + "=?", new String[]{path}, null);
+                if (cursor != null && cursor.moveToFirst() && cursor.getCount() > 0) {
+                    String _id = cursor.getString(0);
+                    values.put(MediaStore.Audio.Media.IS_RINGTONE, true);//設置來電鈴聲為true
+                    values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);//設置通知鈴聲為false
+                    values.put(MediaStore.Audio.Media.IS_ALARM, false);//設置鬧鐘鈴聲為false
+                    values.put(MediaStore.Audio.Media.IS_MUSIC, false);
+                    // 把需要設為鈴聲的歌曲更新鈴聲庫
+                    try {
+                        int count = FileManager.getAppContext().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?", new String[]{path});
+                        if (count > 0) {
+                            newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-                try {
-                    newUri = FileManager.getAppContext().getContentResolver().insert(uri, values);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+                    values.put(MediaStore.MediaColumns.DATA, path);
+                    values.put(MediaStore.MediaColumns.TITLE, "my ringtone");
+                    values.put(MediaStore.MediaColumns.MIME_TYPE, FileUtils.getMIMEType(soundFile));
+                    values.put(MediaStore.MediaColumns.SIZE, soundFile.length());
+                    values.put(MediaStore.Audio.Media.ARTIST, "");
+                    values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
+                    values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true);
+                    values.put(MediaStore.Audio.Media.IS_ALARM, true);
+                    values.put(MediaStore.Audio.Media.IS_MUSIC, false);
+
+                    try {
+                        newUri = FileManager.getAppContext().getContentResolver().insert(uri, values);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-	    	}
-	    	if(cursor!=null)
-	    		cursor.close();
+            }catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(cursor!=null)
+                    cursor.close();
+            }
 	
 	    	try {
 	    		RingtoneManager.setActualDefaultRingtoneUri(FileManager.getAppContext(), RingtoneManager.TYPE_RINGTONE, newUri);

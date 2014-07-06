@@ -6,7 +6,8 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
+
+import com.hufeng.filemanager.utils.LogUtil;
 
 /**
  * Created by feng on 13-12-23.
@@ -41,7 +42,7 @@ public class RootPreferenceFragment extends PreferenceFragment implements Prefer
     public boolean onPreferenceClick(Preference preference) {
         String key = preference.getKey();
         if(!TextUtils.isEmpty(key)) {
-            Log.i(TAG, "onPreferenceClick " + key);
+            LogUtil.i(TAG, "onPreferenceClick " + key);
             if (PreferenceKeys.SHOW_ROOT_DIR.equals(key)) {
                 Intent intent = new Intent("SHOW_ROOT_FILES_ACTION");
                 LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);

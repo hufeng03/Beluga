@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<PreferenceCategory
+	<!--PreferenceCategory
         android:key="others_about"  
         android:title="@string/others_about_title" >  
         <PreferenceScreen
@@ -17,7 +17,7 @@
     			android:summary="@string/kanbox_website" />
           
          </PreferenceScreen>
-    </PreferenceCategory>
+    </PreferenceCategory-->
     
 	<PreferenceCategory 
         android:key="others_upgrade"  
