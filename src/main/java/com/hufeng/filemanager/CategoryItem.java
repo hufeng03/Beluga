@@ -3,6 +3,7 @@ package com.hufeng.filemanager;
 import android.content.Context;
 
 import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.utils.FileUtil;
 
 /**
  * Created by feng on 14-5-19.
@@ -19,12 +20,13 @@ public class CategoryItem extends DrawerItem {
 
     public static CategoryItem[] getAllCategoryItems(Context context) {
         return new CategoryItem[]{
-            new CategoryItem(context.getString(R.string.category_music), FileUtils.FILE_TYPE_AUDIO),
-            new CategoryItem(context.getString(R.string.category_video), FileUtils.FILE_TYPE_VIDEO),
+//            new CategoryItem(context.getString(R.string.category_home), FileUtils.FILE_TYPE_ALL),
             new CategoryItem(context.getString(R.string.category_picture), FileUtils.FILE_TYPE_IMAGE),
-            new CategoryItem(context.getString(R.string.category_document), FileUtils.FILE_TYPE_DOCUMENT),
-            new CategoryItem(context.getString(R.string.category_apk), FileUtils.FILE_TYPE_APK),
-            new CategoryItem(context.getString(R.string.category_zip), FileUtils.FILE_TYPE_ZIP)
+            new CategoryItem(context.getString(R.string.category_music), FileUtils.FILE_TYPE_AUDIO),
+//            new CategoryItem(context.getString(R.string.category_video), FileUtils.FILE_TYPE_VIDEO),
+//            new CategoryItem(context.getString(R.string.category_document), FileUtils.FILE_TYPE_DOCUMENT),
+//            new CategoryItem(context.getString(R.string.category_apk), FileUtils.FILE_TYPE_APK),
+//            new CategoryItem(context.getString(R.string.category_zip), FileUtils.FILE_TYPE_ZIP)
         };
     }
 

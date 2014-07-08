@@ -69,11 +69,11 @@ public class FileManagerDrawerActivity extends FileDrawerActivity
 
     @Override
     public void showDirectoryFragment(String path, String name) {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(DirectoryTabFragment.TAG);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(DirectoryTabFragment.LOG_TAG);
         if (fragment == null) {
             fragment = DirectoryTabFragment.newDirectoryTabFragment(path);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.main_container, fragment, DirectoryTabFragment.TAG);
+            transaction.replace(R.id.main_container, fragment, DirectoryTabFragment.LOG_TAG);
             transaction.commit();
         } else {
             ((DirectoryTabFragment)fragment).setInitPath(path);
