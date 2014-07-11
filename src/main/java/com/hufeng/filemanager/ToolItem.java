@@ -2,32 +2,35 @@ package com.hufeng.filemanager;
 
 import android.content.Context;
 
+import com.hufeng.PlayHttpFragment;
+
 /**
  * Created by feng on 14-5-19.
  */
 public class ToolItem extends DrawerItem{
 
-    String mToolName;
-    String mToolDesc;
-    int mIcon;
-    String mPackage;
-    String mActivity;
+    final String mToolName;
+    final String mToolDesc;
+    final int mIcon;
+    final Class<?> mFragmentClass;
+    final String mFragmentTag;
+    final Object[] mParams;
 
-    public ToolItem(Context context, int name, int des, int icon, String pkg, String act) {
+    public ToolItem(Context context, int name, int des, int icon, Class<?> fragment_class, String tag, Object... params) {
         mToolName = context.getString(name);
         mToolDesc = context.getString(des);
         mIcon = icon;
-        mPackage = pkg;
-        mActivity = act;
+        mFragmentClass = fragment_class;
+        mFragmentTag = tag;
+        mParams = params;
     }
 
     public static ToolItem[] getAllToolItems(Context context) {
         return new ToolItem[] {
-            new ToolItem(context, R.string.tool_name_ftp, R.string.tool_description_ftp, R.drawable.tool_icn_ftp, "com.hufeng.filemanager","com.hufeng.swiftp.ServerControlActivity"),
-            new ToolItem(context, R.string.tool_name_http, R.string.tool_description_http, R.drawable.tool_icn_http, "com.hufeng.filemanager","com.hufeng.nanohttpd.ServerControlActivity"),
-            new ToolItem(context, R.string.tool_name_safe, R.string.tool_description_safe, R.drawable.tool_icn_safe, "com.hufeng.filemanager", "com.hufeng.filemanager.SafeBoxActivity"),
-//            new ToolItem(context, R.string.tool_name_kanbox, R.string.tool_description_kanbox, R.drawable.tool_icn_kanbox, "com.hufeng.filemanager", "com.hufeng.filemanager.KanBoxActivity"),
-            new ToolItem(context, R.string.tool_name_selected, R.string.tool_description_selected, R.drawable.tool_icn_recommend, "com.hufeng.filemanager", "com.hufeng.filemanager.ResourceActivity")
+            new ToolItem(context, R.string.tool_name_ftp, R.string.tool_description_ftp, R.drawable.tool_icn_ftp, PlayHttpFragment.class,"PlayHttpFragment"),
+            new ToolItem(context, R.string.tool_name_http, R.string.tool_description_http, R.drawable.tool_icn_http,PlayHttpFragment.class,"PlayHttpFragment"),
+            new ToolItem(context, R.string.tool_name_safe, R.string.tool_description_safe, R.drawable.tool_icn_safe, PlayHttpFragment.class,"PlayHttpFragment"),
+            new ToolItem(context, R.string.tool_name_selected, R.string.tool_description_selected, R.drawable.tool_icn_recommend, PlayHttpFragment.class,"PlayHttpFragment")
         };
     }
 
@@ -39,6 +42,6 @@ public class ToolItem extends DrawerItem{
 
     @Override
     void work(FileDrawerActivity activity) {
-
+        activity.showFragment(mFragmentClass, mFragmentTag, mParams);
     }
 }

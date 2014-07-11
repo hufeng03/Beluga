@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
+import com.hufeng.filemanager.drawer.DrawItemManager;
 import com.hufeng.filemanager.kanbox.KanBoxTabFragment;
 
 /**
@@ -47,10 +48,9 @@ public class FileManagerDrawerActivity extends FileDrawerActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        if (mNavigationDrawerFragment != null) {
-            DrawerItem item = mNavigationDrawerFragment.getDrawerItem(position);
-            item.work(this);
-        }
+        //if (mNavigationDrawerFragment != null) {
+        DrawerItem item = DrawItemManager.getDrawerItemAtPosition(position);
+        item.work(this);
     }
 
     @Override
@@ -91,6 +91,11 @@ public class FileManagerDrawerActivity extends FileDrawerActivity
             transaction.commit();
         }
         mTitle = title;
+    }
+
+    @Override
+    public void showFragment(Class<?> fragment_class, String tag, Object... params) {
+        FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.main_container, fragment_class, tag, false, params);
     }
 
     @Override

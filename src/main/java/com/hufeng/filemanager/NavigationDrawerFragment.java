@@ -19,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.hufeng.filemanager.drawer.DrawItemManager;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
@@ -51,7 +53,7 @@ public class NavigationDrawerFragment extends BaseFragment {
     private ListView mDrawerListView;
     private View mFragmentContainerView;
 
-    private int mCurrentSelectedPosition = 0;
+    private int mCurrentSelectedPosition = 1;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
@@ -108,19 +110,20 @@ public class NavigationDrawerFragment extends BaseFragment {
         NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(getActivity());
         mDrawerListView.setAdapter(adapter);
 
-        adapter.add(new LabelItem(getString(R.string.category)));
-        adapter.addAll(CategoryItem.getAllCategoryItems(getActivity()));
+//        adapter.add(new LabelItem(getString(R.string.category)));
+//        adapter.addAll(CategoryItem.getAllCategoryItems(getActivity()));
+//
+//        adapter.add(new LabelItem(getString(R.string.directory)));
+//        adapter.addAll(DirectoryItem.getAllDirectoryItems(getActivity()));
+//
+//        adapter.add(new LabelItem(getString(R.string.cloud)));
+//        adapter.addAll(CloudItem.getAllCloudItems(getActivity()));
+//
+//        adapter.add(new LabelItem(getString(R.string.tools)));
+//        adapter.addAll(ToolItem.getAllToolItems(getActivity()));
+        adapter.addAll(DrawItemManager.getAllDrawerItems());
 
-        adapter.add(new LabelItem(getString(R.string.directory)));
-        adapter.addAll(DirectoryItem.getAllDirectoryItems(getActivity()));
-
-        adapter.add(new LabelItem(getString(R.string.cloud)));
-        adapter.addAll(CloudItem.getAllCloudItems(getActivity()));
-
-        adapter.add(new LabelItem(getString(R.string.tools)));
-        adapter.addAll(ToolItem.getAllToolItems(getActivity()));
-
-//        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }
 
@@ -166,7 +169,7 @@ public class NavigationDrawerFragment extends BaseFragment {
                     return;
                 }
 
-                ((FragmentActivity)getActivity()).supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
 
             @Override
@@ -185,7 +188,7 @@ public class NavigationDrawerFragment extends BaseFragment {
                     sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                 }
 
-                ((FragmentActivity)getActivity()).supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
         };
 

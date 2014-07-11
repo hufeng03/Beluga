@@ -705,4 +705,5 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="chinese_goverment_tip">郑重提醒：国家秘密受法律保护。请严格遵守保密法律法规，严禁在互联网上存储、处理、传输、发布涉密信息。任何危害国家秘密安全的行为，都必须受到法律追究。</string>
     <string name="can_not_select_dir">不支持选择文件夹</string>
     <string name="long_press_to_select">请长按文件进行选择</string>
+    <string name="category_home">主页</string>
 </resources>

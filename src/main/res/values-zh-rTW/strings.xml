@@ -707,4 +707,5 @@ or nonexistent.</string>
     <string name="chinese_goverment_tip">鄭重提醒：國家秘密受法律保護。請嚴格遵守保密法律法規，嚴禁在互聯網上存儲、處理、傳輸、發布涉密信息。任何危害國家秘密安全的行為，都必須受到法律追究。</string>
     <string name="can_not_select_dir">不支持选择文件夹</string>
     <string name="long_press_to_select">请长按文件进行选择</string>
+    <string name="category_home">主页</string>
 </resources>
