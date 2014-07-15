@@ -20,8 +20,8 @@ import com.hufeng.playimage.ImageScaleAnimationController;
 
 public abstract class FileTabFragment extends BaseFragment implements
         FileOperation.FileOperationProvider,
-        FileGrouperFragment.FileGrouperFragmentListener,
-        FileBrowserFragment.FileBrowserFragmentListener{
+        FileGrouperFragment.FileGrouperCallbacks,
+        FileBrowserFragment.FileBrowserCallbacks{
 
 	private final String LOG_TAG = ((Object)this).getClass().getSimpleName();
 

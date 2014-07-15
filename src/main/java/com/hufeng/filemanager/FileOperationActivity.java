@@ -62,7 +62,6 @@ public abstract class FileOperationActivity extends BaseActivity implements
         // If the Fragment is non-null, then it is currently being
         // retained across a configuration change.
         if (mGlobalFileOperation == null) {
-//            mGlobalFileOperation = new FileOperation();
             mGlobalFileOperation = FileOperation.newInstance(FileOperation.OPERATION_MODE.NORMAL.ordinal());
             fm.beginTransaction().add(mGlobalFileOperation, "GlobalFileOperation").commit();
         }

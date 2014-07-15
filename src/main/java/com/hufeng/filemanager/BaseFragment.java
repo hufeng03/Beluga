@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import com.hufeng.filemanager.utils.LogUtil;
 
 
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
     private static final boolean DEBUG = BuildConfig.DEBUG;
 
-    public boolean onBackPressed() {
+    protected boolean onBackPressed() {
         return false;
     }
 
@@ -56,7 +56,7 @@ public class BaseFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         if (DEBUG)
-    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onCreate "+this.hashCode());
+    		LogUtil.i(((Object)this).getClass().getSimpleName(), "onCreate "+((savedInstanceState==null)?"null":"with savedInstanceState")+" "+this.hashCode());
 		super.onCreate(savedInstanceState);
 	}
 

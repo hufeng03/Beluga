@@ -43,6 +43,7 @@ public class FragmentUtil {
         } else {
             if (fragment.isDetached() ) {
                 transaction.attach(fragment);
+                transaction.commit();
             }
         }
         return fragment;

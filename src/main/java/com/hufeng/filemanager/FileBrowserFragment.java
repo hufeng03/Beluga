@@ -49,33 +49,27 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
     private static final int LOADER_ID_BROWSER_FILES = 201;
 
-    public static final String ARGUMENT_INIT_ROOT_DIR = "root_dir";
+    public static final String ARGUMENT_INIT_ROOT_DIR = "init_root_dir";
     public static final String ARGUMENT_INIT_DIR_LIST = "init_dir_list";
 
 
-    public static FileBrowserFragment newDownloadBrowser(String root) {
+    public static FileBrowserFragment newDownloadBrowser() {
         FileBrowserFragment fragement = new FileBrowserFragment();
         Bundle data = new Bundle();
         String[] files = UiProvider.getDownloadDirs();
         if (files != null && files.length > 0) {
             data.putStringArray(ARGUMENT_INIT_DIR_LIST, files);
         }
-        if (!TextUtils.isEmpty(root)) {
-            data.putString(ARGUMENT_INIT_ROOT_DIR, root);
-        }
         fragement.setArguments(data);
         return fragement;
     }
 
-    public static FileBrowserFragment newFavoriteBrowser(String root) {
+    public static FileBrowserFragment newFavoriteBrowser() {
         FileBrowserFragment fragement = new FileBrowserFragment();
         Bundle data = new Bundle();
         String[] files = UiProvider.getFavoriteFiles();
         if (files != null && files.length > 0) {
             data.putStringArray(ARGUMENT_INIT_DIR_LIST, files);
-        }
-        if (!TextUtils.isEmpty(root)) {
-            data.putString(ARGUMENT_INIT_ROOT_DIR, root);
         }
         fragement.setArguments(data);
         return fragement;
@@ -118,18 +112,15 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         mCategory = FileUtils.FILE_TYPE_FILE;
     }
 
-    private WeakReference<FileBrowserFragmentListener> mWeakListener = null;
+    private FileBrowserCallbacks mCallbacks;
 
-    public static interface FileBrowserFragmentListener {
+    public static interface FileBrowserCallbacks {
         public void onFileBrowserItemClick(View v, FileEntry entry);
         public void onFileBrowserItemSelect(View v, FileEntry entry);
         public void onFileBrowserItemClose(FileEntry entry);
         public void onFileBrowserDirShown(String path);
     }
 
-    public void setListener(FileBrowserFragmentListener listener) {
-        mWeakListener = new WeakReference<FileBrowserFragmentListener>(listener);
-    }
 
     public void workWithTree(boolean tree) {
         mWorkWithTree = tree;
@@ -147,11 +138,25 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
             }
             setFileOperation(fileOperation);
         }
+        if (getParentFragment() != null) {
+            try {
+                mCallbacks = (FileBrowserCallbacks)getParentFragment();
+            } catch (ClassCastException e) {
+                throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
+            }
+        } else {
+            try {
+                mCallbacks = (FileBrowserCallbacks) activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
+            }
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        mCallbacks = null;
     }
 
     @Override
@@ -230,12 +235,9 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
     public boolean onBackPressed() {
         if (mRootDir != null) {
-            if (mWeakListener != null) {
-                FileBrowserFragmentListener listener = mWeakListener.get();
-                if (listener != null) {
-                    listener.onFileBrowserItemClose(new FileEntry(mRootDir));
+                if (mCallbacks != null) {
+                    mCallbacks.onFileBrowserItemClose(new FileEntry(mRootDir));
                 }
-            }
             String[] initDirs = getArguments().getStringArray(ARGUMENT_INIT_DIR_LIST);
             if (initDirs != null) {
                 boolean flag_child = false, flag_equal = false;
@@ -348,17 +350,14 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
         LogUtil.i(TAG, "onItemClick " + entry.toString());
 
-        if (mWeakListener != null) {
-            FileBrowserFragmentListener listener = mWeakListener.get();
-            if (listener != null) {
+            if (mCallbacks != null) {
                ImageView v_img =  (ImageView)v.findViewById(R.id.icon);
                if (mFileOperation != null && mFileOperation.getFileSelectedSize() > 0) {
-                   listener.onFileBrowserItemSelect(v_img, FileEntryFactory.makeFileObject(entry.path));
+                   mCallbacks.onFileBrowserItemSelect(v_img, FileEntryFactory.makeFileObject(entry.path));
                } else {
-                   listener.onFileBrowserItemClick(v_img, FileEntryFactory.makeFileObject(entry.path));
+                   mCallbacks.onFileBrowserItemClick(v_img, FileEntryFactory.makeFileObject(entry.path));
                }
             }
-        }
     }
 
     @Override
@@ -367,13 +366,10 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         FileEntry entry = (FileEntry)g.getAdapter().getItem(position);
         LogUtil.i(TAG, "onItemSelect " + entry.toString());
 
-        if (mWeakListener != null) {
-            FileBrowserFragmentListener listener = mWeakListener.get();
-            if (listener != null) {
+            if (mCallbacks != null) {
                 ImageView v_img =  (ImageView)v.findViewById(R.id.icon);
-                listener.onFileBrowserItemSelect(v_img, FileEntryFactory.makeFileObject(entry.path));
+                mCallbacks.onFileBrowserItemSelect(v_img, FileEntryFactory.makeFileObject(entry.path));
             }
-        }
     }
 
     @Override
@@ -432,12 +428,9 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         mRootDir = path;
         reloadFiles();
         getActivity().supportInvalidateOptionsMenu();
-        if (mWeakListener != null) {
-            FileBrowserFragmentListener listener = mWeakListener.get();
-            if (listener != null) {
-                listener.onFileBrowserDirShown(mRootDir);
+            if (mCallbacks != null) {
+                mCallbacks.onFileBrowserDirShown(mRootDir);
             }
-        }
     }
 
     @Override

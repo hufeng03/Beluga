@@ -37,6 +37,36 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
 
     public static final String RESOURCE_FRAGMENT_ARGUMENT_TYPE = "resource_fragment_argument_type";
 
+    public static ResourceFragment newGameResourceFragment() {
+        ResourceFragment fragment = new ResourceFragment();
+        Bundle data = new Bundle();
+        data.putInt(ResourceFragment.RESOURCE_FRAGMENT_ARGUMENT_TYPE, ResourceType.GAME.ordinal());
+        fragment.setArguments(data);
+        return fragment;
+    }
+
+    public static ResourceFragment newAppResourceFragment() {
+        ResourceFragment fragment = new ResourceFragment();
+        Bundle data = new Bundle();
+        data.putInt(ResourceFragment.RESOURCE_FRAGMENT_ARGUMENT_TYPE, ResourceType.APP.ordinal());
+        fragment.setArguments(data);
+        return fragment;
+    }
+
+    public static ResourceFragment newDocResourceFragment() {
+        ResourceFragment fragment = new ResourceFragment();
+        Bundle data = new Bundle();
+        data.putInt(ResourceFragment.RESOURCE_FRAGMENT_ARGUMENT_TYPE, ResourceType.DOC.ordinal());
+        fragment.setArguments(data);
+        return fragment;
+    }
+
+    public static ResourceFragment newAllResourceFragment() {
+        ResourceFragment fragment = new ResourceFragment();
+        return fragment;
+    }
+
+
     public ResourceFragment(){
         mMenuId = R.menu.selected_game_fragment_menu;
         mCategory = FileUtils.FILE_TYPE_RESOURCE_ALL;

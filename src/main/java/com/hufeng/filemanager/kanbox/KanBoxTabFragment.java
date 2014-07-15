@@ -43,7 +43,7 @@ import java.util.List;
  * Created by feng on 13-11-21.
  */
 public class KanBoxTabFragment extends FileTabFragment implements
-        FileGrouperFragment.FileGrouperFragmentListener,
+        FileGrouperFragment.FileGrouperCallbacks,
         KanBoxBrowserFragment.KanBoxBrowserListener,
         View.OnClickListener{
 
@@ -391,7 +391,6 @@ public class KanBoxTabFragment extends FileTabFragment implements
                 ft.attach(fragment);
             }
         }
-        fragment.setListener(this);
 //        ft.addToBackStack(null);
         ft.commit();
         clearFragmentInstance();

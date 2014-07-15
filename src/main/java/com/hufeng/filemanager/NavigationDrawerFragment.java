@@ -10,6 +10,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,7 +20,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.drawer.DrawItemManager;
+import com.squareup.otto.Subscribe;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -27,6 +30,8 @@ import com.hufeng.filemanager.drawer.DrawItemManager;
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends BaseFragment {
+
+    private static final String LOG_TAG = "NavigationDrawerFragment";
 
     /**
      * Remember the position of the selected item.
@@ -73,9 +78,11 @@ public class NavigationDrawerFragment extends BaseFragment {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
         }
-
-        // Select either the default item (0) or the last selected item.
-        selectItem(mCurrentSelectedPosition);
+        else {
+            // Select either the default item (1)
+            mCurrentSelectedPosition = 1;
+            selectItem(mCurrentSelectedPosition);
+        }
     }
 
     @Override
@@ -126,6 +133,29 @@ public class NavigationDrawerFragment extends BaseFragment {
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+//        BusProvider.getInstance().unregister(this);
+    }
+
+//    @Subscribe
+//    public void onCategorySelected(CategorySelectEvent event) {
+//        if (event != null) {
+//            if (event.category == FileUtils.FILE_TYPE_IMAGE) {
+//
+//            } else if (event.category == FileUtils.FILE_TYPE_AUDIO) {
+//
+//            }
+//        }
+//    }
 
     public DrawerItem getDrawerItem(int position) {
         return (DrawerItem)mDrawerListView.getAdapter().getItem(position);
@@ -210,6 +240,7 @@ public class NavigationDrawerFragment extends BaseFragment {
     }
 
     private void selectItem(int position) {
+        Log.i(LOG_TAG, "select Item " + position);
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
@@ -299,5 +330,14 @@ public class NavigationDrawerFragment extends BaseFragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+    }
+
+    public boolean goBackHomeIfNeeded() {
+        if (mCurrentSelectedPosition > 3) {
+            selectItem(1);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

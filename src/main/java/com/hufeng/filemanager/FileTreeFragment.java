@@ -27,7 +27,7 @@ import java.util.Comparator;
 
 public class FileTreeFragment extends TreeFragment implements LoaderManager.LoaderCallbacks<InMemoryTreeStateManager<String>>{
 
-    private static final String TAG = FileTreeFragment.class.getSimpleName();
+    public static final String TAG = "FileTreeFragment";
 
     private static final int LOADER_ID_TREE_FILES = 201;
 

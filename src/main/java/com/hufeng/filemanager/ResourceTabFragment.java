@@ -12,6 +12,10 @@ public class ResourceTabFragment extends FileTabFragment{
 
     ResourceFragment mCurrentChildFragment;
 
+    public static ResourceTabFragment newFragment() {
+        return new ResourceTabFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

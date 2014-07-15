@@ -27,6 +27,7 @@ import java.io.File;
 public class DirectoryTabFragment extends FileTabFragment implements
         FileTreeFragment.FileTreeFragmentListener{
 
+    public static final String TAG = "DirectoryTabFragment";
     public static final String LOG_TAG = "DirectoryTabFragment";
 
     private FileBrowserFragment mFileBrowserFragment;
@@ -37,6 +38,8 @@ public class DirectoryTabFragment extends FileTabFragment implements
     private static final String DEVICE_TAB_ROOT_DIR = "device_tab_root_dir";
 
     BroadcastReceiver mReceiver;
+
+    private String mPath;
 
     public static DirectoryTabFragment newDirectoryTabFragment(String path) {
         DirectoryTabFragment fragment = new DirectoryTabFragment();
@@ -55,6 +58,10 @@ public class DirectoryTabFragment extends FileTabFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+        Bundle data = getArguments();
+        if (data != null) {
+            mPath = data.getString(DEVICE_TAB_ROOT_DIR);
+        }
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -69,6 +76,10 @@ public class DirectoryTabFragment extends FileTabFragment implements
                 }
             }
         };
+        if(savedInstanceState == null) {
+            showFileTree(mPath);
+            showFileBrowser(mPath);
+        }
 	}
 
     @Override
@@ -98,21 +109,10 @@ public class DirectoryTabFragment extends FileTabFragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        int orientation = getResources().getConfiguration().orientation;
+
 
         mAdLayout = (LinearLayout)view.findViewById(R.id.device_ad_layout);
         mAdLayout.setVisibility(View.GONE);
-
-
-        String dir = getArguments() != null ? getArguments().getString(DEVICE_TAB_ROOT_DIR, null) : null;
-//        if (savedInstanceState != null) {
-//            dir = savedInstanceState.getString(DEVICE_TAB_ROOT_DIR);
-//        }
-
-        if(Configuration.ORIENTATION_LANDSCAPE == orientation) {
-            showFileTree(dir);
-        }
-        showFileBrowser(dir);
     }
 	
 
@@ -124,24 +124,13 @@ public class DirectoryTabFragment extends FileTabFragment implements
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
        if (mFileBrowserFragment != null) {
            String dir = mFileBrowserFragment.getParentFile();
            if (!TextUtils.isEmpty(dir)) {
-//               outState.putString(DEVICE_TAB_ROOT_DIR, dir);
                getArguments().putString(DEVICE_TAB_ROOT_DIR, dir);
            }
        }
-    }
-
-    @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+       super.onSaveInstanceState(outState);
     }
 
     public void showFileTree(String dir) {
@@ -155,7 +144,7 @@ public class DirectoryTabFragment extends FileTabFragment implements
         }
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
-        mFileTreeFragment = (FileTreeFragment) fm.findFragmentByTag(FileTreeFragment.class.getSimpleName());
+        mFileTreeFragment = (FileTreeFragment) fm.findFragmentByTag(FileTreeFragment.TAG);
         if (mFileTreeFragment == null) {
             LogUtil.i(LOG_TAG, "showFileTree: create new");
 //            mFileTreeFragment = new FileTreeFragment();
@@ -165,18 +154,20 @@ public class DirectoryTabFragment extends FileTabFragment implements
 //            }
 //            mFileTreeFragment.setArguments(data);
             mFileTreeFragment = FileTreeFragment.newStorageBrowser(dir);
-            ft.replace(R.id.fragment_container_tree, mFileTreeFragment, FileTreeFragment.class.getSimpleName());
+            ft.replace(R.id.fragment_container_tree, mFileTreeFragment, FileTreeFragment.TAG);
+            ft.commit();
         } else {
             if (mFileTreeFragment.isDetached()) {
                 LogUtil.i(LOG_TAG, "showFileTree: attach old");
                 ft.attach(mFileTreeFragment);
+                ft.commit();
             }
             if (!TextUtils.isEmpty(dir)) {
                 mFileTreeFragment.showDir(dir);
             }
         }
         mFileTreeFragment.setListener(this);
-        ft.commit();
+
     }
 
 
@@ -194,31 +185,27 @@ public class DirectoryTabFragment extends FileTabFragment implements
                 mFileBrowserFragment.workWithTree(false);
             }
             ft.replace(R.id.fragment_container, mFileBrowserFragment, FileBrowserFragment.class.getSimpleName());
+            ft.commit();
         } else {
             if (mFileBrowserFragment.isDetached()) {
                 LogUtil.i(LOG_TAG, "showFileBrowser: attach old");
                 ft.attach(mFileBrowserFragment);
+                ft.commit();
             }
             if (!TextUtils.isEmpty(dir)) {
                 mFileBrowserFragment.showDir(dir);
             }
         }
-        mFileBrowserFragment.setListener(this);
-        ft.commit();
         mCurrentChildFragment = mFileBrowserFragment;
     }
 
 	@Override
 	public boolean onBackPressed() {
-		// TODO Auto-generated method stub
-//		if(mFileBrowser!=null)
-//			return mFileBrowser.back();
         if (closeImage()) {
             return true;
         } else {
            return mFileBrowserFragment.onBackPressed();
         }
-//		return false;
 	}
 
     public void showBrowserRoot() {

@@ -8,7 +8,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.hufeng.filemanager.apprate.AppRate;
 import com.hufeng.filemanager.drawer.DrawItemManager;
 import com.hufeng.filemanager.kanbox.KanBoxTabFragment;
 
@@ -28,6 +30,11 @@ public class FileManagerDrawerActivity extends FileDrawerActivity
 //     */
     private CharSequence mTitle;
 
+    private AppRate mAppRate;
+
+    private boolean mAppRateShown = false;
+
+    private long mLastBackPressTime = -1;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -44,6 +51,11 @@ public class FileManagerDrawerActivity extends FileDrawerActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         enableImageAnimatorView((ViewGroup)findViewById(R.id.main_container).getRootView());
+
+        if (Constants.APP_RATE) {
+            mAppRate = new AppRate(this);
+            mAppRate.init();
+        }
     }
 
     @Override
@@ -56,27 +68,35 @@ public class FileManagerDrawerActivity extends FileDrawerActivity
     @Override
     public void showCategoryFragment(int category, String name) {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(CategoryTabFragment.TAG);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (fragment == null) {
             fragment = CategoryTabFragment.newCategoryTabFragment(category);
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.main_container, fragment, CategoryTabFragment.TAG);
             transaction.commit();
         } else {
             ((CategoryTabFragment)fragment).setCategory(category);
+            if (fragment.isDetached()) {
+                transaction.attach(fragment);
+                transaction.commit();
+            }
         }
         mTitle = name;
     }
 
     @Override
     public void showDirectoryFragment(String path, String name) {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(DirectoryTabFragment.LOG_TAG);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(DirectoryTabFragment.TAG);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (fragment == null) {
             fragment = DirectoryTabFragment.newDirectoryTabFragment(path);
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.main_container, fragment, DirectoryTabFragment.LOG_TAG);
+            transaction.replace(R.id.main_container, fragment, DirectoryTabFragment.TAG);
             transaction.commit();
         } else {
             ((DirectoryTabFragment)fragment).setInitPath(path);
+            if (fragment.isDetached()) {
+                transaction.attach(fragment);
+                transaction.commit();
+            }
         }
         mTitle = name;
     }
@@ -84,18 +104,24 @@ public class FileManagerDrawerActivity extends FileDrawerActivity
     @Override
     public void showCloudFragment(int provider, String title) {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(KanBoxTabFragment.TAG);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (fragment == null) {
             fragment = KanBoxTabFragment.newKanBoxTabFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.main_container, fragment, KanBoxTabFragment.TAG);
             transaction.commit();
+        } else {
+            if (fragment.isDetached()) {
+                transaction.attach(fragment);
+                transaction.commit();
+            }
         }
         mTitle = title;
     }
 
     @Override
-    public void showFragment(Class<?> fragment_class, String tag, Object... params) {
+    public void showFragment(String title, Class<?> fragment_class, String tag, Object... params) {
         FragmentUtil.replaceFragment(getSupportFragmentManager(), R.id.main_container, fragment_class, tag, false, params);
+        mTitle = title;
     }
 
     @Override
@@ -135,6 +161,26 @@ public class FileManagerDrawerActivity extends FileDrawerActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        BaseFragment fragment = (BaseFragment)getSupportFragmentManager().findFragmentById(R.id.main_container);
+        if (fragment == null || !fragment.onBackPressed()) {
+            if (mNavigationDrawerFragment != null && mNavigationDrawerFragment.goBackHomeIfNeeded()) {
+                return;
+            } else if (!mAppRateShown) {
+                if (mLastBackPressTime == -1 || System.currentTimeMillis() - mLastBackPressTime > 2000) {
+                    if (mAppRate != null && mAppRate.showIfNeeded()) {
+                        mAppRateShown = true;
+                    } else {
+                        Toast.makeText(this, R.string.back_again_to_exit, Toast.LENGTH_SHORT).show();
+                    }
+                    mLastBackPressTime = System.currentTimeMillis();
+                    return;
+                }
+            }
+            super.onBackPressed();
+        }
+    }
 
     @Override
     public void refreshFiles() {

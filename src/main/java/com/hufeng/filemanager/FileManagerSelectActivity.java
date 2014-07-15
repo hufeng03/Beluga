@@ -21,7 +21,7 @@ import java.io.File;
 /**
  * Created by feng on 2014-07-02.
  */
-public class FileManagerSelectActivity extends FileOperationActivity implements FileBrowserFragment.FileBrowserFragmentListener{
+public class FileManagerSelectActivity extends FileOperationActivity implements FileBrowserFragment.FileBrowserCallbacks{
 
     private FileBrowserFragment mFileBrowserFragment;
 
@@ -67,7 +67,6 @@ public class FileManagerSelectActivity extends FileOperationActivity implements 
                 ft.attach(fragment);
             }
         }
-        fragment.setListener(this);
 //        ft.addToBackStack(null);
         mFileBrowserFragment = fragment;
         ft.commit();

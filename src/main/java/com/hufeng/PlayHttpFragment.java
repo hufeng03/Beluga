@@ -198,4 +198,5 @@ public class PlayHttpFragment extends BaseFragment implements View.OnClickListen
             instructionText.setVisibility(View.GONE);
         }
     }
+
 }

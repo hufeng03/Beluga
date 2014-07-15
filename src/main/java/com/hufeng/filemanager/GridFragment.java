@@ -505,4 +505,5 @@ public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         }
         mHandler.post(mRequestFocus);
     }
+
 }

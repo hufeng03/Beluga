@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.provider.UiProvider;
+import com.hufeng.filemanager.utils.LogUtil;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -30,6 +32,15 @@ public class CategoryTabFragment extends FileTabFragment {
     @Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+        Bundle data = getArguments();
+        if (data != null) {
+            mCategory = data.getInt(CATEGORY_TYPE);
+        } else {
+            mCategory = FileUtils.FILE_TYPE_ALL;
+        }
+        if(savedInstanceState == null) {
+            showChildCategoryPanel();
+        }
 	}
 
 
@@ -37,12 +48,6 @@ public class CategoryTabFragment extends FileTabFragment {
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
-	}
-	
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-//        outState.putInt(CATEGORY_TYPE, mCategory);
 	}
 
 	@Override
@@ -56,10 +61,6 @@ public class CategoryTabFragment extends FileTabFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-        //if (savedInstanceState != null) {
-        mCategory = getArguments() !=null ? getArguments().getInt(CATEGORY_TYPE, FileUtils.FILE_TYPE_ALL) : FileUtils.FILE_TYPE_ALL;
-        //}
-        showChildCategoryPanel(mCategory);
 
         mContentObserver = new ContentObserver(null) {
             @Override
@@ -77,7 +78,9 @@ public class CategoryTabFragment extends FileTabFragment {
 
 
     public void setCategory(int category) {
-        showChildCategoryPanel(category);
+        mCategory = category;
+        persistCategoryType(mCategory);
+        showChildCategoryPanel();
     }
 
 	@Override
@@ -89,10 +92,21 @@ public class CategoryTabFragment extends FileTabFragment {
 
     public static CategoryTabFragment newCategoryTabFragment(int type) {
         CategoryTabFragment fragment = new CategoryTabFragment();
-        Bundle data = new Bundle();
-        data.putInt(CATEGORY_TYPE, type);
-        fragment.setArguments(data);
+        fragment.persistCategoryType(type);
         return fragment;
+    }
+
+    private void persistCategoryType(int category) {
+        Bundle data = getArguments();
+        boolean first_inited = false;
+        if (data == null) {
+            data = new Bundle();
+            first_inited = true;
+        }
+        data.putInt(CATEGORY_TYPE, category);
+        if (first_inited) {
+            setArguments(data);
+        }
     }
 	
 	@Override
@@ -110,8 +124,7 @@ public class CategoryTabFragment extends FileTabFragment {
     @Subscribe
     public void onCategorySelected(CategorySelectEvent event) {
         if (event != null) {
-            mCategory = event.category;
-            showChildCategoryPanel(mCategory);
+            setCategory(event.category);
         }
     }
 
@@ -141,14 +154,18 @@ public class CategoryTabFragment extends FileTabFragment {
         final FragmentTransaction ft = fm.beginTransaction();
         CategoryFragment fragment = (CategoryFragment) getChildFragmentManager().findFragmentByTag(CategoryFragment.class.getSimpleName());
         if (fragment == null) {
+            Log.i(TAG, "create new CategoryFragment");
             fragment = new CategoryFragment();
             ft.replace(R.id.fragment_container, fragment, CategoryFragment.class.getSimpleName());
+            ft.commit();
         } else {
+            Log.i(TAG, "use old CategoryFragment");
             if (fragment.isDetached()) {
                 ft.attach(fragment);
+                ft.commit();
+                Log.i(TAG, "old CategoryFragment attach again");
             }
         }
-        ft.commit();
         mCategory = FileUtils.FILE_TYPE_ALL;
         mCategoryFragment = fragment;
         mCurrentChildFragment = null;
@@ -156,18 +173,26 @@ public class CategoryTabFragment extends FileTabFragment {
 
 
     private void toFileGrouper(int category) {
+        Log.i(TAG, "toFileGrouper: " + category);
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
-        FileGrouperFragment fragment = (FileGrouperFragment) fm.findFragmentByTag(FileGrouperFragment.class.getSimpleName());
+        FileGrouperFragment fragment = (FileGrouperFragment) fm.findFragmentByTag(FileGrouperFragment.TAG);
         if(fragment == null) {
             fragment = FileGrouperFragment.newCategoryGrouperInstance(category);
             ft.replace(R.id.fragment_container, fragment, FileGrouperFragment.class.getSimpleName());
+            ft.commit();
         } else {
+            if (fragment.isDetached()) {
+                Log.i(TAG, "toFileGrouper attached again");
+            } else {
+                Log.i(TAG, "toFileGrouper just set category");
+            }
             fragment.setCategory(category);
+            if (fragment.isDetached()) {
+                ft.attach(fragment);
+                ft.commit();
+            }
         }
-//        ft.addToBackStack(null);
-        ft.commit();
-        fragment.setListener(this);
         mCurrentChildFragment = fragment;
         mCategoryFragment = null;
     }
@@ -175,12 +200,12 @@ public class CategoryTabFragment extends FileTabFragment {
     private void toFileBrowser(int type) {
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
-        FileBrowserFragment fragment = (FileBrowserFragment) fm.findFragmentByTag(FileBrowserFragment.class.getSimpleName());
+        FileBrowserFragment fragment = (FileBrowserFragment) fm.findFragmentByTag(FileBrowserFragment.TAG);
         if (fragment == null) {
             if (FileUtils.FILE_TYPE_DOWNLOAD == type) {
-                fragment = FileBrowserFragment.newDownloadBrowser(null);
+                fragment = FileBrowserFragment.newDownloadBrowser();
             } else if (FileUtils.FILE_TYPE_FAVORITE == type) {
-                fragment = FileBrowserFragment.newFavoriteBrowser(null);
+                fragment = FileBrowserFragment.newFavoriteBrowser();
             }
 
             ft.replace(R.id.fragment_container, fragment, FileBrowserFragment.class.getSimpleName());
@@ -190,7 +215,6 @@ public class CategoryTabFragment extends FileTabFragment {
             }
         }
         ft.commit();
-        fragment.setListener(this);
         mCurrentChildFragment = fragment;
         mCategoryFragment = null;
     }
@@ -218,23 +242,27 @@ public class CategoryTabFragment extends FileTabFragment {
         final FragmentTransaction ft = fm.beginTransaction();
         ResourceFragment fragment = (ResourceFragment) fm.findFragmentByTag(ResourceFragment.class.getSimpleName());
         if(fragment == null) {
-            fragment = new ResourceFragment();
-            Bundle data = new Bundle();
-            if (FileUtils.FILE_TYPE_RESOURCE_GAME == category) {
-                data.putInt(ResourceFragment.RESOURCE_FRAGMENT_ARGUMENT_TYPE, ResourceType.GAME.ordinal());
-            } else if (FileUtils.FILE_TYPE_RESOURCE_APP == category) {
-                data.putInt(ResourceFragment.RESOURCE_FRAGMENT_ARGUMENT_TYPE, ResourceType.APP.ordinal());
-            } else if (FileUtils.FILE_TYPE_RESOURCE_DOC == category) {
-                data.putInt(ResourceFragment.RESOURCE_FRAGMENT_ARGUMENT_TYPE, ResourceType.DOC.ordinal());
+            switch (category) {
+                case FileUtils.FILE_TYPE_RESOURCE_GAME:
+                    fragment = ResourceFragment.newGameResourceFragment();
+                    break;
+                case FileUtils.FILE_TYPE_RESOURCE_APP:
+                    fragment = ResourceFragment.newAppResourceFragment();
+                    break;
+                case FileUtils.FILE_TYPE_RESOURCE_DOC:
+                    fragment = ResourceFragment.newDocResourceFragment();
+                    break;
+                case FileUtils.FILE_TYPE_RESOURCE_ALL:
+                default:
+                    fragment = ResourceFragment.newAllResourceFragment();
+                    break;
             }
-            fragment.setArguments(data);
             ft.replace(R.id.fragment_container, fragment, ResourceFragment.class.getSimpleName());
         } else {
             if (fragment.isDetached()) {
                 ft.attach(fragment);
             }
         }
-//        ft.addToBackStack(null);
         ft.commit();
         mCurrentChildFragment = fragment;
         mCategoryFragment = null;
@@ -246,9 +274,10 @@ public class CategoryTabFragment extends FileTabFragment {
 //        showChildCategoryPanel(category);
 //    }
 
-    private boolean showChildCategoryPanel(int category) {
+    private boolean showChildCategoryPanel() {
+        Log.i(TAG, "showChildCategoryPanel: "+mCategory);
         boolean result = true;
-        switch(category) {
+        switch(mCategory) {
             case FileUtils.FILE_TYPE_ALL:
                 showCategoryPanel();
                 break;
@@ -256,15 +285,15 @@ public class CategoryTabFragment extends FileTabFragment {
                 toAppManager();
                 break;
             case FileUtils.FILE_TYPE_FAVORITE:
-                toFileBrowser(category);
+                toFileBrowser(mCategory);
                 break;
             case FileUtils.FILE_TYPE_DOWNLOAD:
-                toFileBrowser(category);
+                toFileBrowser(mCategory);
                 break;
             case FileUtils.FILE_TYPE_RESOURCE_GAME:
             case FileUtils.FILE_TYPE_RESOURCE_APP:
             case FileUtils.FILE_TYPE_RESOURCE_DOC:
-                toResourceFragment(category);
+                toResourceFragment(mCategory);
                 break;
             case FileUtils.FILE_TYPE_AUDIO:
             case FileUtils.FILE_TYPE_IMAGE:
@@ -272,7 +301,7 @@ public class CategoryTabFragment extends FileTabFragment {
             case FileUtils.FILE_TYPE_APK:
             case FileUtils.FILE_TYPE_DOCUMENT:
             case FileUtils.FILE_TYPE_ZIP:
-                toFileGrouper(category);
+                toFileGrouper(mCategory);
                 break;
             case FileUtils.FILE_TYPE_CLOUD:
                 Activity activity = getActivity();

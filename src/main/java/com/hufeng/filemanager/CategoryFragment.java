@@ -74,16 +74,6 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	LinearLayout mInformationLayout;
 	
 	private static final int LOADER_ID_CATEGORY = 1;
-
-//    private WeakReference<CategoryFragmentListener> mWeakListener;
-
-//    public static interface CategoryFragmentListener {
-//        public void onCategorySelected(int category);
-//    }
-
-//    public void setListener(CategoryFragmentListener listener) {
-//        mWeakListener = new WeakReference<CategoryFragmentListener>(listener);
-//    }
 	
 
 	@Override

@@ -18,12 +18,12 @@ public class SafeBoxTabFragment extends FileTabFragment implements
         LockPatternFragment.LockPatternListener,
         SafeBoxCategoryFragment.SafeBoxCategoryListener,
         SafeBoxGrouperFragment.SafeBoxDetailListener,
-        FileGrouperFragment.FileGrouperFragmentListener,
+        FileGrouperFragment.FileGrouperCallbacks,
         FmDialogFragment.OnDialogDoneListener{
 
 
 
-    public static SafeBoxTabFragment newSafeBoxTabFragment() {
+    public static SafeBoxTabFragment newFragment() {
         return new SafeBoxTabFragment();
     }
 
@@ -151,7 +151,6 @@ public class SafeBoxTabFragment extends FileTabFragment implements
                 ft.attach(fragment);
             }
         }
-        fragment.setListener(this);
 //        getFileOperation().setFileOperationProvider(this);
 //        mCurrentFragment = fragment;
         ft.addToBackStack(null);
@@ -168,6 +167,11 @@ public class SafeBoxTabFragment extends FileTabFragment implements
         }
     }
 
+
+    @Override
+    public boolean onBackPressed() {
+        return super.onBackPressed();
+    }
 
     @Override
     protected void showFile(String path) {

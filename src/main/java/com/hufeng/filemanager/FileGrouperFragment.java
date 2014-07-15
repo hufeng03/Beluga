@@ -42,16 +42,16 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
         mMenuId = R.menu.file_grouper_fragment_menu;
     }
 
-    private WeakReference<FileGrouperFragmentListener> mWeakListener = null;
+    FileGrouperCallbacks mCallbacks;
 
-    public static interface FileGrouperFragmentListener {
+    public static interface FileGrouperCallbacks {
         public void onFileGrouperItemClick(View v, FileEntry entry);
         public void onFileGrouperItemSelect(View v, FileEntry entry);
     }
 
-    public void setListener(FileGrouperFragmentListener listener) {
-        mWeakListener = new WeakReference<FileGrouperFragmentListener>(listener);
-    }
+//    public void setListener(FileGrouperFragmentListener listener) {
+//        mWeakListener = new WeakReference<FileGrouperFragmentListener>(listener);
+//    }
 
     public static FileGrouperFragment newCategoryGrouperInstance(int category) {
         FileGrouperFragment fragment = new FileGrouperFragment();
@@ -110,11 +110,25 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
             }
             setFileOperation(fileOperation);
         }
+        if (getParentFragment() != null) {
+            try {
+                mCallbacks = (FileGrouperCallbacks)getParentFragment();
+            } catch (ClassCastException e) {
+                throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
+            }
+        } else {
+            try {
+                mCallbacks = (FileGrouperCallbacks) activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
+            }
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        mCallbacks = null;
     }
 
     @Override
@@ -235,18 +249,15 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
     @Override
     public void onGridItemClick(GridView g, View v, int position, long id) {
         super.onGridItemClick(g,v,position,id);
-        if (mWeakListener != null) {
-            FileGrouperFragmentListener listener = mWeakListener.get();
-            if (listener != null) {
-               Cursor cursor =(Cursor)g.getItemAtPosition(position);
-               //Cursor cursor = (Cursor)g.getAdapter().getItem(position);
-               String path = cursor.getString(DataStructures.FileColumns.FILE_PATH_FIELD_INDEX);
-               ImageView v_img =  (ImageView)v.findViewById(R.id.icon);
-                if (mFileOperation!=null && mFileOperation.getOperationMode() == FileOperation.OPERATION_MODE.ADD_CLOUD) {
-                    listener.onFileGrouperItemSelect(v_img, FileEntryFactory.makeFileObject(path));
-                } else {
-                    listener.onFileGrouperItemClick(v_img, FileEntryFactory.makeFileObject(path));
-                }
+        if (mCallbacks != null) {
+            Cursor cursor =(Cursor)g.getItemAtPosition(position);
+            //Cursor cursor = (Cursor)g.getAdapter().getItem(position);
+            String path = cursor.getString(DataStructures.FileColumns.FILE_PATH_FIELD_INDEX);
+            ImageView v_img =  (ImageView)v.findViewById(R.id.icon);
+            if (mFileOperation!=null && mFileOperation.getOperationMode() == FileOperation.OPERATION_MODE.ADD_CLOUD) {
+                mCallbacks.onFileGrouperItemSelect(v_img, FileEntryFactory.makeFileObject(path));
+            } else {
+                mCallbacks.onFileGrouperItemClick(v_img, FileEntryFactory.makeFileObject(path));
             }
         }
     }
@@ -254,15 +265,12 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
     @Override
     public void onGridItemSelect(GridView g, View v, int position, long id) {
         super.onGridItemSelect(g,v,position,id);
-        if (mWeakListener != null) {
-            FileGrouperFragmentListener listener = mWeakListener.get();
-            if (listener != null) {
-                Cursor cursor =(Cursor)g.getItemAtPosition(position);
-                //Cursor cursor = (Cursor)g.getAdapter().getItem(position);
-                String path = cursor.getString(DataStructures.FileColumns.FILE_PATH_FIELD_INDEX);
-                ImageView v_img =  (ImageView)v.findViewById(R.id.icon);
-                listener.onFileGrouperItemSelect(v_img, FileEntryFactory.makeFileObject(path));
-            }
+        if (mCallbacks != null) {
+            Cursor cursor =(Cursor)g.getItemAtPosition(position);
+            //Cursor cursor = (Cursor)g.getAdapter().getItem(position);
+            String path = cursor.getString(DataStructures.FileColumns.FILE_PATH_FIELD_INDEX);
+            ImageView v_img =  (ImageView)v.findViewById(R.id.icon);
+            mCallbacks.onFileGrouperItemSelect(v_img, FileEntryFactory.makeFileObject(path));
         }
     }
 
