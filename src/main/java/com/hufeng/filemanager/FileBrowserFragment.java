@@ -36,7 +36,8 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         IUiImpl.UiCallback,
         FileGridAdapterListener{
 
-    private static final String LOG_TAG = FileBrowserFragment.class.getSimpleName();
+//    private static final String LOG_TAG = FileBrowserFragment.class.getSimpleName();
+    private static final String LOG_TAG = "FileBrowserFragment";
 
     public static final String FILE_BROWSER_ARGUMENT_SELECT = "file_browser_argumnet_select";
 

@@ -27,7 +27,8 @@ import java.io.File;
 public class DirectoryTabFragment extends FileTabFragment implements
         FileTreeFragment.FileTreeFragmentListener{
 
-    private static final String LOG_TAG = DirectoryTabFragment.class.getSimpleName();
+//    private static final String LOG_TAG = DirectoryTabFragment.class.getSimpleName();
+    private static final String LOG_TAG = "DirectoryTabFragment";
 
     private FileBrowserFragment mFileBrowserFragment;
     private FileTreeFragment mFileTreeFragment;
