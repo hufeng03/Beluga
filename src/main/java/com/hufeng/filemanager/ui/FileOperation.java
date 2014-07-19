@@ -261,13 +261,17 @@ public class FileOperation extends BaseFragment {
 	}
 	
 	public void onOperationPasteCancel(Context context){
-        Intent intent = new Intent(FileManagerTabActivity.ACTION_CANCEL_PASTE_FILES);
-        intent.setClassName(context.getPackageName(), FileManagerTabActivity.class.getName());
-        context.startActivity(intent);
-        mCopyPaths.clear();
-        mMovePaths.clear();
-        mOperationPaths.clear();
-        refresh();
+        if (getActivity() instanceof FileManagerTabActivity) {
+            Intent intent = new Intent(FileManagerTabActivity.ACTION_CANCEL_PASTE_FILES);
+//        intent.setClassName(context.getPackageName(), FileManagerTabActivity.class.getName());
+            context.startActivity(intent);
+            mCopyPaths.clear();
+            mMovePaths.clear();
+            mOperationPaths.clear();
+            refresh();
+        } else {
+            getActivity().finish();
+        }
 	}
 	
 	public void onOperationSendSelected(Context context, String app, String name)
@@ -391,7 +395,7 @@ public class FileOperation extends BaseFragment {
     	if(mOperationPaths.size()>0)
     	{
 	    	Intent intent = new Intent(FileManagerTabActivity.ACTION_MOVE_FILES);
-	    	intent.setClassName(context.getPackageName(), FileManagerTabActivity.class.getName());
+//	    	intent.setClassName(context.getPackageName(), FileManagerTabActivity.class.getName());
 	    	intent.putExtra("files", mOperationPaths.toArray(new String[mOperationPaths.size()]));
 	    	context.startActivity(intent);
             mOperationPaths.clear();
@@ -403,7 +407,7 @@ public class FileOperation extends BaseFragment {
     	if(mOperationPaths.size()>0)
     	{
 	    	Intent intent = new Intent(FileManagerTabActivity.ACTION_COPY_FILES);
-	    	intent.setClassName(context.getPackageName(), FileManagerTabActivity.class.getName());
+//	    	intent.setClassName(context.getPackageName(), FileManagerTabActivity.class.getName());
 	    	intent.putExtra("files", mOperationPaths.toArray(new String[mOperationPaths.size()]));
 	    	context.startActivity(intent);
             mOperationPaths.clear();

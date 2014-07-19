@@ -38,10 +38,10 @@ public class FileManagerTabActivity extends FileOperationActivity{
 
 	private static final String LOG_TAG = FileManagerTabActivity.class.getSimpleName();
 	
-	public static final String ACTION_MOVE_FILES = "action_move_files";
-	public static final String ACTION_COPY_FILES = "action_copy_files";
+	public static final String ACTION_MOVE_FILES = "beluga.fileoperation.action.MOVE";
+	public static final String ACTION_COPY_FILES = "beluga.fileoperation.action.COPY";
     public static final String ACTION_UPLOAD_FILES = "action_upload_files";
-    public static final String ACTION_CANCEL_PASTE_FILES = "action_cancel_paste_files";
+    public static final String ACTION_CANCEL_PASTE_FILES = "beluga.fileoperation.action.PASTE_CANCEL";
 
 	private static final int FRAGMENT_COUNT = 3;
     private static final int FRAGMENT_INDEX_SELECTED = -1;

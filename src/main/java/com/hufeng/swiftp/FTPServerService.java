@@ -42,10 +42,16 @@ import android.net.wifi.WifiManager.WifiLock;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 
 public class FTPServerService extends Service implements Runnable {
+
+    public static final String INTENT_MESSAGE_FTP_SERVICE_STARTED = "ftp_service_started";
+    public static final String INTENT_MESSAGE_FTP_SERVICE_STOPPED = "ftp_service_stopped";
+
+
 	protected static Thread serverThread = null;
 	protected boolean shouldExit = false;
 	protected MyLog myLog = new MyLog(getClass().getName());
@@ -172,7 +178,7 @@ public class FTPServerService extends Service implements Runnable {
 			}
 		} catch (IOException e) {}
 
-		UiUpdater.updateClients();
+//		UiUpdater.updateClients();
 		if(wifiLock != null) {
 			wifiLock.release();
 			wifiLock = null;
@@ -257,6 +263,9 @@ public class FTPServerService extends Service implements Runnable {
 		notificationMgr.notify(0, notification);
 		
 		myLog.d("Notication setup done");
+
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getApplicationContext());
+        localBroadcastManager.sendBroadcast(new Intent(INTENT_MESSAGE_FTP_SERVICE_STARTED));
 	}
 	
 	private void clearNotification() {
@@ -275,7 +284,7 @@ public class FTPServerService extends Service implements Runnable {
 		int consecutiveProxyStartFailures = 0;
 		long proxyStartMillis = 0;
 
-		UiUpdater.updateClients();
+//		UiUpdater.updateClients();
 				
 		myLog.l(Log.DEBUG, "Server thread running");
 		
@@ -307,7 +316,7 @@ public class FTPServerService extends Service implements Runnable {
 
 		// We should update the UI now that we have a socket open, so the UI
 		// can present the URL
-		UiUpdater.updateClients();
+//		UiUpdater.updateClients();
 		
 		while(!shouldExit) {
 			if(acceptWifi) {
@@ -420,6 +429,9 @@ public class FTPServerService extends Service implements Runnable {
 		releaseWifiLock();
 		releaseWakeLock();
 		clearNotification();
+
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getApplicationContext());
+        localBroadcastManager.sendBroadcast(new Intent(INTENT_MESSAGE_FTP_SERVICE_STOPPED));
 	}
 	
 	private void takeWakeLock() {
@@ -532,9 +544,9 @@ public class FTPServerService extends Service implements Runnable {
 		//updateClients();
 	}
 	
-	public static void updateClients() {
-		UiUpdater.updateClients();
-	}
+//	public static void updateClients() {
+//		UiUpdater.updateClients();
+//	}
 	
 	public static void writeMonitor(boolean incoming, String s) {}
 //	public static void writeMonitor(boolean incoming, String s) {

@@ -53,6 +53,8 @@ public class CategoryItem extends DrawerItem {
             case FileUtils.FILE_TYPE_ZIP:
                 icon = R.drawable.file_category_icon_zip;
                 break;
+            case FileUtils.FILE_TYPE_ALL:
+                icon = R.drawable.file_category_icon_all;
         }
         layout.setAsLabel(false, icon);
     }

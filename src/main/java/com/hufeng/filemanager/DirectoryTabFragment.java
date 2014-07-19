@@ -77,7 +77,7 @@ public class DirectoryTabFragment extends FileTabFragment implements
             }
         };
         if(savedInstanceState == null) {
-            showFileTree(mPath);
+//            showFileTree(mPath);
             showFileBrowser(mPath);
         }
 	}
@@ -175,7 +175,7 @@ public class DirectoryTabFragment extends FileTabFragment implements
         LogUtil.i(LOG_TAG, "showFileBrowser:"+((dir!=null)?dir:"null"));
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
-        mFileBrowserFragment = (FileBrowserFragment) fm.findFragmentByTag(FileBrowserFragment.class.getSimpleName());
+        mFileBrowserFragment = (FileBrowserFragment) fm.findFragmentByTag(FileBrowserFragment.TAG);
         if (mFileBrowserFragment == null) {
             LogUtil.i(LOG_TAG, "showFileBrowser: create new");
             mFileBrowserFragment = FileBrowserFragment.newStorageBrowser(dir);
@@ -184,7 +184,7 @@ public class DirectoryTabFragment extends FileTabFragment implements
             } else {
                 mFileBrowserFragment.workWithTree(false);
             }
-            ft.replace(R.id.fragment_container, mFileBrowserFragment, FileBrowserFragment.class.getSimpleName());
+            ft.replace(R.id.fragment_container, mFileBrowserFragment, FileBrowserFragment.TAG);
             ft.commit();
         } else {
             if (mFileBrowserFragment.isDetached()) {

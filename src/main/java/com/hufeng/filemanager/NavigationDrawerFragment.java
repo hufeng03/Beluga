@@ -239,7 +239,7 @@ public class NavigationDrawerFragment extends BaseFragment {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    private void selectItem(int position) {
+    public void selectItem(int position) {
         Log.i(LOG_TAG, "select Item " + position);
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {

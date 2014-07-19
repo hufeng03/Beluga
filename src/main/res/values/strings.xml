@@ -574,12 +574,12 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <!-- Accessibility description sent when user completes drawing a pattern. [CHAR LIMIT=NONE] -->
 <string name="lockscreen_access_pattern_detected">Pattern completed</string>
 <string name="lock_verify_password">Verify Pattern Password</string>
-<string name="lock_set_password">Set password for safe box</string>
-<string name="lock_reset_password">Reset password for safe box</string>
+<string name="lock_set_password">Set password for Safebox</string>
+<string name="lock_reset_password">Reset password for Safebox</string>
 <string name="ad_download">Download</string>
 <string name="recommend">Recommend</string>
-<string name="tool_name_safe">Safe Box</string>
-<string name="tool_description_safe">Safe box for your secrect image and video</string>
+<string name="tool_name_safe">Safebox</string>
+<string name="tool_description_safe">Safebox for your secrect image and video</string>
 <string name="tool_name_kanbox">Kanbox</string>
 <string name="tool_name_selected">Selected App</string>
 <string name="tool_description_kanbox">Alibaba\'s personal cloud service</string>

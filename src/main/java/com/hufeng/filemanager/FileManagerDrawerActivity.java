@@ -1,6 +1,7 @@
 package com.hufeng.filemanager;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import com.hufeng.filemanager.apprate.AppRate;
 import com.hufeng.filemanager.drawer.DrawItemManager;
 import com.hufeng.filemanager.kanbox.KanBoxTabFragment;
+import com.hufeng.nanohttpd.HTTPServerService;
 
 /**
  * Created by feng on 14-5-19.
@@ -55,6 +57,17 @@ public class FileManagerDrawerActivity extends FileDrawerActivity
         if (Constants.APP_RATE) {
             mAppRate = new AppRate(this);
             mAppRate.init();
+        }
+        if (HTTPServerService.INTENT_ACTION_HTTP_SERVICE_VIEW.equals(getIntent().getAction())) {
+            mNavigationDrawerFragment.selectItem(10);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (HTTPServerService.INTENT_ACTION_HTTP_SERVICE_VIEW.equals(intent.getAction())) {
+            mNavigationDrawerFragment.selectItem(10);
         }
     }
 
@@ -163,7 +176,7 @@ public class FileManagerDrawerActivity extends FileDrawerActivity
 
     @Override
     public void onBackPressed() {
-        BaseFragment fragment = (BaseFragment)getSupportFragmentManager().findFragmentById(R.id.main_container);
+        BaseFragment fragment = (BaseFragment)getCurrentFragment();
         if (fragment == null || !fragment.onBackPressed()) {
             if (mNavigationDrawerFragment != null && mNavigationDrawerFragment.goBackHomeIfNeeded()) {
                 return;
@@ -184,16 +197,34 @@ public class FileManagerDrawerActivity extends FileDrawerActivity
 
     @Override
     public void refreshFiles() {
-
+        Fragment fragment = getCurrentFragment();
+        if (fragment!=null && fragment instanceof FileTabFragment) {
+            ((FileTabFragment)fragment).refreshFiles();
+        }
     }
 
     @Override
     public String[] getAllFiles() {
-        return new String[0];
+        Fragment fragment = getCurrentFragment();
+        if (fragment instanceof FileTabFragment) {
+            return ((FileTabFragment)fragment).getAllFiles();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public String getParentFile() {
-        return null;
+        Fragment fragment = getCurrentFragment();
+        if (fragment instanceof FileTabFragment) {
+            return ((FileTabFragment)fragment).getParentFile();
+        } else {
+            return null;
+        }
+    }
+
+    private Fragment getCurrentFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_container);
+        return fragment;
     }
 }

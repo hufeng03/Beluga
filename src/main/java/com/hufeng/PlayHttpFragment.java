@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,8 +43,9 @@ public class PlayHttpFragment extends BaseFragment implements View.OnClickListen
         @Override
         public void onReceive(Context arg0, Intent arg1) {
             // TODO Auto-generated method stub
-            if(ConnectivityManager.CONNECTIVITY_ACTION.equals(arg1.getAction()))
-            {
+            if(ConnectivityManager.CONNECTIVITY_ACTION.equals(arg1.getAction())
+             || HTTPServerService.INTENT_MESSAGE_HTTP_SERVICE_STARTED.equals(arg1.getAction())
+             || HTTPServerService.INTENT_MESSAGE_HTTP_SERVICE_STOPPED.equals(arg1.getAction())) {
                 updateUi();
             }
         }
@@ -82,12 +84,18 @@ public class PlayHttpFragment extends BaseFragment implements View.OnClickListen
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         getActivity().registerReceiver(mReceiver, filter);
+
+        IntentFilter localfilter = new IntentFilter();
+        localfilter.addAction(HTTPServerService.INTENT_MESSAGE_HTTP_SERVICE_STARTED);
+        localfilter.addAction(HTTPServerService.INTENT_MESSAGE_HTTP_SERVICE_STOPPED);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, localfilter);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         getActivity().unregisterReceiver(mReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
     }
 
     @Override

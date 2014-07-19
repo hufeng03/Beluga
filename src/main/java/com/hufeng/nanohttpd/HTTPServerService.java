@@ -19,8 +19,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 
 public class HTTPServerService extends Service {
+
+    public static final String INTENT_MESSAGE_HTTP_SERVICE_STARTED = "http_service_started";
+    public static final String INTENT_MESSAGE_HTTP_SERVICE_STOPPED = "http_service_stopped";
+
+    public static final String INTENT_ACTION_HTTP_SERVICE_VIEW = "beluga.httpservice.action.VIEW";
 
 	static SimpleWebServer server = null;
 	
@@ -45,7 +51,6 @@ public class HTTPServerService extends Service {
 				server = new SimpleWebServer(host, port, FileManager.getAppContext().getFilesDir(), StorageManager.getInstance(FileManager.getAppContext()).getMountedStorages());
 				server.start();
 				setupNotification();
-				UiUpdater.updateClients();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -67,7 +72,6 @@ public class HTTPServerService extends Service {
 			server = null;
 		}
 		clearNotification();
-		UiUpdater.updateClients();
 	}
 
 	@Override
@@ -134,7 +138,8 @@ public class HTTPServerService extends Service {
 		// Define Notification's message and Intent
 		CharSequence contentTitle = getString(R.string.notif_http_title);
 		CharSequence contentText = getString(R.string.notif_http_text);
-		Intent notificationIntent = new Intent(this, ServerControlActivity.class);
+//		Intent notificationIntent = new Intent(this, ServerControlActivity.class);
+        Intent notificationIntent = new Intent(INTENT_ACTION_HTTP_SERVICE_VIEW);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, 
 				notificationIntent, 0);
 		notification.setLatestEventInfo(getApplicationContext(), 
@@ -143,7 +148,8 @@ public class HTTPServerService extends Service {
 		
 		// Pass Notification to NotificationManager
 		notificationMgr.notify(0, notification);
-
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getApplicationContext());
+        localBroadcastManager.sendBroadcast(new Intent(INTENT_MESSAGE_HTTP_SERVICE_STARTED));
 	}
 	
 	private void clearNotification() {
@@ -153,6 +159,8 @@ public class HTTPServerService extends Service {
 			notificationMgr = (NotificationManager) getSystemService(ns);
 		}
 		notificationMgr.cancelAll();
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getApplicationContext());
+        localBroadcastManager.sendBroadcast(new Intent(INTENT_MESSAGE_HTTP_SERVICE_STOPPED));
 	}
 	
 
