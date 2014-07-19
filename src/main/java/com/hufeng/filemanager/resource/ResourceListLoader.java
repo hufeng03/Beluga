@@ -163,7 +163,7 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
                     File[] docs = doc_dir.listFiles(new FilenameFilter() {
                         @Override
                         public boolean accept(File file, String s) {
-                            if (FileUtils.FILE_TYPE_DOCUMENT == FileUtils.getFileType(s) && (TextUtils.isEmpty(mSearch) || s.contains(mSearch) || s.toLowerCase().contains(mSearch.toLowerCase()))) {
+                            if ( (s.endsWith(".apk") || FileUtils.FILE_TYPE_DOCUMENT == FileUtils.getFileType(s)) && (TextUtils.isEmpty(mSearch) || s.contains(mSearch) || s.toLowerCase().contains(mSearch.toLowerCase()))) {
                                 return true;
                             } else {
                                 return false;

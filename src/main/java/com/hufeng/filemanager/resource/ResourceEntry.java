@@ -69,7 +69,8 @@ public class ResourceEntry extends FileEntry{
 
     public void loadResourceInfo(){
         PackageInfo info = null;
-        if(path != null && (ResourceType.valueOf(resource_category) == ResourceType.APP || ResourceType.valueOf(resource_category) == ResourceType.GAME)) {
+        if(path != null && /*(ResourceType.valueOf(resource_category) == ResourceType.APP
+                || ResourceType.valueOf(resource_category) == ResourceType.GAME)*/path.endsWith(".apk")) {
             info = mLoader.mPm.getPackageArchiveInfo(path,
                     PackageManager.GET_ACTIVITIES);
             ApplicationInfo appInfo = null;
@@ -80,7 +81,8 @@ public class ResourceEntry extends FileEntry{
                 version_name = info.versionName;
             }
         }
-        if (package_name != null && (ResourceType.valueOf(resource_category) == ResourceType.APP || ResourceType.valueOf(resource_category) == ResourceType.GAME)) {
+        if (package_name != null && /*(ResourceType.valueOf(resource_category) == ResourceType.APP || ResourceType.valueOf(resource_category) == ResourceType.GAME)*/
+                path.endsWith(".apk")) {
             try{
                 info = mLoader.mPm.getPackageInfo(package_name, PackageManager.GET_UNINSTALLED_PACKAGES);
                 if(info!=null) {
@@ -103,7 +105,7 @@ public class ResourceEntry extends FileEntry{
 
         }
 
-        if(path != null && (ResourceType.valueOf(resource_category) == ResourceType.DOC)) {
+        if(path != null && ResourceType.valueOf(resource_category) == ResourceType.DOC) {
             String name = new File(path).getName();
             String[] name_split = name.split("_");
             if (name_split != null && name_split.length == 2) {

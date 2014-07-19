@@ -139,7 +139,11 @@ public class ResourceListAdapter extends ArrayAdapter<ResourceEntry> implements 
             }
         } else {
             if(entry.isInstalled()) {
-                holder.status.setText(R.string.btn_txt_open);
+                if (entry.resource_category == 2) {
+                    holder.status.setText(R.string.btn_txt_read);
+                } else {
+                    holder.status.setText(R.string.btn_txt_open);
+                }
             } else {
                 if (entry.resource_category == 2) {
                     holder.status.setText(R.string.btn_txt_read);

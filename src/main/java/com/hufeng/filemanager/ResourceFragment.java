@@ -163,7 +163,7 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
                 FileDownloader.cancelDownloader(entry.download_url);
             } else {
                 String name = entry.getName();
-                if (ResourceType.valueOf(entry.resource_category) == ResourceType.DOC) {
+                if (ResourceType.valueOf(entry.resource_category) == ResourceType.DOC && !entry.download_url.endsWith(".apk")) {
                     name = entry.package_name+"_"+entry.server_version_code;
                 }
 
