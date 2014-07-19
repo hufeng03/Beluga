@@ -605,7 +605,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
                             mChinaTipYes = true;
                         }
                     }).setCancelable(false);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
                     @Override

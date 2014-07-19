@@ -60,13 +60,13 @@ public class FileManager extends Application/* implements GalleryApp*/{
         } else {
             initService();
         }
-        
 
         if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "oncreate end "+name);
 
 	}
 	
 	private void initUI(){
+        Thread.setDefaultUncaughtExceptionHandler(new GlobalUncaughtExceptionHandler(this.getApplicationContext()));
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         int old_version = sp.getInt("PACKAGE_VERSION_CODE", 0);
         int new_version = PackageUtil.getVersionCode(this);
