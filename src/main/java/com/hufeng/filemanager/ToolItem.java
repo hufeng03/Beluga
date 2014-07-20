@@ -27,7 +27,7 @@ public class ToolItem extends DrawerItem{
 
     public static ToolItem[] getAllToolItems(Context context) {
         return new ToolItem[] {
-            new ToolItem(context, R.string.tool_name_ftp, R.string.tool_description_ftp, R.drawable.tool_icn_ftp, PlayFtpFragment.class,"PlayFtpFragment"),
+//            new ToolItem(context, R.string.tool_name_ftp, R.string.tool_description_ftp, R.drawable.tool_icn_ftp, PlayFtpFragment.class,"PlayFtpFragment"),
             new ToolItem(context, R.string.tool_name_http, R.string.tool_description_http, R.drawable.tool_icn_http,PlayHttpFragment.class,"PlayHttpFragment"),
             new ToolItem(context, R.string.tool_name_safe, R.string.tool_description_safe, R.drawable.tool_icn_safe, SafeBoxTabFragment.class,"SafeBoxTabFragment"),
             new ToolItem(context, R.string.tool_name_selected, R.string.tool_description_selected, R.drawable.tool_icn_recommend, ResourceTabFragment.class,"ResourceTabFragment")

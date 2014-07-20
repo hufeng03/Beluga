@@ -3,7 +3,7 @@
     <View
         android:id="@+id/seperate_bold_line"
         android:layout_width="match_parent"
-        android:layout_height="4dp"
+        android:layout_height="2dp"
         android:layout_alignParentBottom="true"
         android:background="@color/gray2"
         />

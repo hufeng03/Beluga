@@ -51,12 +51,12 @@ public class NavigationDrawerItem extends RelativeLayout {
 
         if (label) {
             mText.setTextSize(mLabelSize);
-            mText.setPadding(0, mThinPadding, 0, mThinPadding);
+            mText.setPadding(mThinPadding, mThinPadding, 0, mThinPadding);
             mSeperateLine.setVisibility(View.GONE);
             mSeperateBoldLine.setVisibility(View.VISIBLE);
         } else {
             mText.setTextSize(mNonLabelSize);
-            mText.setPadding(0, mBoldPadding, 0, mBoldPadding);
+            mText.setPadding(mThinPadding, mBoldPadding, 0, mBoldPadding);
             mSeperateLine.setVisibility(View.VISIBLE);
             mSeperateBoldLine.setVisibility(View.GONE);
         }

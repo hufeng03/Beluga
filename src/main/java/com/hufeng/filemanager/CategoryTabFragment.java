@@ -142,8 +142,10 @@ public class CategoryTabFragment extends FileTabFragment {
             return true;
         }
         if (mCategoryFragment == null) {
-            showCategoryPanel();
-            return true;
+            if (getActivity() instanceof FileManagerTabActivity) {
+                showCategoryPanel();
+                return true;
+            }
         }
 
 		return false;
