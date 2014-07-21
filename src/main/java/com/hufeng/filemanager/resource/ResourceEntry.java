@@ -35,6 +35,7 @@ public class ResourceEntry extends FileEntry{
     public int installed_version_code;
     public String installed_version_name;
     public boolean app_upgrade;
+    public boolean app_same_version;
     public boolean resource_upgrade;
 
 
@@ -63,8 +64,12 @@ public class ResourceEntry extends FileEntry{
         return app_upgrade;
     }
 
+    public boolean isVersionEqual() {
+        return app_same_version;
+    }
+
     public boolean needDownload() {
-        return (!TextUtils.isEmpty(download_url) && (TextUtils.isEmpty(path) || server_version_code>version_code));
+        return (!TextUtils.isEmpty(download_url) && (!isInstalled() || needAppUpgrade()) && (TextUtils.isEmpty(path) || server_version_code>version_code));
     }
 
     public void loadResourceInfo(){
@@ -93,6 +98,11 @@ public class ResourceEntry extends FileEntry{
                         app_upgrade = true;
                     } else {
                         app_upgrade = false;
+                    }
+                    if(installed_version_code == version_code) {
+                        app_same_version = true;
+                    } else {
+                        app_same_version = false;
                     }
                 } else {
                     installed = false;

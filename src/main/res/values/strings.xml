@@ -667,7 +667,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="btn_txt_upload_again">Upload</string>
 <string name="btn_txt_download">Download</string>
 <string name="btn_txt_downloading">Downloading</string>
-<string name="btn_txt_open">View</string>
+<string name="btn_txt_open">Open</string>
 <string name="file_is_deleted">File is deleted.</string>
 <string name="please_login_kanbox">Please login to Kanbox</string>
 <string name="wifi_not_available">WIFI is not connected!\n</string>

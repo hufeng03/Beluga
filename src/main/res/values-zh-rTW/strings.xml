@@ -655,7 +655,7 @@ or nonexistent.</string>
     <string name="btn_txt_upload_again">重新上傳</string>
     <string name="btn_txt_download">下載</string>
     <string name="btn_txt_downloading">下載中</string>
-    <string name="btn_txt_open">查看</string>
+    <string name="btn_txt_open">打開</string>
     <string name="file_is_deleted">文件已被刪除</string>
     <string name="please_login_kanbox">請先登錄酷盤</string>
     <string name="wifi_not_available">網絡不是WIFI鏈接!\n</string>

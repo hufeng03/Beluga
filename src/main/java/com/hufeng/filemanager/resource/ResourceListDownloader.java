@@ -191,7 +191,7 @@ public class ResourceListDownloader extends AsyncTask<Void, Void, List<ResourceE
                             while(idx<count) {
                                 JSONObject json = rst.getJSONObject(idx);
                                 ResourceEntry entry = buildGameEntry(json);
-                                if(!entry.isInstalled() || entry.needAppUpgrade()) {
+//                                if(!entry.isInstalled() || entry.isVersionEqual() || entry.needAppUpgrade()) {
                                     games.add(entry);
 //                                    Cursor cursor;
 //                                    cursor = mContext.getContentResolver().query(DataStructures.SelectedColumns.CONTENT_URI,
@@ -204,7 +204,7 @@ public class ResourceListDownloader extends AsyncTask<Void, Void, List<ResourceE
 //                                            xxxx
 //                                        }
 //                                    }
-                                }
+//                                }
                                 idx++;
                             }
                             Collections.sort(games, FileSorter.getComparator(FileSorter.SORT_FIELD.DATE, FileSorter.SORT_ORDER.DESC));

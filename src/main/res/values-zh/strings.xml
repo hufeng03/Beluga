@@ -655,7 +655,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="btn_txt_upload_again">重新上传</string>
 <string name="btn_txt_download">下载</string>
 <string name="btn_txt_downloading">下载中</string>
-<string name="btn_txt_open">查看</string>
+<string name="btn_txt_open">打开</string>
 <string name="file_is_deleted">文件已被删除</string>
 <string name="please_login_kanbox">请先登录酷盘</string>
 <string name="wifi_not_available">网络不是WIFI链接!\n</string>

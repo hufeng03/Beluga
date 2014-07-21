@@ -200,21 +200,35 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
  //       }
 
         //load the server push result
-        Cursor cursor = getContext().getContentResolver().query(DataStructures.SelectedColumns.CONTENT_URI, DataStructures.SelectedColumns.SELECTED_PROJECTION, null, null, null);
+//        android.os.Debug.waitForDebugger();
+        String selections = DataStructures.SelectedColumns.APP_CATEGORY_FIELD+"=?";
+        String[] selectionArgs = new String[1];
+        if (mResourceType == ResourceType.APP) {
+            selectionArgs[0] = "0";
+        } else if(mResourceType == ResourceType.GAME) {
+            selectionArgs[0] = "1";
+        } else if (mResourceType == ResourceType.DOC) {
+            selectionArgs[0] = "2";
+        } else {
+            selections = null;
+            selectionArgs = null;
+        }
+//        android.os.Debug.waitForDebugger();
+        Cursor cursor = getContext().getContentResolver().query(DataStructures.SelectedColumns.CONTENT_URI, DataStructures.SelectedColumns.SELECTED_PROJECTION, selections, selectionArgs, null);
         if(cursor!=null) {
             while(cursor.moveToNext()) {
-                ResourceEntry entry = buildResourceEntry(cursor);
-                LogUtil.i(LOG_TAG, "entry is "+entry);
-                if(ResourceType.GAME == mResourceType && entry.resource_category != 1) {
+                ResourceEntry new_entry = buildResourceEntry(cursor);
+                LogUtil.i(LOG_TAG, "entry is "+new_entry);
+                if(ResourceType.GAME == mResourceType && new_entry.resource_category != 1) {
                     continue;
                 }
-                if(ResourceType.APP == mResourceType && entry.resource_category != 0) {
+                if(ResourceType.APP == mResourceType && new_entry.resource_category != 0) {
                     continue;
                 }
-                if (ResourceType.DOC == mResourceType && entry.resource_category != 2) {
+                if (ResourceType.DOC == mResourceType && new_entry.resource_category != 2) {
                     continue;
                 }
-                if(!TextUtils.isEmpty(mSearch) && (!entry.name.contains(mSearch) || entry.package_name.contains(mSearch))) {
+                if(!TextUtils.isEmpty(mSearch) && (!new_entry.name.contains(mSearch) || new_entry.package_name.contains(mSearch))) {
                     continue;
                 }
                 //if(!entry.isInstalled() || entry.needAppUpgrade()) {
@@ -222,18 +236,18 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
                     boolean flag = false;
                     while(iterator.hasNext()) {
                         ResourceEntry old_entry = iterator.next();
-                        if(entry.package_name.equals(old_entry.package_name)) {
-                            old_entry.resource_description = entry.resource_description;
-                            old_entry.resource_name = entry.resource_name;
-                            old_entry.resource_icon_url = entry.resource_icon_url;
-                            old_entry.download_url = entry.download_url;
-                            if(entry.server_version_code>old_entry.version_code){
+                        if(new_entry.package_name.equals(old_entry.package_name)) {
+                            old_entry.resource_description = new_entry.resource_description;
+                            old_entry.resource_name = new_entry.resource_name;
+                            old_entry.resource_icon_url = new_entry.resource_icon_url;
+                            old_entry.download_url = new_entry.download_url;
+                            if(new_entry.server_version_code>old_entry.version_code){
                                 old_entry.resource_upgrade = true;
-                                old_entry.version_code = entry.version_code;
-                                old_entry.version_name = entry.version_name;
-                                old_entry.resource_server_time = entry.resource_server_time;
-                                old_entry.resource_icon_url = entry.resource_icon_url;
-                                old_entry.download_url = entry.download_url;
+                                old_entry.version_code = new_entry.version_code;
+                                old_entry.version_name = new_entry.version_name;
+                                old_entry.resource_server_time = new_entry.resource_server_time;
+                                old_entry.resource_icon_url = new_entry.resource_icon_url;
+                                old_entry.download_url = new_entry.download_url;
 //                                iterator.remove();
                             }
                             flag = true;
@@ -241,7 +255,7 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
                         }
                     }
                     if(!flag) {
-                        entries.add(entry);
+                        entries.add(new_entry);
                     }
                 //}
             }
@@ -386,7 +400,7 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
         entry.server_version_code = entry.version_code;
         entry.server_version_name = entry.version_name;
 
-        if (entry.resource_category != 2) {
+        if (entry.download_url.endsWith(".apk")) {
             PackageInfo info = null;
             try {
                 info = mPm.getPackageInfo(entry.package_name, PackageManager.GET_UNINSTALLED_PACKAGES);
@@ -396,6 +410,8 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
                     entry.installed_version_name = info.versionName;
                     if(entry.installed_version_code < entry.version_code) {
                         entry.app_upgrade = true;
+                    } else if (entry.installed_version_code == info.versionCode) {
+                        entry.app_same_version = true;
                     }
                 }
             } catch (PackageManager.NameNotFoundException e) {

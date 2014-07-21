@@ -139,17 +139,17 @@ public class ResourceListAdapter extends ArrayAdapter<ResourceEntry> implements 
             }
         } else {
             if(entry.isInstalled()) {
-                if (entry.resource_category == 2) {
-                    holder.status.setText(R.string.btn_txt_read);
-                } else {
+//                if (entry.resource_category == 2) {
+//                    holder.status.setText(R.string.btn_txt_read);
+//                } else {
                     holder.status.setText(R.string.btn_txt_open);
-                }
+//                }
             } else {
-                if (entry.resource_category == 2) {
-                    holder.status.setText(R.string.btn_txt_read);
-                } else {
+//                if (entry.resource_category == 2) {
+//                    holder.status.setText(R.string.btn_txt_read);
+//                } else {
                     holder.status.setText(R.string.btn_txt_install);
-                }
+//                }
             }
             holder.progress.setVisibility(View.GONE);
             holder.info.setVisibility(View.VISIBLE);
