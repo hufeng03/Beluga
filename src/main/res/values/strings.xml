@@ -709,7 +709,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="file_group_label">Group:</string>
     <string name="can_not_select_dir">Directory selection is not supported</string>
     <string name="long_press_to_select">Long press on file to select</string>
-
+    <string name="click_to_select">Click on a file to select</string>
     <string name="china_tip_dialog_title">System Alert</string>
     <string name="china_tip_dialog_quit">Quit</string>
     <string name="china_tip_dialog_known">I know</string>

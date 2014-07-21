@@ -699,6 +699,7 @@ or nonexistent.</string>
     <string name="china_tip_dialog_known">不再提示</string>
     <string name="china_tip_dialog_content">本軟件需要連接網絡，以更好地為您提供完整服務。聯網可能產生數據流量費，該費用由運營商收取。</string>
     <string name="chinese_goverment_tip">鄭重提醒：國家秘密受法律保護。請嚴格遵守保密法律法規，嚴禁在互聯網上存儲、處理、傳輸、發布涉密信息。任何危害國家秘密安全的行為，都必須受到法律追究。</string>
-    <string name="can_not_select_dir">不支持选择文件夹</string>
-    <string name="long_press_to_select">请长按文件进行选择</string>
+    <string name="can_not_select_dir">不支持選擇文件夾</string>
+    <string name="long_press_to_select">請長按文件進行選擇</string>
+    <string name="click_to_select">請點擊文件進行選擇</string>
 </resources>
