@@ -15,7 +15,7 @@ import java.io.FileInputStream;
 public class InfoUtil {
 
     public static String getFileInfo(String path, int type) {
-        String info = null;
+        String info;
         switch (type) {
             case FileUtils.FILE_TYPE_DIRECTORY: {
                 int count = getDirectoryChildrenCount(new File(path));

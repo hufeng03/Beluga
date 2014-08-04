@@ -13,9 +13,11 @@ import java.io.PrintWriter;
  */
 public class GlobalUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler{
     Context mContext;
+    Thread.UncaughtExceptionHandler mHandler;
 
     public GlobalUncaughtExceptionHandler(Context context) {
         mContext = context;
+        mHandler = Thread.getDefaultUncaughtExceptionHandler();
     }
 
     @Override
@@ -32,6 +34,9 @@ public class GlobalUncaughtExceptionHandler implements Thread.UncaughtExceptionH
         if (pw != null) {
             ex.printStackTrace(pw);
             pw.close();
+        }
+        if (mHandler != null) {
+            mHandler.uncaughtException(thread, ex);
         }
     }
 }

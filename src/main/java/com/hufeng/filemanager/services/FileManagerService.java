@@ -40,7 +40,7 @@ public class FileManagerService extends Service{
         HandlerThread thread = new HandlerThread("FileManagerServiceHandlerThread", android.os.Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         Looper serviceLooper = thread.getLooper();
-        mHandler = new OurHandler(serviceLooper);
+        mHandler = new FileManagertServiceHandler(serviceLooper);
 
 		mFileSyncServiceImpl = new IFileSyncServiceImpl(this.getApplicationContext());
 		mFileSyncServiceImpl.onCreate();
@@ -68,11 +68,11 @@ public class FileManagerService extends Service{
         ServiceUiHelper.getInstance().removeUiIBinder();
 	}
 
-    public class OurHandler extends Handler {
+    public class FileManagertServiceHandler extends Handler {
 
         public static final int HANDLER_MESSAGE_MOUNTED = 1;
 
-        public OurHandler(Looper looper) {
+        public FileManagertServiceHandler(Looper looper) {
             super(looper);
         }
 
@@ -102,7 +102,7 @@ public class FileManagerService extends Service{
                         mFileSyncServiceImpl.refresh();
                     }
                 } else if (Intent.ACTION_MEDIA_MOUNTED.equals(intent.getAction()) || Intent.ACTION_MEDIA_UNMOUNTED.equals(intent.getAction())) {
-                    mHandler.sendEmptyMessageDelayed(OurHandler.HANDLER_MESSAGE_MOUNTED, 1000);
+                    mHandler.sendEmptyMessageDelayed(FileManagertServiceHandler.HANDLER_MESSAGE_MOUNTED, 1000);
                 }
 
             }

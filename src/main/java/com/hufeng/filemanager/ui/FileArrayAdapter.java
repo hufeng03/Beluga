@@ -140,7 +140,6 @@ public class FileArrayAdapter extends ArrayAdapter<FileEntry> implements GridAda
                     holder.name.setText(filename);
                 }
             }
-//            mInfoLoader.loadInfo(holder.info, holder.path);
             String info = InfoUtil.getFileInfo(holder.path, type);
             holder.info.setText(info);
         }

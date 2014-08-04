@@ -67,6 +67,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
 
 
     public void onCreate() {
+        mHandler.sendEmptyMessageDelayed(0,1000);
     }
 
     public void refresh() {
