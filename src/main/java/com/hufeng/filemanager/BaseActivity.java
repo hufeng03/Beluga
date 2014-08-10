@@ -3,6 +3,7 @@ package com.hufeng.filemanager;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 
@@ -19,7 +20,22 @@ public class BaseActivity extends FragmentActivity {
 	protected void onCreate(Bundle arg0) {
         if (DEBUG)
     		LogUtil.i(((Object) this).getClass().getSimpleName(), "onCreate");
-		super.onCreate(arg0);
+        if (BuildConfig.DEBUG) {
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                    .detectDiskReads()
+                    .detectDiskWrites()
+//                    .detectNetwork()   // or .detectAll() for all detectable problems
+                    .detectAll()
+                    .penaltyLog()
+                    .build());
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .penaltyLog()
+                    .penaltyDeath()
+                    .build());
+        }
+        super.onCreate(arg0);
         if (!Constants.ENABLE_LANDSCAPE) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }

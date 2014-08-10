@@ -8,12 +8,14 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileEntryFactory;
 import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.browser.InfoLoader;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.services.IUiImpl;
 import com.hufeng.filemanager.services.UiServiceHelper;
@@ -24,7 +26,7 @@ import com.hufeng.filemanager.utils.LogUtil;
 
 import java.lang.ref.WeakReference;
 
-public class FileGrouperFragment extends FileGridFragment implements LoaderManager.LoaderCallbacks<Cursor>, FileGridAdapterListener, IUiImpl.UiCallback{
+public class FileGrouperFragment extends FileGridFragment implements LoaderManager.LoaderCallbacks<Cursor>, FileGridAdapterListener, IUiImpl.UiCallback, AbsListView.OnScrollListener{
 
     private static final String TAG = FileGrouperFragment.class.getSimpleName();
 
@@ -185,6 +187,7 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
             }
         }
         setGridShownNoAnimation(false);
+        getGridView().setOnScrollListener(this);
 	}
 
     @Override
@@ -252,6 +255,20 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
     }
 
     @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (scrollState == SCROLL_STATE_FLING) {
+            InfoLoader.getInstance().pause();
+        } else {
+            InfoLoader.getInstance().resume();
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
+
+    @Override
     public String getSearchString() {
         return mSearchString;
     }
@@ -285,6 +302,7 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
 	@Override
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor arg1) {
 		mAdapter.changeCursor(arg1);
+        InfoLoader.getInstance().clear();
         if (arg1 == null || arg1.getCount() == 0) {
             if (UiServiceHelper.getInstance().isScanning()) {
                 setGridShown(false);
@@ -297,6 +315,7 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
 		mAdapter.swapCursor(null);
+        InfoLoader.getInstance().clear();
 	}
 
     @Override

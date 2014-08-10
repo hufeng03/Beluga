@@ -13,13 +13,10 @@ import com.hufeng.filemanager.FileSearchUtil;
 import com.hufeng.filemanager.GridAdapter;
 import com.hufeng.filemanager.GridFragment;
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.browser.ApkInfoLoader;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.browser.IconLoader;
 import com.hufeng.filemanager.browser.IconLoaderHelper;
 import com.hufeng.filemanager.browser.InfoLoader;
-import com.hufeng.filemanager.browser.InfoUtil;
 import com.hufeng.filemanager.storage.StorageManager;
 
 import java.io.File;
@@ -30,9 +27,8 @@ public class FileArrayAdapter extends ArrayAdapter<FileEntry> implements GridAda
     private static final String LOG_TAG = FileArrayAdapter.class.getSimpleName();
 
 	LayoutInflater mInflater;
-    IconLoader mIconLoader;
+//    IconLoader mIconLoader;
     InfoLoader mInfoLoader;
-    ApkInfoLoader mApkInfoLoader;
     String mSearchString = null;
 
 
@@ -46,9 +42,9 @@ public class FileArrayAdapter extends ArrayAdapter<FileEntry> implements GridAda
 		super(context,0);
         mFileOperation = fileOperation;
 		mInflater = LayoutInflater.from(context);
-        mIconLoader = IconLoader.getInstance();
+//        mIconLoader = IconLoader.getInstance();
         mInfoLoader = InfoLoader.getInstance();
-        mApkInfoLoader = ApkInfoLoader.getInstance();
+//        mApkInfoLoader = ApkInfoLoader.getInstance();
 	}
 
     @Override
@@ -116,33 +112,28 @@ public class FileArrayAdapter extends ArrayAdapter<FileEntry> implements GridAda
             }
         }
         int type = FileUtils.getFileType(file);
-        if (FileUtils.FILE_TYPE_APK == type) {
-            if (span != null) {
-//                mInfoLoader.remove(holder.info);
-                holder.name.setText(span);
-            } else {
-                holder.name.setText(filename);
-            }
-            mApkInfoLoader.loadInfo(holder.info, holder.path);
+        if (span != null) {
+            holder.name.setText(span);
         } else {
-            mApkInfoLoader.remove(holder.info);
-            if (span != null) {
-                holder.name.setText(span);
-            } else {
-                if (FileUtils.FILE_TYPE_DIRECTORY == type) {
-                    String description = StorageManager.getInstance(getContext()).getStorageDescription(holder.path);
-                    if (description != null) {
-                        holder.name.setText(description);
-                    } else {
-                        holder.name.setText(filename);
-                    }
+            if (FileUtils.FILE_TYPE_DIRECTORY == type) {
+                String description = StorageManager.getInstance(getContext()).getStorageDescription(holder.path);
+                if (description != null) {
+                    holder.name.setText(description);
                 } else {
                     holder.name.setText(filename);
                 }
+            } else {
+                holder.name.setText(filename);
             }
-            String info = InfoUtil.getFileInfo(holder.path, type);
-            holder.info.setText(info);
         }
+//        if (FileUtils.FILE_TYPE_APK == type) {
+//            mApkInfoLoader.loadInfo(holder.info, holder.path);
+//        } else {
+//            mApkInfoLoader.remove(holder.info);
+//            String info = InfoUtil.getFileInfo(holder.path, type);
+//            holder.info.setText(info);
+//        }
+        mInfoLoader.loadInfo(holder.info, holder.path);
 
         if( mFileOperation!=null ) {
             if(mFileOperation.isMovingOrCopying()) {

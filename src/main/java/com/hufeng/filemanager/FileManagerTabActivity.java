@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hufeng.filemanager.apprate.AppRate;
+import com.hufeng.filemanager.browser.InfoLoader;
 import com.hufeng.filemanager.dialog.FmDialogFragment;
 import com.hufeng.filemanager.kanbox.KanBoxTabFragment;
 import com.hufeng.filemanager.ui.FileOperation;
@@ -174,6 +175,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
     @Override
     protected void onResume() {
         super.onResume();
+        InfoLoader.getInstance().resume();
 //        if(mViewPager.getCurrentItem()==FRAGMENT_INDEX_CATEGORY)
 //            mFileOperation.setFileOperationProvider((CategoryTabFragment)getCurrentFragment());
 //        else if(mViewPager.getCurrentItem()==FRAGMENT_INDEX_DEVICE)
@@ -188,6 +190,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
     @Override
     protected void onPause() {
         super.onPause();
+        InfoLoader.getInstance().pause();
 //        mFileOperation.setListener(null);
     }
 

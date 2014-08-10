@@ -87,12 +87,12 @@ public class ApkInfoLoader implements Handler.Callback {
     }
 
     /**
-     * A soft cache for image thumbnails. the key is file path
+     * A soft cache for file information string. the key is file path
      */
     private final static ConcurrentHashMap<String, TextHolder> mTextCache = new ConcurrentHashMap<String, TextHolder>();
 
     /**
-     * A map from ImageView to the corresponding photo ID. Please note that this
+     * A map from TextView to the corresponding File ID. Please note that this
      * photo ID may change before the photo loading request is started.
      */
     private final ConcurrentHashMap<TextView, FileId> mPendingRequests = new ConcurrentHashMap<TextView, FileId>();
@@ -103,7 +103,7 @@ public class ApkInfoLoader implements Handler.Callback {
     private final Handler mMainThreadHandler = new Handler(this);
 
     /**
-     * Thread responsible for loading photos from the database. Created upon the
+     * Thread responsible for loading informations from the database. Created upon the
      * first request.
      */
     private LoaderThread mLoaderThread;

@@ -15,9 +15,9 @@ import java.io.FileInputStream;
 public class InfoUtil {
 
     public static String getFileInfo(String path, int type) {
-        String info;
+        String info = null;
         switch (type) {
-            case FileUtils.FILE_TYPE_DIRECTORY: {
+            case FileUtils.FILE_TYPE_DIRECTORY:
                 int count = getDirectoryChildrenCount(new File(path));
                 if (!StorageManager.getInstance(FileManager.getAppContext()).isStorage(path)) {
                     String date = FileUtils.getFileDate(new File(path));
@@ -26,8 +26,7 @@ public class InfoUtil {
                     info = path;
                 }
                 break;
-            }
-            case FileUtils.FILE_TYPE_AUDIO: {
+            case FileUtils.FILE_TYPE_AUDIO:
                 String song = getAudioInfoFromFile(path);
                 String size = FileUtils.getFileSize(new File(path));
                 String date = FileUtils.getFileDate(new File(path));
@@ -37,14 +36,16 @@ public class InfoUtil {
                     info = song + " " + size + " " + date;
                 }
                 break;
-            }
             case FileUtils.FILE_TYPE_APK:
-            default: {
-                String size = FileUtils.getFileSize(new File(path));
-                String date = FileUtils.getFileDate(new File(path));
-                info = size + " " + date;
+                info = ApkUtil.getUninstallApkLabel(FileManager.getAppContext(), path);
                 break;
-            }
+            default:
+                break;
+        }
+        if (TextUtils.isEmpty(info)) {
+            String size = FileUtils.getFileSize(new File(path));
+            String date = FileUtils.getFileDate(new File(path));
+            info = size + " " + date;
         }
         return info;
     }

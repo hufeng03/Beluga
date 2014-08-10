@@ -27,13 +27,12 @@ import java.util.ArrayList;
 public class FileCursorAdapter extends CursorAdapter implements GridAdapter {
 	
 	LayoutInflater mInflater;
-    IconLoader mIconLoader;
+//    IconLoader mIconLoader;
     InfoLoader mInfoLoader;
     ApkInfoLoader mApkInfoLoader;
     String mSearchString = null;
 
     GridFragment.DISPLAY_MODE mMode = GridFragment.DISPLAY_MODE.LIST;
-
     int mItemResourceId = R.layout.file_list_row;
 
     FileOperation mFileOperation = null;
@@ -42,7 +41,7 @@ public class FileCursorAdapter extends CursorAdapter implements GridAdapter {
 		super(context, c);
         mFileOperation = fileOperation;
 		mInflater = LayoutInflater.from(context);
-        mIconLoader = IconLoader.getInstance();
+//        mIconLoader = IconLoader.getInstance();
         mInfoLoader = InfoLoader.getInstance();
         mApkInfoLoader = ApkInfoLoader.getInstance();
 	}
@@ -95,26 +94,13 @@ public class FileCursorAdapter extends CursorAdapter implements GridAdapter {
                 mFileGridAdapterListener.reportNotExistFile();
             }
         }
-        int type = FileUtils.getFileType(file);
-        if (FileUtils.FILE_TYPE_APK == type) {
-            if (span != null) {
-//                mInfoLoader.remove(holder.info);
-                holder.name.setText(span);
-            } else {
-                holder.name.setText(filename);
-            }
-            mApkInfoLoader.loadInfo(holder.info, holder.path);
+        if (span != null) {
+            holder.name.setText(span);
         } else {
-            mApkInfoLoader.remove(holder.info);
-            if (span != null) {
-                holder.name.setText(span);
-            } else {
-                holder.name.setText(filename);
-            }
-//            mInfoLoader.loadInfo(holder.info, holder.path);
-            String info = InfoUtil.getFileInfo(holder.path, type);
-            holder.info.setText(info);
+            holder.name.setText(filename);
         }
+
+        mInfoLoader.loadInfo(holder.info, holder.path);
 
         if( mFileOperation!=null ) {
             if(mFileOperation.isMovingOrCopying()) {

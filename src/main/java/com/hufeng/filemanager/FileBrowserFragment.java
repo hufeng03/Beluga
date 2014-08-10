@@ -11,13 +11,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.browser.FileEntryFactory;
 import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.browser.InfoLoader;
 import com.hufeng.filemanager.data.FileListLoader;
 import com.hufeng.filemanager.provider.UiProvider;
 import com.hufeng.filemanager.services.IUiImpl;
@@ -34,6 +38,7 @@ import java.util.List;
 
 public class FileBrowserFragment extends FileGridFragment implements LoaderManager.LoaderCallbacks<List<FileEntry>>,
         IUiImpl.UiCallback,
+        AbsListView.OnScrollListener,
         FileGridAdapterListener{
 
 //    private static final String LOG_TAG = FileBrowserFragment.class.getSimpleName();
@@ -188,6 +193,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         mAdapter.setFileGridAdapterListener(this);
         setGridAdapter(mAdapter);
         setGridShownNoAnimation(false);
+        getGridView().setOnScrollListener(this);
         this.registerForContextMenu(getGridView());
 	}
 
@@ -371,6 +377,20 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
     }
 
     @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (scrollState == SCROLL_STATE_FLING) {
+            InfoLoader.getInstance().pause();
+        } else {
+            InfoLoader.getInstance().resume();
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
+
+    @Override
     public String getSearchString() {
         return mSearchString;
     }
@@ -468,8 +488,8 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
             UiServiceHelper.getInstance().addMonitor(mRootDir);
         }
 
-//        mAdapter.setData(arg1);
         mAdapter.clear();
+        InfoLoader.getInstance().clear();
         mAdapter.addAll(arg1);
         if ( mSelectedPostion >5 ) {
             getGridView().setSelection(mSelectedPostion);
@@ -488,6 +508,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 	@Override
 	public void onLoaderReset(Loader<List<FileEntry>> arg0) {
         mAdapter.clear();
+        InfoLoader.getInstance().clear();
 	}
 
 
