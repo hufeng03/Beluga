@@ -50,10 +50,6 @@ public class StorageManager extends BroadcastReceiver{
 			StorageManager new_instance = new StorageManager(context.getApplicationContext());
             new_instance.registerReceiver();
             new_instance.refreshStorageVolume(context);
-            if (BuildConfig.DEBUG) {
-                EnvironmentUtil.test();
-                EnvironmentUtil.test2(context);
-            }
             instance = new_instance;
 		}
 		return instance;

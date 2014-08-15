@@ -28,19 +28,22 @@ public class ServiceUtil {
 
     public static String[] getAllImportantDirectory() {
         ArrayList<String> dirs = new ArrayList<String>();
-        String[] stors = StorageManager.getInstance(FileManager.getAppContext()).getMountedStorages();
-        if (stors != null) {
-            for (String stor : stors) {
-                dirs.add(stor);
-                for(String dir:IMPORTANT_DIRECTORY) {
-                    File file = new File(stor, dir);
-                    if (file.exists()) {
-                        dirs.add(file.getAbsolutePath());
-                        File[] childs = file.listFiles();
-                        if (childs != null) {
-                            for (File child : childs) {
-                                if (child.isDirectory() && !child.isHidden()) {
-                                    dirs.add(child.getAbsolutePath());
+        StorageManager mangaer = StorageManager.getInstance(FileManager.getAppContext());
+        if (mangaer != null) {
+            String[] stors = mangaer.getMountedStorages();
+            if (stors != null) {
+                for (String stor : stors) {
+                    dirs.add(stor);
+                    for (String dir : IMPORTANT_DIRECTORY) {
+                        File file = new File(stor, dir);
+                        if (file.exists()) {
+                            dirs.add(file.getAbsolutePath());
+                            File[] childs = file.listFiles();
+                            if (childs != null) {
+                                for (File child : childs) {
+                                    if (child.isDirectory() && !child.isHidden()) {
+                                        dirs.add(child.getAbsolutePath());
+                                    }
                                 }
                             }
                         }

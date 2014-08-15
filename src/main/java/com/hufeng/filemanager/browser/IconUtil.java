@@ -129,7 +129,20 @@ public class IconUtil {
                 mp3Id3v2.readId3v2(1024 * 100);
                 if (mp3Id3v2.getImg() != null) {
 //                    String name = Base64.encodeToString(path.getBytes(), Base64.DEFAULT);
-                    String name = "album_icon_"+new File(path).getName()+".jpg";
+                    int len = path.length();
+                    int i = len-1;
+                    StringBuilder builder = new StringBuilder();
+                    while (i >= 0) {
+                        char c = path.charAt(i);
+                        if ( (c >='a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >='0' && c <='9')) {
+                            builder.append(c);
+                        }
+                        i--;
+                    }
+                    if (builder.length() == 0) {
+                        return null;
+                    }
+                    String name = "album_icon_"+builder.toString()+".jpg";
                     File imgFile = new File(FileManager.getAppContext().getExternalCacheDir().getAbsolutePath(),
 									/* mp3Id3v2.getAuthor() +"_"+mp3Id3v2.getSpecial()*/ name);
                     if (!imgFile.exists()) {

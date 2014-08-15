@@ -56,8 +56,10 @@ public class Mp3ReadId3v2 {
 						(byte) 0xD8 }, buff);
 				int imgEnd = ByteUtil.lastIndexOf(new byte[] { (byte) 0xFF,
 						(byte) 0xD9 }, buff, 1, searLen) + 2;
-				byte[] imgb = ByteUtil.cutBytes(imgStart, imgEnd, buff);
-				info.setApic(imgb);
+                if (imgEnd > imgStart && imgStart >= 0 && imgEnd <= buff.length) {
+                    byte[] imgb = ByteUtil.cutBytes(imgStart, imgEnd, buff);
+                    info.setApic(imgb);
+                }
 			}
 			encoding = null;
 //            encoding = "GB18030";//"UTF-8","GBK";
