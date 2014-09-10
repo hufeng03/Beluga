@@ -6,6 +6,7 @@ import android.graphics.Matrix;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Base64;
 
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.mp3.Mp3ReadId3v2;
@@ -128,12 +129,12 @@ public class IconUtil {
                 Mp3ReadId3v2 mp3Id3v2 = new Mp3ReadId3v2(new FileInputStream(path));
                 mp3Id3v2.readId3v2(1024 * 100);
                 if (mp3Id3v2.getImg() != null) {
-//                    String name = Base64.encodeToString(path.getBytes(), Base64.DEFAULT);
-                    int len = path.length();
+                    String path_base64 = Base64.encodeToString(path.getBytes(), Base64.DEFAULT);
+                    int len = path_base64.length();
                     int i = len-1;
                     StringBuilder builder = new StringBuilder();
                     while (i >= 0) {
-                        char c = path.charAt(i);
+                        char c = path_base64.charAt(i);
                         if ( (c >='a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >='0' && c <='9')) {
                             builder.append(c);
                         }
@@ -142,7 +143,7 @@ public class IconUtil {
                     if (builder.length() == 0) {
                         return null;
                     }
-                    String name = "album_icon_"+builder.toString()+".jpg";
+                    String name = builder.toString()+".jpg";
                     File imgFile = new File(FileManager.getAppContext().getExternalCacheDir().getAbsolutePath(),
 									/* mp3Id3v2.getAuthor() +"_"+mp3Id3v2.getSpecial()*/ name);
                     if (!imgFile.exists()) {

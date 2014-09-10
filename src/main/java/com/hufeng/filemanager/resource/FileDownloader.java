@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.hufeng.filemanager.BusProvider;
@@ -109,7 +110,8 @@ public class FileDownloader extends BroadcastReceiver{
                                 ZipUtil.unpackSingleZip(path, getFilename(new File(zip_dir, file_name).getAbsolutePath()));
                             }
                             FileDownloadEvent event = new FileDownloadEvent(url, path, DownloadManager.STATUS_SUCCESSFUL, 100);
-                            BusProvider.getInstance().post(event);
+//                            BusProvider.getInstance().post(event);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(event.buildIntentWithBundle());
                             LogUtil.i(LOG_TAG, "mUpdateCommand post success "+System.currentTimeMillis()+", "+event);
                         }
                     }
@@ -192,13 +194,15 @@ public class FileDownloader extends BroadcastReceiver{
                             case DownloadManager.STATUS_PENDING:
                                 mDownloadProgress.put(url, dl_progress);
                                 FileDownloadEvent event = new FileDownloadEvent(url, path, status, dl_progress);
-                                BusProvider.getInstance().post(event);
+                                //BusProvider.getInstance().post(event);
+                                LocalBroadcastManager.getInstance(FileManager.getAppContext()).sendBroadcast(event.buildIntentWithBundle());
                                 LogUtil.i(LOG_TAG, "mUpdateCommand post progress "+bytes_downloaded+","+bytes_total+","+System.currentTimeMillis()+", "+event);
                                 break;
                             case DownloadManager.STATUS_PAUSED:
                                 mDownloadProgress.put(url, -100);
                                 FileDownloadEvent event_paused = new FileDownloadEvent(url, path, status, dl_progress);
-                                BusProvider.getInstance().post(event_paused);
+                                //BusProvider.getInstance().post(event_paused);
+                                LocalBroadcastManager.getInstance(FileManager.getAppContext()).sendBroadcast(event_paused.buildIntentWithBundle());
                                 LogUtil.i(LOG_TAG, "mUpdateCommand post progress "+bytes_downloaded+","+bytes_total+","+System.currentTimeMillis()+", "+event_paused);
                                 break;
                             case DownloadManager.STATUS_FAILED:
@@ -207,7 +211,8 @@ public class FileDownloader extends BroadcastReceiver{
                                 mDownloadingIdUrlMap.remove(id);
                                 mDownloadingIdPathMap.remove(id);
                                 FileDownloadEvent event_failed = new FileDownloadEvent(url, path, DownloadManager.STATUS_FAILED, dl_progress);
-                                BusProvider.getInstance().post(event_failed);
+                                //BusProvider.getInstance().post(event_failed);
+                                LocalBroadcastManager.getInstance(FileManager.getAppContext()).sendBroadcast(event_failed.buildIntentWithBundle());
                                 LogUtil.i(LOG_TAG, "mUpdateCommand runs "+System.currentTimeMillis()+", "+event_failed);
                                 break;
                             case DownloadManager.STATUS_SUCCESSFUL:
@@ -324,7 +329,8 @@ public class FileDownloader extends BroadcastReceiver{
             mDownloadingIdPathMap.remove(key_selected);
             if (!TextUtils.isEmpty(path)) {
                 FileDownloadEvent event = new FileDownloadEvent(url, path, DownloadManager.STATUS_FAILED, -100);
-                BusProvider.getInstance().post(event);
+//                BusProvider.getInstance().post(event);
+                LocalBroadcastManager.getInstance(FileManager.getAppContext()).sendBroadcast(event.buildIntentWithBundle());
                 LogUtil.i(LOG_TAG, "mUpdateCommand post success "+System.currentTimeMillis()+", "+event);
             }
         }

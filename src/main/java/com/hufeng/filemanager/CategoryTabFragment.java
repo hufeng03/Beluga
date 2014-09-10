@@ -1,11 +1,16 @@
 package com.hufeng.filemanager;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +18,6 @@ import android.view.ViewGroup;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.provider.UiProvider;
-import com.squareup.otto.Subscribe;
 
 import java.io.File;
 
@@ -80,21 +84,33 @@ public class CategoryTabFragment extends FileTabFragment {
 		super.onActivityCreated(savedInstanceState);
 
 	}
-	
+
+
+    BroadcastReceiver mEventReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() == CategorySelectEvent.INTENT_ACTION) {
+                CategorySelectEvent event = new CategorySelectEvent(intent);
+                onCategorySelected(event);
+            }
+        }
+    };
 	
 	@Override
 	public void onResume(){
 		super.onResume();
-        BusProvider.getInstance().register(this);
+//        BusProvider.getInstance().register(this);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mEventReceiver, new IntentFilter(CategorySelectEvent.INTENT_ACTION));
 	}
 	
 	@Override
 	public void onPause(){
 		super.onPause();
-        BusProvider.getInstance().unregister(this);
+ //       BusProvider.getInstance().unregister(this);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mEventReceiver);
 	}
 
-    @Subscribe
+//    @Subscribe
     public void onCategorySelected(CategorySelectEvent event) {
         if (event != null) {
             mCategory = event.category;

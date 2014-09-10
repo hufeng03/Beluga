@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -188,8 +189,8 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
 //                }
 //            }
             mAuthResult = true;
-            BusProvider.getInstance().post(new KanboxAuthResultEvent(System.currentTimeMillis(), mAuthResult));
-//            BusProvider.getInstance().post(produceKanboxAuthResultEvent());
+//            BusProvider.getInstance().post(new KanboxAuthResultEvent(System.currentTimeMillis(), mAuthResult));
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new KanboxAuthResultEvent(System.currentTimeMillis(), mAuthResult).buildIntentWithBundle());
         }
     }
 
@@ -234,8 +235,8 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
 //                }
 //            }
             mAuthResult = true;
-            BusProvider.getInstance().post(new KanboxAuthResultEvent(System.currentTimeMillis(), mAuthResult));
-//            BusProvider.getInstance().post(produceKanboxAuthResultEvent());
+//            BusProvider.getInstance().post(new KanboxAuthResultEvent(System.currentTimeMillis(), mAuthResult));
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new KanboxAuthResultEvent(System.currentTimeMillis(), mAuthResult).buildIntentWithBundle());
         }
     }
 
@@ -269,8 +270,8 @@ public class KanBoxAuthFragment extends BaseFragment implements KanBoxApi.KanBox
 //            }
 //        }
         mAuthResult = false;
-        BusProvider.getInstance().post(new KanboxAuthResultEvent(System.currentTimeMillis(), mAuthResult));
-//        BusProvider.getInstance().post(produceKanboxAuthResultEvent());
+//        BusProvider.getInstance().post(new KanboxAuthResultEvent(System.currentTimeMillis(), mAuthResult));
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new KanboxAuthResultEvent(System.currentTimeMillis(), mAuthResult).buildIntentWithBundle());
     }
 
     @Override

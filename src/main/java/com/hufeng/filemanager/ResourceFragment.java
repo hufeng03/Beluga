@@ -1,11 +1,16 @@
 package com.hufeng.filemanager;
 
 import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +29,6 @@ import com.hufeng.filemanager.resource.ResourceListDownloader;
 import com.hufeng.filemanager.resource.ResourceListLoader;
 import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.utils.NetworkUtil;
-import com.squareup.otto.Subscribe;
 
 import java.io.File;
 import java.util.List;
@@ -70,17 +74,28 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
 
     private ResourceListAdapter mAdapter;
 
+    BroadcastReceiver mEventReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() == FileDownloadEvent.INTENT_ACTION) {
+                FileDownloadEvent event = new FileDownloadEvent(intent);
+                onFileDownloadEvent(event);
+            }
+        }
+    };
 
     @Override
     public void onResume() {
         super.onResume();
-        BusProvider.getInstance().register(this);
+//        BusProvider.getInstance().register(this);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mEventReceiver, new IntentFilter(FileDownloadEvent.INTENT_ACTION));
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        BusProvider.getInstance().unregister(this);
+//        BusProvider.getInstance().unregister(this);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mEventReceiver);
     }
 
     @Override
@@ -222,7 +237,7 @@ public class ResourceFragment extends FileGridFragment implements LoaderManager.
     }
 
 
-    @Subscribe
+//    @Subscribe
     public void onFileDownloadEvent(FileDownloadEvent event) {
         if (event.url.startsWith("http://www.kanbox.com/")) {
             return;

@@ -1,6 +1,10 @@
 package com.hufeng.filemanager.kanbox;
 
 import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -9,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hufeng.filemanager.BusProvider;
+import com.hufeng.filemanager.CategorySelectEvent;
 import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.FileDownloadEvent;
 import com.hufeng.filemanager.FileGrouperFragment;
@@ -34,7 +40,6 @@ import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.resource.FileDownloader;
 import com.hufeng.filemanager.utils.NetworkUtil;
 import com.kanbox.api.Token;
-import com.squareup.otto.Subscribe;
 
 import java.io.File;
 import java.util.List;
@@ -126,20 +131,41 @@ public class KanBoxTabFragment extends FileTabFragment implements
         super.onSaveInstanceState(outState);
     }
 
+    BroadcastReceiver mEventReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() == KanboxAuthResultEvent.INTENT_ACTION) {
+                KanboxAuthResultEvent event = new KanboxAuthResultEvent(intent);
+                onAuthFailedHappened(event);
+            } else if (intent.getAction() == FileDownloadEvent.INTENT_ACTION) {
+                FileDownloadEvent event = new FileDownloadEvent(intent);
+                onFileDownloadEvent(event);
+            } else if (intent.getAction() == KanboxAuthStartEvent.INTENT_ACTION) {
+                KanboxAuthStartEvent event = new KanboxAuthStartEvent(intent);
+                onAuthStartClicked(event);
+            }
+        }
+    };
+
     @Override
     public void onResume() {
         super.onResume();
-        BusProvider.getInstance().register(this);
+//        BusProvider.getInstance().register(this);
+        IntentFilter filter = new IntentFilter(KanboxAuthResultEvent.INTENT_ACTION);
+        filter.addAction(FileDownloadEvent.INTENT_ACTION);
+        filter.addAction(KanboxAuthStartEvent.INTENT_ACTION);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mEventReceiver, filter);
         refreshAdLayout();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        BusProvider.getInstance().unregister(this);
+//        BusProvider.getInstance().unregister(this);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mEventReceiver);
     }
 
-    @Subscribe
+//    @Subscribe
     public void onAuthFailedHappened(KanboxAuthResultEvent event) {
         if (event.success) {
             showKanBoxBrowserFragment();
@@ -148,7 +174,7 @@ public class KanBoxTabFragment extends FileTabFragment implements
         }
     }
 
-    @Subscribe
+//    @Subscribe
     public void onFileDownloadEvent(FileDownloadEvent event) {
         refreshAdLayout();
         if (!event.url.startsWith("http://www.kanbox.com/")) {
@@ -172,8 +198,8 @@ public class KanBoxTabFragment extends FileTabFragment implements
             //progress
         }
     }
-//
-    @Subscribe
+
+//    @Subscribe
     public void onAuthStartClicked(KanboxAuthStartEvent event) {
         showKanBoxAuthFragment();
     }

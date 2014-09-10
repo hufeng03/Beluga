@@ -200,129 +200,56 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	public void onClick(View v) {
 		switch(v.getId()){
 			case R.id.category_music:
-                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_AUDIO));
-//                if (mWeakListener != null) {
-//                    CategoryFragmentListener listener = mWeakListener.get();
-//                    if (listener != null) {
-//                        listener.onCategorySelected(FileUtils.FILE_TYPE_AUDIO);
-//                    }
-//                }
+//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_AUDIO));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_AUDIO).buildIntentWithBundle());
 				break;
 			case R.id.category_video:
-                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_VIDEO));
-//                if (mWeakListener != null) {
-//                    CategoryFragmentListener listener = mWeakListener.get();
-//                    if (listener != null) {
-//                        listener.onCategorySelected(FileUtils.FILE_TYPE_VIDEO);
-//                    }
-//                }
-				break;
+//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_VIDEO));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_VIDEO).buildIntentWithBundle());
+                break;
 			case R.id.category_picture:
-                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_IMAGE));
-//                if (mWeakListener != null) {
-//                    CategoryFragmentListener listener = mWeakListener.get();
-//                    if (listener != null) {
-//                        listener.onCategorySelected(FileUtils.FILE_TYPE_IMAGE);
-//                    }
-//                }
-				break;
+//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_IMAGE));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_IMAGE).buildIntentWithBundle());
+                break;
 			case R.id.category_document:
-                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_DOCUMENT));
-//                if (mWeakListener != null) {
-//                    CategoryFragmentListener listener = mWeakListener.get();
-//                    if (listener != null) {
-//                        listener.onCategorySelected(FileUtils.FILE_TYPE_DOCUMENT);
-//                    }
-//                }
-				break;
+//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_DOCUMENT));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_DOCUMENT).buildIntentWithBundle());
+                break;
 			case R.id.category_zip:
-                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_ZIP));
-//                if (mWeakListener != null) {
-//                    CategoryFragmentListener listener = mWeakListener.get();
-//                    if (listener != null) {
-////                        if(ChannelUtil.isKanBoxChannel(getActivity())) {
-////                            listener.onCategorySelected(FileUtils.FILE_TYPE_CLOUD);
-////                        } else {
-//                            listener.onCategorySelected(FileUtils.FILE_TYPE_ZIP);
-////                        }
-//                    }
-//                }
-				break;
+//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_ZIP));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_ZIP).buildIntentWithBundle());
+                break;
 			case R.id.category_apk:
-                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_APK));
-//                if (mWeakListener != null) {
-//                    CategoryFragmentListener listener = mWeakListener.get();
-//                    if (listener != null) {
-//                        listener.onCategorySelected(FileUtils.FILE_TYPE_APK);
-//                    }
-//                }
-				break;
+//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_APK));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_APK).buildIntentWithBundle());
+                break;
 			case R.id.category_app:
-                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_APP));
-//                if (mWeakListener != null) {
-//                    CategoryFragmentListener listener = mWeakListener.get();
-//                    if (listener != null) {
-////                        if(ChannelUtil.isKanBoxChannel(getActivity())) {
-////                            listener.onCategorySelected(FileUtils.FILE_TYPE_CLOUD);
-////                        } else {
-//                            listener.onCategorySelected(FileUtils.FILE_TYPE_APP);
-////                        }
-//                    }
-//                }
-			    break;
+//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_APP));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_APP).buildIntentWithBundle());
+                break;
             case R.id.category_kanbox:
-                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_CLOUD));
-//                if (mWeakListener != null) {
-//                    CategoryFragmentListener listener = mWeakListener.get();
-//                    if (listener != null) {
-//                        listener.onCategorySelected(FileUtils.FILE_TYPE_CLOUD);
-//                    }
-//                }
+//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_CLOUD));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_CLOUD).buildIntentWithBundle());
                 break;
 			case R.id.category_download:
-                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_DOWNLOAD));
-//                if (mWeakListener != null) {
-//                    CategoryFragmentListener listener = mWeakListener.get();
-//                    if (listener != null) {
-//                        listener.onCategorySelected(FileUtils.FILE_TYPE_DOWNLOAD);
-//                    }
-//                }
-				break;
+//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_DOWNLOAD));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_DOWNLOAD).buildIntentWithBundle());
+                break;
 			case R.id.category_favorite:
-                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_FAVORITE));
-//                if (mWeakListener != null) {
-//                    CategoryFragmentListener listener = mWeakListener.get();
-//                    if (listener != null) {
-//                        listener.onCategorySelected(FileUtils.FILE_TYPE_FAVORITE);
-//                    }
-//                }
+//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_FAVORITE));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_FAVORITE).buildIntentWithBundle());
                 break;
             case R.id.category_selected_game:
-                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_GAME));
-//                if (mWeakListener != null) {
-//                    CategoryFragmentListener listener = mWeakListener.get();
-//                    if (listener != null) {
-//                        listener.onCategorySelected(FileUtils.FILE_TYPE_RESOURCE_GAME);
-//                    }
-//                }
+//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_GAME));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_GAME).buildIntentWithBundle());
                 break;
             case R.id.category_selected_app:
-                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_APP));
-//                if (mWeakListener != null) {
-//                    CategoryFragmentListener listener = mWeakListener.get();
-//                    if (listener != null) {
-//                        listener.onCategorySelected(FileUtils.FILE_TYPE_RESOURCE_APP);
-//                    }
-//                }
+//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_APP));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_APP).buildIntentWithBundle());
                 break;
             case R.id.category_selected_doc:
-                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_DOC));
-//                if (mWeakListener != null) {
-//                    CategoryFragmentListener listener = mWeakListener.get();
-//                    if (listener != null) {
-//                        listener.onCategorySelected(FileUtils.FILE_TYPE_RESOURCE_DOC);
-//                    }
-//                }
+//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_DOC));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_DOC).buildIntentWithBundle());
                 break;
 			}
 	}
