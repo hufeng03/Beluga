@@ -119,6 +119,11 @@ android {
             ukey = '52cf304456240bdbb705da99'
             signingConfig kanboxSigning
         }
+        hosin {
+            packageName = 'com.belugamobile.filemanager'
+            ukey = '4f7d5ca55270150f1a000105'
+            signingConfig googleSigning
+        }
 
 //    	OPPO {
 //            ukey = '4f7d5ca55270150f1a000105'
