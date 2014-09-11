@@ -14,7 +14,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -38,7 +37,9 @@ import java.util.ArrayList;
 public class FileManagerTabActivity extends FileOperationActivity{
 
 	private static final String LOG_TAG = FileManagerTabActivity.class.getSimpleName();
-	
+
+    public static final String ACTION_VIEW_FTP_ACTION = "com.hufeng.filemanager.view_ftp";
+
 	public static final String ACTION_MOVE_FILES = "action_move_files";
 	public static final String ACTION_COPY_FILES = "action_copy_files";
     public static final String ACTION_UPLOAD_FILES = "action_upload_files";
@@ -107,16 +108,14 @@ public class FileManagerTabActivity extends FileOperationActivity{
 //                R.string.selected);
 		final ActionBar.Tab categoryTab = mActionBar.newTab().
                 setCustomView(createTab(R.string.category));
-//                setText(R.string.category);
         final ActionBar.Tab directoryTab = mActionBar.newTab().
                 setCustomView(createTab(R.string.directory));
-//                setText(R.string.directory);
         final ActionBar.Tab toolsTab = mActionBar.newTab().
                 setCustomView(createTab(R.string.tools));
-//                setText(R.string.tools);
         final ActionBar.Tab kanboxTab = mActionBar.newTab().
                 setCustomView(createTab(R.string.kanbox));
-//                setText(R.string.kanbox);
+        final ActionBar.Tab ftpTab = mActionBar.newTab().
+                setCustomView(createTab(R.string.ftp));
 
         final ActionBar.Tab searchTab = mActionBar.newTab().
                 setText(R.string.search);
@@ -131,13 +130,16 @@ public class FileManagerTabActivity extends FileOperationActivity{
         		DirectoryTabFragment.class, null);
         if ("doov".equals(Constants.PRODUCT_FLAVOR_NAME)) {
 
+        } else if ("hosin".equals(Constants.PRODUCT_FLAVOR_NAME)) {
+            mTabAdapter.addTab(ftpTab,
+                    FtpTabFragment.class, null);
         } else {
             if (Constants.SHOW_KANBOX_CATEGORY) {
                 mTabAdapter.addTab(kanboxTab,
                         KanBoxTabFragment.class, null);
             } else {
                 mTabAdapter.addTab(toolsTab,
-                        ToolsFragment.class, null);
+                        ToolTabFragment.class, null);
             }
         }
 
@@ -152,9 +154,9 @@ public class FileManagerTabActivity extends FileOperationActivity{
             mAppRate.init();
         }
 
-        //if ("doov".equals(Constants.PRODUCT_FLAVOR_NAME)) {
+        if (!"hosin".equals(Constants.PRODUCT_FLAVOR_NAME)) {
             showChinaTipDialog();
-        //}
+        }
 
 	}
 
@@ -230,7 +232,9 @@ public class FileManagerTabActivity extends FileOperationActivity{
 			String[] files = intent.getStringArrayExtra("files");
             getFileOperation().setCopyFiles(files);
             mViewPager.setCurrentItem(FRAGMENT_INDEX_DEVICE);
-		}
+		} else if (ACTION_VIEW_FTP_ACTION.equals(intent.getAction())) {
+            mViewPager.setCurrentItem(FRAGMENT_INDEX_TOOLS);
+        }
 
 //        else if( ACTION_UPLOAD_FILES.equals(intent.getAction())) {
 //            String[] files = intent.getStringArrayExtra("files");

@@ -23,9 +23,9 @@ import com.hufeng.filemanager.tools.ToolsListAdapter;
 import com.hufeng.filemanager.tools.ToolsManager;
 import com.hufeng.filemanager.utils.LogUtil;
 
-public class ToolsFragment extends BaseFragment implements OnClickListener, OnItemClickListener{
+public class ToolTabFragment extends BaseFragment implements OnClickListener, OnItemClickListener{
 
-	private static final String LOG_TAG = ToolsFragment.class.getSimpleName();
+	private static final String LOG_TAG = ToolTabFragment.class.getSimpleName();
 	
 	private LinearLayout mRootView;
 	private GridView mGridView;

@@ -30,8 +30,8 @@ public class Defaults {
 	protected static int uiLogLevel = Defaults.release ? Log.INFO : Log.DEBUG;
 	protected static int consoleLogLevel = Defaults.release ? Log.INFO : Log.DEBUG;
 	protected static String settingsName = "SwiFTP";
-	protected static String username = "u";
-	protected static String password = "p";
+	public static String username = "u";
+	public static String password = "p";
 	protected static int portNumber = 2121; 
 //	protected static int ipRetrievalAttempts = 5;
 	public static final int tcpConnectionBacklog = 5;

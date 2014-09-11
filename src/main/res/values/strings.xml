@@ -724,4 +724,5 @@ changed later by pressing the <b>Setup</b> button.</string> -->
     <item>@string/category_zip</item>
     <item>@string/category_document</item>
 </string-array>
+    <string name="ftp">FTP</string>
 </resources>
