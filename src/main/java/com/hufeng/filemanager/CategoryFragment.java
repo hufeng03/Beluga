@@ -457,10 +457,12 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         LogUtil.i(LOG_TAG, "onCreateOptionsMenu");
-//		menu.clear();
 		completeRefresh();
 		mRefreshItem = null;
 
+        if (Constants.PRODUCT_FLAVOR_NAME.equals("hosin")) {
+            return;
+        }
         if (getParentFragment()!=null && !getParentFragment().getUserVisibleHint()) {
             LogUtil.i(LOG_TAG, "onCreateOptionsMenu invisible");
             return;

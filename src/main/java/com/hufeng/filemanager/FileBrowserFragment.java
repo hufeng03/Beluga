@@ -49,6 +49,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
     private FileArrayAdapter mAdapter;
 
     private String mRootDir;
+    private boolean mStorageBrowser;
     private boolean mWorkWithTree;
     private String mSelectedDir = null;
     private int mSelectedPostion = -1;
@@ -57,6 +58,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
 
     public static final String ARGUMENT_INIT_ROOT_DIR = "root_dir";
     public static final String ARGUMENT_INIT_DIR_LIST = "init_dir_list";
+    public static final String ARGUMENT_STORAGE_BROWSER = "storage_browser";
 
 
     public static FileBrowserFragment newDownloadBrowser(String root) {
@@ -97,6 +99,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         if (!TextUtils.isEmpty(root)) {
             data.putString(ARGUMENT_INIT_ROOT_DIR, root);
         }
+        data.putBoolean(ARGUMENT_STORAGE_BROWSER, true);
         fragment.setArguments(data);
         return fragment;
     }
@@ -168,6 +171,7 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
         Bundle arguments = getArguments();
         if (arguments != null) {
             mRootDir = arguments.getString(ARGUMENT_INIT_ROOT_DIR);
+            mStorageBrowser = arguments.getBoolean(ARGUMENT_STORAGE_BROWSER, false);
         }
     }
 
@@ -295,6 +299,11 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
                 }
             }
         } else {
+
+            if (mStorageBrowser && mRootDir == null) {
+                return;
+            }
+
             super.onCreateOptionsMenu(menu, inflater);
 
             if (!mMenuCreated)
