@@ -27,7 +27,6 @@ public class FileArrayAdapter extends ArrayAdapter<FileEntry> implements GridAda
     private static final String LOG_TAG = FileArrayAdapter.class.getSimpleName();
 
 	LayoutInflater mInflater;
-//    IconLoader mIconLoader;
     InfoLoader mInfoLoader;
     String mSearchString = null;
 
@@ -114,25 +113,22 @@ public class FileArrayAdapter extends ArrayAdapter<FileEntry> implements GridAda
         int type = FileUtils.getFileType(file);
         if (span != null) {
             holder.name.setText(span);
+            holder.info.setVisibility(View.VISIBLE);
         } else {
             if (FileUtils.FILE_TYPE_DIRECTORY == type) {
                 String description = StorageManager.getInstance(getContext()).getStorageDescription(holder.path);
                 if (description != null) {
                     holder.name.setText(description);
+                    holder.info.setVisibility(View.GONE);
                 } else {
                     holder.name.setText(filename);
+                    holder.info.setVisibility(View.VISIBLE);
                 }
             } else {
                 holder.name.setText(filename);
+                holder.info.setVisibility(View.VISIBLE);
             }
         }
-//        if (FileUtils.FILE_TYPE_APK == type) {
-//            mApkInfoLoader.loadInfo(holder.info, holder.path);
-//        } else {
-//            mApkInfoLoader.remove(holder.info);
-//            String info = InfoUtil.getFileInfo(holder.path, type);
-//            holder.info.setText(info);
-//        }
         mInfoLoader.loadInfo(holder.info, holder.path);
 
         if( mFileOperation!=null ) {

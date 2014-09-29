@@ -1,40 +1,26 @@
 package com.hufeng.filemanager.resource;
 
-import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObservable;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
-import com.hufeng.filemanager.BusProvider;
 import com.hufeng.filemanager.FileDownloadEvent;
 import com.hufeng.filemanager.FileManager;
-import com.hufeng.filemanager.filedownload.impl.SmartDownloadProgressListener;
-import com.hufeng.filemanager.filedownload.impl.SmartFileDownloader;
 import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.utils.ZipUtil;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
