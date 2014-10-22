@@ -335,7 +335,7 @@ public class ProxyConnector extends Thread {
 			} else if(action.equals("message")) {
 				proxyMessage = json.getString("text");
 				myLog.i("Got news from proxy server: \"" + proxyMessage + "\"");
-				FTPServerService.updateClients(); // UI update to show message
+//				FTPServerService.updateClients(); // UI update to show message
 			} else if(action.equals("noop")) {
 				myLog.d("Proxy noop");
 			} else {
@@ -736,7 +736,7 @@ public class ProxyConnector extends Thread {
 		long oldProxyUsage = proxyUsage;
 		proxyUsage += num;
 		if(proxyUsage % UPDATE_USAGE_BYTES < oldProxyUsage % UPDATE_USAGE_BYTES) {
-			FTPServerService.updateClients();
+//			FTPServerService.updateClients();
 			persistProxyUsage();
 		}
 	}
@@ -748,7 +748,7 @@ public class ProxyConnector extends Thread {
 	private void setProxyState(State state) {
 		proxyState = state;
 		myLog.l(Log.DEBUG, "Proxy state changed to " + state, true);
-		FTPServerService.updateClients(); // UI update
+//		FTPServerService.updateClients(); // UI update
 	}
 	
 	static public String stateToString(State s) {

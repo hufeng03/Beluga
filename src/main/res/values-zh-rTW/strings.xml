@@ -702,4 +702,5 @@ or nonexistent.</string>
     <string name="can_not_select_dir">不支持選擇文件夾</string>
     <string name="long_press_to_select">請長按文件進行選擇</string>
     <string name="click_to_select">請點擊文件進行選擇</string>
+    <string name="ftp">FTP</string>
 </resources>

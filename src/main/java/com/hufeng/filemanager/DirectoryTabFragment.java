@@ -27,7 +27,6 @@ import java.io.File;
 public class DirectoryTabFragment extends FileTabFragment implements
         FileTreeFragment.FileTreeFragmentListener{
 
-//    private static final String LOG_TAG = DirectoryTabFragment.class.getSimpleName();
     private static final String LOG_TAG = "DirectoryTabFragment";
 
     private FileBrowserFragment mFileBrowserFragment;
@@ -38,7 +37,6 @@ public class DirectoryTabFragment extends FileTabFragment implements
     private final String DEVICE_TAB_ROOT_DIR = "device_tab_root_dir";
 
     BroadcastReceiver mReceiver;
-
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -90,7 +88,6 @@ public class DirectoryTabFragment extends FileTabFragment implements
 
         mAdLayout = (LinearLayout)view.findViewById(R.id.device_ad_layout);
         mAdLayout.setVisibility(View.GONE);
-
 
         String dir = null;
         if (savedInstanceState != null) {

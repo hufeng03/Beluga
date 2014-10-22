@@ -43,6 +43,12 @@ android {
             keyAlias "filemanager.doov"
             keyPassword "dycsr001"
         }
+        belugaConfig{
+            storeFile file(".keystore/beluga.keystore")
+            storePassword "gslcl101"
+            keyAlias "beluga.keystore"
+            keyPassword "gslcl101"
+        }
         unsignedConfig{
 
         }
@@ -65,6 +71,7 @@ android {
         def googleSigning = signingConfigs.googleConfig
         def kanboxSigning = signingConfigs.kanboxConfig
         def doovSigning = signingConfigs.doovConfig
+        def belugaSigning = signingConfigs.belugaConfig
     	google {
             ukey = '4f7d5ca55270150f1a000105'
             signingConfig googleSigning
@@ -118,6 +125,11 @@ android {
             packageName = 'com.kanbox.filemanager'
             ukey = '52cf304456240bdbb705da99'
             signingConfig kanboxSigning
+        }
+        hosin {
+            packageName = 'com.belugamobile.filemanager'
+            ukey = '5410cd12fd98c58b2b0588ca'
+            signingConfig belugaSigning
         }
 
 //    	OPPO {
