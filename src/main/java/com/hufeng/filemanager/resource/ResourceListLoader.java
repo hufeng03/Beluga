@@ -259,6 +259,7 @@ public class ResourceListLoader extends AsyncTaskLoader<List<ResourceEntry>> {
                     }
                 //}
             }
+            cursor.close();
         }
 
         // Sort the list.
