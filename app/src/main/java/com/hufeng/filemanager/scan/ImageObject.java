@@ -42,9 +42,9 @@ public class ImageObject extends FileObject{
 
     private void fetchImageResolution(String path) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
-
+        InputStream is = null;
         try{
-            InputStream is = FileManager.getAppContext().getContentResolver().openInputStream(Uri.fromFile(new File(path)));
+            is = FileManager.getAppContext().getContentResolver().openInputStream(Uri.fromFile(new File(path)));
             opts.inJustDecodeBounds = true;
             opts.inPreferredConfig = Bitmap.Config.RGB_565;
             BitmapFactory.decodeStream(is, null, opts);
@@ -52,6 +52,14 @@ public class ImageObject extends FileObject{
             imageHeight = opts.outHeight;
         } catch (Exception e) {
 //            e.printStackTrace();
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 	
