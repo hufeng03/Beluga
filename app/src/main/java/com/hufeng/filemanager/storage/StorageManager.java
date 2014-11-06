@@ -56,12 +56,25 @@ public class StorageManager extends BroadcastReceiver{
 	}
 
     private void registerReceiver() {
-        IntentFilter intent = new IntentFilter(Intent.ACTION_LOCALE_CHANGED);
-        mContext.registerReceiver(this, intent);
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_LOCALE_CHANGED);
+        intentFilter.addAction(Intent.ACTION_MEDIA_MOUNTED);
+        intentFilter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
+
+        mContext.registerReceiver(this, intentFilter);
     }
 
     private void unregisterReceiver() {
         mContext.unregisterReceiver(this);
+    }
+
+    private void refresh(Context context) {
+        clear();
+        getInstance(context);
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        refresh(context);
     }
 	
 	public boolean isStorage(String path){
@@ -224,69 +237,6 @@ public class StorageManager extends BroadcastReceiver{
 		}
 		return storage;
 	}
-	
-	
-//	public String getExternalStorageDirectory(){
-//		String path = null;
-//		for (int i=0;i<mStorageUnits.size();i++) {
-//			StorageUnit unit = mStorageUnits.get(i);
-//			if ( unit.removable ) {
-//				if(unit.path.contains("sdcard")){
-//					return unit.path;
-//				}
-//				if( path == null)
-//					path = unit.path;
-//			}
-//		}
-//		return path;
-//	}
-	
-//	public String getExternalStorageState(){
-//		String state = Environment.MEDIA_REMOVED;
-//		boolean flag = false;
-//		for (int i=0;i<mStorageUnits.size();i++) {
-//			StorageUnit unit = mStorageUnits.get(i);
-//			if ( unit.removable ) {
-//				if(unit.path.contains("sdcard")){
-//					return unit.state;
-//				}
-//				if(!flag){
-//					state = unit.state;
-//					flag = true;
-//				}
-//			}
-//		}
-//		return state;
-//	}
-//
-//
-//	/**
-//	 *
-//	 * @return
-//	 */
-//	public String[] getInnerStorages() {
-//		List<String> storages = new ArrayList<String>();
-//		for (StorageUnit unit : mStorageUnits) {
-//			if ( unit.removable ) {
-//				storages.add(unit.path);
-//			}
-//		}
-//		return storages.toArray(new String[storages.size()]);
-//	}
-//
-//	/**
-//	 *
-//	 * @return
-//	 */
-//	public String[] getExternalStorages(){
-//		List<String> storages = new ArrayList<String>();
-//		for (StorageUnit unit : mStorageUnits) {
-//			if ( !unit.removable ) {
-//				storages.add(unit.path);
-//			}
-//		}
-//		return storages.toArray(new String[storages.size()]);
-//	}
 	
 	/**
 	 * 
@@ -473,9 +423,5 @@ public class StorageManager extends BroadcastReceiver{
 		return;
 	}
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        clear();
-        getInstance(context);
-    }
+
 }

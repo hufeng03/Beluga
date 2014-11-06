@@ -9,12 +9,12 @@ import android.os.RemoteException;
 public class IDirectoryMonitorServiceImpl extends IDirectoryMonitorService.Stub {
 
     Context mContext;
-    ImportantDirectoryMonitor mMonitor;
+    DirectoryMonitorImpl mMonitor;
 
     public IDirectoryMonitorServiceImpl(Context context)
     {
         mContext = context;
-        mMonitor = new ImportantDirectoryMonitor();
+        mMonitor = new DirectoryMonitorImpl();
     }
 
     public void onCreate() {

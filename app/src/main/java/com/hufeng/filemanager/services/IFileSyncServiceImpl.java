@@ -102,7 +102,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
     private void performScan() {
         if (!mIsScanning.get()) {
             mIsScanning.set(true);
-            ServiceUiHelper.getInstance().scanStarted();
+            ServiceCallUiHelper.getInstance().scanStarted();
             FileManager.setPreference(FileManager.FILEMANAGER_LAST_SCAN, System.currentTimeMillis()+"");
 
             new ScanTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -174,7 +174,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             mIsScanning.set(false);
-            ServiceUiHelper.getInstance().scanCompleted();
+            ServiceCallUiHelper.getInstance().scanCompleted();
         }
 
 

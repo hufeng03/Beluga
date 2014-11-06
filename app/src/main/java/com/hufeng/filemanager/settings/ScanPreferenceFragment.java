@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.FileManager;
-import com.hufeng.filemanager.services.UiServiceHelper;
+import com.hufeng.filemanager.services.UiCallServiceHelper;
 
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -71,7 +71,7 @@ public class ScanPreferenceFragment extends PreferenceFragment implements Shared
         SharedPreferences preferences = getPreferenceManager().getSharedPreferences();
         preferences.unregisterOnSharedPreferenceChangeListener(this);
         if(changed_filter_audio || changed_filter_image || changed_scan_hidden || changed_scan_game) {
-            UiServiceHelper.getInstance().startScan();
+            UiCallServiceHelper.getInstance().startScan();
         }
     }
 

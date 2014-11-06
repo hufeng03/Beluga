@@ -127,21 +127,6 @@ public class SearchTabFragment extends FileTabFragment {
     }
 
     @Override
-    protected void showFile(String path) {
-
-    }
-
-    @Override
-    protected void closeFile(String path) {
-
-    }
-
-    @Override
-    public void onFileBrowserDirShown(String path) {
-
-    }
-
-    @Override
     public void refreshFiles() {
 
     }

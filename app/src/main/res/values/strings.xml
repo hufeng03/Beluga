@@ -39,7 +39,7 @@
     <string name="file_size">%d Bytes</string>
     <string name="install_failed">Installation failed</string>
     <string name="install_successful">Installation successful</string>
-    <string name="instruction">Enter the following address into your FTP Client:</string>
+    <string name="instruction">Enter following address in your FTP Client:</string>
     <string name="instruction_pre">Start service to enable FTP server</string>
     <string name="menu_item_search">Search</string>
     <string name="menu_item_sort">Sort by</string>
@@ -298,11 +298,11 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="ftp_title">Remote Control</string>
 <string name="please_connect_after_started">Please input below address in FTP client</string>
 <string name="please_connect_http_after_started">Please input below address in Internet browser</string>
-<string name="if_ftp_started">Start to manager mobile files on your PC</string>
-<string name="if_http_started">Start to manager mobile files on your PC</string>
+<string name="if_ftp_started">Start to manage mobile files on your PC</string>
+<string name="if_http_started">Start to manage mobile files on your PC</string>
 <string name="open_wifi_settings">WIFI Settings</string>
 <string name="menu_cloud_rename">Rename</string>
-<string name="menu_cloud_download">Download from Cloud</string>
+<string name="menu_cloud_download">Download from Cqloud</string>
 <string name="menu_cloud_share">Share</string>
 <string name="menu_cloud_delete_local">Delete Local Copy</string>
 <string name="menu_cloud_delete_remote">Delete from Cloud</string>
@@ -724,5 +724,8 @@ changed later by pressing the <b>Setup</b> button.</string> -->
     <item>@string/category_zip</item>
     <item>@string/category_document</item>
 </string-array>
+    <string name="http">HTTP</string>
     <string name="ftp">FTP</string>
+    <string name="remote">Remote</string>
+    <string name="start_remote_server">Start <xliff:g id="protocol">%s</xliff:g> Server</string>
 </resources>

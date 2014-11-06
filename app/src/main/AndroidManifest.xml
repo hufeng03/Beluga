@@ -38,21 +38,20 @@
     <uses-sdk android:minSdkVersion="11"
               android:targetSdkVersion="17" /> <!--  4.4 -->
     <application
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:replace="android:name,android:label,android:icon,android:theme"
         android:name=".FileManager"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Holo.Light">
         <activity android:name=".TestActivity">
-            <intent-filter>
-                <action android:name="com.hufeng.filemanager.view_ftp" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".FileManagerTabActivity"
             android:launchMode="singleTop"
             android:uiOptions="splitActionBarWhenNarrow"
             android:label="@string/app_name" >
-           	<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -256,10 +255,10 @@
 		<activity android:name="com.hufeng.nanohttpd.ServerControlActivity"/>
 		<service android:name="com.hufeng.nanohttpd.HTTPServerService" />
 		
-		<activity android:name="com.hufeng.swiftp.ServerControlActivity"/>
+		<!--activity android:name="com.hufeng.swiftp.ServerControlActivity"/>
         
         <activity android:name="com.hufeng.swiftp.ConfigureActivity"/>
-        <service android:name="com.hufeng.swiftp.FTPServerService" />
+        <service android:name="com.hufeng.swiftp.FTPServerService" /!-->
         <activity android:name=".SafeBoxActivity"/>
         <activity android:name=".KanBoxActivity"/>
         <activity android:name="com.hufeng.filemanager.SafeCategoryActivity" />
@@ -285,40 +284,16 @@
             android:label="@string/app_name">
         </activity>
 
-		<!--receiver android:name=".receiver.MountReceiver"
-		    android:process="com.hufeng.filemanager.scan"
-		    >
-            <intent-filter android:priority="2147483647">
-                <action
-                    android:name="android.intent.action.BOOT_COMPLETED" />
-                <category
-                    android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.sdcard.action.SDCARD_UPDATE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.sdcard.action.SDCARD_DELETE" />
-            </intent-filter>
+		<receiver android:name=".receiver.MountReceiver"
+		    android:process="com.hufeng.filemanager.scan">
             <intent-filter
                 android:priority="2147483647"
                 >
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
-                <data android:scheme="file" />
-            </intent-filter>
-            <intent-filter>
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
                 <data android:scheme="file" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_EJECT" />
-                <action android:name="android.intent.action.MEDIA_REMOVED" />
-                <action android:name="android.intent.action.MEDIA_BAD_REMOVAL" />
-                <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED" />
-                <action android:name="android.intent.action.MEDIA_SCANNER_STARTED" />
-                <data android:scheme="file" />
-            </intent-filter>
-        </receiver-->
+        </receiver>
 
         <receiver
             android:name=".resource.FileDownloader"

@@ -8,7 +8,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import com.hufeng.filemanager.services.UiServiceHelper;
+import com.hufeng.filemanager.services.UiCallServiceHelper;
 
 public class SettingsScanActivity extends SettingsItemBaseActivity implements OnClickListener, OnCheckedChangeListener{
 
@@ -130,7 +130,7 @@ public class SettingsScanActivity extends SettingsItemBaseActivity implements On
 //			Intent intent2 = new Intent();
 //			intent2.setAction(IFileObserverServiceImpl.START_SCAN_FILE_ACTION);
 //			FileManager.getAppContext().sendBroadcast(intent2);
-            UiServiceHelper.getInstance().startScan();
+            UiCallServiceHelper.getInstance().startScan();
 		}
 	}
 

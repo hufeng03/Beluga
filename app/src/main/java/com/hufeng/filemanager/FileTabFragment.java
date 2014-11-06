@@ -92,21 +92,16 @@ public abstract class FileTabFragment extends BaseFragment implements
                         mCurrentChildFragment.mSearchString = null;
                     }
                 }
-                showFile(entry.path);
+                if (mCurrentChildFragment !=null && mCurrentChildFragment instanceof FileBrowserFragment)
+                    ((FileBrowserFragment)mCurrentChildFragment).showDir(entry.path);
             } else {
                 if (FileUtils.FILE_TYPE_IMAGE == entry.type) {
                     viewImage((ImageView) v, (ImageEntry) entry, FileUtils.FILE_TYPE_IMAGE);
                 } else {
                     FileAction.viewFile(getActivity(), entry.path);
                 }
-                showFile(entry.path);
             }
         }
-    }
-
-    @Override
-    public void onFileBrowserItemClose(FileEntry entry) {
-        closeFile(entry.path);
     }
 
 
@@ -133,9 +128,6 @@ public abstract class FileTabFragment extends BaseFragment implements
     public void onFileGrouperItemSelect(View v, FileEntry entry) {
         selectFile((ImageView) v, entry);
     }
-
-    protected abstract void showFile(String path);
-    protected abstract void closeFile(String path);
 
     protected void viewImage(ImageView v, ImageEntry entry, int type) {
         if (!entry.exist) {

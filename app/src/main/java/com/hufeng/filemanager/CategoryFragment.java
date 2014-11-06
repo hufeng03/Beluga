@@ -25,13 +25,12 @@ import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.provider.DataStructures.CategoryColumns;
 import com.hufeng.filemanager.services.IUiImpl;
-import com.hufeng.filemanager.services.UiServiceHelper;
+import com.hufeng.filemanager.services.UiCallServiceHelper;
 import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.utils.FileUtil;
 import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.view.CategoryBar;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -74,17 +73,6 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	LinearLayout mInformationLayout;
 	
 	private static final int LOADER_ID_CATEGORY = 1;
-
-//    private WeakReference<CategoryFragmentListener> mWeakListener;
-
-//    public static interface CategoryFragmentListener {
-//        public void onCategorySelected(int category);
-//    }
-
-//    public void setListener(CategoryFragmentListener listener) {
-//        mWeakListener = new WeakReference<CategoryFragmentListener>(listener);
-//    }
-	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -146,19 +134,6 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
         mCategorySelectedApp.setOnClickListener(this);
         mCategorySelectedDoc.setOnClickListener(this);
 
-//        if(ChannelUtil.isKanBoxChannel(getActivity())) {
-////            ((ImageView)mCategoryZip.findViewById(R.id.category_zip_icon)).setImageResource(R.drawable.file_category_icon_kanbox);
-////            ((TextView)mCategoryZip.findViewById(R.id.category_zip_name)).setText(R.string.kanbox);
-//
-////            mCategoryOthersPanel.setVisibility(View.GONE);
-////            mCategorySelectedPanel.setVisibility(View.VISIBLE);
-////            view.findViewById(R.id.category_legend_zip).setVisibility(View.GONE);
-////            mCategoryZipCountInfo.setVisibility(View.INVISIBLE);
-//
-//            ((ImageView)mCategoryApp.findViewById(R.id.category_app_icon)).setImageResource(R.drawable.file_category_icon_kanbox);
-//            ((TextView)mCategoryApp.findViewById(R.id.category_app_name)).setText(R.string.kanbox);
-//        }
-//
         if (Constants.SHOW_SELECTED_CATEGORY) {
             mCategoryOthersPanel.setVisibility(View.GONE);
             mCategorySelectedPanel.setVisibility(View.VISIBLE);
@@ -184,10 +159,10 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
             getLoaderManager().initLoader(LOADER_ID_CATEGORY, null, this);
         }
 
-        if(Constants.PRODUCT_FLAVOR_NAME.equals("chenxiang")) {
+//        if(Constants.PRODUCT_FLAVOR_NAME.equals("chenxiang")) {
             mInformationLayout.setVisibility(View.INVISIBLE);
             view.findViewById(R.id.information_label).setVisibility(View.INVISIBLE);
-        }
+//        }
 
 	}
 
@@ -296,18 +271,18 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	@Override
 	public void onResume(){
 		super.onResume();
-        if (UiServiceHelper.getInstance().isScanning()) {
+        if (UiCallServiceHelper.getInstance().isScanning()) {
             refresh();
         } else {
             completeRefresh();
         }
-        UiServiceHelper.getInstance().addCallback(this);
+        UiCallServiceHelper.getInstance().addCallback(this);
 	}
 	
 	@Override
 	public void onPause(){
 		super.onPause();
-        UiServiceHelper.getInstance().removeCallback(this);
+        UiCallServiceHelper.getInstance().removeCallback(this);
         completeRefresh();
 	}	
 	
@@ -441,7 +416,7 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 //                }
              }
 
-            if(UiServiceHelper.getInstance().isScanning())
+            if(UiCallServiceHelper.getInstance().isScanning())
             {
                 refresh();
             }
@@ -473,7 +448,7 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 		if(mRefreshItem!=null)
 			LogUtil.i(LOG_TAG, "new refresh item is "+mRefreshItem);
 		if(mRefreshItem!=null && mRefreshItem.isVisible()){
-			if(UiServiceHelper.getInstance().isScanning()) {
+			if(UiCallServiceHelper.getInstance().isScanning()) {
 				LogUtil.i(LOG_TAG, "set refresh menu item to scanning");
 				refresh();
 			}else{
@@ -500,7 +475,7 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
                 StorageManager.clear();
                 Intent intent = new Intent("SHOW_ROOT_FILES_ACTION");
                 LocalBroadcastManager.getInstance(FileManager.getAppContext()).sendBroadcast(intent);
-                UiServiceHelper.getInstance().startScan();
+                UiCallServiceHelper.getInstance().startScan();
 				flag = true;
 				break;
 			}

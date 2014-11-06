@@ -457,16 +457,6 @@ public class KanBoxTabFragment extends FileTabFragment implements
 //    }
 
     @Override
-    protected void showFile(String path) {
-        return;
-    }
-
-    @Override
-    protected void closeFile(String path) {
-        return;
-    }
-
-    @Override
     public void refreshFiles() {
         if(mCurrentChildFragment != null) {
             mCurrentChildFragment.refreshUI();
@@ -559,9 +549,4 @@ public class KanBoxTabFragment extends FileTabFragment implements
 //            }
 //        }
 //    }
-
-    @Override
-    public void onFileBrowserDirShown(String path) {
-
-    }
 }

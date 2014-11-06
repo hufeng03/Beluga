@@ -1,14 +1,12 @@
 package com.hufeng.nanohttpd;
 
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.storage.StorageManager;
-import com.hufeng.swiftp.Util;
 
 
 import android.app.Notification;
@@ -19,6 +17,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
+
+import be.ppareit.swiftp.Util;
 
 public class HTTPServerService extends Service {
 
@@ -85,10 +85,6 @@ public class HTTPServerService extends Service {
 	 * @return The integer IP address if wifi enabled, or null if not.
 	 */
 	public static InetAddress getWifiIp() {
-//		Context myContext = Globals.getContext();
-//		if(myContext == null) {
-//			throw new NullPointerException("Global context is null");
-//		}
 		WifiManager wifiMgr = (WifiManager)FileManager.getAppContext()
 		                        .getSystemService(Context.WIFI_SERVICE);
 		if(isWifiEnabled()) {

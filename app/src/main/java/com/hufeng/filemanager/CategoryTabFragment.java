@@ -34,8 +34,6 @@ public class CategoryTabFragment extends FileTabFragment {
 		super.onCreate(savedInstanceState);
 	}
 
-
-
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
@@ -58,12 +56,10 @@ public class CategoryTabFragment extends FileTabFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-//        getChildFragmentManager().addOnBackStackChangedListener(this);
-//        showCategoryPanel();
         if (savedInstanceState != null) {
             mCategory = savedInstanceState.getInt(CATEGORY_TYPE, FileUtils.FILE_TYPE_ALL);
         }
-        showChildCategoryPanel(mCategory);
+        showSingleCategoryPanel(mCategory);
 
         mContentObserver = new ContentObserver(null) {
             @Override
@@ -114,7 +110,7 @@ public class CategoryTabFragment extends FileTabFragment {
     public void onCategorySelected(CategorySelectEvent event) {
         if (event != null) {
             mCategory = event.category;
-            showChildCategoryPanel(mCategory);
+            showSingleCategoryPanel(mCategory);
         }
     }
 
@@ -138,33 +134,6 @@ public class CategoryTabFragment extends FileTabFragment {
 
 		return false;
 	}
-
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        if (mCategoryFragment != null) {
-//            mCategoryFragment.onCreateOptionsMenu(menu, inflater);
-//        } else{
-//            super.onCreateOptionsMenu(menu, inflater);
-//        }
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (mCategoryFragment != null) {
-//            return mCategoryFragment.onOptionsItemSelected(item);
-//        } else {
-//            return super.onOptionsItemSelected(item);
-//        }
-//    }
-//
-//    @Override
-//    public void onDestroyOptionsMenu() {
-//        if (mCategoryFragment != null) {
-//            mCategoryFragment.onDestroyOptionsMenu();
-//        } else {
-//            super.onDestroyOptionsMenu();
-//        }
-//    }
 
     public void showCategoryPanel() {
         final FragmentManager fm = getChildFragmentManager();
@@ -210,9 +179,9 @@ public class CategoryTabFragment extends FileTabFragment {
         FileBrowserFragment fragment = (FileBrowserFragment) fm.findFragmentByTag(FileBrowserFragment.class.getSimpleName());
         if (fragment == null) {
             if (FileUtils.FILE_TYPE_DOWNLOAD == type) {
-                fragment = FileBrowserFragment.newDownloadBrowser(null);
+                fragment = FileBrowserFragment.newDownloadBrowser();
             } else if (FileUtils.FILE_TYPE_FAVORITE == type) {
-                fragment = FileBrowserFragment.newFavoriteBrowser(null);
+                fragment = FileBrowserFragment.newFavoriteBrowser();
             }
 
             ft.replace(R.id.fragment_container, fragment, FileBrowserFragment.class.getSimpleName());
@@ -272,13 +241,7 @@ public class CategoryTabFragment extends FileTabFragment {
         mCategoryFragment = null;
     }
 
-//    @Override
-//    public void onCategorySelected(int category) {
-//        mCategory = category;
-//        showChildCategoryPanel(category);
-//    }
-
-    private boolean showChildCategoryPanel(int category) {
+    private boolean showSingleCategoryPanel(int category) {
         boolean result = true;
         switch(category) {
             case FileUtils.FILE_TYPE_ALL:
@@ -320,18 +283,6 @@ public class CategoryTabFragment extends FileTabFragment {
     }
 
     @Override
-    protected void showFile(String path) {
-        if (new File(path).isDirectory() && mCurrentChildFragment !=null && mCurrentChildFragment instanceof FileBrowserFragment) {
-            ((FileBrowserFragment)mCurrentChildFragment).showDir(path);
-        }
-    }
-
-    @Override
-    protected void closeFile(String path) {
-        return;
-    }
-
-    @Override
     public void refreshFiles() {
         if(mCurrentChildFragment != null) {
             mCurrentChildFragment.refreshUI();
@@ -365,10 +316,5 @@ public class CategoryTabFragment extends FileTabFragment {
 //       }
 //    }
 
-
-    @Override
-    public void onFileBrowserDirShown(String path) {
-
-    }
 
 }

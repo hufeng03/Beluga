@@ -443,36 +443,36 @@ public class SimpleWebServer extends NanoHTTPD {
 		}
     }
     
-    /**
-     * Starts as a standalone file server and waits for Enter.
-     */
-    public static void main(String[] args) {
-        System.out.println(
-                "NanoHttpd 2.0: Command line options: [-h hostname] [-p port] [-d root-dir] [--licence]\n" +
-                        "(C) 2001,2005-2011 Jarno Elonen \n" +
-                        "(C) 2010 Konstantinos Togias\n" +
-                        "(C) 2012- Paul S. Hawke\n");
-
-        // Defaults
-        int port = 8080;
-        String host = "127.0.0.1";
-        File wwwroot = new File(".").getAbsoluteFile();
-
-        // Show licence if requested
-        for (int i = 0; i < args.length; ++i)
-            if (args[i].equalsIgnoreCase("-h"))
-                host = args[i + 1];
-            else if (args[i].equalsIgnoreCase("-p"))
-                port = Integer.parseInt(args[i + 1]);
-            else if (args[i].equalsIgnoreCase("-d"))
-                wwwroot = new File(args[i + 1]).getAbsoluteFile();
-            else if (args[i].toLowerCase().endsWith("licence")) {
-                System.out.println(LICENCE + "\n");
-                break;
-            }
-
-        File file =  Environment.getExternalStorageDirectory();
-        ServerRunner.executeInstance(new SimpleWebServer(host, port, file, new String[]{file.getAbsolutePath()}));
-    }
+//    /**
+//     * Starts as a standalone file server and waits for Enter.
+//     */
+//    public static void main(String[] args) {
+//        System.out.println(
+//                "NanoHttpd 2.0: Command line options: [-h hostname] [-p port] [-d root-dir] [--licence]\n" +
+//                        "(C) 2001,2005-2011 Jarno Elonen \n" +
+//                        "(C) 2010 Konstantinos Togias\n" +
+//                        "(C) 2012- Paul S. Hawke\n");
+//
+//        // Defaults
+//        int port = 8080;
+//        String host = "127.0.0.1";
+//        File wwwroot = new File(".").getAbsoluteFile();
+//
+//        // Show licence if requested
+//        for (int i = 0; i < args.length; ++i)
+//            if (args[i].equalsIgnoreCase("-h"))
+//                host = args[i + 1];
+//            else if (args[i].equalsIgnoreCase("-p"))
+//                port = Integer.parseInt(args[i + 1]);
+//            else if (args[i].equalsIgnoreCase("-d"))
+//                wwwroot = new File(args[i + 1]).getAbsoluteFile();
+//            else if (args[i].toLowerCase().endsWith("licence")) {
+//                System.out.println(LICENCE + "\n");
+//                break;
+//            }
+//
+//        File file =  Environment.getExternalStorageDirectory();
+//        ServerRunner.executeInstance(new SimpleWebServer(host, port, file, new String[]{file.getAbsolutePath()}));
+//    }
 }
 

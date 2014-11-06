@@ -40,7 +40,7 @@ public class FileManagerService extends Service{
         HandlerThread thread = new HandlerThread("FileManagerServiceHandlerThread", android.os.Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         Looper serviceLooper = thread.getLooper();
-        mHandler = new FileManagertServiceHandler(serviceLooper);
+        mHandler = new FileManagerServiceHandler(serviceLooper);
 
 		mFileSyncServiceImpl = new IFileSyncServiceImpl(this.getApplicationContext());
 		mFileSyncServiceImpl.onCreate();
@@ -65,14 +65,14 @@ public class FileManagerService extends Service{
         mDirectoryMonitorServiceImpl.onDestroy();
         mFileSyncServiceImpl = null;
         mDirectoryMonitorServiceImpl = null;
-        ServiceUiHelper.getInstance().removeUiIBinder();
+        ServiceCallUiHelper.getInstance().removeUiIBinder();
 	}
 
-    public class FileManagertServiceHandler extends Handler {
+    public class FileManagerServiceHandler extends Handler {
 
-        public static final int HANDLER_MESSAGE_MOUNTED = 1;
+        public static final int HANDLER_MESSAGE_MOUNT = 1;
 
-        public FileManagertServiceHandler(Looper looper) {
+        public FileManagerServiceHandler(Looper looper) {
             super(looper);
         }
 
@@ -80,12 +80,12 @@ public class FileManagerService extends Service{
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case 1:
+                case HANDLER_MESSAGE_MOUNT:
                     StorageManager.clear();
                     if (mDirectoryMonitorServiceImpl != null) {
                         mDirectoryMonitorServiceImpl.refresh();
                     }
-                    ServiceUiHelper.getInstance().storageChanged();
+                    ServiceCallUiHelper.getInstance().storageChanged();
                     break;
             }
         }
@@ -102,7 +102,7 @@ public class FileManagerService extends Service{
                         mFileSyncServiceImpl.refresh();
                     }
                 } else if (Intent.ACTION_MEDIA_MOUNTED.equals(intent.getAction()) || Intent.ACTION_MEDIA_UNMOUNTED.equals(intent.getAction())) {
-                    mHandler.sendEmptyMessageDelayed(FileManagertServiceHandler.HANDLER_MESSAGE_MOUNTED, 1000);
+                    mHandler.sendEmptyMessageDelayed(FileManagerServiceHandler.HANDLER_MESSAGE_MOUNT, 1000);
                 }
 
             }
@@ -177,7 +177,7 @@ public class FileManagerService extends Service{
 
         @Override
         public void setUiIBinder(IBinder iBinder) throws RemoteException {
-            ServiceUiHelper.getInstance().setUiIBinder(iBinder);
+            ServiceCallUiHelper.getInstance().setUiIBinder(iBinder);
         }
 
         @Override
@@ -196,6 +196,7 @@ public class FileManagerService extends Service{
         public IBinder getDirectoryMonitorService() throws RemoteException {
             return mDirectoryMonitorServiceImpl.asBinder();
         }
+
     }
 	
 

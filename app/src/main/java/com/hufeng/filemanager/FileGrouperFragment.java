@@ -18,7 +18,7 @@ import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.browser.InfoLoader;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.services.IUiImpl;
-import com.hufeng.filemanager.services.UiServiceHelper;
+import com.hufeng.filemanager.services.UiCallServiceHelper;
 import com.hufeng.filemanager.ui.FileCursorAdapter;
 import com.hufeng.filemanager.ui.FileGridAdapterListener;
 import com.hufeng.filemanager.ui.FileOperation;
@@ -199,13 +199,13 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
     @Override
     public void onResume() {
         super.onResume();
-        UiServiceHelper.getInstance().addCallback(this);
+        UiCallServiceHelper.getInstance().addCallback(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        UiServiceHelper.getInstance().removeCallback(this);
+        UiCallServiceHelper.getInstance().removeCallback(this);
     }
 
     @Override
@@ -276,7 +276,7 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
     @Override
     public void reportNotExistFile() {
 //        reloadFiles();
-        UiServiceHelper.getInstance().deleteUnexist(mCategory);
+        UiCallServiceHelper.getInstance().deleteUnexist(mCategory);
     }
 
     @Override
@@ -304,7 +304,7 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
 		mAdapter.changeCursor(arg1);
         InfoLoader.getInstance().clear();
         if (arg1 == null || arg1.getCount() == 0) {
-            if (UiServiceHelper.getInstance().isScanning()) {
+            if (UiCallServiceHelper.getInstance().isScanning()) {
                 setGridShown(false);
                 return;
             }

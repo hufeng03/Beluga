@@ -48,16 +48,6 @@ public class ResourceTabFragment extends FileTabFragment{
     }
 
     @Override
-    protected void showFile(String path) {
-
-    }
-
-    @Override
-    protected void closeFile(String path) {
-
-    }
-
-    @Override
     public String[] getAllFiles() {
         return new String[0];
     }
@@ -77,9 +67,4 @@ public class ResourceTabFragment extends FileTabFragment{
 //
 //    }
 
-
-    @Override
-    public void onFileBrowserDirShown(String path) {
-
-    }
 }

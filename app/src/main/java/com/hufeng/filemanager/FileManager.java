@@ -4,21 +4,19 @@ import android.app.Application;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 
 import com.hufeng.filemanager.channel.DoovUtil;
 import com.hufeng.filemanager.provider.DataStructures.MatchColumns;
 import com.hufeng.filemanager.provider.DataStructures.PreferenceColumns;
-import com.hufeng.filemanager.services.UiServiceHelper;
+import com.hufeng.filemanager.services.UiCallServiceHelper;
 import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.utils.OSUtil;
 import com.hufeng.filemanager.utils.PackageUtil;
+
+import be.ppareit.swiftp.FsApp;
 
 
 public class FileManager extends Application/* implements GalleryApp*/{
@@ -51,6 +49,8 @@ public class FileManager extends Application/* implements GalleryApp*/{
 		super.onCreate();
 		
 		mContext = this;
+
+        FsApp.setAppContext(mContext);
 
         DoovUtil.initDoovVistor(this.getApplicationContext(), "FileManager", "onCreate");
 
@@ -137,7 +137,7 @@ public class FileManager extends Application/* implements GalleryApp*/{
 			edit.commit();
         }
 
-        UiServiceHelper.getInstance().connectService(this);
+        UiCallServiceHelper.getInstance().connectService(this);
 	}
 
     private void initService() {

@@ -117,16 +117,6 @@ public class FileManagerSelectActivity extends FileOperationActivity implements 
     }
 
     @Override
-    public void onFileBrowserItemClose(FileEntry entry) {
-
-    }
-
-    @Override
-    public void onFileBrowserDirShown(String path) {
-
-    }
-
-    @Override
     public void refreshFiles() {
         mFileBrowserFragment.refreshUI();
     }

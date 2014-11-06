@@ -87,10 +87,6 @@ public class FileManagerTabActivity extends FileOperationActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		checkUpgradeSlient();
-//		requestWindowFeature(Window.FEATURE_NO_TITLE);
-//		if(savedInstanceState!=null)
-//			mFirst = savedInstanceState.getBoolean("FIRST", true);
 	    
 		setContentView(R.layout.fragment_pager);
 
@@ -101,11 +97,9 @@ public class FileManagerTabActivity extends FileOperationActivity{
 		mActionBar = getActionBar();
 
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        mActionBar.setDisplayShowTitleEnabled(false);
-        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(true);
+        mActionBar.setDisplayShowHomeEnabled(true);
 
-//        final Tab selectedTab = getSupportActionBar().newTab().setText(
-//                R.string.selected);
 		final ActionBar.Tab categoryTab = mActionBar.newTab().
                 setCustomView(createTab(R.string.category));
         final ActionBar.Tab directoryTab = mActionBar.newTab().
@@ -114,8 +108,8 @@ public class FileManagerTabActivity extends FileOperationActivity{
                 setCustomView(createTab(R.string.tools));
         final ActionBar.Tab kanboxTab = mActionBar.newTab().
                 setCustomView(createTab(R.string.kanbox));
-        final ActionBar.Tab ftpTab = mActionBar.newTab().
-                setCustomView(createTab(R.string.ftp));
+        final ActionBar.Tab remoteTab = mActionBar.newTab().
+                setCustomView(createTab(R.string.remote));
 
         final ActionBar.Tab searchTab = mActionBar.newTab().
                 setText(R.string.search);
@@ -127,12 +121,12 @@ public class FileManagerTabActivity extends FileOperationActivity{
         mTabAdapter.addTab(categoryTab,
         		CategoryTabFragment.class, null);
         mTabAdapter.addTab(directoryTab,
-        		DirectoryTabFragment.class, null);
+        		DeviceTabFragment.class, null);
         if ("doov".equals(Constants.PRODUCT_FLAVOR_NAME)) {
 
         } else if ("hosin".equals(Constants.PRODUCT_FLAVOR_NAME)) {
-            mTabAdapter.addTab(ftpTab,
-                    FtpTabFragment.class, null);
+            mTabAdapter.addTab(remoteTab,
+                    RemoteTabFragment.class, null);
         } else {
             if (Constants.SHOW_KANBOX_CATEGORY) {
                 mTabAdapter.addTab(kanboxTab,
@@ -452,9 +446,9 @@ public class FileManagerTabActivity extends FileOperationActivity{
             		}
             	}
             	else if(position==FRAGMENT_INDEX_DEVICE){
-            		DirectoryTabFragment fragment = ((DirectoryTabFragment)getFragment(position));
+            		DeviceTabFragment fragment = ((DeviceTabFragment)getFragment(position));
             		if(fragment!=null) {
-            			fragment.showBrowserRoot();
+            			fragment.showDevicePanel();
             		}
             	}
                 else if(position==FRAGMENT_INDEX_TOOLS) {
