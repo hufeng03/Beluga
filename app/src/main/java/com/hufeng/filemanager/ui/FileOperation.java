@@ -521,16 +521,18 @@ public class FileOperation extends BaseFragment {
 		Intent intent = FileAction.buildSendFile(context, mOperationPaths.toArray(new String[mOperationPaths.size()]));
 		ResolveInfo[] apps = IntentUtils.queryAvailableApps(intent);
         apps = IntentUtils.sort(apps);
-		if(flag_directory) {
-			Toast.makeText(context, R.string.directory_cannot_send, Toast.LENGTH_SHORT).show();
-		}
+
 		if (apps==null || apps.length==0) {
-			if (!flag_directory) {
+            if(flag_directory) {
+                Toast.makeText(context, R.string.directory_cannot_send, Toast.LENGTH_SHORT).show();
+            } else if (!flag_directory) {
 				Toast.makeText(context, R.string.no_send_app_available, Toast.LENGTH_SHORT).show();
             }
 		} else if (apps.length==1) {
 			onOperationSendSelected(context, apps[0].activityInfo.packageName, apps[0].activityInfo.name);
 		} else {
+//            context.startActivity(intent);
+//            context.startActivity(IntentUtils.buildChooserIntent(context.getString(R.string.select_send_app_dialog_title), intent, apps));
 	    	FmDialogFragment.showSelectSendAppDialog(getFileOperationProvider().getHostFragmentManager(), apps);
 		}
 	}

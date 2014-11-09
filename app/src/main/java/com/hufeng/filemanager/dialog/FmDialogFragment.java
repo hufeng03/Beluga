@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -356,20 +357,12 @@ public class FmDialogFragment extends DialogFragment{
         for(ResolveInfo app:available_apps)
         {
         	Map<String,Object> map = new HashMap<String, Object>();
-        	try {
-        		String pkg = app.activityInfo.applicationInfo.packageName;
-	        	String cls = app.activityInfo.name;
-				ComponentName componentName = new ComponentName(pkg, cls);
-				Drawable icon = pm.getActivityIcon(componentName);
-				CharSequence name = app.activityInfo.loadLabel(pm);
-				
-				map.put("name", name);
-	        	map.put("icon", icon);
-	        	listdata.add(map);
-			} catch (NameNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Drawable icon = app.loadIcon(pm);
+            String name = app.loadLabel(pm).toString();
+
+			map.put("name", name);
+	        map.put("icon", icon);
+	        listdata.add(map);
 
         }
     	

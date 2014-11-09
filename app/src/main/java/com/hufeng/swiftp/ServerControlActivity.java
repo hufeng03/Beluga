@@ -47,7 +47,6 @@ import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.SettingsItemBaseActivity;
-import com.hufeng.filemanager.skin.SkinManager;
 import com.hufeng.filemanager.utils.LogUtil;
 
 import java.net.InetAddress;
@@ -55,8 +54,7 @@ import java.net.InetAddress;
 public class ServerControlActivity extends SettingsItemBaseActivity {
 	
 	private static final String LOG_TAG = ServerControlActivity.class.getSimpleName();
-    
-	private int mSkin = SkinManager.SKIN_BLACK;
+
 	
     private TextView startStopButton;
     private ImageView wifiStateImage;
@@ -179,7 +177,6 @@ public class ServerControlActivity extends SettingsItemBaseActivity {
     	super.onResume();
     	// If the required preferences are not present, launch the configuration
         // Activity.
-    	setUI();
         if(!requiredSettingsDefined()) {
         	launchConfigureActivity();
         }
@@ -448,17 +445,6 @@ public class ServerControlActivity extends SettingsItemBaseActivity {
     		return this.getPreferences(MODE_PRIVATE);
     	}
     }
-    
-	private void setUI()
-	{
-		SharedPreferences sp  = PreferenceManager.getDefaultSharedPreferences(this);
-		int skin = sp.getInt(SkinManager.SKIN_SELECTION, SkinManager.SKIN_UNDEFINED);
-		if(mSkin!=skin)
-		{
-//			mBack.setBackgroundResource(SkinManager.getBackButtonResourceId(skin));
-//			mTopTab.setBackgroundResource(SkinManager.getTabBarResourceId(skin));
-			mSkin = skin;
-		}
-	}
+
 
 }

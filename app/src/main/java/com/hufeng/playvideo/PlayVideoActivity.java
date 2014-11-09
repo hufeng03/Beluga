@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 
 import com.hufeng.filemanager.BaseActivity;
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.skin.SkinManager;
 import com.hufeng.playdocument.PlayDocumentActivity;
 
 public class PlayVideoActivity extends BaseActivity {
@@ -25,14 +24,7 @@ public class PlayVideoActivity extends BaseActivity {
     
 	private RelativeLayout mTopTab;
 	private Button mBack;
-    
-	@Override
-	protected void setNewSkin(int skin) {
-		// TODO Auto-generated method stub
-		mBack.setBackgroundResource(SkinManager.getBackButtonResourceId(skin));
-		mTopTab.setBackgroundResource(SkinManager.getTabBarResourceId(skin));
 
-	}
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

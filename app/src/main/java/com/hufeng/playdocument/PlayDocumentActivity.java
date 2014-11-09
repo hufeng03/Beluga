@@ -9,7 +9,6 @@ import org.mozilla.universalchardet.UniversalDetector;
 
 import com.hufeng.filemanager.BaseActivity;
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.skin.SkinManager;
 import com.hufeng.filemanager.utils.LogUtil;
 
 import android.app.Activity;
@@ -35,13 +34,7 @@ import android.widget.Toast;
 public class PlayDocumentActivity extends BaseActivity implements OnGestureListener {
 	
 	private static final String LOG_TAG = PlayDocumentActivity.class.getSimpleName();
-	
-	@Override
-	protected void setNewSkin(int skin) {
-		// TODO Auto-generated method stub
-		mBack.setBackgroundResource(SkinManager.getBackButtonResourceId(skin));
-		mTopTab.setBackgroundResource(SkinManager.getTabBarResourceId(skin));
-	}
+
 	
 	public static final int HANDLER_SHOW_TOP = 1;
 	public static final int HANDLER_HIDE_TOP = 2;

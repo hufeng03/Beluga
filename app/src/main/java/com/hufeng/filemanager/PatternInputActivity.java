@@ -26,11 +26,6 @@ public class PatternInputActivity extends BaseActivity{
 		super.onPause();
 	}
 
-	@Override
-	protected void setNewSkin(int skin) {
-		// TODO Auto-generated method stub
-		super.setNewSkin(skin);
-	}
 
 	
 }

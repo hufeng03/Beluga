@@ -12,12 +12,6 @@ import com.hufeng.filemanager.services.UiServiceHelper;
 
 public class SettingsScanActivity extends SettingsItemBaseActivity implements OnClickListener, OnCheckedChangeListener{
 
-	@Override
-	protected void setNewSkin(int skin) {
-		// TODO Auto-generated method stub
-//		mBack.setBackgroundResource(SkinManager.getBackButtonResourceId(skin));
-//		mTopTab.setBackgroundResource(SkinManager.getTabBarResourceId(skin));
-	}
 
 //	Button mBack;
 //	RelativeLayout mTopTab;

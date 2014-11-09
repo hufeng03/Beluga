@@ -41,7 +41,7 @@
         android:name=".FileManager"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.Holo.Light">
+        android:theme="@style/BelugaTheme">
         <activity android:name=".TestActivity">
             <intent-filter>
                 <action android:name="com.hufeng.filemanager.view_ftp" />

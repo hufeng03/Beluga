@@ -11,7 +11,6 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.skin.SkinManager;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -35,8 +34,7 @@ public class SmsBackupViewer extends Activity implements OnClickListener{
 	
 	private Button mBack;
 	private RelativeLayout mTopTab;
-	
-	private int mSkin = SkinManager.SKIN_BLACK;
+
 	
 //	private SmsListAdapter mAdapter;
 
@@ -63,7 +61,6 @@ public class SmsBackupViewer extends Activity implements OnClickListener{
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		setUI();
 	}
 
 	@Override
@@ -230,18 +227,7 @@ public class SmsBackupViewer extends Activity implements OnClickListener{
 		}
 		
 	}
-	
-	private void setUI()
-	{
-		SharedPreferences sp  = PreferenceManager.getDefaultSharedPreferences(this);
-		int skin = sp.getInt(SkinManager.SKIN_SELECTION, SkinManager.SKIN_UNDEFINED);
-		if(mSkin!=skin)
-		{
-			mBack.setBackgroundResource(SkinManager.getBackButtonResourceId(skin));
-			mTopTab.setBackgroundResource(SkinManager.getTabBarResourceId(skin));
-			mSkin = skin;
-		}
-	}
+
 
 	@Override
 	public void onClick(View v) {

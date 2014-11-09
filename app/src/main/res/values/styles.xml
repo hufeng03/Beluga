@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- the theme applied to the application or activity -->
+    <style name="BelugaTheme"
+        parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarTabStyle">@style/BelugaActionBarTabs</item>
+    </style>
+
+    <!-- ActionBar tabs styles -->
+    <style name="BelugaActionBarTabs"
+        parent="@android:style/Widget.Holo.ActionBar.TabView">
+        <!-- tab indicator -->
+        <item name="android:dividerPadding">10dp</item>
+        <item name="android:showDividers">middle</item>
+        <item name="android:background">@drawable/actionbar_tab_indicator</item>
+    </style>
     <style name="treeViewListStyle">
         <item name="android:background">@android:color/white</item>
         <item name="android:divider">@drawable/divider</item>

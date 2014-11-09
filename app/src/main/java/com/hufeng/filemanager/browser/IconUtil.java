@@ -93,11 +93,23 @@ public class IconUtil {
 
 
     private static Bitmap getImageThumbnailFromDatabase(long id) {
-        return MediaStore.Images.Thumbnails.getThumbnail(FileManager.getAppContext().getContentResolver(), id, MINI_KIND, null);
+        Bitmap bitmap = null;
+        try {
+            bitmap = MediaStore.Images.Thumbnails.getThumbnail(FileManager.getAppContext().getContentResolver(), id, MINI_KIND, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 
     private static Bitmap getVideoThumbnailFromDatabase(long id) {
-        return MediaStore.Video.Thumbnails.getThumbnail(FileManager.getAppContext().getContentResolver(), id, MINI_KIND, null);
+        Bitmap bitmap = null;
+        try{
+            bitmap = MediaStore.Video.Thumbnails.getThumbnail(FileManager.getAppContext().getContentResolver(), id, MINI_KIND, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 
     private static Bitmap getAudioThumbnailFromDatabase(long id) {

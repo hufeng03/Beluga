@@ -7,14 +7,12 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 
-import com.hufeng.filemanager.skin.SkinManager;
 import com.hufeng.filemanager.utils.LogUtil;
 
 public class BaseActivity extends FragmentActivity {
 
     private static final boolean DEBUG = BuildConfig.DEBUG;
 
-	private int mSkin = SkinManager.SKIN_BLACK;
 	
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -53,7 +51,6 @@ public class BaseActivity extends FragmentActivity {
 		if (DEBUG)
     		LogUtil.i(((Object)this).getClass().getSimpleName(), "onResume");
 		super.onResume();
-		changeSkinIfNeeded();
         if (Constants.USE_UMENG) {
 		    UmengDelegate.umengAnalysisResume(this);
         }
@@ -88,21 +85,6 @@ public class BaseActivity extends FragmentActivity {
     		LogUtil.i(((Object)this).getClass().getSimpleName(), "onDestroy");
 		super.onDestroy();
 	}
-	
-	private void changeSkinIfNeeded()
-	{
-		SharedPreferences sp  = PreferenceManager.getDefaultSharedPreferences(this);
-		int skin = sp.getInt(SkinManager.SKIN_SELECTION, SkinManager.SKIN_UNDEFINED);
-		if(mSkin!=skin)
-		{
-			setNewSkin(skin);
-			mSkin = skin;
-		}
-	}
-	
-	protected void setNewSkin(int skin)
-	{
-		
-	}
+
 
 }

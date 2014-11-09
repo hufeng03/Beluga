@@ -76,7 +76,8 @@ public class FileManagerTabActivity extends FileOperationActivity{
         TextView tv = new TextView(this);
         //set caption and caption appearance
         tv.setText(titleTextId);
-        tv.setTextColor(getResources().getColor(R.color.black));
+        //tv.setTextColor(getResources().getColor(R.color.tab_text_color));
+        tv.setTextColor(getResources().getColorStateList(R.color.tab_text_color));
         //set appearance of tab
         tv.setGravity(Gravity.CENTER);
         tv.setLayoutParams(new android.view.ViewGroup.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));

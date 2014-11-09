@@ -1,7 +1,9 @@
 package com.hufeng.filemanager.utils;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.os.Parcelable;
 
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.kanbox.KanBoxConfig;
@@ -10,13 +12,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IntentUtils {
+
+    public static Intent buildChooserIntent(String title, Intent intent, ResolveInfo[] apps) {
+        List<Intent> targetedShareIntents = new ArrayList<Intent>();
+        for (ResolveInfo app: apps) {
+            Intent targetedShareIntent = (Intent)intent.clone();
+            String pkg = app.activityInfo.packageName;
+            String cls = app.activityInfo.name;
+            targetedShareIntent.setPackage(pkg);
+            targetedShareIntent.setClassName(pkg, cls);
+            targetedShareIntents.add(targetedShareIntent);
+        }
+        Intent chooserIntent = Intent.createChooser(targetedShareIntents.remove(targetedShareIntents.size() - 1), title);
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetedShareIntents.toArray(new Parcelable[]{}));
+        return chooserIntent;
+    }
 	
 	public static ResolveInfo[] queryAvailableApps(Intent intent)
 	{
 		
 		List<ResolveInfo> resolveInfos = null;
 		try{
-			resolveInfos = FileManager.getAppContext().getPackageManager().queryIntentActivities (intent, 0); 
+			resolveInfos = FileManager.getAppContext().getPackageManager().queryIntentActivities(intent, 0);
 		}catch(Exception e)
 		{
 			e.printStackTrace();
