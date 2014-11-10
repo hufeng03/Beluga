@@ -70,23 +70,23 @@ public class IntentUtils {
 //	}
 
 	
-//	public static ResolveInfo[] filterOutMms(ResolveInfo[] apps)
-//	{
-//		List<ResolveInfo> resolveInfos = new ArrayList<ResolveInfo>();
-//		if(apps!=null)
-//		{
-//			for(ResolveInfo app:apps)
-//			{
-//				String pkg = app.activityInfo.applicationInfo.packageName;
-//				if(!"com.android.mms".equals(pkg))
-//				{
-//					resolveInfos.add(app);
-//				}
-//			}
-//		}
-//		ResolveInfo[] filtered_apps = (ResolveInfo[])resolveInfos.toArray(new ResolveInfo[0]);
-//		return filtered_apps;
-//	}
+	public static ResolveInfo[] filterOutMms(ResolveInfo[] apps)
+	{
+		List<ResolveInfo> resolveInfos = new ArrayList<ResolveInfo>();
+		if(apps!=null)
+		{
+			for(ResolveInfo app:apps)
+			{
+				String pkg = app.activityInfo.applicationInfo.packageName;
+				if(!"com.android.mms".equals(pkg))
+				{
+					resolveInfos.add(app);
+				}
+			}
+		}
+		ResolveInfo[] filtered_apps = (ResolveInfo[])resolveInfos.toArray(new ResolveInfo[0]);
+		return filtered_apps;
+	}
 //
 //	public static ResolveInfo[] filterOutBluetooth(ResolveInfo[] apps)
 //	{
