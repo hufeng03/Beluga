@@ -180,7 +180,7 @@ public class FTPServerService extends Service implements Runnable {
             }
         } catch (IOException e) {}
 
-//		UiUpdater.updateClients();
+		UiUpdater.updateClients();
         if(wifiLock != null) {
             wifiLock.release();
             wifiLock = null;
@@ -323,7 +323,7 @@ public class FTPServerService extends Service implements Runnable {
 
         // We should update the UI now that we have a socket open, so the UI
         // can present the URL
-//		UiUpdater.updateClients();
+		UiUpdater.updateClients();
 
         while(!shouldExit) {
             if(acceptWifi) {
