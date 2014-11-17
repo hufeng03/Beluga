@@ -520,7 +520,7 @@ public class FileOperation extends BaseFragment {
 		
 		Intent intent = FileAction.buildSendFile(context, mOperationPaths.toArray(new String[mOperationPaths.size()]));
 		ResolveInfo[] apps = IntentUtils.queryAvailableApps(intent);
-        String type = intent.getType();
+        String type = intent==null? null : intent.getType();
         if (TextUtils.isEmpty(type) || !type.startsWith("image/")) {
             apps = IntentUtils.filterOutMms(apps);
         }
