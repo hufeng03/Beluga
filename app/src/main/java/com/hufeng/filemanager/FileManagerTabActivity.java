@@ -154,7 +154,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
             mAppRate.init();
         }
 
-        if (!"hosin".equals(Constants.PRODUCT_FLAVOR_NAME)) {
+        if (!"hosin".equals(Constants.PRODUCT_FLAVOR_NAME) && !"google".equals(Constants.PRODUCT_FLAVOR_NAME) ) {
             showChinaTipDialog();
         }
 
