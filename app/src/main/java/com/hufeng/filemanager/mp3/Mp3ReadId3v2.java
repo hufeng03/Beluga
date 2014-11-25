@@ -1,5 +1,8 @@
 package com.hufeng.filemanager.mp3;
 
+import com.hufeng.filemanager.FileManager;
+import com.hufeng.filemanager.R;
+
 import org.mozilla.universalchardet.UniversalDetector;
 
 import java.io.IOException;
@@ -22,7 +25,8 @@ public class Mp3ReadId3v2 {
 
 	public Mp3ReadId3v2(InputStream in) {
 		this.mp3ips = in;
-		info = new Id3v2Info("未知", "未知", "未知", null);
+        String unknown = FileManager.getAppContext().getString(R.string.unknown);
+		info = new Id3v2Info(unknown, unknown, unknown, null);
 	}
 
 	public void readId3v2() throws Exception {
