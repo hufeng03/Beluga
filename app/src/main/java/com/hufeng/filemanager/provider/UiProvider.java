@@ -126,7 +126,7 @@ public class UiProvider {
     public static String[] getStorageDirs() {
         String[] files = StorageManager.getInstance(FileManager.getAppContext()).getMountedStorages();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
-        boolean show_root = preferences.getBoolean("SHOW_ROOT_DIR",true);
+        boolean show_root = preferences.getBoolean("SHOW_ROOT_DIR", false);
         if (RootHelper.isRootedPhone() && show_root) {
             int len = (files == null ? 0: files.length) + 1;
             String[] new_files = new String[len];
