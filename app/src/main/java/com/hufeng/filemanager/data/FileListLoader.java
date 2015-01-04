@@ -74,24 +74,6 @@ public class FileListLoader extends AsyncTaskLoader<List<FileEntry>> {
                     }
                 }
         }
-//        else {
-//            has_root_path = true;
-//            if (mType == FileBrowserFragment.BROWSER_TYPE.DEVICE) {
-//                files = StorageManager.getInstance(getContext()).getMountedStorages();
-//            } else if (mType == FileBrowserFragment.BROWSER_TYPE.FAVORITE) {
-//                files = FileUtils.getFavoriteFiles();
-//            } else if (mType == FileBrowserFragment.BROWSER_TYPE.DOWNLOAD) {
-//                files = FileUtils.getDownloadDirs();
-//            }
-//        }
-
-//        if (has_root_path == true && mType == FileBrowserFragment.BROWSER_TYPE.DEVICE) {
-//            boolean show_root_dir = PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("SHOW_ROOT_DIR",true);
-//            if (RootHelper.isRootedPhone() && show_root_dir) {
-//                FileEntry entry = new FileEntry("/");
-//                entries.add(entry);
-//            }
-//        }
 
         // Sort the list.
         FileSorter.SORTER sorter = FileSorter.getFileSorter(getContext(), FileUtils.FILE_TYPE_FILE);
