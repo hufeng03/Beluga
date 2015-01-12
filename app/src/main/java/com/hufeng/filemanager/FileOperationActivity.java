@@ -1,5 +1,6 @@
 package com.hufeng.filemanager;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -324,6 +325,10 @@ public abstract class FileOperationActivity extends BaseActivity implements
                 } else {
                     getFileOperation().onOperationAddToCloud(this);
                 }
+                break;
+            case R.id.file_operation_hotknot:
+//                Toast.makeText(this, "HotKnot share", Toast.LENGTH_SHORT).show();
+                getFileOperation().onOperationHotknotShare(this);
                 break;
             default:
                 break;

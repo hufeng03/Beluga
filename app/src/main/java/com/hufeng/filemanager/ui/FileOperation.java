@@ -1,6 +1,7 @@
 package com.hufeng.filemanager.ui;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +31,8 @@ public class FileOperation extends BaseFragment {
 
     public static final String TAG = "FileOperation";
     public static final String FILE_OPERATION_MODE_ARGUMENT = "file_operation_argument";
+
+    private static final String HOTKNOT_INTENT_EXTRA = "?intent=com.mediatek.hotknot.action.FILEMANAGER_FILE_RECEIVED&isMimeType=no";
 
     private FileOperationActivity mOperationActivity;
 //    private WeakReference<FileOperationProvider> mWeakProvider;
@@ -488,6 +491,31 @@ public class FileOperation extends BaseFragment {
         }
         if(mOperationPaths!=null && mOperationPaths.size()>0 ) {
             FmDialogFragment.showAddToCloudDialog(provider.getHostFragmentManager(), mOperationPaths.size(), mOperationPaths.get(0), directory_count, directory_path);
+        }
+    }
+
+    public void onOperationHotknotShare(Context context) {
+
+        if(mOperationPaths!=null && mOperationPaths.size() > 0)
+        {
+            Uri[] uris = new Uri[mOperationPaths.size()];
+            String fPath = mOperationPaths.get(0);
+            for(int i = 0; i< mOperationPaths.size(); i++)
+            {
+                if (0==i) {
+                    uris[i] = Uri.parse("file://"+fPath+HOTKNOT_INTENT_EXTRA);
+                } else {
+                    uris[i] = Uri.fromFile(new File(mOperationPaths.get(i)));
+                }
+            }
+            Intent sIntent= new Intent();
+            sIntent.setAction("com.mediatek.hotknot.action.SHARE");
+            sIntent.putExtra("com.mediatek.hotknot.extra.SHARE_URIS", uris);
+            try {
+                context.startActivity(sIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(context, R.string.no_hotknot, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

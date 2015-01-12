@@ -725,4 +725,6 @@ changed later by pressing the <b>Setup</b> button.</string> -->
     <item>@string/category_document</item>
 </string-array>
     <string name="ftp">FTP</string>
+    <string name="operation_hotknot">Hotknot Share</string>
+    <string name="no_hotknot">Hotknot share activity not found</string>
 </resources>

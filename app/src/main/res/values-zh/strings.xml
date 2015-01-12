@@ -703,4 +703,6 @@ changed later by pressing the <b>Setup</b> button.</string> -->
     <string name="long_press_to_select">请长按文件进行选择</string>
     <string name="click_to_select">请点击文件进行选择</string>
     <string name="ftp">FTP</string>
+    <string name="operation_hotknot">Hotknot分享</string>
+    <string name="no_hotknot">不支持Hotknot分享</string>
 </resources>
