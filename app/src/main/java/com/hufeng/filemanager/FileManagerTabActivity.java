@@ -65,8 +65,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
     private boolean mSelection = false;
 
     private Handler mHandler = new Handler();
-	
-//	private boolean mFirst = true;
+
     AppRate mAppRate = null;
 
     private int mOldItemId = -1;
@@ -91,10 +90,6 @@ public class FileManagerTabActivity extends FileOperationActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		checkUpgradeSlient();
-//		requestWindowFeature(Window.FEATURE_NO_TITLE);
-//		if(savedInstanceState!=null)
-//			mFirst = savedInstanceState.getBoolean("FIRST", true);
 	    
 		setContentView(R.layout.fragment_pager);
 
@@ -108,8 +103,6 @@ public class FileManagerTabActivity extends FileOperationActivity{
         mActionBar.setDisplayShowTitleEnabled(false);
         mActionBar.setDisplayShowHomeEnabled(false);
 
-//        final Tab selectedTab = getSupportActionBar().newTab().setText(
-//                R.string.selected);
 		final ActionBar.Tab categoryTab = mActionBar.newTab().
                 setCustomView(createTab(R.string.category));
         final ActionBar.Tab directoryTab = mActionBar.newTab().
@@ -126,8 +119,6 @@ public class FileManagerTabActivity extends FileOperationActivity{
         
         mTabAdapter = new TabAdapter(this, mViewPager);
 
-//        mTabAdapter.addTab(selectedTab,
-//                SelectedFragment.class, null);
         mTabAdapter.addTab(categoryTab,
         		CategoryTabFragment.class, null);
         mTabAdapter.addTab(directoryTab,
@@ -167,9 +158,6 @@ public class FileManagerTabActivity extends FileOperationActivity{
     @Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-//		outState.putInt("CATEGORY", mCategory);
-//		outState.putBoolean(mFirst, true);
-//		outState.putBoolean("FIRST", false);
 	}
 	
 	@Override
@@ -182,22 +170,12 @@ public class FileManagerTabActivity extends FileOperationActivity{
     protected void onResume() {
         super.onResume();
         InfoLoader.getInstance().resume();
-//        if(mViewPager.getCurrentItem()==FRAGMENT_INDEX_CATEGORY)
-//            mFileOperation.setFileOperationProvider((CategoryTabFragment)getCurrentFragment());
-//        else if(mViewPager.getCurrentItem()==FRAGMENT_INDEX_DEVICE)
-//            mFileOperation.setFileOperationProvider((DirectoryTabFragment)getCurrentFragment());
-//        else
-//            mFileOperation.setFileOperationProvider(null);
-        //mFileOperation.setSelection(mSelection);
-//        mFileOperation.setOperationMode(FileOperation.OPERATION_MODE.SELECT);
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         InfoLoader.getInstance().pause();
-//        mFileOperation.setListener(null);
     }
 
     @Override
@@ -415,6 +393,13 @@ public class FileManagerTabActivity extends FileOperationActivity{
                 if(position<count) {
                     mActionBar.setSelectedNavigationItem(position);
                     mActivity.get().refreshTabWithDelay();
+                }
+            }
+
+            if (position == 2) {
+//                Toast.makeText(mActivity.get(), "tab 3", Toast.LENGTH_SHORT).show();
+                if ("bodao".equals(Constants.PRODUCT_FLAVOR_NAME)) {
+                    mActivity.get().showChinaTipDialog();
                 }
             }
 
