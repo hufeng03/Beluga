@@ -8,6 +8,9 @@ import android.database.Cursor;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Logger;
+import com.google.android.gms.analytics.Tracker;
 import com.hufeng.filemanager.channel.DoovUtil;
 import com.hufeng.filemanager.provider.DataStructures.MatchColumns;
 import com.hufeng.filemanager.provider.DataStructures.PreferenceColumns;
@@ -16,10 +19,10 @@ import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.utils.OSUtil;
 import com.hufeng.filemanager.utils.PackageUtil;
 
-import be.ppareit.swiftp.FsApp;
+import java.util.HashMap;
 
 
-public class FileManager extends Application/* implements GalleryApp*/{
+public class FileManager extends Application {
 	
 	private static final String LOG_TAG = FileManager.class.getName();
 	
@@ -27,6 +30,11 @@ public class FileManager extends Application/* implements GalleryApp*/{
 	public static final String FILEMANAGER_LAST_SCAN = "filemanager_last_scan";
     
 	static FileManager mContext;
+
+    public static final String AUDIO_FILTER_SMALL = "Audio_Filter_Small";
+    public static final String IMAGE_FILTER_SMALL = "Image_Filter_Small";
+    public static final String SCAN_HIDDEN_FILES = "Scan_Hidden_Files";
+    public static final String SCAN_GAME_FILES = "Scan_Game_Files";
 	
 	
 	@Override
@@ -49,15 +57,6 @@ public class FileManager extends Application/* implements GalleryApp*/{
 		super.onCreate();
 		
 		mContext = this;
-
-        FsApp.setAppContext(mContext);
-
-        DoovUtil.initDoovVistor(this.getApplicationContext(), "FileManager", "onCreate");
-
-        //for play music ...............................
-//		mUtils = new MediaUtils(this);
-//		mServiceInterface = new ServiceInterface(this);
-		//..............................................
 				
         String name = OSUtil.getCurrProcessName(this);
         String pkgName = getPackageName();
@@ -84,56 +83,6 @@ public class FileManager extends Application/* implements GalleryApp*/{
 			edit.putBoolean("has_new_version", false);
             edit.putBoolean("need_new_refresh",true);
 			edit.putInt("PACKAGE_VERSION_CODE", PackageUtil.getVersionCode(this));
-//			String image_default_viewer = sp.getString("IMAGE_DEFAULT_VIEW_ACTIVITY", "");
-//			String audio_default_viewer = sp.getString("AUDIO_DEFAULT_VIEW_ACTIVITY", "");
-//			String video_default_viewer = sp.getString("VIDEO_DEFAULT_VIEW_ACTIVITY", "");
-//			boolean flag_image = false, flag_audio = false, flag_video = false;
-//			if(!TextUtils.isEmpty(image_default_viewer) && image_default_viewer.equals("com.hufeng.playimage.PlayImageActivity")){
-//				flag_image = true;
-//			}
-//			if(!TextUtils.isEmpty(audio_default_viewer) && audio_default_viewer.equals("com.hufeng.playmusic.PlayMusicActivity")){
-//				flag_audio = true;
-//			}
-//			if(!TextUtils.isEmpty(video_default_viewer) && video_default_viewer.equals("com.hufeng.playvideo.PlayVideoActivity")){
-//				flag_video = true;
-//			}
-//			if(flag_image || flag_audio || flag_video){
-//				boolean flag_image_exist = false,flag_audio_exist = false, flag_video_exist = false;
-//				try{
-//					PackageInfo packageInfo = getPackageManager().getPackageInfo("com.hufeng.filemanager", 0);
-//					ActivityInfo[] activities = packageInfo.activities;
-//					if(activities!=null){
-//						for(ActivityInfo activity:activities){
-//							if("com.hufeng.playimage.PlayImageActivity".equals(activity.name)){
-//								flag_image_exist = true;
-//							}
-//							if("com.hufeng.playmusic.PlayMusicActivity".equals(activity.name)){
-//								flag_audio_exist = true;
-//							}
-//							if("com.hufeng.playvideo.PlayVideoActivity".equals(activity.name)){
-//								flag_video_exist = true;
-//							}
-//							if((flag_image_exist || !flag_image) && (flag_audio_exist || !flag_audio) && (flag_video_exist || !flag_video)){
-//								break;
-//							}
-//						}
-//					}
-//				}catch(NameNotFoundException e){
-//					e.printStackTrace();
-//				}
-//				if(flag_image && !flag_image_exist){
-//					edit.putString("IMAGE_DEFAULT_VIEW_APP", "");
-//					edit.putString("IMAGE_DEFAULT_VIEW_ACTIVITY", "");
-//				}
-//				if(flag_audio && !flag_audio_exist){
-//					edit.putString("AUDIO_DEFAULT_VIEW_APP", "");
-//					edit.putString("AUDIO_DEFAULT_VIEW_ACTIVITY", "");
-//				}
-//				if(flag_video && !flag_video_exist){
-//					edit.putString("VIDEO_DEFAULT_VIEW_APP", "");
-//					edit.putString("VIDEO_DEFAULT_VIEW_ACTIVITY", "");
-//				}
-//			}
 			edit.commit();
         }
 
@@ -169,7 +118,6 @@ public class FileManager extends Application/* implements GalleryApp*/{
                         });
         }catch(IllegalArgumentException e){
         	e.printStackTrace();
-//        	System.exit(0);
         }catch(Exception e) {
             e.printStackTrace();
         }
@@ -185,7 +133,6 @@ public class FileManager extends Application/* implements GalleryApp*/{
                         PreferenceColumns.NAME + "=?", new String[] { name });
         }catch(IllegalArgumentException e){
         	e.printStackTrace();
-//        	System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -217,93 +164,36 @@ public class FileManager extends Application/* implements GalleryApp*/{
         LogUtil.e(LOG_TAG, "getPreference:" + name + "," + "def:" + defValues + "," + value);
         return value;
     }
-    
-    /**
-     * ****************************************************************************************
-     */
-    public static void setCategoryMatch(String name, int category) {
-        if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "setMatch:" + name + "," + category);
-        ContentValues values = new ContentValues();
-        values.put(MatchColumns.CATEGORY_FIELD, category);
-        try{
-        FileManager
-                .getAppContext()
-                .getContentResolver()
-                .update(MatchColumns.CONTENT_URI, values, MatchColumns.EXTENSION_FIELD + "=?",
-                        new String[] {
-                            name
-                        });
-        }catch(IllegalArgumentException e){
-        	e.printStackTrace();
-//        	System.exit(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-//    public static void removeMatch(String name) {
-//        if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "removePreference:" + name);
-//        try{
-//        FileManager
-//                .getAppContext()
-//                .getContentResolver()
-//                .delete(MatchColumns.CONTENT_URI,
-//                        MatchColumns.EXTENSION_FIELD + "=?", new String[] { name });
-//        }catch(IllegalArgumentException e){
-//        	e.printStackTrace();
-////        	System.exit(0);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public static String getCategoryMatch(String name, String defValues) {
-//        Cursor cursor = null;
-//        String value = defValues;
-//        try {
-//            cursor = FileManager
-//                    .getAppContext()
-//                    .getContentResolver()
-//                    .query(MatchColumns.CONTENT_URI, new String[] {
-//                            MatchColumns.CATEGORY_FIELD
-//                    }, MatchColumns.EXTENSION_FIELD + "=?", new String[] {
-//                            name
-//                    },
-//                            null);
-//            if (cursor != null && cursor.moveToFirst()) {
-//                value = cursor.getString(0);
-//            }
-//        } finally {
-//            if (cursor != null) {
-//                cursor.close();
-//            }
-//        }
-//        if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "getMatch:" + name + "," + "def:" + defValues + "," + value);
-//        return value;
-//    }
-
-//    //for play music .............................
-// 	private MediaUtils mUtils;
-//
-// 	private ServiceInterface mServiceInterface;
-//
-// 	public ServiceInterface getServiceInterface() {
-// 		return mServiceInterface;
-// 	}
-//
-// 	public MediaUtils getMediaUtils() {
-// 		return mUtils;
-// 	}
 
  	@Override
  	public void onTerminate() {
  		// TODO Auto-generated method stub
  		super.onTerminate();
-// 		mUtils = null;
  	}
  	//............................................
 
+    private static final String PROPERTY_ID = "UA-59522104-1";
 
+    public enum TrackerName {
+        APP_TRACKER, // Tracker used only in this app.
+//        GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
+//        ECOMMERCE_TRACKER, // Tracker used by all ecommerce transactions from a company.
+    }
+
+    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+
+    synchronized Tracker getTracker(TrackerName trackerId) {
+        if (!mTrackers.containsKey(trackerId)) {
+
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
+            Tracker t = analytics.newTracker(PROPERTY_ID);
+            t.enableAdvertisingIdCollection(true);
+            mTrackers.put(trackerId, t);
+        }
+        return mTrackers.get(trackerId);
+    }
 
 
 }

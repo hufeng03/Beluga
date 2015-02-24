@@ -40,10 +40,10 @@ public class DeviceAdapter extends ArrayAdapter<StorageUnit>{
 
         if (entry.isRemovable()) {
             name.setText(R.string.external_storage);
-            icon.setImageResource(R.drawable.sd_card_icon);
+            icon.setImageResource(R.drawable.ic_action_sd_card);
         } else {
             name.setText(R.string.internal_storage);
-            icon.setImageResource(R.drawable.phone_data_icon);
+            icon.setImageResource(R.drawable.ic_action_phone_android);
         }
 
         return view;

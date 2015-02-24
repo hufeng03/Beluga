@@ -237,43 +237,7 @@ public class StorageManager extends BroadcastReceiver{
 		}
 		return storage;
 	}
-	
-	/**
-	 * 
-	 * @param path
-	 * @return
-	 */
-	public long getAllSize(String path){
-		long size = 0L;
-		if( path != null ) {
-			for (StorageUnit unit : mStorageUnits) {
-				if ( path.equals(unit.path) ) {
-					size = unit.allSpace;
-					break;
-				}
-			}
-		}
-		return size;
-	}
-	
-	/**
-	 * 
-	 * @param path
-	 * @return
-	 */
-	public long getAvailableSize(String path){
-		long size = 0L;
-		if( path != null ) {
-			for (StorageUnit unit : mStorageUnits) {
-				if ( path.equals(unit.path) ) {
-					unit.availableSpace = StorageUtil.getAvailaleSize(unit.path);
-                    size = unit.availableSpace;
-					break;
-				}
-			}
-		}
-		return size;
-	}
+
 	
 	/**
 	 * 

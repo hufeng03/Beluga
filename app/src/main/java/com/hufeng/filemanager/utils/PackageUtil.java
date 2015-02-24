@@ -9,7 +9,7 @@ public class PackageUtil {
 	
 	public static int getVersionCode(Context context)
 	{
-		int verCode = -1;
+		int verCode = 0;
 		try{
 			String name = getPackageName(context);
 			verCode = context.getPackageManager().getPackageInfo(name, 0).versionCode;

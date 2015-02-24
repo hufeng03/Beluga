@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:beluga="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/file_operation_safe_delete"
+          android:icon="@drawable/ic_action_discard"
+          android:title="@string/operation_delete" />
+    <item android:id="@+id/file_operation_safe_move"
+        android:icon="@drawable/ic_action_lock_open"
+        android:title="@string/operation_move" />
+    <item android:id="@+id/file_operation_safe_selectall"
+          android:icon="@drawable/ic_action_select_all"
+          android:title="@string/operation_selectall" />
+</menu>

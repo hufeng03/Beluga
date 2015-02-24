@@ -14,8 +14,8 @@ import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
+import com.hufeng.filemanager.CategorySelectEvent;
 import com.hufeng.filemanager.FileManager;
-import com.hufeng.filemanager.SettingsScanActivity;
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.scan.ApkObject;
@@ -90,7 +90,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
 	}
 
     @Override
-    public void deleteUnexist(int type) throws RemoteException {
+    public void deleteUnexist(String type) throws RemoteException {
         if (!mIsScanning.get()) {
             mIsScanning.set(true);
             new DeleteUnexistTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, type);
@@ -102,7 +102,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
     private void performScan() {
         if (!mIsScanning.get()) {
             mIsScanning.set(true);
-            ServiceCallUiHelper.getInstance().scanStarted();
+//            ServiceCallUiHelper.getInstance().scanStarted();
             FileManager.setPreference(FileManager.FILEMANAGER_LAST_SCAN, System.currentTimeMillis()+"");
 
             new ScanTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -111,9 +111,9 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
         }
     }
 
-    private class DeleteUnexistTask extends AsyncTask<Integer, Void, Void> {
+    private class DeleteUnexistTask extends AsyncTask<String, Void, Void> {
         @Override
-        protected Void doInBackground(Integer... params) {
+        protected Void doInBackground(String... params) {
             deleteUnexistFiles(params[0]);
             return null;
         }
@@ -125,24 +125,25 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
         }
     }
 
-    private void deleteUnexistFiles(int type) {
-        switch (type) {
-            case FileUtils.FILE_TYPE_IMAGE:
+    private void deleteUnexistFiles(String type) {
+        CategorySelectEvent.CategoryType categoryType = CategorySelectEvent.CategoryType.valueOf(type);
+        switch (categoryType) {
+            case PHOTO:
                 clearUnexistFileInDatabase(DataStructures.ImageColumns.CONTENT_URI);
                 break;
-            case FileUtils.FILE_TYPE_AUDIO:
+            case AUDIO:
                 clearUnexistFileInDatabase(DataStructures.AudioColumns.CONTENT_URI);
                 break;
-            case FileUtils.FILE_TYPE_VIDEO:
+            case VIDEO:
                 clearUnexistFileInDatabase(DataStructures.VideoColumns.CONTENT_URI);
                 break;
-            case FileUtils.FILE_TYPE_APK:
+            case APK:
                 clearUnexistFileInDatabase(DataStructures.ApkColumns.CONTENT_URI);
                 break;
-            case FileUtils.FILE_TYPE_DOCUMENT:
+            case DOC:
                 clearUnexistFileInDatabase(DataStructures.DocumentColumns.CONTENT_URI);
                 break;
-            case FileUtils.FILE_TYPE_ZIP:
+            case ZIP:
                 clearUnexistFileInDatabase(DataStructures.ZipColumns.CONTENT_URI);
                 break;
 
@@ -174,7 +175,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             mIsScanning.set(false);
-            ServiceCallUiHelper.getInstance().scanCompleted();
+//            ServiceCallUiHelper.getInstance().scanCompleted();
         }
 
 
@@ -290,8 +291,8 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                                       ArrayList<String> audios, ArrayList<String> videos,
                                       ArrayList<String> apks, ArrayList<String> documents, ArrayList<String> zips) {
 
-        boolean filter_small_image = (FileManager.getPreference(SettingsScanActivity.IMAGE_FILTER_SMALL, "1") == "1");
-        boolean filter_small_audio = (FileManager.getPreference(SettingsScanActivity.AUDIO_FILTER_SMALL, "1") == "1");
+        boolean filter_small_image = (FileManager.getPreference(FileManager.IMAGE_FILTER_SMALL, "1") == "1");
+        boolean filter_small_audio = (FileManager.getPreference(FileManager.AUDIO_FILTER_SMALL, "1") == "1");
         if (dirs == null) {
             return;
         }
@@ -601,7 +602,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
             MediaStore.MediaColumns.WIDTH,
             MediaStore.MediaColumns.HEIGHT,
         };
-        String filter = FileManager.getPreference(SettingsScanActivity.IMAGE_FILTER_SMALL, "1");
+        String filter = FileManager.getPreference(FileManager.IMAGE_FILTER_SMALL, "1");
         if(filter.equals("0"))
         {
             mFilterSmallIcon = false;
@@ -645,7 +646,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                 MediaStore.Audio.AudioColumns.ARTIST
         };
         uri_fm = DataStructures.AudioColumns.CONTENT_URI;
-        filter = FileManager.getPreference(SettingsScanActivity.AUDIO_FILTER_SMALL, "1");
+        filter = FileManager.getPreference(FileManager.AUDIO_FILTER_SMALL, "1");
         if(filter.equals("0"))
         {
             mFilterSmallAudio = false;

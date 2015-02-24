@@ -217,6 +217,4 @@ public class DirectoryMonitorImpl {
             mHandler.sendMessageDelayed(msg, 1000);
         }
     }
-
-
 }

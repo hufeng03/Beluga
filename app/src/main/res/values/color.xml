@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Divider color for header separator -->
+    <color name="primary_text_color">#363636</color>
+    <color name="secondary_text_color">@color/dialtacts_secondary_text_color</color>
+    <color name="dialtacts_secondary_text_color">#737373</color>
+    <!-- Color of the background of the contact detail and editor pages -->
+    <color name="background_primary">#f9f9f9</color>
+
+    <color name="actionbar_background_color">@color/primary_color</color>
+    <color name="actionbar_background_color_dark">@color/primary_color_dark</color>
+    <color name="primary_color_dark">#0277bd</color>
+    <color name="primary_color">#0288d1</color>
+    <color name="actionbar_text_color">#ffffff</color>
+    <color name="actionbar_unselected_text_color">#a6ffffff</color>
+    <color name="tab_ripple_color">@color/tab_accent_color</color>
+    <color name="tab_accent_color">#ffffff</color>
+    <color name="tab_selected_underline_color">@color/tab_accent_color</color>
+    <!-- Text color of the search box text as entered by user  -->
+    <color name="searchbox_text_color">#000000</color>
+    <!-- Background color of the search box -->
+    <color name="searchbox_background_color">#ffffff</color>
+
+    <color name="searchbox_hint_text_color">#737373</color>
+    <color name="searchbox_icon_tint">@color/searchbox_hint_text_color</color>
+
+    <color name="search_shortcut_background_color">#b6b6b6</color>
+    <color name="search_shortcut_icon_color">#f8f8f8</color>
+
     <color name="primary">#ffff00</color>
     <color name="primary_dark">#00ffff</color>
     <color name="accent">#ff00ff</color>
@@ -16,6 +44,7 @@
     <color name="naming">#ffababab</color>
     <color name="blue">#ff0000ff</color>
     <color name="red">#ffff0000</color>
+    <color name="green">#ff00ff00</color>
     <color name="background">#ff272727</color>
     <color name="orange_yellow">#ff9b9ba0</color>
     <color name="remote_connect_text">#ffe78018</color>
@@ -49,4 +78,36 @@
     <color name="game_download_progress_color">#00ff00</color>
     <color name="button_bg_pressed">#4593ce</color>
     <color name="button_bg_normal">#2fb0d6</color>
+    <color name="actionbar_icon_color">#ffffff</color>
+    <color name="dialtacts_theme_color">#0288d1</color>
+    <color name="button_disabled">#ddd</color>
+    <color name="list_divider_color">#10000000</color>
+    <color name="semi_transparent_cover">#10000000</color>
+    <color name="statusbar_color_cab">#212121</color>
+    <color name="m_entry">@android:color/white</color>
+    <color name="m_entry_active">#22000000</color>
+    <color name="m_entry_pressed">#ffff9900</color>
+    <color name="m_entry_focused">@color/m_entry_pressed</color>
+    <color name="m_entry_selected">@color/m_entry_pressed</color>
+    <color name="m_entry_disabled_focused">@color/m_material_grey_300</color>
+    <color name="m_entry_text_primary">@color/m_app_primary_text</color>
+    <color name="m_entry_text_secondary">@color/m_app_secondary_text</color>
+    <color name="m_material_grey_50">#fffafafa</color>
+    <color name="m_material_grey_100">#fff5f5f5</color>
+    <color name="m_material_grey_200">#ffeeeeee</color>
+    <color name="m_material_grey_300">#ffe0e0e0</color>
+    <color name="m_material_grey_300_with_tiny_alpha">#fee0e0e0</color>
+    <color name="m_material_grey_400">#ffbdbdbd</color>
+    <color name="m_material_grey_500">#ff9e9e9e</color>
+    <color name="m_material_grey_600">#ff757575</color>
+    <color name="m_material_grey_700">#ff616161</color>
+    <color name="m_cool_grey_70">#ff4c4c4c</color>
+    <color name="m_app_primary_text">@color/m_cool_grey_70</color>
+    <color name="m_app_primary_inverse_text">@android:color/white</color>
+    <color name="m_app_primary_action_text">#ff0091ea</color>
+    <color name="m_add_collaborator_background_alpha_hack">@color/m_material_grey_300_with_tiny_alpha</color>
+    <color name="m_app_secondary_text">@color/m_material_grey_600</color>
+    <color name="beluga_accent_color_lighter">#f06292</color>
+    <color name="beluga_accent_color">#e91e63</color>
+    <color name="beluga_accent_color_darker">#d81b60</color>
 </resources>

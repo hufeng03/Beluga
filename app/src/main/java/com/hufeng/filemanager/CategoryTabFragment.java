@@ -1,37 +1,40 @@
 package com.hufeng.filemanager;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.database.ContentObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.provider.DataStructures;
-import com.hufeng.filemanager.provider.UiProvider;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.hufeng.filemanager.browser.FileEntry;
+import com.squareup.otto.Subscribe;
 
-import java.io.File;
 
 
 public class CategoryTabFragment extends FileTabFragment {
 
 	private static final String CATEGORY_TYPE = "category_type";
-    private int mCategory = FileUtils.FILE_TYPE_ALL;
+    private static final String FOLDER_PATH = "folder_path";
+    private CategorySelectEvent.CategoryType mCategory = CategorySelectEvent.CategoryType.NONE;
     private Fragment mCategoryFragment;
-    ContentObserver mContentObserver;
+
+    private String mFolderPath;
 
     @Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            String categoryValue = savedInstanceState.getString(CATEGORY_TYPE);
+            if (categoryValue != null) {
+                mCategory = CategorySelectEvent.CategoryType.valueOf(categoryValue);
+            }
+            mFolderPath = savedInstanceState.getString(FOLDER_PATH);
+        }
 	}
 
 	@Override
@@ -42,7 +45,8 @@ public class CategoryTabFragment extends FileTabFragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-        outState.putInt(CATEGORY_TYPE, mCategory);
+        outState.putString(CATEGORY_TYPE, mCategory.toString());
+        outState.putString(FOLDER_PATH, mFolderPath);
 	}
 
 	@Override
@@ -56,23 +60,7 @@ public class CategoryTabFragment extends FileTabFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-        if (savedInstanceState != null) {
-            mCategory = savedInstanceState.getInt(CATEGORY_TYPE, FileUtils.FILE_TYPE_ALL);
-        }
-        showSingleCategoryPanel(mCategory);
-
-        mContentObserver = new ContentObserver(null) {
-            @Override
-            public void onChange(boolean selfChange) {
-//                LogUtil.i(TAG, "receive onChange");
-                super.onChange(selfChange);
-                if (mCategory == FileUtils.FILE_TYPE_FAVORITE && mCurrentChildFragment!=null) {
-                    ((FileBrowserFragment)mCurrentChildFragment).setInitDirs( UiProvider.getFavoriteFiles() );
-                }
-            }
-        };
-
-        getActivity().getContentResolver().registerContentObserver(DataStructures.FavoriteColumns.CONTENT_URI, true, mContentObserver);
+        showSingleCategoryPanel();
 	}
 	
 	@Override
@@ -80,46 +68,38 @@ public class CategoryTabFragment extends FileTabFragment {
 		super.onActivityCreated(savedInstanceState);
 
 	}
-
-
-    BroadcastReceiver mEventReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() == CategorySelectEvent.INTENT_ACTION) {
-                CategorySelectEvent event = new CategorySelectEvent(intent);
-                onCategorySelected(event);
-            }
-        }
-    };
 	
 	@Override
 	public void onResume(){
 		super.onResume();
-//        BusProvider.getInstance().register(this);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mEventReceiver, new IntentFilter(CategorySelectEvent.INTENT_ACTION));
+        BusProvider.getInstance().register(this);
 	}
 	
 	@Override
 	public void onPause(){
 		super.onPause();
- //       BusProvider.getInstance().unregister(this);
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mEventReceiver);
+        BusProvider.getInstance().unregister(this);
 	}
 
-//    @Subscribe
+    @Subscribe
     public void onCategorySelected(CategorySelectEvent event) {
         if (event != null) {
             mCategory = event.category;
-            showSingleCategoryPanel(mCategory);
+            showSingleCategoryPanel();
+        }
+    }
+
+    @Subscribe
+    public void onFolderOpen(FolderOpenEvent event) {
+        if (event != null) {
+            mFolderPath = event.entry.path;
+            toFileBrowser();
         }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (mContentObserver != null) {
-            getActivity().getContentResolver().unregisterContentObserver(mContentObserver);
-        }
     }
 
     @Override
@@ -127,194 +107,175 @@ public class CategoryTabFragment extends FileTabFragment {
         if ( super.onBackPressed() ){
             return true;
         }
-        if (mCategoryFragment == null) {
-            showCategoryPanel();
-            return true;
-        }
-
-		return false;
-	}
-
-    public void showCategoryPanel() {
-        final FragmentManager fm = getChildFragmentManager();
-        final FragmentTransaction ft = fm.beginTransaction();
-        CategoryFragment fragment = (CategoryFragment) getChildFragmentManager().findFragmentByTag(CategoryFragment.class.getSimpleName());
-        if (fragment == null) {
-            fragment = new CategoryFragment();
-            ft.replace(R.id.fragment_container, fragment, CategoryFragment.class.getSimpleName());
-        } else {
-            if (fragment.isDetached()) {
-                ft.attach(fragment);
-            }
-        }
-        ft.commit();
-        mCategory = FileUtils.FILE_TYPE_ALL;
-        mCategoryFragment = fragment;
-        mCurrentChildFragment = null;
-	}
-
-
-    private void toFileGrouper(int category) {
-        final FragmentManager fm = getChildFragmentManager();
-        final FragmentTransaction ft = fm.beginTransaction();
-        FileGrouperFragment fragment = (FileGrouperFragment) fm.findFragmentByTag(FileGrouperFragment.class.getSimpleName());
-        if(fragment == null) {
-            fragment = FileGrouperFragment.newCategoryGrouperInstance(category);
-            ft.replace(R.id.fragment_container, fragment, FileGrouperFragment.class.getSimpleName());
-        } else {
-            if (fragment.isDetached()) {
-                ft.attach(fragment);
-            }
-        }
-//        ft.addToBackStack(null);
-        ft.commit();
-        fragment.setListener(this);
-        mCurrentChildFragment = fragment;
-        mCategoryFragment = null;
-    }
-
-    private void toFileBrowser(int type) {
-        final FragmentManager fm = getChildFragmentManager();
-        final FragmentTransaction ft = fm.beginTransaction();
-        FileBrowserFragment fragment = (FileBrowserFragment) fm.findFragmentByTag(FileBrowserFragment.class.getSimpleName());
-        if (fragment == null) {
-            if (FileUtils.FILE_TYPE_DOWNLOAD == type) {
-                fragment = FileBrowserFragment.newDownloadBrowser();
-            } else if (FileUtils.FILE_TYPE_FAVORITE == type) {
-                fragment = FileBrowserFragment.newFavoriteBrowser();
-            }
-
-            ft.replace(R.id.fragment_container, fragment, FileBrowserFragment.class.getSimpleName());
-        } else {
-            if (fragment.isDetached()) {
-                ft.attach(fragment);
-            }
-        }
-        ft.commit();
-        fragment.setListener(this);
-        mCurrentChildFragment = fragment;
-        mCategoryFragment = null;
-    }
-
-    private void toAppManager() {
-        final FragmentManager fm = getChildFragmentManager();
-        final FragmentTransaction ft = fm.beginTransaction();
-        AppManagerFragment fragment = (AppManagerFragment) fm.findFragmentByTag(AppManagerFragment.class.getSimpleName());
-        if (fragment == null) {
-            fragment = new AppManagerFragment();
-            ft.replace(R.id.fragment_container, fragment, AppManagerFragment.class.getSimpleName());
-        } else {
-            if (fragment.isDetached()) {
-                ft.attach(fragment);
-            }
-        }
-//        ft.addToBackStack(null);
-        ft.commit();
-        mCurrentChildFragment = fragment;
-        mCategoryFragment = null;
-    }
-
-    private void toResourceFragment(int category) {
-        final FragmentManager fm = getChildFragmentManager();
-        final FragmentTransaction ft = fm.beginTransaction();
-        ResourceFragment fragment = (ResourceFragment) fm.findFragmentByTag(ResourceFragment.class.getSimpleName());
-        if(fragment == null) {
-            fragment = new ResourceFragment();
-            Bundle data = new Bundle();
-            if (FileUtils.FILE_TYPE_RESOURCE_GAME == category) {
-                data.putInt(ResourceFragment.RESOURCE_FRAGMENT_ARGUMENT_TYPE, ResourceType.GAME.ordinal());
-            } else if (FileUtils.FILE_TYPE_RESOURCE_APP == category) {
-                data.putInt(ResourceFragment.RESOURCE_FRAGMENT_ARGUMENT_TYPE, ResourceType.APP.ordinal());
-            } else if (FileUtils.FILE_TYPE_RESOURCE_DOC == category) {
-                data.putInt(ResourceFragment.RESOURCE_FRAGMENT_ARGUMENT_TYPE, ResourceType.DOC.ordinal());
-            }
-            fragment.setArguments(data);
-            ft.replace(R.id.fragment_container, fragment, ResourceFragment.class.getSimpleName());
-        } else {
-            if (fragment.isDetached()) {
-                ft.attach(fragment);
-            }
-        }
-//        ft.addToBackStack(null);
-        ft.commit();
-        mCurrentChildFragment = fragment;
-        mCategoryFragment = null;
-    }
-
-    private boolean showSingleCategoryPanel(int category) {
-        boolean result = true;
-        switch(category) {
-            case FileUtils.FILE_TYPE_ALL:
-                showCategoryPanel();
-                break;
-            case FileUtils.FILE_TYPE_APP:
-                toAppManager();
-                break;
-            case FileUtils.FILE_TYPE_FAVORITE:
-                toFileBrowser(category);
-                break;
-            case FileUtils.FILE_TYPE_DOWNLOAD:
-                toFileBrowser(category);
-                break;
-            case FileUtils.FILE_TYPE_RESOURCE_GAME:
-            case FileUtils.FILE_TYPE_RESOURCE_APP:
-            case FileUtils.FILE_TYPE_RESOURCE_DOC:
-                toResourceFragment(category);
-                break;
-            case FileUtils.FILE_TYPE_AUDIO:
-            case FileUtils.FILE_TYPE_IMAGE:
-            case FileUtils.FILE_TYPE_VIDEO:
-            case FileUtils.FILE_TYPE_APK:
-            case FileUtils.FILE_TYPE_DOCUMENT:
-            case FileUtils.FILE_TYPE_ZIP:
-                toFileGrouper(category);
-                break;
-            case FileUtils.FILE_TYPE_CLOUD:
-                Activity activity = getActivity();
-                if(activity instanceof FileManagerTabActivity) {
-                    ((FileManagerTabActivity)activity).gotoCloud();
+        switch (mCategory) {
+            case DOWNLOAD:
+                if (!TextUtils.isEmpty(mFolderPath)) {
+                    toDownloadList();
+                    mFolderPath  = null;
+                    return true;
                 }
                 break;
+            case FAVORITE:
+                if (!TextUtils.isEmpty(mFolderPath)) {
+                    toFileGrouper();
+                    mFolderPath  = null;
+                    return true;
+                }
+                break;
+            case NONE:
+                return false;
             default:
-                result = false;
                 break;
         }
-        return result;
+        mCategory = CategorySelectEvent.CategoryType.NONE;
+        showSingleCategoryPanel();
+
+		return true;
+	}
+
+    private void toCategoryPanel() {
+        final FragmentManager fm = getChildFragmentManager();
+        final FragmentTransaction ft = fm.beginTransaction();
+        NewCategoryFragment fragment = (NewCategoryFragment) getChildFragmentManager().findFragmentByTag(NewCategoryFragment.class.getSimpleName());
+        if (fragment == null) {
+            fragment = new NewCategoryFragment();
+            ft.replace(R.id.fragment_container, fragment, NewCategoryFragment.class.getSimpleName());
+        } else {
+            if (fragment.isDetached()) {
+                ft.attach(fragment);
+            }
+        }
+        ft.commit();
+        mCategoryFragment = fragment;
+        mCurrentChildFragment = null;
+        mCategory = CategorySelectEvent.CategoryType.NONE;
+
+        Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
+        t.setScreenName("Category Panel");
+        t.send(new HitBuilders.AppViewBuilder().build());
+	}
+
+
+    private void toFileGrouper() {
+        final FragmentManager fm = getChildFragmentManager();
+        final FragmentTransaction ft = fm.beginTransaction();
+        final String tag = "FileGrouper";
+        FileGrouperFragment fragment = (FileGrouperFragment) fm.findFragmentByTag(tag);
+        if(fragment == null) {
+            fragment = FileGrouperFragment.newCategoryGrouperInstance(mCategory);
+            ft.replace(R.id.fragment_container, fragment, tag);
+        } else {
+            if (fragment.isDetached()) {
+                ft.attach(fragment);
+            }
+        }
+        ft.commit();
+        mCurrentChildFragment = fragment;
+        mCategoryFragment = null;
+
+        Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
+        t.setScreenName("File Grouper: "+mCategory);
+        t.send(new HitBuilders.AppViewBuilder().build());
+    }
+
+    private void toDownloadList() {
+        final FragmentManager fm = getChildFragmentManager();
+        final FragmentTransaction ft = fm.beginTransaction();
+        final String tag = "DownloadList";
+        NewDownloadFragment fragment = (NewDownloadFragment) fm.findFragmentByTag(tag);
+        if (fragment == null) {
+            fragment = new NewDownloadFragment();
+            ft.replace(R.id.fragment_container, fragment, tag);
+            ft.commit();
+        } else {
+            if (fragment.isDetached()) {
+                ft.attach(fragment);
+                ft.commit();
+            }
+        }
+        mCurrentChildFragment = fragment;
+        mCategoryFragment = null;
+
+        Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
+        t.setScreenName("Download List: "+mCategory);
+        t.send(new HitBuilders.AppViewBuilder().build());
+    }
+
+    private void toFileBrowser() {
+        final FragmentManager fm = getChildFragmentManager();
+        final FragmentTransaction ft = fm.beginTransaction();
+        final String tag = "FileBrowser";
+        FileBrowserFragment fragment = (FileBrowserFragment) fm.findFragmentByTag(tag);
+        if (fragment == null) {
+            fragment = FileBrowserFragment.newRootFolderBrowser(mFolderPath);
+            ft.replace(R.id.fragment_container, fragment, tag);
+            ft.commit();
+        } else {
+            if (fragment.isDetached()) {
+                ft.attach(fragment);
+                ft.commit();
+            }
+        }
+        mCurrentChildFragment = fragment;
+        mCategoryFragment = null;
+
+        Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
+        t.setScreenName("File Browser: "+mCategory);
+        t.send(new HitBuilders.AppViewBuilder().build());
+    }
+
+    private void showSingleCategoryPanel() {
+        switch(mCategory) {
+            case NONE:
+                toCategoryPanel();
+                break;
+            case FAVORITE:
+                if (TextUtils.isEmpty(mFolderPath)) {
+                    toFileGrouper();
+                } else {
+                    toFileBrowser();
+                }
+                break;
+            case DOWNLOAD:
+                if (TextUtils.isEmpty(mFolderPath)) {
+                    toDownloadList();
+                } else {
+                    toFileBrowser();
+                }
+                break;
+            case AUDIO:
+            case PHOTO:
+            case VIDEO:
+            case APK:
+            case DOC:
+            case ZIP:
+                toFileGrouper();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
-    public void refreshFiles() {
+    protected void showInitialState() {
+        super.showInitialState();
+        toCategoryPanel();
+    }
+
+    @Override
+    public void refreshUI() {
         if(mCurrentChildFragment != null) {
             mCurrentChildFragment.refreshUI();
         }
-//        getActivity().supportInvalidateOptionsMenu();
     }
 
     @Override
-    public String[] getAllFiles() {
+    public FileEntry[] getAllFiles() {
         if(mCurrentChildFragment != null) {
             return mCurrentChildFragment.getAllFiles();
         } else {
             return null;
         }
     }
-
-    @Override
-    public String getParentFile() {
-        if(mCurrentChildFragment != null) {
-            return mCurrentChildFragment.getParentFile();
-        } else {
-            return null;
-        }
-    }
-
-//    @Override
-//    public void onBackStackChanged() {
-//       mCurrentChildFragment = (SherlockFragment)getChildFragmentManager().findFragmentById(R.id.fragment_container);
-//       if (mCurrentChildFragment instanceof CategoryFragment) {
-//            ((CategoryFragment)mCurrentChildFragment).setListener(this);
-//       }
-//    }
-
 
 }

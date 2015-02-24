@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 
-public class SettingsItemBaseActivity extends BaseActivity{
+public class SettingsItemBaseActivity extends BelugaBaseActionBarActivity {
 	
 	@Override
 	protected void onCreate(Bundle arg0) {

@@ -1,135 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/file_items"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:minHeight="52dip"
-    android:padding="8dip" >
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    android:elevation="2dp"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardCornerRadius="4dp">
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        >
-    <ImageView
-        android:id="@+id/appicon"
-        android:layout_width="36dip"
-        android:layout_height="36dip"
-        android:layout_marginRight="8dip"
-        android:adjustViewBounds="true"
-        android:duplicateParentState="true"
-        android:scaleType="centerInside"
-        android:layout_alignParentLeft="true"
-        android:src="@drawable/file_icon_file" />
-    
-    <LinearLayout
-        android:id="@+id/app_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentRight="true"
-        android:gravity="right"
-        android:layout_marginRight="10dip"
-        >
-                <TextView
-            android:id="@+id/app_running"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-		android:text="@string/app_running"
-		android:textColor="@color/list_item_name_color"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="4dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="4dp">
+
+        <!--the icon should be 32dp*32dp-->
+        <com.hufeng.playimage.BelugaLazyLoadImageView
+            android:id="@+id/icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:adjustViewBounds="true"
+            android:duplicateParentState="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/file_icon_file" />
+
+        <ImageView
+            android:id="@+id/overflow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            style="@style/BelugaCardOverflow"
+            />
+
         <TextView
-            android:id="@+id/app_mem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/list_item_name_color"
-        />
-        </LinearLayout>
-        
-    <LinearLayout
-        android:id="@+id/appdetail"
-        android:layout_weight="1.0"
-        android:layout_width="0.0dip"
-        android:layout_height="fill_parent"
-        android:duplicateParentState="true"
-        android:gravity="center_vertical"
-        android:layout_toRightOf="@id/appicon"
-        android:layout_toLeftOf="@id/app_info"
-        android:orientation="vertical" >
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:text=""
+            android:textColor="@color/file_info_normal"
+            android:textSize="12sp"
+            android:paddingRight="6dp"
+            android:visibility="visible" />
+
+        <!--TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:background="@drawable/button_bg"
+            android:gravity="center"
+            android:minWidth="54dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="visible" /!-->
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            >
-        <TextView
-            android:id="@+id/appname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:duplicateParentState="true"
-            android:ellipsize="marquee"
-            android:maxLines="1"
-            android:textColor="@color/list_item_name_color"
-            android:textSize="14sp" />
-        <TextView
-            android:id="@+id/appsystem"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:duplicateParentState="true"
-            android:ellipsize="marquee"
-            android:maxLines="1"
-            android:textColor="@color/list_item_name_color"
-            android:textSize="14sp" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/overflow"
+            android:layout_toRightOf="@id/icon"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="name of the item"
+                android:textColor="@color/file_name_normal"
+                android:textSize="16sp"
+                />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="info of the item"
+                android:textColor="@color/file_info_normal"
+                android:textSize="12sp" />
+
+            <!--ProgressBar
+                android:id="@+id/progress"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="4dp"
+                android:progress="0"
+                android:progressDrawable="@drawable/progress_bar_bg" /!-->
+
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            >
-        	<TextView
-            android:id="@+id/appversion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:duplicateParentState="true"
-            android:textColor="@color/list_item_info_color"
-            android:textSize="10sp" />
-           	<TextView
-            android:id="@+id/appsize"
-            android:layout_marginLeft="10dip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:duplicateParentState="true"
-            android:textColor="@color/list_item_info_color"
-            android:textSize="10sp" />
-           	<TextView
-            android:id="@+id/appstorage"
-            android:layout_marginLeft="10dip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:duplicateParentState="true"
-            android:textColor="@color/list_item_info_color"
-            android:textSize="10sp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <!--Button 
-        android:id="@+id/appremove" 
-        android:focusable="false" 
-        android:layout_marginLeft="8dip"
-        android:layout_marginTop="8dip"
-        android:layout_marginBottom="8dip"
-        android:layout_width="wrap_content" 
-        android:layout_height="fill_parent" 
-        android:text="@string/app_remove" /-->
     </RelativeLayout>
-    <TextView
-        android:id="@+id/appprocesses"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/gray"
-        />
-    
-
-</LinearLayout>
+</android.support.v7.widget.CardView>

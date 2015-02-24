@@ -1,9 +1,11 @@
 package com.hufeng.filemanager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -15,47 +17,39 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.provider.DataStructures;
-import com.hufeng.filemanager.provider.DataStructures.CategoryColumns;
 import com.hufeng.filemanager.services.IUiImpl;
 import com.hufeng.filemanager.services.UiCallServiceHelper;
 import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.utils.FileUtil;
 import com.hufeng.filemanager.utils.LogUtil;
-import com.hufeng.filemanager.view.CategoryBar;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class CategoryFragment extends BaseFragment implements OnClickListener,
-        IUiImpl.UiCallback,
+public class CategoryFragment extends Fragment implements OnClickListener,
         LoaderManager.LoaderCallbacks<Cursor>{
 
 	private static final String LOG_TAG = CategoryFragment.class.getSimpleName();
 
-    LinearLayout mCategoryOthersPanel;
-    LinearLayout mCategorySelectedPanel;
 	LinearLayout mSDCardMiss;
+
 	LinearLayout mCategoryMusic;
 	LinearLayout mCategoryVideo;
 	LinearLayout mCategoryPicture;
-	LinearLayout mCategoryDownload;
 	LinearLayout mCategoryDocument;
 	LinearLayout mCategoryZip;
 	LinearLayout mCategoryApk;
+    LinearLayout mCategoryDownload;
 	LinearLayout mCategoryFavorite;
 	LinearLayout mCategoryApp;
-    LinearLayout mCategorySelectedGame;
-    LinearLayout mCategorySelectedApp;
-    LinearLayout mCategorySelectedDoc;
+    LinearLayout mCategorySafe;
+    LinearLayout mCategoryCloud;
 	
 	TextView mCategoryMusicCountInfo;
 	TextView mCategoryVideoCountInfo;
@@ -63,14 +57,6 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	TextView mCategoryDocumentCountInfo;
 	TextView mCategoryZipCountInfo;
 	TextView mCategoryApkCountInfo;
-	TextView mCategoryFavoriteCount;
-	TextView mCategoryAppCount;
-	TextView mCategoryDownloadCount;
-    TextView mCategorySelectedGameCount;
-    TextView mCategorySelectedAppCount;
-    TextView mCategorySelectedDocCount;
-	
-	LinearLayout mInformationLayout;
 	
 	private static final int LOADER_ID_CATEGORY = 1;
 
@@ -91,9 +77,6 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-        mCategoryOthersPanel = (LinearLayout)view.findViewById(R.id.category_others_panel);
-        mCategorySelectedPanel = (LinearLayout)view.findViewById(R.id.category_selected_panel);
-		mInformationLayout = (LinearLayout)view.findViewById(R.id.information_panel);
 		mSDCardMiss = (LinearLayout)view.findViewById(R.id.sd_not_available_page);
 		mCategoryMusic = (LinearLayout)view.findViewById(R.id.category_music);
 		mCategoryVideo = (LinearLayout)view.findViewById(R.id.category_video);
@@ -104,22 +87,15 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 		mCategoryApk = (LinearLayout)view.findViewById(R.id.category_apk);
 		mCategoryFavorite = (LinearLayout)view.findViewById(R.id.category_favorite);
 		mCategoryApp = (LinearLayout)view.findViewById(R.id.category_app);
-        mCategorySelectedGame = (LinearLayout)view.findViewById(R.id.category_selected_game);
-        mCategorySelectedApp = (LinearLayout)view.findViewById(R.id.category_selected_app);
-        mCategorySelectedDoc = (LinearLayout)view.findViewById(R.id.category_selected_doc);
+        mCategorySafe = (LinearLayout)view.findViewById(R.id.category_safe);
+        mCategoryCloud = (LinearLayout)view.findViewById(R.id.category_cloud);
 
 		mCategoryMusicCountInfo = (TextView)view.findViewById(R.id.category_music_count);
 		mCategoryVideoCountInfo = (TextView)view.findViewById(R.id.category_video_count);
 		mCategoryPictureCountInfo = (TextView)view.findViewById(R.id.category_picture_count);
-		mCategoryDownloadCount = (TextView)view.findViewById(R.id.category_download_count);
 		mCategoryDocumentCountInfo = (TextView)view.findViewById(R.id.category_document_count);
 		mCategoryZipCountInfo = (TextView)view.findViewById(R.id.category_zip_count);
 		mCategoryApkCountInfo = (TextView)view.findViewById(R.id.category_apk_count);
-		mCategoryFavoriteCount = (TextView)view.findViewById(R.id.category_favorite_count);
-		mCategoryAppCount = (TextView)view.findViewById(R.id.category_app_count);
-        mCategorySelectedGameCount = (TextView)view.findViewById(R.id.category_selected_game_count);
-        mCategorySelectedAppCount = (TextView)view.findViewById(R.id.category_selected_app_count);
-        mCategorySelectedDocCount = (TextView)view.findViewById(R.id.category_selected_doc_count);
 		
 		mCategoryMusic.setOnClickListener(this);
 		mCategoryVideo.setOnClickListener(this);
@@ -130,39 +106,14 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 		mCategoryApk.setOnClickListener(this);
 		mCategoryApp.setOnClickListener(this);
 		mCategoryFavorite.setOnClickListener(this);
-        mCategorySelectedGame.setOnClickListener(this);
-        mCategorySelectedApp.setOnClickListener(this);
-        mCategorySelectedDoc.setOnClickListener(this);
-
-        if (Constants.SHOW_SELECTED_CATEGORY) {
-            mCategoryOthersPanel.setVisibility(View.GONE);
-            mCategorySelectedPanel.setVisibility(View.VISIBLE);
-            if (Constants.SHOW_KANBOX_CATEGORY) {
-                ((ImageView)mCategoryZip.findViewById(R.id.category_zip_icon)).setImageResource(R.drawable.file_category_icon_kanbox);
-                ((TextView)mCategoryZip.findViewById(R.id.category_zip_name)).setText(R.string.kanbox);
-                mCategoryZip.setId(R.id.category_kanbox);
-                mCategoryZip.findViewById(R.id.category_zip_count).setVisibility(View.GONE);
-            }
-        } else {
-            if (Constants.SHOW_KANBOX_CATEGORY) {
-                ((ImageView)mCategoryApp.findViewById(R.id.category_app_icon)).setImageResource(R.drawable.file_category_icon_kanbox);
-                ((TextView)mCategoryApp.findViewById(R.id.category_app_name)).setText(R.string.kanbox);
-                mCategoryApp.setId(R.id.category_kanbox);
-            }
-        }
-
-
+        mCategorySafe.setOnClickListener(this);
+        mCategoryCloud.setOnClickListener(this);
 
         if (getLoaderManager().getLoader(LOADER_ID_CATEGORY) != null) {
 		    getLoaderManager().restartLoader(LOADER_ID_CATEGORY, null, this);
         } else {
             getLoaderManager().initLoader(LOADER_ID_CATEGORY, null, this);
         }
-
-//        if(Constants.PRODUCT_FLAVOR_NAME.equals("chenxiang")) {
-            mInformationLayout.setVisibility(View.INVISIBLE);
-            view.findViewById(R.id.information_label).setVisibility(View.INVISIBLE);
-//        }
 
 	}
 
@@ -175,56 +126,31 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	public void onClick(View v) {
 		switch(v.getId()){
 			case R.id.category_music:
-//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_AUDIO));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_AUDIO).buildIntentWithBundle());
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), CategorySelectEvent.CategoryType.AUDIO));
 				break;
 			case R.id.category_video:
-//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_VIDEO));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_VIDEO).buildIntentWithBundle());
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), CategorySelectEvent.CategoryType.VIDEO));
                 break;
 			case R.id.category_picture:
-//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_IMAGE));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_IMAGE).buildIntentWithBundle());
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), CategorySelectEvent.CategoryType.PHOTO));
                 break;
 			case R.id.category_document:
-//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_DOCUMENT));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_DOCUMENT).buildIntentWithBundle());
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), CategorySelectEvent.CategoryType.DOC));
                 break;
 			case R.id.category_zip:
-//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_ZIP));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_ZIP).buildIntentWithBundle());
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), CategorySelectEvent.CategoryType.ZIP));
                 break;
 			case R.id.category_apk:
-//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_APK));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_APK).buildIntentWithBundle());
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), CategorySelectEvent.CategoryType.APK));
                 break;
 			case R.id.category_app:
-//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_APP));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_APP).buildIntentWithBundle());
-                break;
-            case R.id.category_kanbox:
-//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_CLOUD));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_CLOUD).buildIntentWithBundle());
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), CategorySelectEvent.CategoryType.APP));
                 break;
 			case R.id.category_download:
-//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_DOWNLOAD));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_DOWNLOAD).buildIntentWithBundle());
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), CategorySelectEvent.CategoryType.DOWNLOAD));
                 break;
 			case R.id.category_favorite:
-//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_FAVORITE));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_FAVORITE).buildIntentWithBundle());
-                break;
-            case R.id.category_selected_game:
-//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_GAME));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_GAME).buildIntentWithBundle());
-                break;
-            case R.id.category_selected_app:
-//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_APP));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_APP).buildIntentWithBundle());
-                break;
-            case R.id.category_selected_doc:
-//                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_DOC));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new CategorySelectEvent(System.currentTimeMillis(), FileUtils.FILE_TYPE_RESOURCE_DOC).buildIntentWithBundle());
+                BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), CategorySelectEvent.CategoryType.FAVORITE));
                 break;
 			}
 	}
@@ -271,19 +197,11 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	@Override
 	public void onResume(){
 		super.onResume();
-        if (UiCallServiceHelper.getInstance().isScanning()) {
-            refresh();
-        } else {
-            completeRefresh();
-        }
-        UiCallServiceHelper.getInstance().addCallback(this);
 	}
 	
 	@Override
 	public void onPause(){
 		super.onPause();
-        UiCallServiceHelper.getInstance().removeCallback(this);
-        completeRefresh();
 	}	
 	
 	private void bindCategoryData(Cursor cursor){
@@ -364,66 +282,6 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 					}
 				}
 			}
-			
-			String[] paths = StorageManager.getInstance(getActivity()).getMountedStorages();
-			LayoutInflater inflater = LayoutInflater.from(getActivity());
-			mInformationLayout.removeAllViews();
-			for(int i=0;i<paths.length;i++){
-//                int j = 0;
-//                while (j<3) {
-                    Map map = new HashMap<Integer, Long>();
-                    long total_size = 0;
-                    View child = inflater.inflate(R.layout.space_stats, null);
-                    child.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 0, 1.0f));
-                    CategoryBar bar = (CategoryBar) child.findViewById(R.id.space_volume_stats);
-                    TextView label = (TextView) child.findViewById(R.id.space_volume_label);
-                    TextView description = (TextView) child.findViewById(R.id.space_volume_description);
-                    String path = paths[i];
-                    cursor.moveToPosition(-1);
-                    map.clear();
-                    while (cursor.moveToNext()) {
-                        String path1 = cursor.getString(CategoryColumns.STORAGE_FIELD_INDEX);
-                        if (path.equalsIgnoreCase(path1)) {
-                            long size = cursor.getLong(DataStructures.CategoryColumns.SIZE_FIELD_INDEX);
-                            long number = cursor.getLong(DataStructures.CategoryColumns.NUMBER_FIELD_INDEX);
-                            int category = cursor.getInt(DataStructures.CategoryColumns.CATEGORY_FIELD_INDEX);
-                            map.put(category, size);
-                            if (category != 0)
-                                total_size += size;
-                        }
-                    }
-                    long all_size = StorageManager.getInstance(getActivity()).getAllSize(path);
-                    long available_size = StorageManager.getInstance(getActivity()).getAvailableSize(path);
-                    long other_size = all_size
-                            - available_size
-                            - total_size;
-                    if (other_size < 0)
-                        other_size = 0;
-                    map.put(0, other_size);
-                    map.put(-1, all_size);
-                    bar.refresh(map);
-
-                    String self_description = StorageManager.getInstance(getActivity()).getStorageDescription(paths[i]);
-                    if (self_description != null) {
-                        label.setText(self_description);
-                    } else {
-                        label.setText(paths[i]);
-                    }
-                    description.setText(getString(R.string.sdcard_description, FileUtil.normalize(available_size), FileUtil.normalize(all_size)));
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
-                    mInformationLayout.addView(child, params);
-//                    j++;
-//                }
-             }
-
-            if(UiCallServiceHelper.getInstance().isScanning())
-            {
-                refresh();
-            }
-            else
-            {
-                completeRefresh();
-            }
 		}
 	}	
 
@@ -432,129 +290,48 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         LogUtil.i(LOG_TAG, "onCreateOptionsMenu");
-		completeRefresh();
-		mRefreshItem = null;
-
-        if (Constants.PRODUCT_FLAVOR_NAME.equals("hosin")) {
-            return;
-        }
-        if (getParentFragment()!=null && !getParentFragment().getUserVisibleHint()) {
-            LogUtil.i(LOG_TAG, "onCreateOptionsMenu invisible");
-            return;
-        }
-		inflater.inflate(R.menu.category_fragment_menu, menu);
-
-		mRefreshItem = menu.findItem(R.id.menu_refresh);
-		if(mRefreshItem!=null)
-			LogUtil.i(LOG_TAG, "new refresh item is "+mRefreshItem);
-		if(mRefreshItem!=null && mRefreshItem.isVisible()){
-			if(UiCallServiceHelper.getInstance().isScanning()) {
-				LogUtil.i(LOG_TAG, "set refresh menu item to scanning");
-				refresh();
-			}else{
-				LogUtil.i(LOG_TAG, "set refresh menu item to complete scanning");
-				completeRefresh();
-			}
-		}
+        inflater.inflate(R.menu.category_fragment_menu, menu);
 	}
-	
-	@Override
-	public void onDestroyOptionsMenu(){
-		LogUtil.i(LOG_TAG, "onDestroyOptionsMenu");
-	    completeRefresh();
-	    mRefreshItem = null;
-		super.onDestroyOptionsMenu();
-	}
-	
-	@Override
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        final MenuItem categorySearchMenu = menu.findItem(R.id.menu_category_search);
+        final MenuItem categoryRefreshMenu = menu.findItem(R.id.menu_category_refresh);
+
+        final Fragment parentFragment = getParentFragment();
+        boolean isFragmentVisible = true;
+        if(parentFragment != null && (parentFragment instanceof FileTabFragment)) {
+            isFragmentVisible = parentFragment.getUserVisibleHint();
+        }
+        final Activity parentActivity = getActivity();
+        boolean isSearchMode = false;
+        if (parentActivity != null && (parentActivity instanceof BelugaDrawerActivity)) {
+            isSearchMode = ((BelugaDrawerActivity)getActivity()).isSearchMode();
+        }
+
+        final boolean menuVisible = isFragmentVisible && !isSearchMode;
+
+        categorySearchMenu.setVisible(menuVisible);
+        categoryRefreshMenu.setVisible(menuVisible);
+
+    }
+
+    @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		boolean flag = false;
 		switch(item.getItemId()){
-			case R.id.menu_refresh:
-			{
+			case R.id.menu_category_refresh:
                 StorageManager.clear();
                 Intent intent = new Intent("SHOW_ROOT_FILES_ACTION");
                 LocalBroadcastManager.getInstance(FileManager.getAppContext()).sendBroadcast(intent);
                 UiCallServiceHelper.getInstance().startScan();
-				flag = true;
-				break;
-			}
-			case R.id.menu_settings:
-			{
-                try {
-                    Intent intent3 = new Intent(getActivity(), FileManagerPreferenceActivity.class);
-                    startActivity(intent3);
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-				flag = true;
-				break;
-			}
-		}
-		return flag;
-	}
-
-	MenuItem mRefreshItem;
-	Animation mRefreshAnimation;
-	ImageView mRefreshView;
-	boolean mRefreshing = false;
-	
-	private void refresh(){
-		if(!mRefreshing && getActivity()!=null) {
-			if(mRefreshItem!=null && mRefreshItem.isVisible()){				
-				if(mRefreshView == null){
-					LayoutInflater inflater = LayoutInflater.from(getActivity());
-					mRefreshView = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
-				}				
-				if(mRefreshAnimation == null) {
-					mRefreshAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.clockwise_rotate);
-					mRefreshAnimation.setRepeatCount(Animation.INFINITE);
-				}
-				if(mRefreshView.getAnimation()==null){
-					mRefreshView.startAnimation(mRefreshAnimation);
-				}
-
-				mRefreshItem.setActionView(mRefreshView);
-				mRefreshing = true;
-			}
+				return true;
+			case R.id.menu_category_search:
+                getActivity().onSearchRequested();
+				return true;
+            default:
+                return super.onOptionsItemSelected(item);
 		}
 	}
-	
-	public void completeRefresh() {
-		if(mRefreshView!=null){
-			mRefreshView.clearAnimation();
-		}
-		if(mRefreshing){
-			if(mRefreshItem!=null) {
-				mRefreshItem.setActionView(null);
-			}
-		}
-		mRefreshing = false;
-	}
-
-    @Override
-    public void scanStarted() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                refresh();
-            }
-        });
-    }
-
-    @Override
-    public void scanCompleted() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                completeRefresh();
-            }
-        });
-    }
-
-    @Override
-    public void changeMonitored(String dir) {
-
-    }
 
 }

@@ -3,7 +3,7 @@ package com.hufeng.filemanager;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class SearchResultsActivity extends BaseActivity{
+public class SearchResultsActivity extends BelugaBaseActionBarActivity {
 
 
 	@Override

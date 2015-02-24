@@ -3,6 +3,7 @@ package com.hufeng.filemanager;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +11,9 @@ import android.view.ViewGroup;
 import com.hufeng.filemanager.utils.LogUtil;
 
 
-public class BaseFragment extends Fragment {
+public class BaseFragment extends Fragment{
 
     private static final boolean DEBUG = BuildConfig.DEBUG;
-
-    public boolean onBackPressed() {
-        return false;
-    }
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {

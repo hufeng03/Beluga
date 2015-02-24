@@ -3,108 +3,68 @@ package com.hufeng.filemanager;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
-import android.widget.GridView;
-import android.widget.ImageView;
 
+import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.browser.FileEntryFactory;
-import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.browser.InfoLoader;
-import com.hufeng.filemanager.provider.DataStructures;
+import com.hufeng.filemanager.data.FileCursorLoader;
+import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 import com.hufeng.filemanager.services.IUiImpl;
 import com.hufeng.filemanager.services.UiCallServiceHelper;
-import com.hufeng.filemanager.ui.FileCursorAdapter;
 import com.hufeng.filemanager.ui.FileGridAdapterListener;
-import com.hufeng.filemanager.ui.FileOperation;
+import com.hufeng.filemanager.ui.BelugaActionController;
 import com.hufeng.filemanager.utils.LogUtil;
 
-import java.lang.ref.WeakReference;
-
-public class FileGrouperFragment extends FileGridFragment implements LoaderManager.LoaderCallbacks<Cursor>, FileGridAdapterListener, IUiImpl.UiCallback, AbsListView.OnScrollListener{
+public class FileGrouperFragment extends FileRecyclerFragment implements
+        LoaderManager.LoaderCallbacks<Cursor>,
+        FileGridAdapterListener,
+        BelugaEntryViewHolder.EntryClickListener {
 
     private static final String TAG = FileGrouperFragment.class.getSimpleName();
 
     public static final String FILE_GROUPER_ARGUMENT_CATEGORY = "file_grouper_argument_category";
-//    public static final String FILE_GROUPER_ARGUMENT_SELECTION = "file_grouper_argument_selection";
-    public static final String FILE_GROUPER_ARGUMENT_SAFE = "file_grouper_argument_safe";
-    public static final String FILE_GROUPER_ARGUMENT_CLOUD = "file_grouper_argumnet_cloud";
-    public static final String FILE_GROUPER_ARGUMENT_CLOUD_UPLOAD_PARENT = "file_grouper_argument_cloud_upload_parent";
+    public static final String FILE_GROUPER_ARGUMENT_PICK = "file_grouper_argument_pick";
 
-    private FileCursorAdapter mAdapter;
+    private BelugaCursorRecyclerAdapter mAdapter;
 
-    public FileGrouperFragment() {
-        super();
-        mMenuId = R.menu.file_grouper_fragment_menu;
-    }
+    private CategorySelectEvent.CategoryType mCategory;
 
-    private WeakReference<FileGrouperFragmentListener> mWeakListener = null;
+    private static final int LOADER_ID = 1;
 
-    public static interface FileGrouperFragmentListener {
-        public void onFileGrouperItemClick(View v, FileEntry entry);
-        public void onFileGrouperItemSelect(View v, FileEntry entry);
-    }
 
-    public void setListener(FileGrouperFragmentListener listener) {
-        mWeakListener = new WeakReference<FileGrouperFragmentListener>(listener);
-    }
-
-    public static FileGrouperFragment newCategoryGrouperInstance(int category) {
+    public static FileGrouperFragment newCategoryGrouperInstance(CategorySelectEvent.CategoryType category) {
         FileGrouperFragment fragment = new FileGrouperFragment();
         Bundle data = new Bundle();
-        data.putInt(FileGrouperFragment.FILE_GROUPER_ARGUMENT_CATEGORY, category);
+        data.putString(FileGrouperFragment.FILE_GROUPER_ARGUMENT_CATEGORY, category.toString());
         fragment.setArguments(data);
         return fragment;
     }
 
-    public static FileGrouperFragment newSafeBoxAddSelectInstance(int category) {
+    public static FileGrouperFragment newSelectionGrouper(CategorySelectEvent.CategoryType category) {
         FileGrouperFragment fragment = new FileGrouperFragment();
         Bundle data = new Bundle();
-        data.putInt(FileGrouperFragment.FILE_GROUPER_ARGUMENT_CATEGORY, category);
-        data.putBoolean(FILE_GROUPER_ARGUMENT_SAFE, true);
+        data.putString(FileGrouperFragment.FILE_GROUPER_ARGUMENT_CATEGORY, category.toString());
+        data.putBoolean(FILE_GROUPER_ARGUMENT_PICK, true);
         fragment.setArguments(data);
-//        FileOperation fileOperation = new FileOperation();
-//        fileOperation.setOperationMode(FileOperation.OPERATION_MODE.ADD_SAFE);
-//        fragment.getChildFragmentManager().beginTransaction().add(fragment, "FileOperation").commit();
-//        fragment.setFileOperation(fileOperation);
         return fragment;
     }
-
-    public static FileGrouperFragment newCloudUploadSelectInstance(int category, String root) {
-        FileGrouperFragment fragment = new FileGrouperFragment();
-        Bundle data = new Bundle();
-        data.putInt(FileGrouperFragment.FILE_GROUPER_ARGUMENT_CATEGORY, category);
-        data.putBoolean(FILE_GROUPER_ARGUMENT_CLOUD, true);
-        data.putString(FILE_GROUPER_ARGUMENT_CLOUD_UPLOAD_PARENT, root);
-        fragment.setArguments(data);
-//        FileOperation fileOperation = new FileOperation();
-//        fileOperation.setOperationMode(FileOperation.OPERATION_MODE.ADD_CLOUD);
-//        fragment.getChildFragmentManager().beginTransaction().add(fragment, "FileOperation").commit();
-//        fragment.setFileOperation(fileOperation);
-        return fragment;
-    }
-
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (getArguments().getBoolean(FILE_GROUPER_ARGUMENT_CLOUD) || getArguments().getBoolean(FILE_GROUPER_ARGUMENT_SAFE)) {
-            FileOperation fileOperation = (FileOperation) getChildFragmentManager().findFragmentByTag("FileGrouper-FileOperation");
-            if (fileOperation == null) {
-                if (getArguments().getBoolean(FILE_GROUPER_ARGUMENT_SAFE)) {
-                    fileOperation = FileOperation.newInstance(FileOperation.OPERATION_MODE.ADD_SAFE.ordinal());
-                } else {
-                    fileOperation = FileOperation.newInstance(FileOperation.OPERATION_MODE.ADD_CLOUD.ordinal());
-                }
-                getChildFragmentManager().beginTransaction().add(fileOperation, "FileGrouper-FileOperation").commit();
-            }
-            setFileOperation(fileOperation);
-        }
     }
 
     @Override
@@ -115,32 +75,13 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        LogUtil.i(TAG, "FileGrouperFragment onCreate  with menuId = " + mMenuId);
+        LogUtil.i(TAG, "FileGrouperFragment onCreate");
         Bundle data = getArguments();
-        if (data == null) {
-            mCategory = FileUtils.FILE_TYPE_IMAGE;
-        } else {
-            mCategory = data.getInt(FILE_GROUPER_ARGUMENT_CATEGORY);
-        }
-        if(getArguments().getBoolean(FILE_GROUPER_ARGUMENT_SAFE) || getArguments().getBoolean(FILE_GROUPER_ARGUMENT_CLOUD)) {
-            mMenuId = R.menu.file_grouper_fragment_search_menu;
-        } else {
-            mMenuId = R.menu.file_grouper_fragment_menu;
+        if (data != null) {
+            String categoryValue = data.getString(FILE_GROUPER_ARGUMENT_CATEGORY);
+            mCategory = CategorySelectEvent.CategoryType.valueOf(categoryValue);
         }
 	}
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (getFileOperation().getOperationMode() == FileOperation.OPERATION_MODE.ADD_CLOUD) {
-            Activity act = getActivity();
-            if (act != null && act instanceof FileManagerTabActivity) {
-                ((FileManagerTabActivity)act).setPagingEnabled(false);
-            }
-        }
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
 
 
 	@Override
@@ -149,23 +90,26 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
 
         String empty_text;
         switch(mCategory){
-            case FileUtils.FILE_TYPE_APK:
+            case APK:
                 empty_text = getResources().getString(R.string.empty_apk);
                 break;
-            case FileUtils.FILE_TYPE_AUDIO:
+            case AUDIO:
                 empty_text = getResources().getString(R.string.empty_audio);
                 break;
-            case FileUtils.FILE_TYPE_IMAGE:
+            case PHOTO:
                 empty_text = getResources().getString(R.string.empty_image);
                 break;
-            case FileUtils.FILE_TYPE_VIDEO:
+            case VIDEO:
                 empty_text = getResources().getString(R.string.empty_video);
                 break;
-            case FileUtils.FILE_TYPE_DOCUMENT:
+            case DOC:
                 empty_text = getResources().getString(R.string.empty_document);
                 break;
-            case FileUtils.FILE_TYPE_ZIP:
+            case ZIP:
                 empty_text = getResources().getString(R.string.empty_zip);
+                break;
+            case FAVORITE:
+                empty_text = getResources().getString(R.string.empty_favorite);
                 break;
             default:
                 empty_text = "";
@@ -174,178 +118,142 @@ public class FileGrouperFragment extends FileGridFragment implements LoaderManag
 
         setEmptyText(empty_text);
 
-        mAdapter = new FileCursorAdapter(getActivity(), null, getFileOperation());
-        mAdapter.setFileGridAdapterListener(this);
-        setGridAdapter(mAdapter);
-        if (FileUtils.FILE_TYPE_IMAGE == mCategory || FileUtils.FILE_TYPE_VIDEO == mCategory) {
-            if (getDisplayMode() == DISPLAY_MODE.LIST) {
-                switchDisplayMode();
-            }
-        } else {
-            if (getDisplayMode() == DISPLAY_MODE.GRID) {
-                switchDisplayMode();
-            }
+        mAdapter = new BelugaCursorRecyclerAdapter(getActivity(), null, BelugaDisplayMode.LIST,/*R.layout.file_list_row,*/
+                new BelugaEntryViewHolder.Builder() {
+                    @Override
+                    public BelugaEntryViewHolder createViewHolder(ViewGroup parent, int type) {
+                        if (type == BelugaDisplayMode.GRID.ordinal()) {
+                            View view = LayoutInflater.from(parent.getContext())
+                                    .inflate( R.layout.file_grid_row, parent, false);
+                            return new FileEntryGridViewHolder(view, getActionController(), FileGrouperFragment.this);
+                        } else {
+                            View view = LayoutInflater.from(parent.getContext())
+                                    .inflate( R.layout.file_list_row, parent, false);
+                            return new FileEntryListViewHolder(view, getActionController(), FileGrouperFragment.this);
+                        }
+                    }
+                });
+        setRecyclerAdapter(mAdapter);
+
+        if (CategorySelectEvent.CategoryType.VIDEO == mCategory ||
+                CategorySelectEvent.CategoryType.PHOTO == mCategory ||
+                CategorySelectEvent.CategoryType.AUDIO == mCategory ||
+                CategorySelectEvent.CategoryType.APK == mCategory) {
+            mRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (mRootView.getWidth() > 0 && mRootView.getHeight() > 0) {
+                        switchDisplay();
+                        mRootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                }
+            });
         }
-        setGridShownNoAnimation(false);
-        getGridView().setOnScrollListener(this);
+
+        setEmptyViewShown(false);
+        setListShownNoAnimation(false);
 	}
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(LoaderIDs.getLoaderId(mCategory), null, this);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        UiCallServiceHelper.getInstance().addCallback(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        UiCallServiceHelper.getInstance().removeCallback(this);
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (getFileOperation().getOperationMode() == FileOperation.OPERATION_MODE.ADD_CLOUD) {
-            Activity act = getActivity();
-            if (act != null && act instanceof FileManagerTabActivity) {
-                ((FileManagerTabActivity)act).setPagingEnabled(true);
-            }
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.file_grouper_fragment_menu, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        final MenuItem displayMenu = menu.findItem(R.id.menu_grouper_display);
+        final MenuItem sortMenu = menu.findItem(R.id.menu_grouper_sort);
+
+        final Fragment parentFragment = getParentFragment();
+        boolean isFragmentVisible = true;
+        if(parentFragment != null && (parentFragment instanceof FileTabFragment)) {
+            isFragmentVisible = parentFragment.getUserVisibleHint();
         }
-//        unregisterForContextMenu(getGridView());
-    }
-
-    @Override
-    public void onGridItemClick(GridView g, View v, int position, long id) {
-        super.onGridItemClick(g,v,position,id);
-        if (mWeakListener != null) {
-            FileGrouperFragmentListener listener = mWeakListener.get();
-            if (listener != null) {
-               Cursor cursor =(Cursor)g.getItemAtPosition(position);
-               //Cursor cursor = (Cursor)g.getAdapter().getItem(position);
-               String path = cursor.getString(DataStructures.FileColumns.FILE_PATH_FIELD_INDEX);
-               ImageView v_img =  (ImageView)v.findViewById(R.id.icon);
-                if (mFileOperation!=null && mFileOperation.getOperationMode() == FileOperation.OPERATION_MODE.ADD_CLOUD) {
-                    listener.onFileGrouperItemSelect(v_img, FileEntryFactory.makeFileObject(path));
-                } else {
-                    listener.onFileGrouperItemClick(v_img, FileEntryFactory.makeFileObject(path));
-                }
-            }
+        final Activity parentActivity = getActivity();
+        boolean isSearchMode = false;
+        if (parentActivity != null && (parentActivity instanceof BelugaDrawerActivity)) {
+            isSearchMode = ((BelugaDrawerActivity)getActivity()).isSearchMode();
         }
+
+        final boolean menuVisible = isFragmentVisible && !isSearchMode;
+        displayMenu.setVisible(menuVisible);
+        sortMenu.setVisible(menuVisible);
+
+        displayMenu.setIcon(getDisplayMode() == BelugaDisplayMode.LIST ?
+                R.drawable.ic_action_view_as_grid : R.drawable.ic_action_view_as_list);
     }
 
     @Override
-    public void onGridItemSelect(GridView g, View v, int position, long id) {
-        super.onGridItemSelect(g,v,position,id);
-        if (mWeakListener != null) {
-            FileGrouperFragmentListener listener = mWeakListener.get();
-            if (listener != null) {
-                Cursor cursor =(Cursor)g.getItemAtPosition(position);
-                //Cursor cursor = (Cursor)g.getAdapter().getItem(position);
-                String path = cursor.getString(DataStructures.FileColumns.FILE_PATH_FIELD_INDEX);
-                ImageView v_img =  (ImageView)v.findViewById(R.id.icon);
-                listener.onFileGrouperItemSelect(v_img, FileEntryFactory.makeFileObject(path));
-            }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.menu_grouper_display:
+                switchDisplay();
+                getActivity().supportInvalidateOptionsMenu();
+                return true;
+            case R.id.menu_grouper_sort:
+                BelugaDialogFragment.showSortDialog(getActivity(), mCategory);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        if (scrollState == SCROLL_STATE_FLING) {
-            InfoLoader.getInstance().pause();
-        } else {
-            InfoLoader.getInstance().resume();
-        }
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-    }
-
-    @Override
-    public String getSearchString() {
-        return mSearchString;
     }
 
     @Override
     public void reportNotExistFile() {
-//        reloadFiles();
-        UiCallServiceHelper.getInstance().deleteUnexist(mCategory);
+        UiCallServiceHelper.getInstance().deleteUnexist(mCategory.toString());
     }
 
     @Override
-    public void reloadFiles() {
-        getLoaderManager().restartLoader(LoaderIDs.getLoaderId(mCategory), null, this);
-    }
-
-    @Override
-    public String getParentFile() {
-        return getArguments().getString(FILE_GROUPER_ARGUMENT_CLOUD_UPLOAD_PARENT,"");
-    }
-
-    @Override
-    public String[] getAllFiles() {
-        return mAdapter.getAllFiles();
+    public FileEntry[] getAllFiles() {
+        return mAdapter.getAll();
     }
 
     @Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-        return FileManagerLoaders.getCursorLoader(getActivity(), mCategory, mSearchString);
+        Log.i(TAG, "onCreateLoader");
+        return new FileCursorLoader(getActivity(), mCategory, mSearchString);
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor arg1) {
-		mAdapter.changeCursor(arg1);
-        InfoLoader.getInstance().clear();
-        if (arg1 == null || arg1.getCount() == 0) {
-            if (UiCallServiceHelper.getInstance().isScanning()) {
-                setGridShown(false);
-                return;
-            }
-        }
-		setGridShown(true);
+        Log.i(TAG, "onCreateFinished");
+		mAdapter.swapCursor(arg1);
+        final boolean empty = arg1 == null || arg1.getCount() == 0;
+        final boolean scanning = UiCallServiceHelper.getInstance().isScanning();
+        setRecyclerViewShown(!empty || !scanning);
+        setEmptyViewShown(empty && !scanning);
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
+        Log.i(TAG, "onCreateReset");
 		mAdapter.swapCursor(null);
-        InfoLoader.getInstance().clear();
 	}
 
-    @Override
-    public void scanStarted() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                setGridShown(false);
-            }
-        });
-    }
 
     @Override
-    public void scanCompleted() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    setGridShown(true);
-                    reloadFiles();
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    public void onEntryClickedToOpen(View view, BelugaEntry entry) {
+        FileEntry fileEntry = (FileEntry)entry;
+        if (fileEntry.isDirectory) {
+            BusProvider.getInstance().post(new FolderOpenEvent(System.currentTimeMillis(), fileEntry));
+        } else {
+            BelugaActionDelegate.view(view.getContext(), fileEntry);
+        }
     }
-
-    @Override
-    public void changeMonitored(String dir) {
-
-    }
-	
 }

@@ -12,7 +12,7 @@
         android:layout_alignParentLeft="true"
         style="@style/InformationTextStyle"  
         android:drawablePadding="5dip"
-        android:drawableLeft="@drawable/sd_card_icon"
+        android:drawableLeft="@drawable/ic_action_sd_card"
         />
     <TextView
         android:id="@+id/space_volume_description"

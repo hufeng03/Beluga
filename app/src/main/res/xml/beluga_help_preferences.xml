@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:title="Can not copy/create/delete file in SD card"
+        android:icon="@null"
+        android:summary="Google has restricted third party apps to write to secondary external storage device, except in their package-specific directories whereas there is no such restriction in case of some custom ROMs.">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="market://details?id=com.belugamobile.filemanager" />
+    </Preference>
+    <Preference
+        android:title="Review"
+        android:icon="@null"
+        android:summary="Give it a five star rating.">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="market://details?id=com.belugamobile.filemanager" />
+    </Preference>
+    <Preference
+        android:title="Email"
+        android:icon="@null"
+        android:summary="Send us email to tell your encountered problems and suggestions or just say hi.">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="mailto:belugamobile@gmail.com" />
+    </Preference>
+</PreferenceScreen>

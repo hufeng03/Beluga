@@ -5,5 +5,5 @@
             android:defaultValue="true"
             android:key="SHOW_ROOT_DIR"
             android:summary="@string/settings_show_root_dir_summary"
-            android:title="@string/settings_show_root_dir" />\
+            android:title="@string/settings_show_root_dir" />
 </PreferenceScreen>

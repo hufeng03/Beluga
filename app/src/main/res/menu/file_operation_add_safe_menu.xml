@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/file_operation_cancel"
-        android:icon="@drawable/operation_button_cancel"
-        android:title="@string/operation_cancel" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:beluga="http://schemas.android.com/apk/res-auto">
+    <!--item android:id="@+id/file_operation_cancel"
+        android:icon="@drawable/ic_action_cancel"
+        android:title="@string/operation_cancel" /!-->
     <item android:id="@+id/file_operation_addsafe"
-        android:icon="@drawable/operation_button_addsafe"
-        android:title="@string/operation_addsafe" />
+        android:icon="@null"
+        android:title="@string/operation_addsafe"
+        beluga:showAsAction="always"/>
 </menu>

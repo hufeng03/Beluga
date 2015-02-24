@@ -53,9 +53,9 @@
     <string name="search_no_file">No file found</string>
     <string name="no_wifi">No Wi-Fi network</string>
     <string name="operation_cancel">Cancel</string>
-    <string name="operation_selectok">Select</string>
-    <string name="operation_addsafe">Add Into Safebox</string>
-    <string name="operation_addcloud">Add Into Cloud Box</string>
+    <string name="operation_selectok">Open</string>
+    <string name="operation_addsafe">Lock</string>
+    <string name="operation_addcloud">Upload</string>
     <string name="operation_cancel_selectall">Deselect All</string>
     <string name="operation_copy">Copy</string>
     <string name="operation_create_folder">New folder</string>
@@ -194,7 +194,7 @@
     <string name="delete">Delete</string>
     <string name="settings_detail_recover">Recover Default</string>
     <string name="menu_rename">Rename</string>
-    <string name="rename_dialog_title">Rename file to</string>
+    <string name="rename_dialog_title">Rename</string>
     <string name="rename_empty_string">empty filename not allowed</string>
     <string name="rename_same_name_string">filename exists, please change</string>
     <string name="select_app_dialog_title">please select default application</string>
@@ -310,8 +310,8 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="menu_run">Run</string>
 <string name="menu_app_detail">App Detail</string>
 <string name="menu_view_detail">Properties</string>
-<string name="menu_add_favorite">Add Into Favorite</string>
-<string name="detail_dialog_title">File Detail</string>
+<string name="menu_add_favorite">Mark Favorite</string>
+<string name="detail_dialog_title">Details</string>
 <string name="file_info_kind">Kind:</string>
 <string name="file_info_kind_directory">Directory</string>
 <string name="file_info_kind_file">File</string>
@@ -355,18 +355,18 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="repeat_current_notif">Repeating current song.</string>
 <string name="repeat_all_notif">Repeating all songs.</string>
 <string name="music_format_not_supported">Sorry, music file format not supported</string>
-<string name="delete_confirm_dialog_title">Delete confirm</string>
-<string name="delete_confirm_text">be sure to delete\n<xliff:g id="count">%2$d</xliff:g>(<xliff:g id="name">%1$s</xliff:g> &#8230;)\nfiles and their children files or directories</string>
-<string name="add_to_safe_confirm_dialog_text">move \n<xliff:g id="count">%2$d</xliff:g>(<xliff:g id="name">%1$s</xliff:g> &#8230;)\nfiles into safebox? (Please do not delete /mnt/sdcard/.safebox/)</string>
-<string name="add_to_safe_confirm_dialog_title">SafeBox</string>
-<string name="add_to_cloud_confirm_dialog_text">Upload \n<xliff:g id="count">%2$d</xliff:g>(<xliff:g id="name">%1$s</xliff:g> &#8230;)\nfiles into cloud box?</string>
-<string name="add_to_cloud_confirm_dialog_text_no_dir">Upload \n<xliff:g id="count">%2$d</xliff:g>(<xliff:g id="name">%1$s</xliff:g> &#8230;)\nfiles into cloud box?\n<xliff:g id="count">%4$d</xliff:g>(<xliff:g id="name">%3$s</xliff:g> &#8230;) will not be uploaded.</string>
-<string name="add_to_cloud_confirm_dialog_title">Cloud Box</string>
-<string name="delete_from_safe_confirm_dialog_text">delete <xliff:g id="count">%2$d</xliff:g> files from safebox and do not recover? </string>
-<string name="delete_from_safe_confirm_dialog_title">SafeBox</string>
-<string name="download_from_cloud_confirm_dialog_text">download <xliff:g id="name">%1$s</xliff:g> from cloud? </string>
+<string name="delete_confirm_dialog_title">Delete</string>
+<string name="delete_confirm_text">Are you sure that you want to delete?</string>
+<string name="add_to_safe_confirm_dialog_text">Move <xliff:g id="count">%d</xliff:g> file(s) into Safebox? (Please do not delete .safebox directory in root of storage)</string>
+<string name="add_to_safe_confirm_dialog_title">Safebox</string>
+<string name="add_to_cloud_confirm_dialog_text">Upload \n<xliff:g id="count">%d</xliff:g> file(s) into Cloudbox?</string>
+<string name="add_to_cloud_confirm_dialog_text_no_dir">Upload \n<xliff:g id="count">%d</xliff:g> file(s) into cloud box?\n</string>
+<string name="add_to_cloud_confirm_dialog_title">Cloudbox</string>
+<string name="delete_from_safe_confirm_dialog_text">Delete <xliff:g id="count">%d</xliff:g> file(s) from Safebox and do not recover? </string>
+<string name="delete_from_safe_confirm_dialog_title">Safebox</string>
+<string name="download_from_cloud_confirm_dialog_text">Download <xliff:g id="name">%s</xliff:g> from CloudBox? </string>
 <string name="download_from_cloud_confirm_dialog_title">Download</string>
-<string name="move_from_safe_confirm_dialog_text">move <xliff:g id="count">%2$d</xliff:g> files from safebox to their original path?</string>
+<string name="move_from_safe_confirm_dialog_text">move <xliff:g id="count">%d</xliff:g> file(s) from Safebox to their original path?</string>
 <string name="move_from_safe_confirm_dialog_title">SafeBox</string>
 <string name="sdcard_volume">"SD Card: <xliff:g id="capacity">%s</xliff:g>(<xliff:g id="available">%s</xliff:g> free)"</string>
 <string name="phone_data_volume">"Phone Data: <xliff:g id="capacity">%s</xliff:g>(<xliff:g id="available">%s</xliff:g> free)"</string>
@@ -386,7 +386,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="sdcard_label">SDCard</string>
 <string name="settings_backup">Backup</string>
 <string name="cloud_logout_dialog_title">Logout</string>
-<string name="new_directory_dialog_title">Create Directory</string>
+<string name="new_directory_dialog_title">New Folder</string>
 <string name="new_directory_alreay_exist">The directory exists</string>
 <string name="new_directory_path_null">Directory name cannot be empty</string>
 <string name="new_directory_path_long">Directory name is too long</string>
@@ -485,13 +485,13 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="scanning_tips">SDCard scanning, please wait</string>
 <string name="category_safe">Secret</string>
 <string name="menu_add_safe">Add Into Safebox</string>
-<string name="menu_remove_favorite">Remove from Favorite</string>
+<string name="menu_remove_favorite">Undo Favorite</string>
 <string name="menu_remove_safe">Remove from Safe</string>
 <string name="multi_select_title">Selected <xliff:g id="number">%1$s</xliff:g> item(s)</string>
 <string name="menu_refresh">Refresh</string>
 <string name="menu_search">Search Files</string>
-<string name="menu_settings">Tools</string>
-<string name="menu_create">New Directory</string>
+<string name="menu_settings">Settings</string>
+<string name="menu_create">Create Folder</string>
 <string name="menu_cloud_add">Upload File</string>
 <string name="menu_cloud_add_image">Upload Image</string>
 <string name="menu_cloud_add_audio">Upload Audio</string>
@@ -537,15 +537,19 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="create_directory_not_allowed">Cannot create directory here</string>
 <string name="create_directory_success">Create directory success</string>
 <string name="create_directory_fail">Create directory fail</string>
-<string name="menu_sort_date_asc">Sort by date asc</string>
-<string name="menu_sort_date_desc">Sort by date desc</string>
-<string name="menu_sort_name_asc">Sort by name asc</string>
-<string name="menu_sort_name_desc">Sort by name desc</string>
-<string name="menu_sort_size_asc">Sort by size asc</string>
-<string name="menu_sort_size_desc">Sort by size desc</string>
-<string name="menu_sort_extension_asc">Sort by extension asc</string>
-<string name="menu_sort_extension_desc">Sort by extension desc</string>
-<string name="app_browser_count_empty">no applications</string>
+<string name="menu_sort_by_date">By date</string>
+<string name="menu_sort_by_name">By name</string>
+<string name="menu_sort_by_size">By size</string>
+<string name="menu_sort_by_extension">By extension</string>
+<string name="menu_sort_date_asc">Date asc</string>
+<string name="menu_sort_date_desc">Date desc</string>
+<string name="menu_sort_name_asc">Name asc</string>
+<string name="menu_sort_name_desc">Name desc</string>
+<string name="menu_sort_size_asc">Size asc</string>
+<string name="menu_sort_size_desc">Size desc</string>
+<string name="menu_sort_extension_asc">Extension asc</string>
+<string name="menu_sort_extension_desc">Extension desc</string>
+<string name="app_browser_count_empty">No applications</string>
 <string name="app_browser_count_both"><xliff:g id="installed">%d</xliff:g> installed app(s), <xliff:g id="running">%d</xliff:g> is running</string>
 <string name="app_browser_count_installed_only"><xliff:g id="installed">%d</xliff:g> installed app(s)</string>
 <string name="empty_audio">No audio</string>
@@ -581,7 +585,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="tool_description_safe">Safe box for your secrect image and video</string>
 <string name="tool_name_kanbox">Kanbox</string>
 <string name="tool_name_selected">Selected App</string>
-<string name="tool_description_kanbox">Alibaba\'s personal cloud service</string>
+<string name="tool_description_kanbox">Alibaba Personal Cloud Service</string>
 <string name="tool_description_selected">Top popular app and game recommendataion</string>
 <string name="safe_category_image">Images</string>
 <string name="safe_category_video">Videos</string>
@@ -641,7 +645,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="kanbox_intro_enter">Enter Kanbox</string>
 <string name="kanbox_intro_login">Login</string>
 <string name="kanbox_intro_login_with_taobao">Taobao.com users can login directly</string>
-<string name="kanbox_intro_slogan">Alibaba\'s Personal Cloud Service</string>
+<string name="kanbox_intro_slogan">Alibaba Personal Cloud Service</string>
 <string name="kanbox_intro_tip"></string>
 <string name="kanbox_getting_file_list">Loading ...</string>
 <string name="kanbox_getting_file_list_empty">Empty directory</string>
@@ -728,4 +732,96 @@ changed later by pressing the <b>Setup</b> button.</string> -->
     <string name="ftp">FTP</string>
     <string name="remote">Remote</string>
     <string name="start_remote_server">Start <xliff:g id="protocol">%s</xliff:g> Server</string>
+    <string name="tab_font_family">sans-serif</string>
+    <!-- Content description for the fake action menu up button as used
+ inside search. [CHAR LIMIT=NONE] -->
+    <string name="action_menu_back_from_search">stop searching</string>
+
+    <!--  String describing the icon used to clear the search field -->
+    <string name="description_clear_search">Clear search</string>
+
+    <!-- The font-family to use for the text inside the searchbox.
+         Do not translate. -->
+    <string name="search_font_family">sans-serif</string>
+
+    <!-- Query hint displayed inside the search field [CHAR LIMIT=64] -->
+    <string name="hint_searchFile">Search file</string>
+    <string name="menu_help">Help</string>
+    <string name="menu_safe_add_photo">Add photo</string>
+    <string name="menu_safe_add_audio">Add audio</string>
+    <string name="menu_safe_add_video">Add video</string>
+    <string name="menu_picker_open">Open</string>
+    <string name="content_description_options">Options</string>
+    <string name="app_open">Launch</string>
+    <string name="app_manage">Manage</string>
+    <string name="app_market">Market</string>
+    <string name="none_child_file">Empty</string>
+    <string name="multiple_child_file">%d Files</string>
+    <string name="single_child_file">1 File</string>
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_drawer">Close Drawer</string>
+    <string name="drawer_settings">Settings</string>
+    <string name="drawer_help_and_feedback">Help &amp; Feedback</string>
+    <string name="drawer_about">About</string>
+    <string name="menu_sort_order">Sort order</string>
+    <string name="enter_new_name">Enter new name:</string>
+
+    <string name="details_content_file"><![CDATA[
+        <b>Name:</b>&nbsp;&nbsp;%1$s<br/>
+        <b>Parent:</b>&nbsp;&nbsp;%2$s<br/>
+        <b>Size:</b>&nbsp;&nbsp;%3$s<br/>
+        <b>Modified:</b>&nbsp;&nbsp;%4$s
+    ]]></string>
+    <string name="details_content_dir"><![CDATA[
+        <b>Name:</b>&nbsp;&nbsp;%1$s<br/>
+        <b>Parent:</b>&nbsp;&nbsp;%2$s<br/>
+        <b>Contents:</b>&nbsp;&nbsp;%3$s<br/>
+        <b>Modified:</b>&nbsp;&nbsp;%4$s
+    ]]></string>
+
+    <string name="details_permission_owner"><![CDATA[
+        <br/><b>Permission:</b>&nbsp;&nbsp;%1$s<br/>
+        <b>Owner:</b>&nbsp;&nbsp;%2$s
+    ]]></string>
+
+    <string name="empty_dir">Empty</string>
+    <string name="single_dir">%1$d folder</string>
+    <string name="multiple_dirs">%1$d folders</string>
+    <string name="single_file">%1$d file</string>
+    <string name="multiple_files">%1$d files</string>
+    <string name="sort_dialog_title">Sort by</string>
+
+    <string name="radio_sort_by_date">Last modified</string>
+    <string name="radio_sort_by_name">File name</string>
+    <string name="radio_sort_by_size">File size</string>
+    <string name="radio_sort_by_extension">File extension</string>
+
+    <string name="radio_app_sort_by_date">Installation time</string>
+    <string name="radio_app_sort_by_name">App name</string>
+    <string name="radio_app_sort_by_size">App size</string>
+    <string name="overflow_share">Share</string>
+    <string name="overflow_copy">Copy</string>
+    <string name="overflow_cut">Cut</string>
+    <string name="overflow_delete">Delete</string>
+    <string name="overflow_rename">Rename</string>
+    <string name="overflow_details">Details</string>
+    <string name="overflow_add_favorite">Mark favorite</string>
+    <string name="overflow_remove_favorite">Undo favorite</string>
+    <string name="overflow_ringtone">Set as ringtone</string>
+    <string name="overflow_wallpaper">Set as wallpaper</string>dl
+    <string name="enter_new_folder_name">Enter folder name:</string>
+    <string name="drawer_my_apps">My Apps</string>
+    <string name="drawer_my_files">My Files</string>
+    <string name="app_manager_label">App Manager</string>
+    <string name="search_progress_dialog_title">Searching</string>
+    <string name="search_progress_dialog_message">Searching file</string>
+    <string name="search_complete">Search complete</string>
+    <string name="menu_up">Up</string>
+    <string name="copy_paste_confirm_title">Paste</string>
+    <string name="copy_paste_confirm_text">Are you sure that you want to copy and paste to %s?</string>
+    <string name="cut_paste_confirm_title">Paste</string>
+    <string name="cut_paste_confirm_text">Are you sure that you want to cut and paste to %s?</string>
+    <string name="settings_label">Settings</string>
+    <string name="about_label">About</string>
+    <string name="help_label">Help</string>
 </resources>

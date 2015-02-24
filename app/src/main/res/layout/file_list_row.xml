@@ -1,87 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/file_items"
-    android:layout_width="fill_parent"
-    android:layout_height="48dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp">
+    <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:background="@drawable/list_selector">
 
-    <!--the icon should be 32dp*32dp-->
-    <com.hufeng.playimage.MyLazyLoadImageView
-        android:id="@+id/icon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
-        android:adjustViewBounds="true"
-        android:duplicateParentState="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/file_icon_file" />
+        <!--the icon should be 32dp*32dp-->
+        <com.hufeng.playimage.BelugaLazyLoadImageView
+            android:id="@+id/icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:adjustViewBounds="true"
+            android:duplicateParentState="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/file_icon_file"/>
+            <!--android:background="@color/blue"/-->
+
+
     <ImageView
-        android:id="@+id/checked"
-        android:src="@drawable/kanbox_ic_downloaded"
+        android:id="@+id/check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@id/icon"
+        android:layout_alignTop="@id/icon"
         android:layout_alignBottom="@id/icon"
+        android:layout_alignLeft="@id/icon"
+        android:layout_alignRight="@id/icon"
+        android:scaleType="centerInside"
+        android:background="@color/list_divider_color"
+        android:src="@drawable/ic_check_white_24"
         android:visibility="gone"
         />
 
-    <TextView
-        android:id="@+id/status"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:minWidth="54dp"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:textSize="12sp"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:layout_marginLeft="4dp"
-        android:visibility="visible"
-        android:textColor="@color/white"
-        android:text=""
-        android:background="@drawable/button_bg"
-        android:gravity="center" />
+        <ImageView
+            android:id="@+id/overflow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            style="@style/BelugaCardOverflow"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="8dp"/>
+            <!--android:background="@color/green"/-->
 
-    <LinearLayout
-        android:layout_toRightOf="@id/icon"
-        android:layout_toLeftOf="@id/status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="vertical">
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:text=""
+            android:textColor="@color/file_info_normal"
+            android:textSize="12sp"
+            android:paddingRight="6dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"/>
+            <!--android:background="@color/red"/-->
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:text="name of the item"
-        android:textColor="@color/file_name_normal"
-        android:textSize="16sp"
-        android:layout_marginBottom="0dp" />
+        <!--TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:background="@drawable/button_bg"
+            android:gravity="center"
+            android:minWidth="54dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="visible" /!-->
 
-    <TextView
-        android:id="@+id/info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/file_info_normal"
-        android:text="info of the item"
-        android:textSize="12sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/icon"
+            android:orientation="vertical">
 
-    <ProgressBar
-        android:id="@+id/progress"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:progress="0"
-        android:progressDrawable="@drawable/progress_bar_bg"
-        android:layout_marginTop="4dp" />
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="name of the item"
+                android:textColor="@color/file_name_normal"
+                android:textSize="16sp"
+                />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="info of the item"
+                android:textColor="@color/file_info_normal"
+                android:textSize="12sp" />
 
-</RelativeLayout>
+            <!--ProgressBar
+                android:id="@+id/progress"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="4dp"
+                android:progress="0"
+                android:progressDrawable="@drawable/progress_bar_bg" /!-->
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/list_divider_color"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>

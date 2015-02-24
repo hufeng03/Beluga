@@ -19,8 +19,6 @@ public class ImageLoader implements Callback {
     private static ImageLoader INSTANCE;
 
     public static final String THUMBNAIL_PREFIX = "Thumb://";
-    public static final String KANBOX_PREFIX = "Kanbox://";
-    public static final String KANBOX_THUMBNAIL_PREFIX = "Kanbox_Thumb://";
 
     public synchronized static ImageLoader getInstance() {
         if (INSTANCE == null) {
@@ -84,9 +82,9 @@ public class ImageLoader implements Callback {
         }
 
         cacheImageViewWithUri(img, uri);
-        img.useDefaultBitmap();
+        img.useDefaultResource();
         // use task to load the bitmap
-        mTaskManager.startLoad(uri);
+        mTaskManager.startLoad(img.getContext().getApplicationContext(), uri);
     }
 
     private boolean displayImageFromCache(BaseLazyLoadImageView img, String uri) {

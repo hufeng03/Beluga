@@ -29,30 +29,6 @@ public class ServiceCallUiHelper {
         mIUi = null;
     }
 
-    public void scanStarted() {
-        if (mIUi != null) {
-            try {
-                mIUi.scanStarted();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void scanCompleted() {
-        if (mIUi != null) {
-            try {
-                mIUi.scanCompleted();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public void changeMonitored(String dir) {
         if (mIUi != null) {
             try {

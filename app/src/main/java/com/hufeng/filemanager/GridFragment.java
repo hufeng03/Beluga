@@ -184,7 +184,7 @@ public class GridFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     /**
-     * It shows the SwipeRefreshLayout progress
+     * It hides the SwipeRefreshLayout progress
      */
     public void hideSwipeProgress() {
         mRefreshLayout.setRefreshing(false);

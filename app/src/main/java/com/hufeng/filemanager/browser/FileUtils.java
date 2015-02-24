@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.webkit.MimeTypeMap;
 
 import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.FileManager;
@@ -20,7 +21,7 @@ import com.hufeng.filemanager.provider.DataStructures.MatchColumns;
 import com.hufeng.filemanager.storage.MediaContentUtil;
 import com.hufeng.filemanager.utils.FileUtil;
 import com.hufeng.filemanager.utils.LogUtil;
-import com.hufeng.filemanager.utils.MimeUtils;
+import com.hufeng.filemanager.utils.MimeUtil;
 import com.hufeng.filemanager.utils.TimeUtil;
 
 import java.io.File;
@@ -70,52 +71,43 @@ public class FileUtils {
         return FileUtil.normalize(data);
     }
 
-    public static int getFileType(String path) {
-        if(sFileMap==null)
-        {
-            initFileMap();
-            buildFileMap();
-        }
-
-        int dotIndex = path.lastIndexOf(".");
-        if (dotIndex < 0)
-            return FILE_TYPE_FILE;
-
-        String end = path.substring(dotIndex, path.length()).toLowerCase();
-        if (TextUtils.isEmpty(end))
-            return FILE_TYPE_FILE;
-
-        Integer t = sFileMap.get(end);
-        if (t != null)
-            return t;
-        return FILE_TYPE_FILE;
-    }
-
     public static int getFileType(File file) {
     	if(file.isDirectory())
     	{
     		return FILE_TYPE_DIRECTORY;
     	}
-    	
-    	if(sFileMap==null)
-    	{
-        	initFileMap();
-    		buildFileMap();
-    	}
-    	
-        String name = file.getName();
-        int dotIndex = name.lastIndexOf(".");
-        if (dotIndex < 0)
-            return FILE_TYPE_FILE;
+        String mimeType = MimeUtil.getMimeType(file.getAbsolutePath());
 
-        String end = name.substring(dotIndex, name.length()).toLowerCase();
-        if (TextUtils.isEmpty(end))
+        if (TextUtils.isEmpty(mimeType)) {
             return FILE_TYPE_FILE;
-
-        Integer t = sFileMap.get(end);
-        if (t != null)
-            return t;
-        return FILE_TYPE_FILE;
+        } else {
+            if (mimeType.startsWith("audio/")) {
+                return FILE_TYPE_AUDIO;
+            } else if (mimeType.startsWith("image/")) {
+                return FILE_TYPE_IMAGE;
+            } else if (mimeType.startsWith("text/")
+                    || mimeType.equals("application/pdf")
+                    || mimeType.equals("application/msword")
+                    || mimeType.equals("application/vnd.ms-excel")
+                    || mimeType.equals("application/vnd.ms-powerpoint")
+                    || mimeType.startsWith("application/vnd.oasis.opendocument.text")
+                    || mimeType.startsWith("application/vnd.openxmlformats-officedocument.wordprocessingml")
+                    || mimeType.startsWith("application/vnd.openxmlformats-officedocument.spreadsheetml")
+                    || mimeType.startsWith("application/vnd.openxmlformats-officedocument.presentationml")) {
+                return FILE_TYPE_DOCUMENT;
+            } else if (mimeType.startsWith("video/")) {
+                return FILE_TYPE_VIDEO;
+            } else if (mimeType.equals("application/vnd.android.package-archive")) {
+                return FILE_TYPE_APK;
+            } else if (mimeType.equals("application/zip")
+                    || mimeType.equals("application/rar")
+                    || mimeType.equals("application/x-tar")
+                    || mimeType.equals("application/x-gtar")) {
+                return FILE_TYPE_ZIP;
+            } else {
+                return FILE_TYPE_FILE;
+            }
+        }
     }
     
     /* 判断文件MimeType的method */
@@ -127,16 +119,8 @@ public class FileUtils {
         if (dotPosition == -1)
         	return "*/*";
 
-        String ext = filePath.substring(dotPosition + 1, filePath.length()).toLowerCase();
-        
-        if("gz".equals(ext) && filePath.endsWith(".tar.gz")){
-        	ext = "tar.gz";
-        }
-        
-        String mimeType = MimeUtils.guessMimeTypeFromExtension(ext);
-//            if (ext.equals("mtz")) {
-//                mimeType = "application/miui-mtz";
-//            }
+        String extension = MimeTypeMap.getFileExtensionFromUrl(f.getPath());
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
 
         return mimeType != null ? mimeType : "*/*";
     }
@@ -146,123 +130,123 @@ public class FileUtils {
     	return TimeUtil.getDateString(date);
     }
 
-    private static HashMap<String, Integer> sFileMap = null;
-    
-    public static void initFileMap(){
-		String first_open = FileManager.getPreference("filemanager_first_open", "1");
-		
-		if("1".equals(first_open))
-		{
-	        FileManager.setCategoryMatch(".3gp", FileUtils.FILE_TYPE_VIDEO);
-	        FileManager.setCategoryMatch(".asf", FileUtils.FILE_TYPE_VIDEO);
-	        FileManager.setCategoryMatch(".avi", FileUtils.FILE_TYPE_VIDEO);
-	        FileManager.setCategoryMatch(".m4u", FileUtils.FILE_TYPE_VIDEO);
-	        FileManager.setCategoryMatch(".m4v", FileUtils.FILE_TYPE_VIDEO);
-	        FileManager.setCategoryMatch(".mov", FileUtils.FILE_TYPE_VIDEO);
-	        FileManager.setCategoryMatch(".mp4", FileUtils.FILE_TYPE_VIDEO);
-	        FileManager.setCategoryMatch(".mpe", FileUtils.FILE_TYPE_VIDEO);
-	        FileManager.setCategoryMatch(".mpeg", FileUtils.FILE_TYPE_VIDEO);
-	        FileManager.setCategoryMatch(".mpg", FileUtils.FILE_TYPE_VIDEO);
-	        FileManager.setCategoryMatch(".mpg4", FileUtils.FILE_TYPE_VIDEO);
-	        FileManager.setCategoryMatch(".rmvb", FileUtils.FILE_TYPE_VIDEO);
-	        FileManager.setCategoryMatch(".rm", FileUtils.FILE_TYPE_VIDEO);
-	        FileManager.setCategoryMatch(".wmv", FileUtils.FILE_TYPE_VIDEO);
-	        FileManager.setCategoryMatch(".xv", FileUtils.FILE_TYPE_VIDEO);
-            FileManager.setCategoryMatch(".flv", FileUtils.FILE_TYPE_VIDEO);
-
-	        FileManager.setCategoryMatch(".m3u", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".m4a", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".m4b", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".m4p", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".mp2", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".mp3", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".mpga", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".amr", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".aac", FileUtils.FILE_TYPE_AUDIO);       
-	        FileManager.setCategoryMatch(".ogg", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".wav", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".wma", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".ape", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".flac", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".imy", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".mmf", FileUtils.FILE_TYPE_AUDIO);
-	        FileManager.setCategoryMatch(".3gpp", FileUtils.FILE_TYPE_AUDIO);
-            FileManager.setCategoryMatch(".awb", FileUtils.FILE_TYPE_AUDIO);
-            FileManager.setCategoryMatch(".mid", FileUtils.FILE_TYPE_AUDIO);
-
-	        FileManager.setCategoryMatch(".apk", FileUtils.FILE_TYPE_APK);
-
-	        FileManager.setCategoryMatch(".bmp", FileUtils.FILE_TYPE_IMAGE);
-	        FileManager.setCategoryMatch(".gif", FileUtils.FILE_TYPE_IMAGE);
-	        FileManager.setCategoryMatch(".jpeg", FileUtils.FILE_TYPE_IMAGE);
-	        FileManager.setCategoryMatch(".jpg", FileUtils.FILE_TYPE_IMAGE);
-	        FileManager.setCategoryMatch(".png", FileUtils.FILE_TYPE_IMAGE);
-	        FileManager.setCategoryMatch(".tif", FileUtils.FILE_TYPE_IMAGE);
-	        FileManager.setCategoryMatch(".mpo", FileUtils.FILE_TYPE_IMAGE);
-            FileManager.setCategoryMatch(".wbmp", FileUtils.FILE_TYPE_IMAGE);
-            FileManager.setCategoryMatch(".pcx", FileUtils.FILE_TYPE_IMAGE);
-            FileManager.setCategoryMatch(".tga", FileUtils.FILE_TYPE_IMAGE);
-            FileManager.setCategoryMatch(".wmf", FileUtils.FILE_TYPE_IMAGE);
-	        
-	        FileManager.setCategoryMatch(".txt", FileUtils.FILE_TYPE_DOCUMENT);
-	        FileManager.setCategoryMatch(".epub", FileUtils.FILE_TYPE_DOCUMENT);
-	        FileManager.setCategoryMatch(".chm", FileUtils.FILE_TYPE_DOCUMENT);
-	        FileManager.setCategoryMatch(".pdf", FileUtils.FILE_TYPE_DOCUMENT);
-	        FileManager.setCategoryMatch(".ps", FileUtils.FILE_TYPE_DOCUMENT);
-	        FileManager.setCategoryMatch(".doc", FileUtils.FILE_TYPE_DOCUMENT);
-	        FileManager.setCategoryMatch(".ppt", FileUtils.FILE_TYPE_DOCUMENT);
-	        FileManager.setCategoryMatch(".xls", FileUtils.FILE_TYPE_DOCUMENT);
-	        FileManager.setCategoryMatch(".docx", FileUtils.FILE_TYPE_DOCUMENT);
-	        FileManager.setCategoryMatch(".pptx", FileUtils.FILE_TYPE_DOCUMENT);
-	        FileManager.setCategoryMatch(".xlsx", FileUtils.FILE_TYPE_DOCUMENT);
-	        FileManager.setCategoryMatch(".html", FileUtils.FILE_TYPE_DOCUMENT);
-	        FileManager.setCategoryMatch(".htm", FileUtils.FILE_TYPE_DOCUMENT);
-	        FileManager.setCategoryMatch(".xhtml", FileUtils.FILE_TYPE_DOCUMENT);
-	        FileManager.setCategoryMatch(".xml", FileUtils.FILE_TYPE_DOCUMENT);
-	        
-	        
-	        FileManager.setCategoryMatch(".zip", FileUtils.FILE_TYPE_ZIP);
-	        FileManager.setCategoryMatch(".rar", FileUtils.FILE_TYPE_ZIP);
-	        FileManager.setCategoryMatch(".tar", FileUtils.FILE_TYPE_ZIP);
-	        FileManager.setCategoryMatch(".z", FileUtils.FILE_TYPE_ZIP);
-	        FileManager.setCategoryMatch(".7z", FileUtils.FILE_TYPE_ZIP);
-	        FileManager.setCategoryMatch(".gz", FileUtils.FILE_TYPE_ZIP);
-	        
-			FileManager.setPreference(FileManager.FILEMANAGER_FIRST_OPEN, "0");
-		}
-    }
-    
-    public static void buildFileMap()
-    {
-    	if(sFileMap!=null)
-    		sFileMap.clear();
-		sFileMap = new HashMap<String, Integer>();
-		
-    	Cursor cursor = FileManager.getAppContext().getContentResolver()
-    			.query(MatchColumns.CONTENT_URI, new String[] {
-           MatchColumns.EXTENSION_FIELD, MatchColumns.CATEGORY_FIELD},null, null, null);
-    	    	
-    	if(cursor!=null)
-    	{
-        	if(LogUtil.IDBG) LogUtil.i(TAG, "build File Map with database record number is "+cursor.getCount());
-        	if(cursor.getCount()==0)
-        	{
-        		LogUtil.e(TAG, "build File Map error because not match pair in database");
-        	}
-    		while(cursor.moveToNext())
-    		{
-    			String extension = cursor.getString(0);
-    			int category = cursor.getInt(1);
-    			if(LogUtil.IDBG) LogUtil.i(TAG, "build File Map with "+extension+" "+category);
-    			sFileMap.put(extension, category);
-    		}
-    		cursor.close();
-    	} 	
-    	else
-    	{
-    		LogUtil.e(TAG, "build File Map error because not match pair in database");
-    	}
-    }
+//    private static HashMap<String, Integer> sFileMap = null;
+//
+//    public static void initFileMap(){
+//		String first_open = FileManager.getPreference("filemanager_first_open", "1");
+//
+//		if("1".equals(first_open))
+//		{
+//	        FileManager.setCategoryMatch(".3gp", FileUtils.FILE_TYPE_VIDEO);
+//	        FileManager.setCategoryMatch(".asf", FileUtils.FILE_TYPE_VIDEO);
+//	        FileManager.setCategoryMatch(".avi", FileUtils.FILE_TYPE_VIDEO);
+//	        FileManager.setCategoryMatch(".m4u", FileUtils.FILE_TYPE_VIDEO);
+//	        FileManager.setCategoryMatch(".m4v", FileUtils.FILE_TYPE_VIDEO);
+//	        FileManager.setCategoryMatch(".mov", FileUtils.FILE_TYPE_VIDEO);
+//	        FileManager.setCategoryMatch(".mp4", FileUtils.FILE_TYPE_VIDEO);
+//	        FileManager.setCategoryMatch(".mpe", FileUtils.FILE_TYPE_VIDEO);
+//	        FileManager.setCategoryMatch(".mpeg", FileUtils.FILE_TYPE_VIDEO);
+//	        FileManager.setCategoryMatch(".mpg", FileUtils.FILE_TYPE_VIDEO);
+//	        FileManager.setCategoryMatch(".mpg4", FileUtils.FILE_TYPE_VIDEO);
+//	        FileManager.setCategoryMatch(".rmvb", FileUtils.FILE_TYPE_VIDEO);
+//	        FileManager.setCategoryMatch(".rm", FileUtils.FILE_TYPE_VIDEO);
+//	        FileManager.setCategoryMatch(".wmv", FileUtils.FILE_TYPE_VIDEO);
+//	        FileManager.setCategoryMatch(".xv", FileUtils.FILE_TYPE_VIDEO);
+//            FileManager.setCategoryMatch(".flv", FileUtils.FILE_TYPE_VIDEO);
+//
+//	        FileManager.setCategoryMatch(".m3u", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".m4a", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".m4b", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".m4p", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".mp2", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".mp3", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".mpga", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".amr", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".aac", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".ogg", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".wav", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".wma", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".ape", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".flac", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".imy", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".mmf", FileUtils.FILE_TYPE_AUDIO);
+//	        FileManager.setCategoryMatch(".3gpp", FileUtils.FILE_TYPE_AUDIO);
+//            FileManager.setCategoryMatch(".awb", FileUtils.FILE_TYPE_AUDIO);
+//            FileManager.setCategoryMatch(".mid", FileUtils.FILE_TYPE_AUDIO);
+//
+//	        FileManager.setCategoryMatch(".apk", FileUtils.FILE_TYPE_APK);
+//
+//	        FileManager.setCategoryMatch(".bmp", FileUtils.FILE_TYPE_IMAGE);
+//	        FileManager.setCategoryMatch(".gif", FileUtils.FILE_TYPE_IMAGE);
+//	        FileManager.setCategoryMatch(".jpeg", FileUtils.FILE_TYPE_IMAGE);
+//	        FileManager.setCategoryMatch(".jpg", FileUtils.FILE_TYPE_IMAGE);
+//	        FileManager.setCategoryMatch(".png", FileUtils.FILE_TYPE_IMAGE);
+//	        FileManager.setCategoryMatch(".tif", FileUtils.FILE_TYPE_IMAGE);
+//	        FileManager.setCategoryMatch(".mpo", FileUtils.FILE_TYPE_IMAGE);
+//            FileManager.setCategoryMatch(".wbmp", FileUtils.FILE_TYPE_IMAGE);
+//            FileManager.setCategoryMatch(".pcx", FileUtils.FILE_TYPE_IMAGE);
+//            FileManager.setCategoryMatch(".tga", FileUtils.FILE_TYPE_IMAGE);
+//            FileManager.setCategoryMatch(".wmf", FileUtils.FILE_TYPE_IMAGE);
+//
+//	        FileManager.setCategoryMatch(".txt", FileUtils.FILE_TYPE_DOCUMENT);
+//	        FileManager.setCategoryMatch(".epub", FileUtils.FILE_TYPE_DOCUMENT);
+//	        FileManager.setCategoryMatch(".chm", FileUtils.FILE_TYPE_DOCUMENT);
+//	        FileManager.setCategoryMatch(".pdf", FileUtils.FILE_TYPE_DOCUMENT);
+//	        FileManager.setCategoryMatch(".ps", FileUtils.FILE_TYPE_DOCUMENT);
+//	        FileManager.setCategoryMatch(".doc", FileUtils.FILE_TYPE_DOCUMENT);
+//	        FileManager.setCategoryMatch(".ppt", FileUtils.FILE_TYPE_DOCUMENT);
+//	        FileManager.setCategoryMatch(".xls", FileUtils.FILE_TYPE_DOCUMENT);
+//	        FileManager.setCategoryMatch(".docx", FileUtils.FILE_TYPE_DOCUMENT);
+//	        FileManager.setCategoryMatch(".pptx", FileUtils.FILE_TYPE_DOCUMENT);
+//	        FileManager.setCategoryMatch(".xlsx", FileUtils.FILE_TYPE_DOCUMENT);
+//	        FileManager.setCategoryMatch(".html", FileUtils.FILE_TYPE_DOCUMENT);
+//	        FileManager.setCategoryMatch(".htm", FileUtils.FILE_TYPE_DOCUMENT);
+//	        FileManager.setCategoryMatch(".xhtml", FileUtils.FILE_TYPE_DOCUMENT);
+//	        FileManager.setCategoryMatch(".xml", FileUtils.FILE_TYPE_DOCUMENT);
+//
+//
+//	        FileManager.setCategoryMatch(".zip", FileUtils.FILE_TYPE_ZIP);
+//	        FileManager.setCategoryMatch(".rar", FileUtils.FILE_TYPE_ZIP);
+//	        FileManager.setCategoryMatch(".tar", FileUtils.FILE_TYPE_ZIP);
+//	        FileManager.setCategoryMatch(".z", FileUtils.FILE_TYPE_ZIP);
+//	        FileManager.setCategoryMatch(".7z", FileUtils.FILE_TYPE_ZIP);
+//	        FileManager.setCategoryMatch(".gz", FileUtils.FILE_TYPE_ZIP);
+//
+//			FileManager.setPreference(FileManager.FILEMANAGER_FIRST_OPEN, "0");
+//		}
+//    }
+//
+//    public static void buildFileMap()
+//    {
+//    	if(sFileMap!=null)
+//    		sFileMap.clear();
+//		sFileMap = new HashMap<String, Integer>();
+//
+//    	Cursor cursor = FileManager.getAppContext().getContentResolver()
+//    			.query(MatchColumns.CONTENT_URI, new String[] {
+//           MatchColumns.EXTENSION_FIELD, MatchColumns.CATEGORY_FIELD},null, null, null);
+//
+//    	if(cursor!=null)
+//    	{
+//        	if(LogUtil.IDBG) LogUtil.i(TAG, "build File Map with database record number is "+cursor.getCount());
+//        	if(cursor.getCount()==0)
+//        	{
+//        		LogUtil.e(TAG, "build File Map error because not match pair in database");
+//        	}
+//    		while(cursor.moveToNext())
+//    		{
+//    			String extension = cursor.getString(0);
+//    			int category = cursor.getInt(1);
+//    			if(LogUtil.IDBG) LogUtil.i(TAG, "build File Map with "+extension+" "+category);
+//    			sFileMap.put(extension, category);
+//    		}
+//    		cursor.close();
+//    	}
+//    	else
+//    	{
+//    		LogUtil.e(TAG, "build File Map error because not match pair in database");
+//    	}
+//    }
 
     public static String getUninstallApkLabel(Context context, String apkPath) {
         String PATH_PackageParser = "android.content.pm.PackageParser";

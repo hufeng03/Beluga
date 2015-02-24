@@ -194,7 +194,7 @@
     <string name="delete">刪除</string>
     <string name="settings_detail_recover">恢復默認</string>
     <string name="menu_rename">重命名</string>
-    <string name="rename_dialog_title">文件重命名為</string>
+    <string name="rename_dialog_title">重命名</string>
     <string name="rename_empty_string">重命名文件名不能為空</string>
     <string name="rename_same_name_string">此文件名已存在，請重新命名</string>
     <string name="select_app_dialog_title">請選擇默認查看程序</string>
@@ -310,7 +310,7 @@ or nonexistent.</string>
     <string name="menu_add_safe">加密私藏</string>
     <string name="menu_remove_favorite">取消收藏</string>
     <string name="menu_remove_safe">取消加密私藏</string>
-    <string name="detail_dialog_title">文件詳情</string>
+    <string name="detail_dialog_title">詳情</string>
     <string name="file_info_kind">類型：</string>
     <string name="file_info_kind_directory">文件夾</string>
     <string name="file_info_kind_file">文件</string>
@@ -355,17 +355,17 @@ or nonexistent.</string>
     <string name="repeat_all_notif">Repeating all songs.</string>
     <string name="music_format_not_supported">抱歉，播放器暫不支持該格式</string>
     <string name="delete_confirm_dialog_title">刪除文件(夾)</string>
-    <string name="delete_confirm_text">確認刪除\n<xliff:g id="name">%1$s</xliff:g>\n等<xliff:g id="count">%2$d</xliff:g>個文件</string>
-    <string name="add_to_safe_confirm_dialog_text">確認將\n<xliff:g id="name">%1$s</xliff:g>\n等<xliff:g id="count">%2$d</xliff:g>個文件移到保險箱? (請勿刪除或隨意操作/mnt/sdcard/.safebox/)</string>
+    <string name="delete_confirm_text">確認刪除?</string>
+    <string name="add_to_safe_confirm_dialog_text">確認將\n<xliff:g id="count">%d</xliff:g>\n個文件移到保險箱? (請勿刪除或隨意操作.safebox目录)</string>
     <string name="add_to_safe_confirm_dialog_title">保險箱</string>
-    <string name="add_to_cloud_confirm_dialog_text">確認將\n<xliff:g id="name">%1$s</xliff:g>\n等<xliff:g id="count">%2$d</xliff:g>個文件上傳到酷盤?</string>
-    <string name="add_to_cloud_confirm_dialog_text_no_dir">確認將\n<xliff:g id="name">%1$s</xliff:g>\n等<xliff:g id="count">%2$d</xliff:g>個文件上傳到酷盤?\n(<xliff:g id="name">%3$s</xliff:g>\n等<xliff:g id="count">%4$d</xliff:g>個文件夾不會被上傳)</string>
+    <string name="add_to_cloud_confirm_dialog_text">確認將<xliff:g id="count">%1d</xliff:g>個文件上傳到酷盤?</string>
+    <string name="add_to_cloud_confirm_dialog_text_no_dir">確認將<xliff:g id="count">%d</xliff:g>個文件上傳到酷盤?</string>
     <string name="add_to_cloud_confirm_dialog_title">酷盤</string>
-    <string name="delete_from_safe_confirm_dialog_text">確認將<xliff:g id="count">%2$d</xliff:g>個文件從保險箱刪除，文件不會被恢復?</string>
+    <string name="delete_from_safe_confirm_dialog_text">確認將<xliff:g id="count">%d</xliff:g>個文件從保險箱刪除，文件不會被恢復?</string>
     <string name="delete_from_safe_confirm_dialog_title">保險箱</string>
-    <string name="download_from_cloud_confirm_dialog_text">確認從雲端下載文件<xliff:g id="name">%1$s</xliff:g>到本地? </string>
+    <string name="download_from_cloud_confirm_dialog_text">確認從雲端下載文件<xliff:g id="name">%s</xliff:g>到本地? </string>
     <string name="download_from_cloud_confirm_dialog_title">下載</string>
-    <string name="move_from_safe_confirm_dialog_text">確認將<xliff:g id="count">%2$d</xliff:g>個文件移出保險箱，恢復到原有位置? </string>
+    <string name="move_from_safe_confirm_dialog_text">確認將<xliff:g id="count">%d</xliff:g>個文件移出保險箱，恢復到原有位置? </string>
     <string name="move_from_safe_confirm_dialog_title">保險箱</string>
     <string name="sdcard_volume">"SD卡: <xliff:g id="capacity">%s</xliff:g>(剩余空間<xliff:g id="available">%s</xliff:g>)"</string>
     <string name="phone_data_volume">"手機存儲: <xliff:g id="capacity">%s</xliff:g>(剩余空間<xliff:g id="available">%s</xliff:g>)"</string>
@@ -486,7 +486,7 @@ or nonexistent.</string>
     <string name="multi_select_title">已選擇 <xliff:g id="number">%1$s</xliff:g> 個</string>
     <string name="menu_refresh">刷新</string>
     <string name="menu_search">搜索文件</string>
-    <string name="menu_settings">工具箱</string>
+    <string name="menu_settings">设置</string>
     <string name="menu_create">新建文件夾</string>
     <string name="menu_cloud_add">上傳文件</string>
     <string name="menu_cloud_add_image">上傳圖片</string>
@@ -522,6 +522,10 @@ or nonexistent.</string>
     <string name="create_directory_not_allowed">無法在此處創建文件夾</string>
     <string name="create_directory_success">成功創建文件夾</string>
     <string name="create_directory_fail">創建文件夾失敗</string>
+    <string name="menu_sort_by_date">日期排序</string>
+    <string name="menu_sort_by_name">名稱排序</string>
+    <string name="menu_sort_by_size">大小排序</string>
+    <string name="menu_sort_by_extension">格式排序</string>
     <string name="menu_sort_date_asc">日期升序</string>
     <string name="menu_sort_date_desc">日期降序</string>
     <string name="menu_sort_name_asc">名稱升序</string>
@@ -705,4 +709,17 @@ or nonexistent.</string>
     <string name="ftp">FTP</string>
     <string name="http">HTTP</string>
     <string name="remote">远程</string>
+    <string name="menu_safe_add_photo">加密照片</string>
+    <string name="menu_safe_add_audio">加密音频</string>
+    <string name="menu_safe_add_video">加密视频</string>
+    <string name="menu_picker_open">打开</string>
+    <string name="content_description_options">选项</string>
+    <string name="none_child_file">空文件夹</string>
+    <string name="multiple_child_file">%d子文件</string>
+    <string name="single_child_file">1子文件</string>
+    <string name="drawer_settings">设置</string>
+    <string name="drawer_help_and_feedback">帮助和反馈</string>
+    <string name="drawer_about">关于</string>
+    <string name="menu_sort_order">顺序</string>
+    <string name="sort_dialog_title">排序</string>
 </resources>

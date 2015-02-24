@@ -59,6 +59,10 @@
 	public static final int *; 
 }
 
+-keep public class com.belugamobile.filemanager.R$*{
+	public static final int *;
+}
+
 -keep public class com.feedback.ui.ThreadView{
 }
 
@@ -85,4 +89,16 @@
 
 -keep class * implements android.os.Parcelable {
   public static final android.os.Parcelable$Creator *;
+}
+
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+-dontwarn com.squareup.okhttp.**
+
+-dontwarn rx.**
+-dontwarn retrofit.**
+-dontwarn okio.**
+-keep class retrofit.** { *; }
+-keepclasseswithmembers class * {
+    @retrofit.http.* <methods>;
 }

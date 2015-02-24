@@ -8,8 +8,8 @@ import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.hufeng.filemanager.browser.BelugaSorter;
 import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.browser.FileSorter;
 import com.hufeng.filemanager.provider.UiProvider;
 import com.hufeng.filemanager.treeview.InMemoryTreeStateManager;
 import com.hufeng.filemanager.treeview.TreeBuilder;
@@ -97,7 +97,7 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
         String path = (String)parent.getAdapter().getItem(position);
         FileEntry entry = new FileEntry(path);
         boolean collasp = false;
-        if (entry.isDirectory()) {
+        if (entry.isDirectory) {
             final TreeNodeInfo<String> info = mTreeManager.getNodeInfo(path);
             if(info.isWithChildren()){
                 if(!info.isExpanded()){
@@ -265,7 +265,7 @@ public class FileTreeFragment extends TreeFragment implements LoaderManager.Load
         File[] child_files = new File(file).listFiles();
         if(child_files == null)
             return;
-        Arrays.sort(child_files, FileSorter.getFileComparator(FileSorter.SORT_FIELD.NAME, FileSorter.SORT_ORDER.ASC));
+        Arrays.sort(child_files, BelugaSorter.getFileComparator(BelugaSorter.SORT_FIELD.NAME, BelugaSorter.SORT_ORDER.ASC));
         int flag_child = -1;
         for(File child_file : child_files){
             if(!child_file.isDirectory()){

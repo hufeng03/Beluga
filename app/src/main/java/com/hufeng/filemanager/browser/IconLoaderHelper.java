@@ -99,12 +99,12 @@ public class IconLoaderHelper {
     public static int getFileIcon(Context context, String path, boolean with_square) {
         if (path.endsWith("/") || new File(path).isDirectory()) {
             if (path.equals("/")) {
-                return with_square?R.drawable.file_icon_phone_square:R.drawable.phone;
+                return with_square?R.drawable.file_icon_phone_square:R.drawable.ic_action_phone_android;
             } else if (StorageManager.getInstance(context).isStorage(path)) {
                 if (StorageManager.getInstance(context).isInternalStorage(path)) {
-                    return with_square?R.drawable.file_icon_phone_square:R.drawable.phone;
+                    return with_square?R.drawable.file_icon_phone_square:R.drawable.ic_action_phone_android;
                 } else {
-                    return with_square?R.drawable.file_icon_sdcard_square:R.drawable.sdcard;
+                    return with_square?R.drawable.file_icon_sdcard_square:R.drawable.ic_action_sd_card;
                 }
             } else {
                 return with_square?R.drawable.file_icon_folder_square:R.drawable.file_icon_folder;
@@ -124,13 +124,13 @@ public class IconLoaderHelper {
                 switch(type)
                 {
                 case FileUtils.FILE_TYPE_IMAGE:
-                    id = with_square?R.drawable.file_icon_picture_square:R.drawable.file_icon_picture;
+                    id = with_square?R.drawable.file_icon_picture_square:R.drawable.file_category_icon_image;
                     break;
                 case FileUtils.FILE_TYPE_VIDEO:
-                    id = with_square?R.drawable.file_icon_video_square:R.drawable.file_icon_video;
+                    id = with_square?R.drawable.file_icon_video_square:R.drawable.file_category_icon_video;
                     break;
                 case FileUtils.FILE_TYPE_AUDIO:
-                    id = with_square?R.drawable.file_icon_music_square:R.drawable.file_icon_music;
+                    id = with_square?R.drawable.file_icon_music_square:R.drawable.file_category_icon_audio;
                     break;
                 default:
                     id= with_square?R.drawable.file_icon_default_square:R.drawable.file_icon_default;

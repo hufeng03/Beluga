@@ -1,20 +1,36 @@
 package com.hufeng.filemanager.browser;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Debug;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.mp3.Mp3ReadId3v2;
 import com.hufeng.filemanager.utils.ImageUtil;
+import com.hufeng.filemanager.utils.LogUtil;
+import com.hufeng.filemanager.utils.MimeUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Created by feng on 13-10-7.
@@ -23,108 +39,138 @@ public class IconUtil {
 
     private static final String TAG = IconUtil.class.getSimpleName();
 
-    private static final int MINI_KIND = 1;
+
+    public static Bitmap getApkThumbnail(String path) {
+        final Context context = FileManager.getAppContext();
+        PackageInfo packageInfo = context.getPackageManager().getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
+        ApplicationInfo appInfo = packageInfo.applicationInfo;
+        appInfo.sourceDir = path;
+        appInfo.publicSourceDir = path;
+        Drawable icon = appInfo.loadIcon(context.getPackageManager());
+        Bitmap bmpIcon = ((BitmapDrawable) icon).getBitmap();
+        return bmpIcon;
+    }
 
     public static Bitmap getImageThumbnail(String path){
-        long id = getDbId(path, FileUtils.FILE_TYPE_IMAGE);
-        return getImageThumbnail(path, id);
+        return getImageThumbnail(path, MimeUtil.getMimeType(path));
     }
 
     public static Bitmap getVideoThumbnail(String path) {
-//        android.os.Debug.waitForDebugger();
-        long id = getDbId(path, FileUtils.FILE_TYPE_VIDEO);
-//        LogUtil.i(TAG, "video_"+path+" id in db is " + id);
-        return getVideoThumbnail(path, id);
+        return getVideoThumbnail(path, MimeUtil.getMimeType(path));
     }
 
     public static Bitmap getAudioThumbnail(String path){
-        long id = getDbId(path, FileUtils.FILE_TYPE_AUDIO);
-        return getAudioThumbnail(path, id);
+        return getAudioThumbnail(path, MimeUtil.getMimeType(path));
     }
 
-    public static Bitmap getImageThumbnail(String path, long id) {
-        Bitmap bm = null;
-        //Bitmap bitmap = null;
-        Bitmap bitmap = getImageThumbnailFromDatabase(id);
+    public static Bitmap getImageThumbnail(String path, String mimeType) {
+        Bitmap bitmap = null;
+        try {
+            long id = getDbId(path, FileUtils.FILE_TYPE_IMAGE);
+            bitmap = getImageThumbnailFromDatabase(id);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+
         if (bitmap == null) {
-            bitmap = getImageThumbnailFromFile(path);
+            bitmap = getImageThumbnailFromFile(path, mimeType);
         }
-
-        if(bitmap!=null)
-        {
-            int degree = ImageUtil.getImageRotateDegree(path);
-            if(degree!=0)
-            {
-                Matrix mat = new Matrix();
-                mat.postRotate(degree);
-                bm  = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),mat,true);
-                if(bm!=null && !bm.equals(bitmap))
-                {
-                    bitmap.recycle();
-                }
-                else
-                {
-                    bm = bitmap;
-                }
-            }
-            else
-            {
-                bm = bitmap;
-            }
-        }
-        return bm;
+        return bitmap;
+//        if(bitmap!=null)
+//        {
+//            int degree = ImageUtil.getImageRotateDegree(path);
+//            if(degree!=0)
+//            {
+//                Matrix mat = new Matrix();
+//                mat.postRotate(degree);
+//                bm  = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),mat,true);
+//                if(bm!=null && !bm.equals(bitmap))
+//                {
+//                    bitmap.recycle();
+//                }
+//                else
+//                {
+//                    bm = bitmap;
+//                }
+//            }
+//            else
+//            {
+//                bm = bitmap;
+//            }
+//        }
+//        return bm;
     }
-    public static Bitmap getVideoThumbnail(String path, long id) {
-        Bitmap bm = getVideoThumbnailFromDatabase(id);
-        if (bm == null) {
-            bm = getVideoThumbnailFromFile(path);
+    public static Bitmap getVideoThumbnail(String path, String mimeType) {
+        Bitmap bitmap = null;
+        try {
+            long id = getDbId(path, FileUtils.FILE_TYPE_VIDEO);
+            bitmap = getVideoThumbnailFromDatabase(id);
+        } catch (Exception e) {
+
         }
-        return bm;
+        if (bitmap == null) {
+            bitmap = getVideoThumbnailFromFile(path, mimeType);
+        }
+        return bitmap;
 
     }
-    public static Bitmap getAudioThumbnail(String path, long id) {
-        Bitmap bm = getAudioThumbnailFromDatabase(id);
-        if(bm==null)
-        {
-            bm = getAudioThumbnailFromFile(path);
+    public static Bitmap getAudioThumbnail(String path, String mimeType) {
+        Bitmap bitmap = null;
+        try {
+            long id = getDbId(path, FileUtils.FILE_TYPE_AUDIO);
+            bitmap = getAudioThumbnailFromDatabase(id);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return bm;
+        if (bitmap == null) {
+            bitmap = getAudioThumbnailFromFile(path, mimeType);
+        }
+        return bitmap;
     }
 
 
     private static Bitmap getImageThumbnailFromDatabase(long id) {
-        return MediaStore.Images.Thumbnails.getThumbnail(FileManager.getAppContext().getContentResolver(), id, MINI_KIND, null);
+        return MediaStore.Images.Thumbnails.getThumbnail(FileManager.getAppContext().getContentResolver(), id, MediaStore.Images.Thumbnails.MINI_KIND, null);
     }
 
     private static Bitmap getVideoThumbnailFromDatabase(long id) {
-        return MediaStore.Video.Thumbnails.getThumbnail(FileManager.getAppContext().getContentResolver(), id, MINI_KIND, null);
+        return MediaStore.Video.Thumbnails.getThumbnail(FileManager.getAppContext().getContentResolver(), id, MediaStore.Video.Thumbnails.MINI_KIND, null);
     }
 
     private static Bitmap getAudioThumbnailFromDatabase(long id) {
         return null;
     }
 
-    private static Bitmap getVideoThumbnailFromFile(String path) {
-        Bitmap bitmap =  ThumbnailUtils.createVideoThumbnail(path, MINI_KIND);
-//        LogUtil.i(TAG, "video_"+path+" create thumbnail from file " + bitmap);
+    private static Bitmap getVideoThumbnailFromFile(String path, String mimeType) {
+        Bitmap bitmap =  ThumbnailUtils.createVideoThumbnail(path,  MediaStore.Video.Thumbnails.MINI_KIND);
         return bitmap;
     }
 
-    private static Bitmap getImageThumbnailFromFile(String path)
+    private static Bitmap getImageThumbnailFromFile(String path, String mimeType)
     {
-        Bitmap bm = ImageUtil.loadBitmapWithSizeLimitation(FileManager.getAppContext(),
-                512 * 512, Uri.fromFile(new File(path)));
+        try {
+            Method method = ThumbnailUtils.class.getMethod("createImageThumbnail", new Class[]{String.class, int.class});
+            Bitmap bitmap = (Bitmap) method.invoke(null, new Object[]{path, new Integer(MediaStore.Images.Thumbnails.MINI_KIND)});
+            if (bitmap != null) {
+                return bitmap;
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
-        if(bm==null)
-            return null;
-        return bm;
+//      return ImageUtil.loadBitmapWithSizeLimitation(FileManager.getAppContext(),
+//                512 * 512, Uri.fromFile(new File(path)));
+        return null;
     }
 
-    private static Bitmap getAudioThumbnailFromFile(String path){
+    private static Bitmap getAudioThumbnailFromFile(String path, String mimeType){
         Bitmap bm = null;
 
-        if("mp3".equalsIgnoreCase(IconLoaderHelper.getExtFromFilename(path)))
-        {
+        if("audio/mpeg".equals(mimeType) || "audio/mp3".equals(mimeType)) {
             try {
                 Mp3ReadId3v2 mp3Id3v2 = new Mp3ReadId3v2(new FileInputStream(path));
                 mp3Id3v2.readId3v2(1024 * 100);
@@ -168,7 +214,7 @@ public class IconUtil {
         return bm;
     }
 
-    private static long getDbId(String path, int cate) {
+    private static long getDbId(String path, int cate) throws Exception{
         String volumeName = "external";
         Uri uri = null;
         if(cate==FileUtils.FILE_TYPE_VIDEO)
@@ -198,16 +244,28 @@ public class IconUtil {
                 MediaStore.Files.FileColumns._ID, MediaStore.Files.FileColumns.DATA
         };
 
-        Cursor c = FileManager.getAppContext().getContentResolver()
-                .query(uri, columns, selection, selectionArgs, null);
-        if (c == null) {
-            return 0;
-        }
         long id = 0;
-        if (c.moveToNext()) {
-            id = c.getLong(0);
+        Cursor c = null;
+        boolean found = false;
+        try {
+            c = FileManager.getAppContext().getContentResolver()
+                .query(uri, columns, selection, selectionArgs, null);
+            if (c != null) {
+                if (c.moveToNext()) {
+                    id = c.getLong(0);
+                    found = true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c!= null) {
+                c.close();
+            }
         }
-        c.close();
+        if (!found) {
+            throw new Exception("Entry not found in MediaDatabase");
+        }
         return id;
     }
 }

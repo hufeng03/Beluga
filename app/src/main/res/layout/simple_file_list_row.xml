@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/simple_file_list_row_height"
+    android:background="@drawable/list_selector">
+
+        <!--the icon should be 32dp*32dp-->
+        <com.hufeng.playimage.BelugaLazyLoadImageView
+            android:id="@+id/icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="0dp"
+            android:adjustViewBounds="true"
+            android:duplicateParentState="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/file_icon_file"/>
+
+
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_toRightOf="@id/icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="name of the item"
+                android:textColor="@color/file_name_normal"
+                android:textSize="16sp"
+                android:gravity="center_vertical|left"
+                />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/list_divider_color"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>

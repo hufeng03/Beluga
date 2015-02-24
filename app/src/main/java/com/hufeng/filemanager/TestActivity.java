@@ -1,21 +1,14 @@
 package com.hufeng.filemanager;
 
-import android.app.Activity;
-import android.content.Context;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
-
-import com.hufeng.filemanager.resource.FileDownloader;
 
 import com.hufeng.filemanager.server.BelugaServer;
 
 import org.java_websocket.drafts.Draft_17;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 

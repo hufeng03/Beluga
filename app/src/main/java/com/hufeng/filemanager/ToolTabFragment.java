@@ -185,11 +185,11 @@ public class ToolTabFragment extends BaseFragment implements OnClickListener, On
 		if( mDisplayMode == 0 ) {
         	MenuItem item = menu.findItem(R.id.menu_display);
         	if(item!=null)
-        		item.setIcon(R.drawable.ic_menu_display_as_grid_holo_light);
+        		item.setIcon(R.drawable.ic_action_view_as_grid);
         }else{
         	MenuItem item = menu.findItem(R.id.menu_display);
         	if(item!=null)
-        		item.setIcon(R.drawable.ic_menu_display_as_list_holo_light);
+        		item.setIcon(R.drawable.ic_action_view_as_list);
         }
 	}
 

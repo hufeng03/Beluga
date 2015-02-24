@@ -12,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import be.ppareit.swiftp.gui.FsPreferenceActivity;
-
 /**
  * Created by feng on 2014-09-10.
  */
@@ -101,8 +99,6 @@ public class RemoteTabFragment extends BaseFragment{
 //            }
 //        }
 //        ft.commit();
-        Intent intent = new Intent(getActivity(), FsPreferenceActivity.class);
-        startActivity(intent);
     }
 
 }

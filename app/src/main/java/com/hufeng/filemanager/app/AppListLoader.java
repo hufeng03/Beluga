@@ -6,8 +6,9 @@ import android.content.pm.PackageManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 
-import com.hufeng.filemanager.browser.FileSorter;
-import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.CategorySelectEvent;
+import com.hufeng.filemanager.SortPreferenceReceiver;
+import com.hufeng.filemanager.browser.BelugaSorter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +24,7 @@ public class AppListLoader extends AsyncTaskLoader<List<AppEntry>> {
 
     List<AppEntry> mApps;
     PackageIntentReceiver mPackageObserver;
-
+    SortPreferenceReceiver mSortObserver;
     String mSearch;
 
     public AppListLoader(Context context, String search) {
@@ -60,15 +61,14 @@ public class AppListLoader extends AsyncTaskLoader<List<AppEntry>> {
                 if((apps.get(i).flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) ==0 )
                     continue;
             }
-            AppEntry entry = new AppEntry(this, apps.get(i));
-            entry.loadLabel(context);
-            if(TextUtils.isEmpty(mSearch) || entry.getLabel().contains(mSearch) || entry.getApplicationInfo().processName.contains(mSearch)) {
+            AppEntry entry = new AppEntry(getContext(), /*apps.get(i)*/apps.get(i).packageName);
+            if(TextUtils.isEmpty(mSearch) || entry.getName().contains(mSearch) || entry.packageName.contains(mSearch)) {
                 entries.add(entry);
             }
         }
         // Sort the list.
-        FileSorter.SORTER sorter = FileSorter.getFileSorter(getContext(), FileUtils.FILE_TYPE_APP);
-        Collections.sort(entries, FileSorter.getComparator(sorter.field, sorter.order));
+        BelugaSorter.SORTER sorter = BelugaSorter.getFileSorter(getContext(), CategorySelectEvent.CategoryType.APP);
+        Collections.sort(entries, BelugaSorter.getComparator(sorter.field, sorter.order));
 
         // Done!
         return entries;
@@ -120,6 +120,10 @@ public class AppListLoader extends AsyncTaskLoader<List<AppEntry>> {
             mPackageObserver = new PackageIntentReceiver(this);
         }
 
+        if (mSortObserver == null) {
+            mSortObserver = new SortPreferenceReceiver(this, CategorySelectEvent.CategoryType.APP);
+        }
+
         // Has something interesting in the configuration changed since we
         // last built the app list?
         boolean configChange = mLastConfig.applyNewConfig(getContext().getResources());
@@ -168,8 +172,14 @@ public class AppListLoader extends AsyncTaskLoader<List<AppEntry>> {
 
         // Stop monitoring for changes.
         if (mPackageObserver != null) {
-            getContext().unregisterReceiver(mPackageObserver);
+            mPackageObserver.dismiss(getContext());
             mPackageObserver = null;
+        }
+
+        // Stop monitoring for changes.
+        if (mSortObserver != null) {
+            mSortObserver.dismiss(getContext());
+            mSortObserver = null;
         }
     }
 

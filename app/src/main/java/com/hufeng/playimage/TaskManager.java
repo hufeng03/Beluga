@@ -1,5 +1,6 @@
 package com.hufeng.playimage;
 
+import android.content.Context;
 import android.os.Handler;
 
 import java.lang.ref.WeakReference;
@@ -40,14 +41,13 @@ public class TaskManager {
     }
 
 
-    public void startLoad(String uri) {
+    public void startLoad(Context context, String uri) {
         if (isUriLoading(uri)) {
             return;
         }
 
         BaseImageLoadTask task = null;
-//        task = new LocalImageLoadTask(mHandler, uri);
-        task = ImageLoadTaskFactory.newImageLoadTask(mHandler, uri);
+        task = new LocalImageLoadTask(mHandler, uri);
         if (task instanceof LocalImageLoadTask) {
             mDiskPoolExecutor.execute(task);
         } else {

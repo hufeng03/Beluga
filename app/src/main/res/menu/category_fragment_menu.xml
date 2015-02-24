@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_settings"
-        android:icon="@drawable/ic_menu_settings_holo_light"
-        android:title="@string/menu_settings"
-        android:showAsAction="always" />
-    <item android:id="@+id/menu_refresh"
-        android:icon="@drawable/ic_menu_refresh_static_holo_light"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:beluga="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_category_search"
+        android:icon="@drawable/ic_ab_search"
+        android:title="@string/menu_search"
+        beluga:showAsAction="ifRoom" />
+    <item android:id="@+id/menu_category_refresh"
         android:title="@string/menu_refresh"
-        android:showAsAction="always" />
+        beluga:showAsAction="never" />
 </menu>

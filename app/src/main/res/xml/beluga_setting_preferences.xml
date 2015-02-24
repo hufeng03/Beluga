@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="scan_hidden"
+        android:title="Hidden file"
+        android:icon="@null"
+        android:summary="Show hidden files and directories preceding filename with '.'" />
+    <CheckBoxPreference
+        android:key="scan_nomedia"
+        android:title=".Nomedia"
+        android:icon="@null"
+        android:summary="Enable media scanning in specific Android directories with a .nomedia file" />
+</PreferenceScreen>

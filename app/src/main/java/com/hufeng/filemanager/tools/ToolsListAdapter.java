@@ -3,14 +3,12 @@ package com.hufeng.filemanager.tools;
 import java.util.ArrayList;
 
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.ui.FileViewHolder;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 

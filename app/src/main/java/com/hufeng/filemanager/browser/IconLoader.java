@@ -15,6 +15,7 @@ import android.provider.MediaStore.Video;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -29,6 +30,8 @@ import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
+
+import retrofit.mime.MimeUtil;
 
 public class IconLoader implements Callback {
 
@@ -85,7 +88,7 @@ public class IconLoader implements Callback {
             if (v == null) {
                 return true;
             }
-            v.setScaleType(ScaleType.FIT_CENTER);
+            v.setScaleType(ScaleType.CENTER_CROP);
             v.setImageBitmap(bitmapRef.get());
             return true;
         }
@@ -171,56 +174,40 @@ public class IconLoader implements Callback {
         mPendingRequests.remove(view);
     }
 
-    public boolean loadIcon(ImageView view, RelativeLayout background, LinearLayout detail, String path) {
-        if (background != null) {
-            background.setBackgroundResource(R.drawable.grid_item_image_bg);
-        }
-        if (detail != null) {
-            detail.setVisibility(View.VISIBLE);
-        }
+    public boolean loadIcon(ImageView view, String path) {
         if (TextUtils.isEmpty(path)) {
             return true;
         }
         boolean loaded;
-        int cate = 0;
-        if ("to_up_dir".equals(path)) {
+        if (new File(path).isDirectory()) {
             loaded = true;
-            view.setImageResource(R.drawable.to_up_dir);
-            view.setScaleType(ScaleType.CENTER_INSIDE);
-        }
-//           else if(path.startsWith("http://")){
-//               view.setScaleType(ScaleType.CENTER_INSIDE);
-//               view.setImageResource(IconLoaderHelper.getFileIcon(FileUtils.FILE_TYPE_APK));
-//               loaded = loadCachedIcon(view, path, -1);
-//           }
-        else if (new File(path).isDirectory()) {
-            loaded = true;
-            if (StorageManager.getInstance(mContext).isStorage(path)) {
-                if (StorageManager.getInstance(mContext).isInternalStorage(path)) {
-                    view.setImageResource(R.drawable.phone);
-                } else {
-                    view.setImageResource(R.drawable.sdcard);
-                }
-            } else {
-                view.setImageResource(R.drawable.file_icon_folder);
-            }
+//            if (StorageManager.getInstance(mContext).isStorage(path)) {
+//                if (StorageManager.getInstance(mContext).isInternalStorage(path)) {
+//                    view.setImageResource(R.drawable.ic_action_phone_android);
+//                } else {
+//                    view.setImageResource(R.drawable.ic_action_sd_card);
+//                }
+//            } else {
+              view.setImageResource(R.drawable.file_icon_folder);
+//            }
             view.setScaleType(ScaleType.CENTER_INSIDE);
         } else {
-            cate = FileUtils.getFileType(new File(path));
-            view.setScaleType(ScaleType.CENTER_INSIDE);
+
             view.setImageResource(IconLoaderHelper.getFileIcon(view.getContext(), path));
-            if (cate == FileUtils.FILE_TYPE_ZIP || cate == FileUtils.FILE_TYPE_DOCUMENT) {
+            view.setScaleType(ScaleType.CENTER_INSIDE);
+            String extension = MimeTypeMap.getFileExtensionFromUrl(path);
+            String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+//            if (!TextUtils.isEmpty(mimeType) &&
+//                    (mimeType.startsWith("image/") || mimeType.startsWith("audio/") || mimeType.startsWith("video/"))) {
+//                loaded = loadCachedIcon(view, path, cate);
+//            } else {
                 loaded = true;
-            } else if (cate == FileUtils.FILE_TYPE_AUDIO && !"mp3".equals(IconLoaderHelper.getExtFromFilename(path))) {
-                loaded = true;
-            } else {
-                loaded = loadCachedIcon(view, path, cate);
-            }
+//            }
         }
         if (loaded) {
             mPendingRequests.remove(view);
         } else {
-            FileId p = new FileId(path, 0, cate);
+            FileId p = new FileId(path, 0, 0);
             mPendingRequests.put(new WeakReference<ImageView>(view), p);
             if (!mPaused) {
                 // Send a request to start loading photos
@@ -272,11 +259,7 @@ public class IconLoader implements Callback {
         ImageHolder holder = mImageCache.get(path);
 
         if (holder == null) {
-//                if (path.startsWith("http://")) {
-//                    holder = new BitmapHolder();
-//                } else {
             holder = ImageHolder.create(cate);
-//                }
             if (holder == null)
                 return false;
 
@@ -393,10 +376,6 @@ public class IconLoader implements Callback {
                 if (holder != null && holder.state == ImageHolder.NEEDED) {
                     // Assuming atomic behavior
                     holder.state = ImageHolder.LOADING;
-
-//                        if(id.mPath.startsWith("http://")){
-//
-//                        } else {
                     switch (id.mCategory) {
                         case FileUtils.FILE_TYPE_APK:
                             holder.setImage(FileUtils.getUninstallAPKIcon(mContext, id.mPath));
@@ -411,11 +390,11 @@ public class IconLoader implements Callback {
                             }
                             Bitmap bm = null;
                             if (id.mCategory == FileUtils.FILE_TYPE_VIDEO) {
-                                bm = IconUtil.getVideoThumbnail(id.mPath, id.mId);
+                                bm = IconUtil.getVideoThumbnail(id.mPath);
                             } else if (id.mCategory == FileUtils.FILE_TYPE_IMAGE) {
-                                bm = IconUtil.getImageThumbnail(id.mPath, id.mId);
+                                bm = IconUtil.getImageThumbnail(id.mPath);
                             } else if (id.mCategory == FileUtils.FILE_TYPE_AUDIO) {
-                                bm = IconUtil.getAudioThumbnail(id.mPath, id.mId);
+                                bm = IconUtil.getAudioThumbnail(id.mPath);
                             }
                             if (bm != null) {
                                 holder.setImage(bm);

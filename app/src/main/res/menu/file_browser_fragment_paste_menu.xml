@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:beluga="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menu_paste_confirm"
           android:icon="@null"
           android:title="@string/menu_paste_confirm"
-          android:showAsAction="always" />
+          beluga:showAsAction="always" />
     <item android:id="@+id/menu_paste_cancel"
           android:icon="@null"
           android:title="@string/menu_paste_cancel"
-          android:showAsAction="always" />
+          beluga:showAsAction="always" />
 </menu>

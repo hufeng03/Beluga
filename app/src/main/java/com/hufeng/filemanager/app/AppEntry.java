@@ -2,8 +2,12 @@ package com.hufeng.filemanager.app;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
 
+import com.hufeng.filemanager.BelugaEntry;
 import com.hufeng.filemanager.browser.FileEntry;
 
 import java.io.File;
@@ -11,112 +15,72 @@ import java.io.File;
 /**
  * This class holds the per-item data in our Loader.
  */
-public class AppEntry extends FileEntry{
+public class AppEntry extends BelugaEntry {
 
-    public AppEntry(AppListLoader loader, ApplicationInfo info) {
-        super();
-        mLoader = loader;
-        mInfo = info;
-        mApkFile = new File(info.sourceDir);
+    public FileEntry apkEntry;
+    public String appName;
+    public Drawable appIcon;
+    public String packageName;
+    public String versionName;
+    public int versionCode;
+
+
+    public AppEntry(Context context, String packageName) {
+        this.packageName = packageName;
+        PackageInfo info = null;
+        try {
+            info = context.getPackageManager().getPackageInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (info != null) {
+            appName = info.applicationInfo.loadLabel(context.getPackageManager()).toString();
+            appIcon = info.applicationInfo.loadIcon(context.getPackageManager());
+            versionCode = info.versionCode;
+            versionName = info.versionName;
+            apkEntry = new FileEntry(info.applicationInfo.sourceDir);
+        }
     }
 
-    public ApplicationInfo getApplicationInfo() {
-        return mInfo;
+    @Override
+    public String getIdentity() {
+        return "app://"+packageName;
     }
 
-    public String getPackageName(){
-        return mInfo.packageName;
+    @Override
+    public String getName() {
+        return appName;
     }
 
-    public String getAppSourcePath() {
-        return (mInfo==null)?"":mInfo.sourceDir;
+    @Override
+    public long getSize() {
+        return apkEntry.getSize();
     }
 
-    public String getLabel() {
-        return mLabel;
+    @Override
+    public long getTime() {
+        return apkEntry.getTime();
+    }
+
+    public String getPackageName() {
+        return packageName;
     }
 
     public Drawable getIcon() {
-        if (mIcon == null) {
-            if (mApkFile.exists()) {
-                mIcon = mInfo.loadIcon(mLoader.mPm);
-                return mIcon;
-            } else {
-                mMounted = false;
-            }
-        } else if (!mMounted) {
-            // If the app wasn't mounted but is now mounted, reload
-            // its icon.
-            if (mApkFile.exists()) {
-                mMounted = true;
-                mIcon = mInfo.loadIcon(mLoader.mPm);
-                super.buildFromFile(mApkFile);
-                return mIcon;
-            }
-        } else {
-            return mIcon;
-        }
-
-        return mLoader.getContext().getResources().getDrawable(
-                android.R.drawable.sym_def_app_icon);
+        return appIcon;
     }
 
     public void getDescription() {
 
     }
 
-    @Override public String toString() {
-        return mLabel;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    void loadLabel(Context context) {
-        if (mLabel == null || !mMounted) {
-            if (!mApkFile.exists()) {
-                mMounted = false;
-                mLabel = mInfo.packageName;
-               // mInfo.
-            } else {
-                mMounted = true;
-                CharSequence label = mInfo.loadLabel(context.getPackageManager());
-                mLabel = label != null ? label.toString() : mInfo.packageName;
-            }
-        }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
-
-    private boolean mFileEntryBuilt;
-
-    public String getName () {
-        return mLabel;
-    }
-
-    public long length () {
-        if (!mFileEntryBuilt && mApkFile.exists()) {
-            buildFromFile(mApkFile);
-            mFileEntryBuilt = true;
-        }
-        return super.length();
-    }
-
-    public boolean isDirectory () {
-        if (!mFileEntryBuilt && mApkFile.exists()) {
-            buildFromFile(mApkFile);
-            mFileEntryBuilt = true;
-        }
-        return super.isDirectory();
-    }
-
-    public long lastModified () {
-        if (!mFileEntryBuilt && mApkFile.exists()) {
-            buildFromFile(mApkFile);
-            mFileEntryBuilt = true;
-        }
-        return super.lastModified();
-    }
-
-    private final AppListLoader mLoader;
-    private final ApplicationInfo mInfo;
-    private final File mApkFile;
-    private String mLabel;
-    private Drawable mIcon;
-    private boolean mMounted;
 }

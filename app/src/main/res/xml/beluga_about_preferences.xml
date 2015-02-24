@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:title="Version"
+        android:icon="@null"
+        android:summary="1.0">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="market://details?id=com.hufeng.filemanager" />
+    </Preference>
+    <Preference
+        android:title="Developer"
+        android:icon="@null"
+        android:summary="Feng Hu">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="http://hufeng.info/me" />
+    </Preference>
+    <Preference
+        android:title="Website"
+        android:icon="@null"
+        android:summary="http://www.belugamobile.com">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="http://www.belugamobile.com" />
+    </Preference>
+</PreferenceScreen>

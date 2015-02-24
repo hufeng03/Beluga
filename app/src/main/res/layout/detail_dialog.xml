@@ -1,147 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
-
-    <TextView
-        android:id="@+id/file_name_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="90dp"
-        android:text="@string/file_name_label"
-        android:textColor="@color/black"
-        android:textSize="16sp" />
+    android:layout_height="match_parent"
+    android:minWidth="300dp"
+    android:paddingTop="16dp"
+    android:paddingRight="24dp"
+    android:paddingLeft="24dp">
 
     <TextView
-        android:id="@+id/file_name_content"
-        android:layout_width="wrap_content"
+        android:id="@+id/detail_dialog_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/file_content_label"
-        android:layout_toRightOf="@id/file_name_label"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/file_location_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/file_name_content"
-        android:layout_below="@id/file_name_content"
-        android:text="Content of Locationxxxxxxxxxxxxx"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/file_location_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/file_location_content"
-        android:text="@string/file_location_label"
-        android:textColor="@color/black"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/file_size_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/file_name_content"
-        android:layout_below="@id/file_location_content"
-        android:lines="1"
-        android:text="Content of Size"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/file_size_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/file_size_label"
-        android:layout_alignTop="@id/file_size_content"
-        android:textColor="@color/black"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/file_timestamp_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/file_name_content"
-        android:layout_below="@id/file_size_content"
-        android:lines="1"
-        android:text="Content of timestamp"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/file_timestamp_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/file_timestamp_label"
-        android:textColor="@color/black"
-        android:layout_alignTop="@id/file_timestamp_content"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/file_permissions_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/file_name_content"
-        android:layout_below="@id/file_timestamp_content"
-        android:lines="1"
-        android:textSize="18sp"
-        android:visibility="gone" />
-
-
-    <TextView
-        android:id="@+id/file_permissions_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/file_permission_label"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:layout_alignTop="@id/file_permissions_content"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/file_owner_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:lines="1"
-        android:textSize="18sp"
-        android:layout_alignLeft="@id/file_name_content"
-        android:layout_below="@id/file_permissions_content"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/file_owner_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/file_owner_label"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:layout_alignTop="@id/file_owner_content"
-        android:visibility="gone" />
-
-
-    <TextView
-        android:id="@+id/file_group_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:lines="1"
-        android:textSize="18sp"
-        android:layout_alignLeft="@id/file_name_content"
-        android:layout_below="@id/file_owner_content"
-        android:visibility="gone" />
-
-
-    <TextView
-        android:id="@+id/file_group_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/file_group_label"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:layout_alignTop="@id/file_group_content"
-        android:visibility="gone" />
-    </RelativeLayout>
-</ScrollView>
+        android:gravity="left"
+        android:textAppearance="@style/TextAppearancePrimary"
+        />
+</RelativeLayout>

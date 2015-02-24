@@ -5,8 +5,7 @@ import android.net.Uri;
 import android.support.v4.content.CursorLoader;
 import android.text.TextUtils;
 
-import com.hufeng.filemanager.browser.FileSorter;
-import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.browser.BelugaSorter;
 import com.hufeng.filemanager.provider.DataStructures;
 
 /**
@@ -14,31 +13,31 @@ import com.hufeng.filemanager.provider.DataStructures;
  */
 public class FileManagerLoaders {
 
-    public static CursorLoader getCursorLoader(Context context, int type, String search_string) {
+    public static CursorLoader getCursorLoader(Context context, CategorySelectEvent.CategoryType categoryType, String search_string) {
         Uri baseUri;
         String[] projection = null;
-        switch (type) {
-            case FileUtils.FILE_TYPE_APK:
+        switch (categoryType) {
+            case APK:
                 baseUri = DataStructures.ApkColumns.CONTENT_URI;
                 projection = DataStructures.ApkColumns.APK_PROJECTION;
                 break;
-            case FileUtils.FILE_TYPE_AUDIO:
+            case AUDIO:
                 baseUri = DataStructures.AudioColumns.CONTENT_URI;
                 projection = DataStructures.AudioColumns.AUDIO_PROJECTION;
                 break;
-            case FileUtils.FILE_TYPE_IMAGE:
+            case PHOTO:
                 baseUri = DataStructures.ImageColumns.CONTENT_URI;
                 projection = DataStructures.ImageColumns.IMAGE_PROJECTION;
                 break;
-            case FileUtils.FILE_TYPE_VIDEO:
+            case VIDEO:
                 baseUri = DataStructures.VideoColumns.CONTENT_URI;
                 projection = DataStructures.VideoColumns.VIDEO_PROJECTION;
                 break;
-            case FileUtils.FILE_TYPE_DOCUMENT:
+            case DOC:
                 baseUri = DataStructures.DocumentColumns.CONTENT_URI;
                 projection = DataStructures.DocumentColumns.DOCUMENT_PROJECTION;
                 break;
-            case FileUtils.FILE_TYPE_ZIP:
+            case ZIP:
                 baseUri = DataStructures.ZipColumns.CONTENT_URI;
                 projection = DataStructures.ZipColumns.ZIP_PROJECTION;
                 break;
@@ -48,7 +47,7 @@ public class FileManagerLoaders {
         }
 
         if(baseUri!=null){
-            FileSorter.SORTER sorter = FileSorter.getFileSorter(context, type);
+            BelugaSorter.SORTER sorter = BelugaSorter.getFileSorter(context, categoryType);
             String sort_constraint = null;
             switch(sorter.field){
                 case NAME:
@@ -65,7 +64,7 @@ public class FileManagerLoaders {
                     break;
             }
             if(!TextUtils.isEmpty(sort_constraint)){
-                if(sorter.order == FileSorter.SORT_ORDER.ASC){
+                if(sorter.order == BelugaSorter.SORT_ORDER.ASC){
                     sort_constraint += " ASC";
                 }else{
                     sort_constraint += " DESC";
@@ -78,13 +77,6 @@ public class FileManagerLoaders {
                 search_string.replace("%","[%]");
                 search_string.replace("_","[_]");
                 search_string.replace("^","[^]");
-//                search_string = search_string.replace("[","/[");
-//                search_string = search_string.replace("]","/]");
-//                search_string = search_string.replace("%","/%");
-//                search_string = search_string.replace("&","/&");
-//                search_string = search_string.replace("_","/_");
-//                search_string = search_string.replace("(","/(");
-//                search_string = search_string.replace(")","/)");
                 search_string = search_string.replace("'", "''");
                 search_constraint = DataStructures.FileColumns.FILE_NAME_FIELD+" LIKE '%"+search_string+"%'";
             }

@@ -1,6 +1,8 @@
 package com.hufeng.filemanager;
 
 import android.content.pm.ApplicationInfo;
+import android.os.Environment;
+import android.os.storage.StorageManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.content.Context;
 import android.support.v4.content.Loader;
@@ -44,93 +46,32 @@ public class DeviceLoader extends AsyncTaskLoader<List<StorageUnit>> {
     @Override
     public List<StorageUnit> loadInBackground() {
 
-        List<StorageUnit> storageUnits = new ArrayList<StorageUnit>();
+        List<StorageUnit> storageUnits = com.hufeng.filemanager.utils.StorageUtil.getMountedStorageUnits(getContext());
 
-        android.os.storage.StorageManager sStorageManager = (android.os.storage.StorageManager)getContext().getSystemService(Context.STORAGE_SERVICE);
-        boolean flag_reflection_error = false;
-        if(sStorageManager==null) {
-            flag_reflection_error = true;
-        }else{
-            Class<?> StorageVolume;
-            try {
-                StorageVolume = Class.forName("android.os.storage.StorageVolume");
-                Method method_getVolumeList = android.os.storage.StorageManager.class.getDeclaredMethod("getVolumeList");
-                Method method_getPath = StorageVolume.getDeclaredMethod("getPath");
-                //Method method_getDescription = StorageVolume.getDeclaredMethod("getDescription");
-                Method method_isRemovable = StorageVolume.getDeclaredMethod("isRemovable");
-                Method method_getVolumeState = sStorageManager.getClass().getDeclaredMethod("getVolumeState", String.class);
-                try {
-                    Object volumeList = method_getVolumeList.invoke(sStorageManager);
-                    if(volumeList.getClass().isArray()){
-                        int len = Array.getLength(volumeList);
-                        int internal_count = 0;
-                        int external_count = 0;
-                        for(int i=0;i<len;i++){
-                            Object volume = Array.get(volumeList, i);
-                            Object real_volume = StorageVolume.cast(volume);
-
-                            String path = (String) method_getPath.invoke(real_volume);
-                            if (TextUtils.isEmpty(path)) continue;
-                            path = new File(path).getAbsolutePath();
-                            if (TextUtils.isEmpty(path)) continue;
-                            boolean isRemovable = (Boolean) method_isRemovable.invoke(real_volume);
-                            String state = (String) method_getVolumeState.invoke(sStorageManager, path);
-
-                            long availableSize = StorageUtil.getAvailaleSize(path);
-                            long allSize = StorageUtil.getAllSize(path);
-                            String description = null;
-                            if (isRemovable) {
-                                external_count ++;
-                                if (external_count > 1) {
-                                    description = getContext().getString(R.string.external_storage) + " ["+external_count+"]";
-                                }
-                            } else {
-                                internal_count ++;
-                                if (internal_count > 1) {
-                                    description = getContext().getString(R.string.internal_storage) + " ["+internal_count+"]";
-                                }
-                            }
-                            storageUnits.add(new StorageUnit(path, description, isRemovable, state, availableSize, allSize ));
-                        }
-                        for (int i=0; i<storageUnits.size(); i++) {
-                            StorageUnit unit = storageUnits.get(i);
-                            if (unit.description == null) {
-                                if (unit.isRemovable()) {
-                                    if (external_count <= 1) {
-                                        unit.description = getContext().getString(R.string.external_storage);
-                                    } else {
-                                        unit.description = getContext().getString(R.string.external_storage)+ " [1]";
-                                    }
-                                } else {
-                                    if (external_count <= 1) {
-                                        unit.description = getContext().getString(R.string.internal_storage);
-                                    } else {
-                                        unit.description = getContext().getString(R.string.internal_storage)+ " [1]";
-                                    }
-                                }
-                            }
-                        }
-
+        int internal_count = 0;
+        int external_count = 0;
+        for (StorageUnit unit : storageUnits) {
+            if (unit.isRemovable()) {
+                external_count++;
+            } else {
+                internal_count++;
+            }
+        }
+        for (StorageUnit unit : storageUnits) {
+            if (unit.description == null) {
+                if (unit.isRemovable()) {
+                    if (external_count <= 1) {
+                        unit.description = getContext().getString(R.string.external_storage);
+                    } else {
+                        unit.description = getContext().getString(R.string.external_storage)+ " [1]";
                     }
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                    flag_reflection_error = true;
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    flag_reflection_error = true;
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                    flag_reflection_error = true;
+                } else {
+                    if (internal_count <= 1) {
+                        unit.description = getContext().getString(R.string.internal_storage);
+                    } else {
+                        unit.description = getContext().getString(R.string.internal_storage)+ " [1]";
+                    }
                 }
-            } catch (ClassNotFoundException e1) {
-                e1.printStackTrace();
-                flag_reflection_error = true;
-            } catch (SecurityException e) {
-                e.printStackTrace();
-                flag_reflection_error = true;
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-                flag_reflection_error = true;
             }
         }
 

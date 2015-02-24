@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:beluga="http://schemas.android.com/apk/res-auto">
    <item android:id="@+id/menu_wallpaper" android:title="@string/menu_wallpaper" />
    <item android:id="@+id/menu_send" android:title="@string/menu_send" />
 	<item android:id="@+id/menu_remove_safe" android:title="@string/menu_remove_safe" />

@@ -26,8 +26,7 @@
             android:id="@+id/kanbox_ad_close"
             android:padding="5dip"
             android:layout_weight="0"
-            android:src="@drawable/operation_button_cancel"
-            android:background="@null"
+            android:src="@drawable/ic_action_cancel"
             android:layout_gravity="right|center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

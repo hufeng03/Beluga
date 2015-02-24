@@ -3,6 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:drawable="@drawable/grid_item_image_bg" />
     <item>
-  		<bitmap android:src="@drawable/sdcard" android:gravity="center" />
+  		<bitmap android:src="@drawable/ic_action_sd_card" android:gravity="center" />
 	</item>
 </layer-list>

@@ -23,10 +23,8 @@ import android.util.Base64;
 import android.widget.Toast;
 
 import com.hufeng.filemanager.FileManager;
-import com.hufeng.filemanager.FileManagerTabActivity;
 import com.hufeng.filemanager.IntentData;
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.SettingsScanActivity;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.provider.DataStructures.FavoriteColumns;
 import com.hufeng.filemanager.provider.DataStructures.FileColumns;
@@ -43,9 +41,6 @@ import com.hufeng.filemanager.utils.ImageUtil;
 import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.utils.PackageUtil;
 import com.hufeng.filemanager.utils.TimeUtil;
-import com.hufeng.safebox.CryptUtil;
-import com.hufeng.safebox.SafeBoxConfig;
-import com.hufeng.safebox.SafeDataStructs;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -60,54 +55,6 @@ public class FileAction {
 	
 	private static final String LOG_TAG = "FileAction";
 
-//    public static boolean delete(String dir, ArrayList<String> paths)
-//    {
-//    	boolean result = true;
-//    	for(String path:paths)
-//    	{
-//    		if(!delete(dir,path))
-//    			result = false;
-//    	}
-//    	return result;
-//    }
-
-//    public static boolean add_to_cloud(String[] paths, String root, Boolean cancel) {
-//        boolean result = true;
-//        for(String path:paths)
-//        {
-//            if(cancel)
-//                return false;
-//            if(!add_to_cloud(path, root, cancel))
-//            {
-//                result = false;
-//            }
-//        }
-//
-//        return result;
-//    }
-
-//    public static boolean add_to_cloud(String path, String root, Boolean cancel) {
-//        boolean result;
-//        result = KanBoxApi.getInstance().uploadFileSynchronized(path, root, Token.getInstance());
-//        return result;
-//    }
-
-    public static boolean add_to_safe(String[] paths, Boolean cancel) {
-
-        boolean result = true;
-        for(String path:paths)
-        {
-            if(cancel)
-                return false;
-            if(!add_to_safe(path, cancel))
-            {
-                result = false;
-            }
-        }
-
-        return result;
-    }
-    
     public static boolean delete(String[] paths, Boolean cancel)
     {
     	boolean result = true;
@@ -121,111 +68,6 @@ public class FileAction {
     		}
     	}
     	return result;
-    }
-    
-//    private static boolean delete(String dir, String path)
-//    {
-//    		File delFile = new File(dir+File.separator+path);
-//    		if(delFile.isDirectory())
-//    			return deleteDir(delFile);
-//    		else
-//    		{
-//    			boolean result = true;
-//    			if(!delFile.delete())
-//    				result = false;
-//    			else
-//    				deleteFileInDatabase(delFile);
-//    			return result;
-//    		}
-//    }
-
-    public static void addToSafeBox(String path) {
-        if(new File(path).exists())
-            moveToSafeBox(new File(path));
-    }
-
-    private static String moveToSafeBox(File nfile){
-        boolean result = true;
-        String device0 = StorageManager.getInstance(FileManager.getAppContext()).getStorageForPath(nfile.getAbsolutePath());
-        String dir = device0 + File.separator + SafeBoxConfig.STORAGE_DIR;
-        if(!new File(dir).exists()) {
-            new File(dir).mkdirs();
-        }
-        String name = nfile.getName();
-        String encoded_name = Base64.encodeToString(name.getBytes(), Base64.DEFAULT);
-        encoded_name = encoded_name.trim();
-        File encoded_file = new File(dir, encoded_name);
-        int i = 1;
-        while(encoded_file.exists()) {
-            encoded_file = new File(dir, encoded_name+"("+(i++)+")");
-        }
-
-        copyFileToSafeInDatabase(nfile, encoded_file);
-
-        nfile.renameTo(encoded_file);
-
-        try {
-            CryptUtil.encryptOneFile(encoded_file.getAbsolutePath());
-            deleteFileInDatabase(nfile);
-            result = true;
-        }catch (Exception e) {
-            result = false;
-        }
-        if(result) {
-            return encoded_file.getAbsolutePath();
-        } else {
-            return null;
-        }
-    }
-
-    private static boolean addToSafeBox_Dir(File safeDir, Boolean cancel){
-        if(!safeDir.exists())
-            return true;
-        File[] f=safeDir.listFiles();//取得文件夹里面的路径
-        if(f==null || f.length==0){
-            return safeDir.delete();
-        }
-        else {
-            boolean result = true;
-            for(File nFile:f){
-                if(cancel)
-                    return false;
-                if(nFile.isDirectory()){
-                    if(!addToSafeBox_Dir(nFile, cancel))
-                        result = false;
-                }else {
-                    String new_path = moveToSafeBox(nFile);
-                    if(new_path == null) {
-                        result = false;
-                    } else {
-
-                    }
-                }
-            }
-            if(result) {
-                result = safeDir.delete();
-            }
-            return result;
-        }
-    }
-
-    private static boolean add_to_safe(String path, Boolean cancel) {
-        LogUtil.i(LOG_TAG, "add_to_safe " + (path == null ? "null" : path));
-        File safeFile = new File(path);
-        if(safeFile.isDirectory())
-            return addToSafeBox_Dir(safeFile, cancel);
-        else
-        {
-            boolean result = true;
-            String new_path = null;
-            if(safeFile.exists()){
-                new_path  = moveToSafeBox(safeFile);
-                if (new_path == null) {
-                    result = false;
-                }
-            }
-            return result;
-        }
     }
 
     public static void scanSinglePath(String path) {
@@ -317,7 +159,7 @@ public class FileAction {
     		return result;
     	}
     }
-    
+
     private static boolean deleteDir(File delFile, Boolean cancel){
     	if(!delFile.exists())
     		return true;
@@ -331,7 +173,7 @@ public class FileAction {
                 		if(cancel)
                 			return false;
                         if(nFile.isDirectory()){
-                                if(!deleteDir(nFile, cancel)) 
+                                if(!deleteDir(nFile, cancel))
                                 	result = false;
                         }else {
                                 if(!nFile.delete())
@@ -344,90 +186,8 @@ public class FileAction {
                 return result;
         }
     }
-    
-  //文件复制
-    public static boolean copy(String[] paths, String target, Boolean cancel)
-    {
-    //	File targetDir = new File(target);
-    	boolean result = true;
-    	for(String path:paths)
-    	{
-    		File file = new File(path);
-    		String name = path;
-    		int idx = path.lastIndexOf("/");
-    		if(idx>0)
-    			name = path.substring(idx+1);
-    		File targetFile = new File(target+File.separator+name);
-    		
-//    		if(file.getPath().equals(targetFile.getPath()))
-//    		{
-//    			continue;
-//    		}
-    		
-    		int i = 1;
-    		int pos = name.lastIndexOf(".");
-    		while(targetFile.exists())
-    		{
-    			if(pos>0)
-    			{
-    				targetFile = new File(target+File.separator+name.substring(0,pos)+"("+i+")"+name.substring(pos));
-    			}
-    			else
-    			{
-    				targetFile = new File(target+File.separator+name+"("+i+")");
-    			}
-    			i++;
-    		}
-    		if(cancel)
-    		{
-    			return false;
-    		}
-    		if(file.isDirectory())
-    		{
-    			if(!copyDir(file, targetFile, cancel))
-    				result = false;
-    		}
-    		else
-    		{
-    			if(!copyFile(file,targetFile))
-    				result = false;
-    			else
-    				addFileInDatabase(targetFile);
-    		}
-    	}
-    	return result;
-    }
-    
-//    private static String getDeviceFromPath(String target)
-//    {
-//		int idx2 = target.indexOf("/mnt/");
-//		String device = null;
-//		if(idx2==0)
-//		{
-//			if(target.length()>5)
-//			{
-//    			device = target.substring(5);
-//    			int idx3 = device.indexOf("/");
-//    			if(idx3!=-1)
-//    			{
-//    				device = device.substring(0,idx3);
-//    			}
-//			}
-//		}
-//		else
-//		{
-//			if(target.length()>1)
-//			{
-//				device = target.substring(1);
-//				int idx3 = device.indexOf("/");
-//    			if(idx3!=-1)
-//    			{
-//    				device = device.substring(0,idx3);
-//    			}
-//			}
-//		}
-//		return device;
-//    }
+
+
     //文件复制
     public static boolean move(String[] paths, String target, Boolean cancel)
     {
@@ -436,14 +196,10 @@ public class FileAction {
     	for(String path:paths)
     	{
     		File file = new File(path);
-    		String name = path;
-    		int idx = path.lastIndexOf("/");
-    		if(idx>0)
-    			name = path.substring(idx+1);
-    		File targetFile = new File(target+File.separator+name);
+    		String name = file.getName();
+    		File targetFile = new File(target, name);
     		boolean flag_copy_delete = false;
-    		if(file.getPath().equals(targetFile.getPath()))
-    		{
+    		if(file.getPath().equals(targetFile.getPath())) {
     			continue;
     		}
             StorageManager stor = StorageManager.getInstance(FileManager.getAppContext());
@@ -454,7 +210,7 @@ public class FileAction {
     			//not in same sdcard
     			flag_copy_delete = true;
     		}
-    		
+
     		String targetFile_path = FileUtils.getFilename(new File(target, name).getAbsolutePath());
             targetFile = new File(targetFile_path);
 //    		int i = 1;
@@ -549,7 +305,7 @@ public class FileAction {
             return result;
     }
     
-    private static boolean copyFile(File file, File plasPath){
+    public static boolean copyFile(File file, File plasPath){
             try {
                     FileInputStream fileInput = new FileInputStream(file);
                     BufferedInputStream inBuff=new BufferedInputStream(fileInput);
@@ -686,7 +442,7 @@ public class FileAction {
 
     }
     
-    private static void deleteFileInDatabase(File file)
+    public static void deleteFileInDatabase(File file)
     {
     	if(file.isDirectory())
     		return;
@@ -734,7 +490,7 @@ public class FileAction {
     	deleteFileInMediaDb(file.getAbsolutePath());
     }
     
-    private static void addFileInDatabase(File file)
+    public static void addFileInDatabase(File file)
     {
     	if(file.isDirectory())
     		return;
@@ -743,7 +499,7 @@ public class FileAction {
         if (category == FileUtils.FILE_TYPE_IMAGE) {
             long size = file.length();
             if (size < 30720) {
-                String filter = FileManager.getPreference(SettingsScanActivity.IMAGE_FILTER_SMALL, "1");
+                String filter = FileManager.getPreference(FileManager.IMAGE_FILTER_SMALL, "1");
                 if (filter.equals("1")) {
                     if (LogUtil.IDBG) {
                         LogUtil.i(LOG_TAG, "image filter small "+size+" of "+file.getAbsolutePath());
@@ -754,7 +510,7 @@ public class FileAction {
         } else if (category == FileUtils.FILE_TYPE_AUDIO) {
             long size = file.length();
             if (file.length() < 102400) {
-                String filter = FileManager.getPreference(SettingsScanActivity.AUDIO_FILTER_SMALL, "1");
+                String filter = FileManager.getPreference(FileManager.AUDIO_FILTER_SMALL, "1");
                 if (filter.equals("1")) {
                     if (LogUtil.IDBG) {
                         LogUtil.i(LOG_TAG, "audio filter small "+size+" of "+file.getAbsolutePath());
@@ -819,7 +575,7 @@ public class FileAction {
 
     }
     
-    private static void moveDirInDatabase(File olddir, File newdir)
+    public static void moveDirInDatabase(File olddir, File newdir)
     {
     	File[] files = olddir.listFiles();
     	if(files!=null)
@@ -837,82 +593,6 @@ public class FileAction {
 	    	}
     	}
     	
-    }
-
-    public static void copyFileToSafeInDatabase(File oldFile, File newFile) {
-
-        int category = FileUtils.getFileType(oldFile);
-//        FileEntry old_entry = new FileEntry(oldFile);
-//        LogUtil.i(LOG_TAG, "save new entry: "+new_entry);
-        ContentValues cv = new ContentValues();
-        Uri uri = null;
-        switch(category)
-        {
-            case FileUtils.FILE_TYPE_APK:
-                uri = DataStructures.ApkColumns.CONTENT_URI;
-                break;
-            case FileUtils.FILE_TYPE_AUDIO:
-                uri = DataStructures.AudioColumns.CONTENT_URI;
-                break;
-            case FileUtils.FILE_TYPE_DOCUMENT:
-                uri = DataStructures.DocumentColumns.CONTENT_URI;
-                break;
-            case FileUtils.FILE_TYPE_IMAGE:
-                uri = DataStructures.ImageColumns.CONTENT_URI;
-                break;
-            case FileUtils.FILE_TYPE_VIDEO:
-                uri = DataStructures.VideoColumns.CONTENT_URI;
-                break;
-            case FileUtils.FILE_TYPE_ZIP:
-                uri = DataStructures.ZipColumns.CONTENT_URI;
-                break;
-            case FileUtils.FILE_TYPE_FILE:
-            default:
-                uri = DataStructures.FileColumns.CONTENT_URI;
-                break;
-        }
-        if(uri != null) {
-            Cursor cursor = null;
-            try {
-                cursor = FileManager.getAppContext().getContentResolver().query(uri, FileColumns.FILE_PROJECTION, FileColumns.FILE_PATH_FIELD + "=?", new String[]{oldFile.getAbsolutePath()}, null);
-                if (cursor != null && cursor.moveToFirst()) {
-                    cv.put(SafeDataStructs.SafeColumns.ORIGINAL_PATH, cursor.getString(FileColumns.FILE_PATH_FIELD_INDEX));
-                    cv.put(SafeDataStructs.SafeColumns.ORIGINAL_DATE, cursor.getLong(FileColumns.FILE_DATE_FIELD_INDEX));
-                    cv.put(SafeDataStructs.SafeColumns.ORIGINAL_SIZE, cursor.getLong(FileColumns.FILE_SIZE_FIELD_INDEX));
-                    cv.put(SafeDataStructs.SafeColumns.ORIGINAL_EXTENSION, cursor.getString(FileColumns.FILE_EXTENSION_FIELD_INDEX));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
-            }
-        }
-        cv.put(SafeDataStructs.SafeColumns.CATEGORY, category);
-        cv.put(SafeDataStructs.SafeColumns.SAFE_PATH, newFile.getAbsolutePath());
-        cv.put(SafeDataStructs.SafeColumns.SAFE_ADD_DATE, System.currentTimeMillis());
-        Bitmap bitmap = null;
-        if(category == FileUtils.FILE_TYPE_IMAGE) {
-            bitmap = IconUtil.getImageThumbnail(oldFile.getAbsolutePath());
-        } else if(category == FileUtils.FILE_TYPE_AUDIO) {
-            bitmap = IconUtil.getAudioThumbnail(oldFile.getAbsolutePath());
-        } else if(category == FileUtils.FILE_TYPE_VIDEO) {
-            bitmap = IconUtil.getVideoThumbnail(oldFile.getAbsolutePath());
-        }
-
-        if (bitmap != null) {
-            byte[] data = null;
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
-            data = bos.toByteArray();
-            cv.put(SafeDataStructs.SafeColumns.THUMBNAIL, data);
-        }
-        try {
-            FileManager.getAppContext().getContentResolver().insert(SafeDataStructs.SafeColumns.CONTENT_URI, cv);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
     }
     
     private static int updateInDb(String old_path, String new_path, int cate){
@@ -1048,7 +728,7 @@ public class FileAction {
         return id;
     }
     
-    private static void updateFileInDatabase(File oldfile, File newfile)
+    public static void updateFileInDatabase(File oldfile, File newfile)
     {
     	if(oldfile.isDirectory())
     		return;
@@ -1137,7 +817,7 @@ public class FileAction {
 
     }
     
-    public static void removeFromFavorite(String path)
+    public static boolean removeFromFavorite(String path)
     {
     	ContentValues values = new ContentValues();
     	FileObject fo = new FileObject(path);
@@ -1150,7 +830,28 @@ public class FileAction {
         } catch (Exception e) {
             e.printStackTrace();
         }
-            if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "remove favorite "+path+" return "+count);
+        return count > 0;
+    }
+
+    public static boolean isFavorite(String path) {
+        Cursor cursor = null;
+        try {
+            cursor = FileManager.getAppContext().getContentResolver().query(FavoriteColumns.CONTENT_URI,
+                    null,
+                    FavoriteColumns.FILE_PATH_FIELD+"=?",
+                    new String[]{path},
+                    null);
+            if (cursor != null && cursor.getCount() > 0) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return false;
     }
 
     public static boolean isAllFavorite(String[] paths) {
@@ -1239,7 +940,7 @@ public class FileAction {
 //		}
 //    }
     
-    public static void addToFavorite(String path)
+    public static boolean addToFavorite(String path)
     {
     	ContentValues values = new ContentValues();
     	FileObject fo = new FileObject(path);
@@ -1262,7 +963,7 @@ public class FileAction {
         }
 
         if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "update "+path+" return "+count);
-		if(count<=0)
+		if(count <= 0)
 		{
             try {
                 FileManager.getAppContext().getContentResolver().insert(uri, values);
@@ -1271,6 +972,7 @@ public class FileAction {
             }
 			if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "insert "+path+" return "+count);
 		}
+        return count > 0;
     }
 
     public static void setAsWallpaper(String  path)
@@ -1377,66 +1079,66 @@ public class FileAction {
 //    	}
 //    }
     
-    public static void setAsRingTone(String path)
-    {
-    	if(!TextUtils.isEmpty(path)) {
-	    	File soundFile = new File(path);
-	    	ContentValues values = new ContentValues();
-	    	Uri newUri = null;
-	    	Uri uri = MediaStore.Audio.Media.getContentUriForPath(path);
-	    	Cursor cursor = null;
-            try {
-                cursor = FileManager.getAppContext().getContentResolver().query(uri, null, MediaStore.MediaColumns.DATA + "=?", new String[]{path}, null);
-                if (cursor != null && cursor.moveToFirst() && cursor.getCount() > 0) {
-                    String _id = cursor.getString(0);
-                    values.put(MediaStore.Audio.Media.IS_RINGTONE, true);//設置來電鈴聲為true
-                    values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);//設置通知鈴聲為false
-                    values.put(MediaStore.Audio.Media.IS_ALARM, false);//設置鬧鐘鈴聲為false
-                    values.put(MediaStore.Audio.Media.IS_MUSIC, false);
-                    // 把需要設為鈴聲的歌曲更新鈴聲庫
-                    try {
-                        int count = FileManager.getAppContext().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?", new String[]{path});
-                        if (count > 0) {
-                            newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    values.put(MediaStore.MediaColumns.DATA, path);
-                    values.put(MediaStore.MediaColumns.TITLE, "my ringtone");
-                    values.put(MediaStore.MediaColumns.MIME_TYPE, FileUtils.getMIMEType(soundFile));
-                    values.put(MediaStore.MediaColumns.SIZE, soundFile.length());
-                    values.put(MediaStore.Audio.Media.ARTIST, "");
-                    values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
-                    values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true);
-                    values.put(MediaStore.Audio.Media.IS_ALARM, true);
-                    values.put(MediaStore.Audio.Media.IS_MUSIC, false);
-
-                    try {
-                        newUri = FileManager.getAppContext().getContentResolver().insert(uri, values);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if(cursor!=null)
-                    cursor.close();
-            }
-	
-	    	try {
-	    		RingtoneManager.setActualDefaultRingtoneUri(FileManager.getAppContext(), RingtoneManager.TYPE_RINGTONE, newUri);
-	    		Toast.makeText(FileManager.getAppContext(), R.string.set_ringtone_success, Toast.LENGTH_SHORT).show();
-	    		return;
-	    	} catch (Throwable t) {
-	    		t.printStackTrace();
-	    	}
-	    	Toast.makeText(FileManager.getAppContext(), R.string.set_ringtone_fail, Toast.LENGTH_SHORT).show();
-    	}
-    }
+//    public static void setAsRingTone(String path)
+//    {
+//    	if(!TextUtils.isEmpty(path)) {
+//	    	File soundFile = new File(path);
+//	    	ContentValues values = new ContentValues();
+//	    	Uri newUri = null;
+//	    	Uri uri = MediaStore.Audio.Media.getContentUriForPath(path);
+//	    	Cursor cursor = null;
+//            try {
+//                cursor = FileManager.getAppContext().getContentResolver().query(uri, null, MediaStore.MediaColumns.DATA + "=?", new String[]{path}, null);
+//                if (cursor != null && cursor.moveToFirst() && cursor.getCount() > 0) {
+//                    String _id = cursor.getString(0);
+//                    values.put(MediaStore.Audio.Media.IS_RINGTONE, true);//設置來電鈴聲為true
+//                    values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);//設置通知鈴聲為false
+//                    values.put(MediaStore.Audio.Media.IS_ALARM, false);//設置鬧鐘鈴聲為false
+//                    values.put(MediaStore.Audio.Media.IS_MUSIC, false);
+//                    // 把需要設為鈴聲的歌曲更新鈴聲庫
+//                    try {
+//                        int count = FileManager.getAppContext().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?", new String[]{path});
+//                        if (count > 0) {
+//                            newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                } else {
+//                    values.put(MediaStore.MediaColumns.DATA, path);
+//                    values.put(MediaStore.MediaColumns.TITLE, "my ringtone");
+//                    values.put(MediaStore.MediaColumns.MIME_TYPE, FileUtils.getMIMEType(soundFile));
+//                    values.put(MediaStore.MediaColumns.SIZE, soundFile.length());
+//                    values.put(MediaStore.Audio.Media.ARTIST, "");
+//                    values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
+//                    values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true);
+//                    values.put(MediaStore.Audio.Media.IS_ALARM, true);
+//                    values.put(MediaStore.Audio.Media.IS_MUSIC, false);
+//
+//                    try {
+//                        newUri = FileManager.getAppContext().getContentResolver().insert(uri, values);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }catch (Exception e) {
+//                e.printStackTrace();
+//            } finally {
+//                if(cursor!=null)
+//                    cursor.close();
+//            }
+//
+//	    	try {
+//	    		RingtoneManager.setActualDefaultRingtoneUri(FileManager.getAppContext(), RingtoneManager.TYPE_RINGTONE, newUri);
+//	    		Toast.makeText(FileManager.getAppContext(), R.string.set_ringtone_success, Toast.LENGTH_SHORT).show();
+//	    		return;
+//	    	} catch (Throwable t) {
+//	    		t.printStackTrace();
+//	    	}
+//	    	Toast.makeText(FileManager.getAppContext(), R.string.set_ringtone_fail, Toast.LENGTH_SHORT).show();
+//    	}
+//    }
     
 //    public static void sendFile(Context context, File file)
 //    {
@@ -1505,44 +1207,44 @@ public class FileAction {
         }
     }
     
-    public static Intent buildSendFile(Context context, String... files)
-    {
-        ArrayList<Uri> uris = new ArrayList<Uri>();
-
-        String mimeType = "*/*";
-        boolean flag = false;
-        for (String file : files) {
-            if (new File(file).isDirectory())
-            {
-            	flag = true;
-                continue;
-            }
-            File fileIn = new File(file);
-            mimeType = FileUtils.getMIMEType(fileIn);
-            Uri u = Uri.fromFile(fileIn);
-            uris.add(u);
-        }
-
-        if (uris.size() == 0)
-            return null;
-
-        boolean multiple = (uris.size() > 1);
-        Intent intent = new Intent(multiple ? android.content.Intent.ACTION_SEND_MULTIPLE
-                : android.content.Intent.ACTION_SEND);
-
-        if (multiple) {
-            intent.setType("*/*");
-            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-        } else {
-        	if("application/vnd.android.package-archive".equals(mimeType)){
-        		mimeType = "application/zip";
-        	}
-            intent.setType(mimeType);
-            intent.putExtra(Intent.EXTRA_STREAM, uris.get(0));
-        }
-        
-        return intent;
-    }
+//    public static Intent buildSendFile(Context context, String... files)
+//    {
+//        ArrayList<Uri> uris = new ArrayList<Uri>();
+//
+//        String mimeType = "*/*";
+//        boolean flag = false;
+//        for (String file : files) {
+//            if (new File(file).isDirectory())
+//            {
+//            	flag = true;
+//                continue;
+//            }
+//            File fileIn = new File(file);
+//            mimeType = FileUtils.getMIMEType(fileIn);
+//            Uri u = Uri.fromFile(fileIn);
+//            uris.add(u);
+//        }
+//
+//        if (uris.size() == 0)
+//            return null;
+//
+//        boolean multiple = (uris.size() > 1);
+//        Intent intent = new Intent(multiple ? android.content.Intent.ACTION_SEND_MULTIPLE
+//                : android.content.Intent.ACTION_SEND);
+//
+//        if (multiple) {
+//            intent.setType("*/*");
+//            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+//        } else {
+//        	if("application/vnd.android.package-archive".equals(mimeType)){
+//        		mimeType = "application/zip";
+//        	}
+//            intent.setType(mimeType);
+//            intent.putExtra(Intent.EXTRA_STREAM, uris.get(0));
+//        }
+//
+//        return intent;
+//    }
 
     
     public static boolean renameFile(Context context, File file, File newPath)
@@ -1560,206 +1262,138 @@ public class FileAction {
         });
     	return true;
     }
-    
-    public static boolean pickFile(Context context, File f){
-    	if(!TextUtils.isEmpty(IntentData.action)
-    			&& 
-    			("android.intent.action.GET_CONTENT".equals(IntentData.action)
-    			|| "android.intent.action.PICK".equals(IntentData.action)))
-    	{
-    		boolean flag_match = true;
-    		Uri uri_base = null;
-    		if(!TextUtils.isEmpty(IntentData.type) && IntentData.type.startsWith("image/"))
-    		{
-    			uri_base = Images.Media.getContentUri("external");
-    			if(FileUtils.getFileType(f)!=FileUtils.FILE_TYPE_IMAGE)
-    			{
-    				flag_match = false;
-    				Toast.makeText(context, R.string.select_image_file_not_match, Toast.LENGTH_SHORT).show();
-    			}
-    		}
-    		else if(!TextUtils.isEmpty(IntentData.type) && IntentData.type.startsWith("audio/"))
-    		{
-    			uri_base = Audio.Media.getContentUri("external");
-    			if(FileUtils.getFileType(f)!=FileUtils.FILE_TYPE_AUDIO)
-    			{
-    				flag_match = false;
-    				Toast.makeText(context, R.string.select_audio_file_not_match, Toast.LENGTH_SHORT).show();	
-    			}
-    			else if(IntentData.type.equals("audio/mp3") && !f.getAbsolutePath().endsWith("mp3"))
-    			{
-    				flag_match = false;
-    				Toast.makeText(context, R.string.select_file_not_supported_format, Toast.LENGTH_SHORT).show();
-    			}
-    		}
-    		else if(!TextUtils.isEmpty(IntentData.type) && IntentData.type.startsWith("video/"))
-    		{
-    			uri_base = Video.Media.getContentUri("external");
-    			if(FileUtils.getFileType(f)!=FileUtils.FILE_TYPE_VIDEO)
-    			{
-    				flag_match = false;
-    				Toast.makeText(context, R.string.select_video_file_not_match, Toast.LENGTH_SHORT).show();
-    			}
-    		}
-    		if(flag_match)
-    		{
-    			Uri uri = null;
-    			if(uri_base!=null){
-    				long id = getIdInMediaDb(f.getAbsolutePath());
-    				if(id!=-1)
-    				{
-    					uri = Uri.withAppendedPath(uri_base, String.valueOf(id));
-    				}
-    			}
-    			if(uri == null)
-    				uri = Uri.fromFile(f);
-//    			Intent intent = new Intent();
-//    			intent.setData(uri);
-//    			((Activity)context).setResult(Activity.RESULT_OK, intent);
-//    			((Activity)context).finish();
-    			
-            	Intent intent = new Intent(context, FileManagerTabActivity.class);
-    			intent.setData(uri);
-    			intent.setAction("quit");
-    			context.startActivity(intent);
-    		}
-    		return true;
-    	}else{
-    		return false;
-    	}
-    }
-    
-    public static void viewFile(Context context, String file)
-    {
-    	boolean flag_anim = false;
-        File f = new File(file);
-		if (f.canRead()) {
-	    	Uri uri = Uri.fromFile(f);
-	    	
-	    	Intent myIntent = new Intent();
-	    	myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	    	
-	    	boolean flag_content = false;
-	    	
-	    	int file_type = FileUtils.getFileType(f);
-	    	
-	    	switch(file_type)
-	    	{
-	    		case FileUtils.FILE_TYPE_DOCUMENT:
-	    		{
-	    	    	myIntent.setAction(android.content.Intent.ACTION_VIEW);
-	    			if(viewDocumentFile(context, f))
-	    				return;
-	    		}
-	    		case FileUtils.FILE_TYPE_ZIP:
-	    		{
-                    myIntent.setAction(Intent.ACTION_VIEW);
-                    myIntent.setPackage(PackageUtil.getPackageName(context));
-	    		}
-	    		case FileUtils.FILE_TYPE_AUDIO:
-	    		{
-	    	    	myIntent.setAction(android.content.Intent.ACTION_VIEW);
-	    			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());    		    			
-	    			String music_app_pkg = sp.getString("AUDIO_DEFAULT_VIEW_APP", "");
 
-		    		if(!TextUtils.isEmpty(music_app_pkg))	
-		    		{
-			    	       PackageInfo packageInfo = null;
-			    	       try {
-			    	           packageInfo = FileManager.getAppContext().getPackageManager().getPackageInfo(music_app_pkg, 0);
-			    	       } catch (NameNotFoundException ex) {
-			    	       }
-			   		       if (packageInfo != null) {
-			    		       	myIntent.setPackage(music_app_pkg);
-			   		       }
-		    		}
-	    			break;
-	    		}
-	    		case FileUtils.FILE_TYPE_IMAGE:
-	    		{
-	    	    	myIntent.setAction(android.content.Intent.ACTION_VIEW);
-	    			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());    		    			
-	    			String image_app_pkg = sp.getString("IMAGE_DEFAULT_VIEW_APP", "");
-	    			if(!TextUtils.isEmpty(image_app_pkg))	
-	    			{
-	    				PackageInfo packageInfo = null;
-	    		        try {
-	    		            packageInfo = FileManager.getAppContext().getPackageManager().getPackageInfo(image_app_pkg, 0);
-	    		        } catch (NameNotFoundException ex) {
-	    		        }
-	    		        if (packageInfo != null) {
-	    		        	myIntent.setPackage(image_app_pkg);
-	    		        }
-	    			}
-	    			break;
-	    		}
-	    		case FileUtils.FILE_TYPE_VIDEO:
-	    		{
-                    myIntent.setAction(android.content.Intent.ACTION_VIEW);
-	    			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());    		    			
-	    			String video_app_pkg = sp.getString("VIDEO_DEFAULT_VIEW_APP", "");
-	    			if(!TextUtils.isEmpty(video_app_pkg))
-	    			{
-	    				PackageInfo packageInfo = null;
-	    		        try {
-	    		            packageInfo = FileManager.getAppContext().getPackageManager().getPackageInfo(video_app_pkg, 0);
-	    		        } catch (NameNotFoundException ex) {
-	    		        }
-	    		        if (packageInfo != null) {
-	    		        	myIntent.setPackage(video_app_pkg);
-	    		        }
-	    			}
-	    			break;
-	    		}
-	    		default:
-	    	    	myIntent.setAction(android.content.Intent.ACTION_VIEW);
-	    	}
-	    	
-	    	//String type = FileUtil.getMIMEType(f);
-	    	String type = FileUtils.getMIMEType(f);
-	    	
-	    	if(type==null || "*/*".equals(type))
-	    	{
-	    		if(FileUtils.FILE_TYPE_VIDEO == file_type){
-	    			type = "video/*";
-	    		}else if(FileUtils.FILE_TYPE_AUDIO == file_type){
-	    			type = "audio/*";
-	    		}else if(FileUtils.FILE_TYPE_IMAGE == file_type){
-	    			type = "image/*";
-	    		}else{
-	    			Toast.makeText(FileManager.getAppContext(), R.string.file_type_not_recognized, Toast.LENGTH_SHORT).show();
-	    			return;
-	    		}
-	    	}
-            myIntent.setDataAndType(Uri.fromFile(f), type);
-            try {
-                context.startActivity(myIntent);
-            } catch (Exception e) {
-                if (myIntent.getPackage() != null && myIntent.getType() != null) {
-                    myIntent.setPackage(null);
-                    try {
-                        context.startActivity(myIntent);
-                    } catch (Exception e2) {
-                        if (file.endsWith(".pdf")) {
-                            Toast.makeText(FileManager.getAppContext(), R.string.no_app_to_view_pdf, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(FileManager.getAppContext(), R.string.no_activity_found, Toast.LENGTH_SHORT).show();
-                        }
-                        e2.printStackTrace();
-                    }
-                } else {
-                    if (file.endsWith(".pdf")) {
-                        Toast.makeText(FileManager.getAppContext(), R.string.no_app_to_view_pdf, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(FileManager.getAppContext(), R.string.no_activity_found, Toast.LENGTH_SHORT).show();
-                    }
-                    e.printStackTrace();
-                }
-            }
-
-        }
-    }
-    
+//    public static void viewFile(Context context, String file)
+//    {
+//    	boolean flag_anim = false;
+//        File f = new File(file);
+//		if (f.canRead()) {
+//	    	Uri uri = Uri.fromFile(f);
+//
+//	    	Intent myIntent = new Intent();
+//	    	myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//
+//	    	boolean flag_content = false;
+//
+//	    	int file_type = FileUtils.getFileType(f);
+//
+//	    	switch(file_type)
+//	    	{
+//	    		case FileUtils.FILE_TYPE_DOCUMENT:
+//	    		{
+//	    	    	myIntent.setAction(android.content.Intent.ACTION_VIEW);
+//	    			if(viewDocumentFile(context, f))
+//	    				return;
+//	    		}
+//	    		case FileUtils.FILE_TYPE_ZIP:
+//	    		{
+//                    myIntent.setAction(Intent.ACTION_VIEW);
+//                    myIntent.setPackage(PackageUtil.getPackageName(context));
+//	    		}
+//	    		case FileUtils.FILE_TYPE_AUDIO:
+//	    		{
+//	    	    	myIntent.setAction(android.content.Intent.ACTION_VIEW);
+//	    			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
+//	    			String music_app_pkg = sp.getString("AUDIO_DEFAULT_VIEW_APP", "");
+//
+//		    		if(!TextUtils.isEmpty(music_app_pkg))
+//		    		{
+//			    	       PackageInfo packageInfo = null;
+//			    	       try {
+//			    	           packageInfo = FileManager.getAppContext().getPackageManager().getPackageInfo(music_app_pkg, 0);
+//			    	       } catch (NameNotFoundException ex) {
+//			    	       }
+//			   		       if (packageInfo != null) {
+//			    		       	myIntent.setPackage(music_app_pkg);
+//			   		       }
+//		    		}
+//	    			break;
+//	    		}
+//	    		case FileUtils.FILE_TYPE_IMAGE:
+//	    		{
+//	    	    	myIntent.setAction(android.content.Intent.ACTION_VIEW);
+//	    			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
+//	    			String image_app_pkg = sp.getString("IMAGE_DEFAULT_VIEW_APP", "");
+//	    			if(!TextUtils.isEmpty(image_app_pkg))
+//	    			{
+//	    				PackageInfo packageInfo = null;
+//	    		        try {
+//	    		            packageInfo = FileManager.getAppContext().getPackageManager().getPackageInfo(image_app_pkg, 0);
+//	    		        } catch (NameNotFoundException ex) {
+//	    		        }
+//	    		        if (packageInfo != null) {
+//	    		        	myIntent.setPackage(image_app_pkg);
+//	    		        }
+//	    			}
+//	    			break;
+//	    		}
+//	    		case FileUtils.FILE_TYPE_VIDEO:
+//	    		{
+//                    myIntent.setAction(android.content.Intent.ACTION_VIEW);
+//	    			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
+//	    			String video_app_pkg = sp.getString("VIDEO_DEFAULT_VIEW_APP", "");
+//	    			if(!TextUtils.isEmpty(video_app_pkg))
+//	    			{
+//	    				PackageInfo packageInfo = null;
+//	    		        try {
+//	    		            packageInfo = FileManager.getAppContext().getPackageManager().getPackageInfo(video_app_pkg, 0);
+//	    		        } catch (NameNotFoundException ex) {
+//	    		        }
+//	    		        if (packageInfo != null) {
+//	    		        	myIntent.setPackage(video_app_pkg);
+//	    		        }
+//	    			}
+//	    			break;
+//	    		}
+//	    		default:
+//	    	    	myIntent.setAction(android.content.Intent.ACTION_VIEW);
+//	    	}
+//
+//	    	//String type = FileUtil.getMIMEType(f);
+//	    	String type = FileUtils.getMIMEType(f);
+//
+//	    	if(type==null || "*/*".equals(type))
+//	    	{
+//	    		if(FileUtils.FILE_TYPE_VIDEO == file_type){
+//	    			type = "video/*";
+//	    		}else if(FileUtils.FILE_TYPE_AUDIO == file_type){
+//	    			type = "audio/*";
+//	    		}else if(FileUtils.FILE_TYPE_IMAGE == file_type){
+//	    			type = "image/*";
+//	    		}else{
+//	    			Toast.makeText(FileManager.getAppContext(), R.string.file_type_not_recognized, Toast.LENGTH_SHORT).show();
+//	    			return;
+//	    		}
+//	    	}
+//            myIntent.setDataAndType(Uri.fromFile(f), type);
+//            try {
+//                context.startActivity(myIntent);
+//            } catch (Exception e) {
+//                if (myIntent.getPackage() != null && myIntent.getType() != null) {
+//                    myIntent.setPackage(null);
+//                    try {
+//                        context.startActivity(myIntent);
+//                    } catch (Exception e2) {
+//                        if (file.endsWith(".pdf")) {
+//                            Toast.makeText(FileManager.getAppContext(), R.string.no_app_to_view_pdf, Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            Toast.makeText(FileManager.getAppContext(), R.string.no_activity_found, Toast.LENGTH_SHORT).show();
+//                        }
+//                        e2.printStackTrace();
+//                    }
+//                } else {
+//                    if (file.endsWith(".pdf")) {
+//                        Toast.makeText(FileManager.getAppContext(), R.string.no_app_to_view_pdf, Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(FileManager.getAppContext(), R.string.no_activity_found, Toast.LENGTH_SHORT).show();
+//                    }
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//        }
+//    }
+//
     private static boolean viewDocumentFile(Context context, File f)
     {
     	Intent intent = FileIntent.getDocumentFileIntent(f);

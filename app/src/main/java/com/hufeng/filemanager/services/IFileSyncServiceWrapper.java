@@ -23,7 +23,7 @@ public class IFileSyncServiceWrapper {
         }
     }
 
-    public void deleteUnexist(int type) {
+    public void deleteUnexist(String type) {
         if (mIFileSyncService != null) {
             try {
                 mIFileSyncService.deleteUnexist(type);

@@ -44,7 +44,19 @@ public class TimeUtil {
 //        return String.valueOf(y) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
         Time time = new Time();
         time.set(t);
-        return time.format("%Y-%m-%d %H:%M");
+        return time.format("%Y/%m/%d %H:%M");
+    }
+
+    public static String getDayString(long t) {
+//        final Calendar c = Calendar.getInstance();
+//        c.setTimeInMillis(t);
+//        int y = c.get(Calendar.YEAR);
+//        int m = c.get(Calendar.MONTH) + 1;
+//        int d = c.get(Calendar.DAY_OF_MONTH);
+//        return String.valueOf(y) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+        Time time = new Time();
+        time.set(t);
+        return time.format("%Y/%m/%d");
     }
 
     public static boolean isToday(long t) {

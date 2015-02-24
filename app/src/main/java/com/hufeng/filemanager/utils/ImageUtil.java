@@ -70,7 +70,7 @@ public class ImageUtil {
             try {
                 is.close();
             } catch (java.io.IOException e) {
-                  e.printStackTrace();
+                e.printStackTrace();
             }
             if(image!=null){
 	            int width = image.getWidth();

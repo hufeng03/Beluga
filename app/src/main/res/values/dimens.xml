@@ -9,4 +9,60 @@
     <dimen name="grid_fragment_vertical_spacing">5dp</dimen>
     <dimen name="grid_fragment_horizontal_spacing">5dp</dimen>
     <dimen name="grid_fragment_padding">5dp</dimen>
+    <dimen name="tab_text_size">14sp</dimen>
+    <dimen name="tab_elevation">2dp</dimen>
+    <!-- Height of the selection indicator of a tab. -->
+    <dimen name="tab_selected_underline_height">2dp</dimen>
+    <!-- Padding around the icon in the search box. -->
+    <dimen name="search_box_icon_margin">4dp</dimen>
+    <!-- Size of the icon (voice search, back arrow) in the search box. -->
+    <dimen name="search_box_icon_size">28dp</dimen>
+    <!-- Size of the close icon.
+         Because it expands diagonally, it needs to be shrunk to look relatively the same size -->
+    <dimen name="search_box_close_icon_size">24dp</dimen>
+    <!-- Padding around back arrow icon in the search box -->
+    <dimen name="search_box_navigation_icon_margin">14dp</dimen>
+    <!-- Padding around close icon in the search box -->
+    <dimen name="search_box_close_icon_margin">16dp</dimen>
+    <!-- Left margin of the text field in the search box. -->
+    <dimen name="search_box_text_left_margin">15dp</dimen>
+    <!-- Search box text size -->
+    <dimen name="search_text_size">20sp</dimen>
+    <!-- The width the that the tabs occupy in the ActionBar when in landscape mode.
+     426dp is the height of a "small" screen. We should leave 240dp for
+     the title and menu items -->
+    <dimen name="beluga_activity_landscape_tabs_width">186dp</dimen>
+    <!-- The size of the text displayed in the ActionBar tabs in landscape mode.
+         Text in the tabs should must be width dependent, otherwise it won't fit in the tabs.
+         In portrait mode, the tabs look okay when overflowing their allocated space.
+         We have to be more careful in landscape. -->
+    <dimen name="beluga_activity_landscape_tabs_text_size">8dp</dimen>
+
+    <!-- Height of the floating action button -->
+    <dimen name="floating_action_button_height">56dp</dimen>
+    <!-- Width of the floating action button -->
+    <dimen name="floating_action_button_width">56dp</dimen>
+    <!-- Corner radius of the floating action button -->
+    <dimen name="floating_action_button_radius">28dp</dimen>
+    <!-- Z translation of the floating action button -->
+    <dimen name="floating_action_button_translation_z">2dp</dimen>
+    <!-- Padding to be applied to the bottom of lists to make space for the floating action
+         button -->
+    <dimen name="floating_action_button_list_bottom_padding">88dp</dimen>
+    <!-- Right margin of the floating action button -->
+    <dimen name="floating_action_button_margin_right">16dp</dimen>
+    <!-- Bottom margin of the floating action button -->
+    <dimen name="floating_action_button_margin_bottom">16dp</dimen>
+    <!-- Offset of bottom margin of the floating action button used when dialpad is up -->
+    <dimen name="floating_action_button_dialpad_margin_bottom_offset">4dp</dimen>
+    <dimen name="recycler_view_padding">2dp</dimen>
+    <dimen name="m_text_size_caption">12.0sp</dimen>
+    <dimen name="m_text_size_body">14.0sp</dimen>
+    <dimen name="m_text_size_subhead">16.0sp</dimen>
+    <dimen name="m_text_size_title">20.0sp</dimen>
+    <dimen name="m_text_size_headline">24.0sp</dimen>
+    <item type="dimen" name="m_entry_text_size_primary">@dimen/m_text_size_subhead</item>
+    <item type="dimen" name="m_entry_text_size_secondary">@dimen/m_text_size_body</item>
+    <item type="dimen" name="m_entry_text_size_tertiary">@dimen/m_text_size_caption</item>
+    <dimen name="simple_file_list_row_height">64dp</dimen>
 </resources>

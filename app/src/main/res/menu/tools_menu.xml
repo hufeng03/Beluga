@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:beluga="http://schemas.android.com/apk/res-auto">
    	<item android:id="@+id/menu_display"
-        android:icon="@drawable/ic_menu_display_as_grid_holo_light"
+        android:icon="@drawable/ic_action_view_as_grid"
         android:title="@string/menu_display"
-        android:showAsAction="always" />
+        beluga:showAsAction="always" />
 </menu>

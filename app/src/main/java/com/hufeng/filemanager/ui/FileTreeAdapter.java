@@ -13,7 +13,7 @@ import com.hufeng.filemanager.browser.IconLoaderHelper;
 import com.hufeng.filemanager.treeview.AbstractTreeViewAdapter;
 import com.hufeng.filemanager.treeview.TreeNodeInfo;
 import com.hufeng.filemanager.treeview.TreeStateManager;
-import com.hufeng.playimage.MyLazyLoadImageView;
+import com.hufeng.playimage.BelugaLazyLoadImageView;
 
 
 public class FileTreeAdapter extends AbstractTreeViewAdapter<String>{
@@ -77,14 +77,14 @@ public class FileTreeAdapter extends AbstractTreeViewAdapter<String>{
         final LinearLayout viewLayout = (LinearLayout) view;
         final TextView descriptionView = (TextView) viewLayout
                 .findViewById(R.id.file_tree_item_name);
-        final MyLazyLoadImageView imageView = (MyLazyLoadImageView) viewLayout
+        final BelugaLazyLoadImageView imageView = (BelugaLazyLoadImageView) viewLayout
                 .findViewById(R.id.file_tree_item_image);
         String path = treeNodeInfo.getId();
         descriptionView.setText(getDescription(path));
         //levelView.setText(Integer.toString(treeNodeInfo.getLevel()));
 //        mIconLoader.loadIcon(imageView, null, null, path);
         imageView.setDefaultResource(IconLoaderHelper.getFileIcon(view.getContext(), path));
-        imageView.requestDisplayLocalThumbnail(path);
+        imageView.requestDisplayImage(path);
 
 
 //        final CheckBox box = (CheckBox) viewLayout

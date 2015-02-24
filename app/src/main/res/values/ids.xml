@@ -3,4 +3,10 @@
     <item type="id" name="status_img_tag_path" />
     <item type="id" name="status_img_tag_selected" />
     <item type="id" name="category_kanbox" />
+    <item type="id" name="drawer_item_settings"/>
+    <item type="id" name="drawer_item_about"/>
+    <item type="id" name="drawer_item_help_and_feedback"/>
+    <item type="id" name="drawer_item_my_apps" />
+    <item type="id" name="drawer_item_my_files" />
+    <item type="id" name="category_tag"/>
 </resources>

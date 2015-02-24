@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/share"
+        android:title="@string/overflow_share"/>
+    <item android:id="@+id/copy"
+        android:title="@string/overflow_copy"/>
+    <item android:id="@+id/cut"
+        android:title="@string/overflow_cut"/>
+    <item android:id="@+id/delete"
+        android:title="@string/overflow_delete"/>
+    <item android:id="@+id/rename"
+        android:title="@string/overflow_rename"/>
+    <item android:id="@+id/details"
+        android:title="@string/overflow_details"/>
+    <item android:id="@+id/add_favorite"
+        android:title="@string/overflow_add_favorite"/>
+    <item android:id="@+id/remove_favorite"
+        android:title="@string/overflow_remove_favorite"/>
+
+</menu>

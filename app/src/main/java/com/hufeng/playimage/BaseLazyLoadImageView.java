@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import com.hufeng.filemanager.BelugaImageLoader;
+
 public abstract class BaseLazyLoadImageView extends ImageView {
 
     protected String currentUri;
@@ -25,12 +27,11 @@ public abstract class BaseLazyLoadImageView extends ImageView {
         if (TextUtils.isEmpty(uri)) {
             throw new IllegalArgumentException("the uri can not be NULL");
         }
-
+        targetUri = uri;
         if (uri.equals(currentUri)) {
             return;
         }
-        targetUri = uri;
-        ImageLoader.getInstance().displayImage(this, uri);
+        BelugaImageLoader.getInstance().displayImage(this, uri);
     }
 
     public void setImageBitmap(Bitmap bm, String url) {
@@ -38,15 +39,15 @@ public abstract class BaseLazyLoadImageView extends ImageView {
         currentUri = url;
     }
 
-    public void setImageDrawable(Drawable drawable, String url) {
-        super.setImageDrawable(drawable);
-        currentUri = url;
-    }
-
-    public void setImageResource(int resId, String url){
-        super.setImageResource(resId);
-        currentUri = url;
-    }
+//    public void setImageDrawable(Drawable drawable, String url) {
+//        super.setImageDrawable(drawable);
+//        currentUri = url;
+//    }
+//
+//    public void setImageResource(int resId, String url){
+//        super.setImageResource(resId);
+//        currentUri = url;
+//    }
 
     public boolean setImageBitmapIfNeeds(Bitmap bm, String uri) {
         if (uri.equals(targetUri)) {
@@ -56,6 +57,6 @@ public abstract class BaseLazyLoadImageView extends ImageView {
         return false;
     }
 
-    public abstract void useDefaultBitmap();
+    public abstract void useDefaultResource();
 
 }

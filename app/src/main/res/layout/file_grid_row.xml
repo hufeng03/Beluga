@@ -1,16 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/file_items"
+    android:padding="2dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
+
+    <!--com.hufeng.filemanager.view.SquareLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        >
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text=""
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/description"
+            android:text=""
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            />
+    </com.hufeng.filemanager.view.SquareLayout!-->
+
+    <com.hufeng.filemanager.view.SquareLayout
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/list_divider_color"
+        />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/background"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:textSize="12sp"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:background="@color/gray"
+        />
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/description"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:textSize="12sp"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:background="@color/gray"
+        />
 
         <com.hufeng.filemanager.view.SquareLazyLoadImageView
             android:id="@+id/icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
-            android:layout_marginBottom="4dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/file_icon_default_square"/>
+
+    <View
+        android:id="@+id/mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@id/icon"
+        android:layout_alignLeft="@id/icon"
+        android:layout_alignBottom="@id/icon"
+        android:layout_alignRight="@id/icon"
+        android:background="@drawable/list_selector"
+        />
+
+    <ImageView
+        android:id="@+id/check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_check_white"
+        />
+
+            <ImageView
+                android:id="@+id/expand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/icon"
+                android:layout_alignRight="@id/icon"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/ic_aspect_ratio"
+                />
+
+
 
         	<!--CheckBox
                 android:id="@+id/fileCheckbox"
@@ -45,11 +138,13 @@
                 android:src="@drawable/checkbox_normal"
                 /-->
 
-    <ImageView
-        android:id="@+id/checked"
-        android:src="@drawable/kanbox_ic_downloaded"
+    <!--ImageView
+        android:id="@+id/overflow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        style="@style/BelugaCardOverflow"
         android:layout_alignRight="@id/icon"
         android:layout_alignBottom="@id/icon"
         android:paddingRight="5dp"
@@ -69,13 +164,13 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:layout_marginLeft = "4dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:textColor="@color/white"
                 android:text=""
                 android:background="@drawable/button_bg"
                 android:gravity="center"
                 android:layout_gravity="center_vertical"
-                />
+                /!-->
 
     <!--LinearLayout
         android:id="@+id/filedetail"
@@ -90,7 +185,7 @@
         android:paddingRight="4dp"
         android:paddingBottom="2dp"-->
 
-        <TextView
+        <!--TextView
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -100,21 +195,24 @@
             android:singleLine="true"
             android:text="name of item"
             android:textColor="@color/file_name_normal"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            android:visibility="gone"
+            />
 
         <TextView
-            android:id="@+id/info"
+            android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/name"
             android:layout_toLeftOf="@id/status"
             android:singleLine="true"
-            android:visibility="visible"
+            android:visibility="gone"
             android:textColor="@color/file_info_normal"
             android:text="info of item"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            /!-->
 
-        <ProgressBar
+        <!--ProgressBar
             android:id="@+id/progress"
             android:layout_width="match_parent"
             android:layout_height="4dp"
@@ -124,7 +222,7 @@
             android:visibility="visible"
             android:progress="0"
             android:progressDrawable="@drawable/progress_bar_bg"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="4dp"/!-->
 
     <!--/LinearLayout-->
 

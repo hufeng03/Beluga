@@ -34,14 +34,6 @@ public class UiCallServiceHelper implements ServiceConnection {
         return mServiceHelper;
     }
 
-    public void addCallback(IUiImpl.UiCallback callback) {
-        mIUiImpl.addCallback(callback);
-    }
-
-    public void removeCallback(IUiImpl.UiCallback callback) {
-        mIUiImpl.removeCallback(callback);
-    }
-
     public void connectService(Context context) {
         mContext = context;
         Intent service = new Intent(context, FileManagerService.class);
@@ -52,7 +44,7 @@ public class UiCallServiceHelper implements ServiceConnection {
         getIFileObserverServiceWrapper().startScan();
     }
 
-    public void deleteUnexist (int type) {
+    public void deleteUnexist (String type) {
         getIFileObserverServiceWrapper().deleteUnexist(type);
     }
 

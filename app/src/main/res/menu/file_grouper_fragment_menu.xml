@@ -1,55 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_back"
-          android:icon="@drawable/ic_menu_back_holo_light"
-          android:title="@string/menu_back"
-          android:showAsAction="always" />
-    <item android:id="@+id/menu_display"
-          android:icon="@drawable/ic_menu_display_holo_light"
-          android:title="@string/menu_display"
-          android:showAsAction="always" />
-    <item android:id="@+id/menu_sort"
-          android:icon="@drawable/ic_menu_sort_asc_holo_light"
-          android:title="@string/menu_sort"
-          android:showAsAction="always">
-        <menu>
-            <item android:id="@+id/menu_sort_by_date_asc"
-                  android:icon="@drawable/ic_menu_sort_asc_holo_light"
-                  android:title="@string/menu_sort_date_asc"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:beluga="http://schemas.android.com/apk/res-auto">
+        <item android:id="@+id/menu_grouper_sort"
+              android:icon="@drawable/ic_action_sort_asc"
+              android:title="@string/menu_sort"
+              beluga:showAsAction="always">
+            <!--menu>
+                <item android:id="@+id/menu_grouper_sort_by_date"
+                      android:icon="@drawable/ic_action_sort_desc"
+                      android:title="@string/menu_sort_by_date"
+                        />
+                <item android:id="@+id/menu_grouper_sort_by_size"
+                      android:icon="@drawable/ic_action_sort_desc"
+                      android:title="@string/menu_sort_by_size"
+                        />
+                <item android:id="@+id/menu_grouper_sort_by_name"
+                    android:icon="@drawable/ic_action_sort_asc"
+                    android:title="@string/menu_sort_by_name"
                     />
-            <item android:id="@+id/menu_sort_by_date_desc"
-                  android:icon="@drawable/ic_menu_sort_desc_holo_light"
-                  android:title="@string/menu_sort_date_desc"
-                    />
-            <item android:id="@+id/menu_sort_by_name_asc"
-                  android:icon="@drawable/ic_menu_sort_asc_holo_light"
-                  android:title="@string/menu_sort_name_asc"
-                    />
-            <item android:id="@+id/menu_sort_by_name_desc"
-                  android:icon="@drawable/ic_menu_sort_desc_holo_light"
-                  android:title="@string/menu_sort_name_desc"
-                    />
-            <item android:id="@+id/menu_sort_by_size_asc"
-                  android:icon="@drawable/ic_menu_sort_asc_holo_light"
-                  android:title="@string/menu_sort_size_asc"
-                    />
-            <item android:id="@+id/menu_sort_by_size_desc"
-                  android:icon="@drawable/ic_menu_sort_desc_holo_light"
-                  android:title="@string/menu_sort_size_desc"
-                    />
-            <item android:id="@+id/menu_sort_by_extension_asc"
-                  android:icon="@drawable/ic_menu_sort_asc_holo_light"
-                  android:title="@string/menu_sort_extension_asc"
-                    />
-            <item android:id="@+id/menu_sort_by_extension_desc"
-                  android:icon="@drawable/ic_menu_sort_desc_holo_light"
-                  android:title="@string/menu_sort_extension_desc"
-                    />
-        </menu>
-    </item>
-    <item android:id="@+id/menu_search"
-          android:icon="@drawable/ic_menu_search_holo_light"
-          android:title="@string/menu_search"
-          android:showAsAction="collapseActionView|always"
-          android:actionViewClass="android.widget.SearchView" />
+                <item android:id="@+id/menu_grouper_sort_by_extension"
+                      android:icon="@drawable/ic_action_sort_asc"
+                      android:title="@string/menu_sort_by_extension"
+                        />
+            </menu!-->
+        </item>
+        <item android:id="@+id/menu_grouper_display"
+            android:icon="@drawable/ic_action_view_as_grid"
+            android:title="@string/menu_display"
+            beluga:showAsAction="ifRoom" />
+        <!--item android:id="@+id/menu_grouper_search"
+            android:icon="@drawable/ic_ab_search"
+            android:title="@string/menu_search"
+            beluga:showAsAction="never"/!-->
+
+    <!--group android:id="@+id/file_menu_group_pick">
+        <item android:id="@+id/menu_picker_grouper_open"
+            android:title="@string/menu_picker_open"
+            />
+    </group!-->
 </menu>

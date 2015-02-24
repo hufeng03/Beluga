@@ -46,6 +46,8 @@ public class UiProvider {
                 }
             }
             files = all_downloads.toArray(new String[0]);
+        } else {
+            files = new String[0];
         }
         return files;
     }
@@ -53,22 +55,28 @@ public class UiProvider {
     public static String[] getFavoriteFiles() {
         ArrayList<String> dirs = new ArrayList<String>(0);
         ArrayList<String> deleted_favorite_dirs = new ArrayList<String>(0);
-        Cursor cursor = FileManager.getAppContext().getContentResolver().query(DataStructures.FavoriteColumns.CONTENT_URI, DataStructures.FavoriteColumns.FILE_PROJECTION, null, null, null);
-        if(cursor!=null)
-        {
-            while(cursor.moveToNext())
-            {
-                String file = cursor.getString(DataStructures.FavoriteColumns.FILE_PATH_FIELD_INDEX);
-                if(new File(file).exists())
-                    dirs.add(file);
-                else
-                    deleted_favorite_dirs.add(file);
+        Cursor cursor = null;
+        try {
+            cursor = FileManager.getAppContext().getContentResolver().query(DataStructures.FavoriteColumns.CONTENT_URI, DataStructures.FavoriteColumns.FILE_PROJECTION, null, null, null);
+            if(cursor!=null) {
+                while(cursor.moveToNext()) {
+                    String file = cursor.getString(DataStructures.FavoriteColumns.FILE_PATH_FIELD_INDEX);
+                    if(new File(file).exists())
+                        dirs.add(file);
+                    else
+                        deleted_favorite_dirs.add(file);
+                }
             }
-            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
 
-        if(!deleted_favorite_dirs.isEmpty())
-        {
+
+        if(!deleted_favorite_dirs.isEmpty()) {
             StringBuilder selection = new StringBuilder();
             selection.append(DataStructures.FavoriteColumns.FILE_PATH_FIELD + " IN ");
             selection.append('(');
@@ -114,28 +122,26 @@ public class UiProvider {
         }
         dirs = tempList;
 
-        if(dirs.size()==0)
-            return null;
-        else
-        {
-            String[] store = new String[dirs.size()];
-            return dirs.toArray(store);
+        if(dirs.size()==0) {
+            return new String[0];
+        } else {
+            return dirs.toArray(new String[dirs.size()]);
         }
     }
 
     public static String[] getStorageDirs() {
         String[] files = StorageManager.getInstance(FileManager.getAppContext()).getMountedStorages();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
-        boolean show_root = preferences.getBoolean("SHOW_ROOT_DIR",true);
-        if (RootHelper.isRootedPhone() && show_root) {
-            int len = (files == null ? 0: files.length) + 1;
-            String[] new_files = new String[len];
-            for (int i = 0; i < len-1; i++) {
-                new_files[i] = files[i];
-            }
-            new_files[len-1] = "/";
-            files = new_files;
-        }
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
+//        boolean show_root = preferences.getBoolean("SHOW_ROOT_DIR",true);
+//        if (RootHelper.isRootedPhone() && show_root) {
+//            int len = (files == null ? 0: files.length) + 1;
+//            String[] new_files = new String[len];
+//            for (int i = 0; i < len-1; i++) {
+//                new_files[i] = files[i];
+//            }
+//            new_files[len-1] = "/";
+//            files = new_files;
+//        }
         return files;
     }
 }

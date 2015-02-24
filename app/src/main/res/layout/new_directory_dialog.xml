@@ -2,29 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:minWidth="300dp"
+    android:paddingTop="16dp"
+    android:paddingRight="24dp"
+    android:paddingLeft="24dp"
     android:orientation="vertical" >
-	
-    <!--TextView
-        android:layout_width="fill_parent"
+
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/please_input_directory_name"
-        /-->
+        android:text="@string/enter_new_folder_name"
+        android:textAppearance="@style/TextAppearanceSecondary"
+        android:singleLine="true"
+        />
+
     <EditText
         android:id="@+id/new_directory_dialog_edit"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:lines="1"
         android:maxLines="1"
+        android:textAppearance="@style/TextAppearancePrimary"
         android:inputType="text"
         android:textColor="@color/gray"
         />
-    <TextView
-        android:id="@+id/error_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/red"
-        android:visibility="invisible"
-        android:paddingLeft="4dp"
-        android:text="@string/file_name_input_wrong"/>
 
 </LinearLayout>

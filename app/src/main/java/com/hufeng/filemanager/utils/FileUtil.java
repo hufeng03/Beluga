@@ -10,15 +10,15 @@ public class FileUtil {
     private static final long M = K * K;
     private static final long G = M * K;
 
-    public static String normalize(long data) {
-        if (data > G)
-            return String.format("%.2fG", data / (double)G);
-        else if (data > M)
-            return String.format("%.2fM", data / (double)M);
-        else if (data > K)
-            return String.format("%.2fK", data / (double)K);
+    public static String normalize(long length) {
+        if (length > G)
+            return String.format("%.2fG", length / (double)G);
+        else if (length > M)
+            return String.format("%.2fM", length / (double)M);
+        else if (length > K)
+            return String.format("%.2fK", length / (double)K);
         else
-            return String.valueOf(data + "B");
+            return String.valueOf(length + "B");
     }
 
     /* 判断文件MimeType的method */
