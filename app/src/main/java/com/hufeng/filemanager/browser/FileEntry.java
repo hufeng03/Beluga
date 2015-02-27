@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.hufeng.filemanager.BelugaEntry;
+import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.utils.MimeUtil;
 
@@ -56,7 +57,7 @@ public class FileEntry extends BelugaEntry {
         this.name = file.getName();
         this.size = file.length();
         this.lastModified = file.lastModified();
-        this.type = FileUtils.getFileType(file);
+        this.type = FileCategoryHelper.getFileCategoryForFile(path);
         this.hidden = file.isHidden();
         this.isDirectory = file.isDirectory();
         this.isWritable = file.canWrite();

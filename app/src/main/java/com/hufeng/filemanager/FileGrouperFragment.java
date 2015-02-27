@@ -17,20 +17,14 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 
-import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.browser.InfoLoader;
 import com.hufeng.filemanager.data.FileCursorLoader;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
-import com.hufeng.filemanager.services.IUiImpl;
 import com.hufeng.filemanager.services.UiCallServiceHelper;
-import com.hufeng.filemanager.ui.FileGridAdapterListener;
-import com.hufeng.filemanager.ui.BelugaActionController;
 import com.hufeng.filemanager.utils.LogUtil;
 
 public class FileGrouperFragment extends FileRecyclerFragment implements
         LoaderManager.LoaderCallbacks<Cursor>,
-        FileGridAdapterListener,
         BelugaEntryViewHolder.EntryClickListener {
 
     private static final String TAG = FileGrouperFragment.class.getSimpleName();
@@ -214,10 +208,6 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
         }
     }
 
-    @Override
-    public void reportNotExistFile() {
-        UiCallServiceHelper.getInstance().deleteUnexist(mCategory.toString());
-    }
 
     @Override
     public FileEntry[] getAllFiles() {
@@ -235,9 +225,8 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
         Log.i(TAG, "onCreateFinished");
 		mAdapter.swapCursor(arg1);
         final boolean empty = arg1 == null || arg1.getCount() == 0;
-        final boolean scanning = UiCallServiceHelper.getInstance().isScanning();
-        setRecyclerViewShown(!empty || !scanning);
-        setEmptyViewShown(empty && !scanning);
+        setRecyclerViewShown(true);
+        setEmptyViewShown(empty);
 	}
 
 	@Override

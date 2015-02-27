@@ -16,13 +16,6 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.provider.DataStructures;
-import com.hufeng.filemanager.utils.FileUtil;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

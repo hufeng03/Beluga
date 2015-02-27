@@ -6,12 +6,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.provider.DocumentsContract;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.textservice.TextInfo;
-import android.webkit.MimeTypeMap;
 
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.browser.IconLoaderHelper;
+import com.hufeng.filemanager.helper.IconLoaderHelper;
 import com.hufeng.filemanager.utils.MimeUtil;
 
 import java.io.File;

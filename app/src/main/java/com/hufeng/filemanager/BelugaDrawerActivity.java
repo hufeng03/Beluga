@@ -17,15 +17,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import com.hufeng.filemanager.apprate.AppRate;
 import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.browser.InfoLoader;
 import com.hufeng.filemanager.ui.BelugaActionController;
 import com.hufeng.filemanager.ui.FileViewPager;
 
@@ -71,19 +68,6 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
      * This is to disable {@link #onOptionsItemSelected} when we trying to stop the activity.
      */
     private boolean mDisableOptionItemSelected;
-
-    private long mLastBackPressTime = -1;
-
-    private boolean mAppRateShown = false;
-
-    private boolean mSelection = false;
-
-    private Handler mHandler = new Handler();
-
-    //	private boolean mFirst = true;
-    AppRate mAppRate = null;
-
-    private int mOldItemId = -1;
 
     private String[] mTabTitles;
     private final TabPagerListener mTabPagerListener = new TabPagerListener();
@@ -200,11 +184,6 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
             ViewUtil.addRectangularOutlineProvider(findViewById(R.id.toolbar_parent), getResources());
         }
 
-        if (Constants.APP_RATE) {
-            mAppRate = new AppRate(this);
-            mAppRate.init();
-        }
-
         supportInvalidateOptionsMenu();
 
         invalidate();
@@ -259,7 +238,6 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
     @Override
     protected void onResume() {
         super.onResume();
-        InfoLoader.getInstance().resume();
 
         // Re-register the listener, which may have been cleared when onSaveInstanceState was
         // called.  See also: onSaveInstanceState
@@ -276,7 +254,6 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
     @Override
     protected void onPause() {
         super.onPause();
-        InfoLoader.getInstance().pause();
     }
 
     @Override

@@ -13,35 +13,22 @@ public class IFileSyncServiceWrapper {
     	mIFileSyncService = f;
     }
 
-    public void startScan() {
+    public void forceScan() {
         if (mIFileSyncService != null) {
             try {
-                mIFileSyncService.startScan();
+                mIFileSyncService.forceScan();
             } catch(RemoteException e) {
                 e.printStackTrace();
             }
         }
     }
-
-    public void deleteUnexist(String type) {
-        if (mIFileSyncService != null) {
-            try {
-                mIFileSyncService.deleteUnexist(type);
-            } catch(RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     
     public boolean isScanning()
     {
 		if(mIFileSyncService==null)
 			return false;
 		try {
-			boolean rst =  mIFileSyncService.isScanning();
-//			if(LogUtil.IDBG) LogUtil.i(LOG_TAG, " isScanning return "+rst);
-			return rst;
+			return  mIFileSyncService.isScanning();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

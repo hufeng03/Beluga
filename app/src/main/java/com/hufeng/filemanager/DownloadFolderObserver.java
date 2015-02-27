@@ -1,17 +1,9 @@
 package com.hufeng.filemanager;
 
-import android.content.Context;
-import android.os.Bundle;
 import android.os.FileObserver;
-import android.os.Looper;
-import android.os.Message;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.textservice.TextInfo;
-
-import com.hufeng.filemanager.browser.BelugaSorter;
-import com.hufeng.filemanager.browser.FileEntry;
 
 import java.io.File;
 import java.util.ArrayList;

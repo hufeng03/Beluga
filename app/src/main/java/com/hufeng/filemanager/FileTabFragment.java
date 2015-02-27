@@ -2,17 +2,10 @@ package com.hufeng.filemanager;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.hufeng.filemanager.browser.FileAction;
-import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.browser.ImageEntry;
-import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.ui.BelugaActionController;
 
-public abstract class FileTabFragment extends BaseFragment implements
+public abstract class FileTabFragment extends BelugaBaseFragment implements
         BelugaFragmentInterface {
 	private final String LOG_TAG = ((Object)this).getClass().getSimpleName();
 

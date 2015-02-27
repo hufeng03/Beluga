@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import com.hufeng.filemanager.CategorySelectEvent;
 import com.hufeng.filemanager.SortPreferenceReceiver;
-import com.hufeng.filemanager.browser.BelugaSorter;
+import com.hufeng.filemanager.helper.BelugaSortHelper;
 import com.hufeng.filemanager.provider.DataStructures;
 
 /**
@@ -61,7 +61,7 @@ public class FileCursorLoader extends CursorLoader {
         }
 
         if (baseUri != null) {
-            BelugaSorter.SORTER sorter = BelugaSorter.getFileSorter(context, categoryType);
+            BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(context, categoryType);
             String sort_constraint = null;
             switch (sorter.field) {
                 case NAME:
@@ -78,7 +78,7 @@ public class FileCursorLoader extends CursorLoader {
                     break;
             }
             if (!TextUtils.isEmpty(sort_constraint)) {
-                if (sorter.order == BelugaSorter.SORT_ORDER.ASC) {
+                if (sorter.order == BelugaSortHelper.SORT_ORDER.ASC) {
                     sort_constraint += " ASC";
                 } else {
                     sort_constraint += " DESC";
@@ -129,7 +129,7 @@ public class FileCursorLoader extends CursorLoader {
     }
 
     private void refreshSortOrder() {
-        BelugaSorter.SORTER sorter = BelugaSorter.getFileSorter(getContext(), mCategoryType);
+        BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(getContext(), mCategoryType);
         String sort_constraint = null;
         switch (sorter.field) {
             case NAME:
@@ -146,7 +146,7 @@ public class FileCursorLoader extends CursorLoader {
                 break;
         }
         if (!TextUtils.isEmpty(sort_constraint)) {
-            if (sorter.order == BelugaSorter.SORT_ORDER.ASC) {
+            if (sorter.order == BelugaSortHelper.SORT_ORDER.ASC) {
                 sort_constraint += " ASC";
             } else {
                 sort_constraint += " DESC";

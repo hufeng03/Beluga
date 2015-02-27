@@ -14,9 +14,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.hufeng.filemanager.Constants;
-import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.channel.DoovUtil;
+import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.provider.DataStructures.ApkColumns;
 import com.hufeng.filemanager.provider.DataStructures.AudioColumns;
 import com.hufeng.filemanager.provider.DataStructures.CategoryColumns;
@@ -255,7 +253,6 @@ public class FileManagerProvider extends ContentProvider{
         mCloudProjectionMap.put(CloudBoxColumns.ICON_DATA_FIELD, CloudBoxColumns.ICON_DATA_FIELD);
         
         mPreferenceProjectionMap = new HashMap<String,String>();
-//        mPreferenceProjectionMap.put(PreferenceColumns._ID, PreferenceColumns._ID);
         mPreferenceProjectionMap.put(PreferenceColumns.NAME, PreferenceColumns.NAME);
         mPreferenceProjectionMap.put(PreferenceColumns.VALUE, PreferenceColumns.VALUE);
         
@@ -443,88 +440,88 @@ public class FileManagerProvider extends ContentProvider{
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int count = 0;
         String tablename = null;
-        int type = -1;
+        int category = -1;
         switch (URI_MATCHER.match(uri)) {
-        	case FILES:
-        		tablename = FileColumns.TABLE;
-        		type = FileUtils.FILE_TYPE_FILE;
-        		count = db.delete(FileColumns.TABLE, where, whereArgs);
-        		break;
-        	case FILE_ID:
-        		tablename = FileColumns.TABLE;
-        		type = FileUtils.FILE_TYPE_FILE;
-        		where = "_id=" + uri.getPathSegments().get(1)
-                + (!TextUtils.isEmpty(where) ? " AND (" + where + ")" : "");
-        		count = db.delete(FileColumns.TABLE, where, whereArgs);
-        		break;
+//        	case FILES:
+//        		tablename = FileColumns.TABLE;
+//        		type = FileCategoryHelper.FILE_TYPE_FILE;
+//        		count = db.delete(FileColumns.TABLE, where, whereArgs);
+//        		break;
+//        	case FILE_ID:
+//        		tablename = FileColumns.TABLE;
+//        		type = FileCategoryHelper.FILE_TYPE_FILE;
+//        		where = "_id=" + uri.getPathSegments().get(1)
+//                + (!TextUtils.isEmpty(where) ? " AND (" + where + ")" : "");
+//        		count = db.delete(FileColumns.TABLE, where, whereArgs);
+//        		break;
         	case IMAGES:
         		tablename = ImageColumns.TABLE;
-        		type = FileUtils.FILE_TYPE_IMAGE;
+                category = FileCategoryHelper.CATEGORY_TYPE_IMAGE;
         		count = db.delete(ImageColumns.TABLE, where, whereArgs);
         		break;
         	case IMAGE_ID:
         		tablename = ImageColumns.TABLE;
-        		type = FileUtils.FILE_TYPE_IMAGE;
+                category = FileCategoryHelper.CATEGORY_TYPE_IMAGE;
         		where = "_id=" + uri.getPathSegments().get(1)
                 + (!TextUtils.isEmpty(where) ? " AND (" + where + ")" : "");
         		count = db.delete(ImageColumns.TABLE, where, whereArgs);
         		break;
         	case AUDIOS:
         		tablename = AudioColumns.TABLE;
-        		type = FileUtils.FILE_TYPE_AUDIO;
+                category = FileCategoryHelper.CATEGORY_TYPE_AUDIO;
         		count = db.delete(AudioColumns.TABLE, where, whereArgs);
         		break;
         	case AUDIO_ID:
         		tablename = AudioColumns.TABLE;
-        		type = FileUtils.FILE_TYPE_AUDIO;
+                category = FileCategoryHelper.CATEGORY_TYPE_AUDIO;
         		where = "_id=" + uri.getPathSegments().get(1)
                 + (!TextUtils.isEmpty(where) ? " AND (" + where + ")" : "");
         		count = db.delete(AudioColumns.TABLE, where, whereArgs);
         		break;
         	case VIDEOS:
         		tablename = VideoColumns.TABLE;
-        		type = FileUtils.FILE_TYPE_VIDEO;
+                category = FileCategoryHelper.CATEGORY_TYPE_VIDEO;
         		count = db.delete(VideoColumns.TABLE, where, whereArgs);
         		break;
         	case VIDEO_ID:
         		tablename = VideoColumns.TABLE;
-        		type = FileUtils.FILE_TYPE_VIDEO;
+                category = FileCategoryHelper.CATEGORY_TYPE_VIDEO;
         		where = "_id=" + uri.getPathSegments().get(1)
                 + (!TextUtils.isEmpty(where) ? " AND (" + where + ")" : "");
         		count = db.delete(VideoColumns.TABLE, where, whereArgs);
         		break;
         	case APKS:
         		tablename = ApkColumns.TABLE;
-        		type = FileUtils.FILE_TYPE_APK;
+                category = FileCategoryHelper.CATEGORY_TYPE_APK;
         		count = db.delete(ApkColumns.TABLE, where, whereArgs);
         		break;
         	case APK_ID:
         		tablename = ApkColumns.TABLE;
-        		type = FileUtils.FILE_TYPE_APK;
+                category = FileCategoryHelper.CATEGORY_TYPE_APK;
         		where = "_id=" + uri.getPathSegments().get(1)
                 + (!TextUtils.isEmpty(where) ? " AND (" + where + ")" : "");
         		count = db.delete(ApkColumns.TABLE, where, whereArgs);
         		break;
         	case DOCUMENTS:
         		tablename = DocumentColumns.TABLE;
-        		type = FileUtils.FILE_TYPE_DOCUMENT;
+                category = FileCategoryHelper.CATEGORY_TYPE_DOCUMENT;
         		count = db.delete(DocumentColumns.TABLE, where, whereArgs);
         		break;
         	case DOCUMENT_ID:
         		tablename = DocumentColumns.TABLE;
-        		type = FileUtils.FILE_TYPE_DOCUMENT;
+                category = FileCategoryHelper.CATEGORY_TYPE_DOCUMENT;
         		where = "_id=" + uri.getPathSegments().get(1)
                 + (!TextUtils.isEmpty(where) ? " AND (" + where + ")" : "");
         		count = db.delete(DocumentColumns.TABLE, where, whereArgs);
         		break;
         	case ZIPS:
         		tablename = ZipColumns.TABLE;
-        		type = FileUtils.FILE_TYPE_ZIP;
+                category = FileCategoryHelper.CATEGORY_TYPE_ZIP;
         		count = db.delete(ZipColumns.TABLE, where, whereArgs);
         		break;
         	case ZIP_ID:
         		tablename = ZipColumns.TABLE;
-        		type = FileUtils.FILE_TYPE_ZIP;
+                category = FileCategoryHelper.CATEGORY_TYPE_ZIP;
         		where = "_id=" + uri.getPathSegments().get(1)
                 + (!TextUtils.isEmpty(where) ? " AND (" + where + ")" : "");
         		count = db.delete(ZipColumns.TABLE, where, whereArgs);
@@ -568,8 +565,8 @@ public class FileManagerProvider extends ContentProvider{
         		throw new IllegalArgumentException("Unknown URI " + uri);
         }
         LogUtil.i(LOG_TAG, "delete:" + uri.toString() + "," + (whereArgs==null?"":whereArgs[0]) + " return "+count);
-        if(count>0 && type!=-1){
-        	updateCategoryData(db,tablename, type);
+        if(count>0 && category!=-1){
+        	updateCategoryData(db,tablename, category);
         }
 	    getContext().getContentResolver().notifyChange(uri, null);
 	    return count;
@@ -637,22 +634,22 @@ public class FileManagerProvider extends ContentProvider{
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         long rowId = 0;
         String tablename = null;
-        int type = -1;
+        int category = -1;
         switch(URI_MATCHER.match(uri)){
-	        case FILES:
-                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
-                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
-                }
-	        	tablename = FileColumns.TABLE;
-	        	type = FileUtils.FILE_TYPE_FILE;
-	        	rowId = db.insert(FileColumns.TABLE, null, values);
-	        	break;
+//	        case FILES:
+//                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
+//                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+//                }
+//	        	tablename = FileColumns.TABLE;
+//	        	type = FileCategoryHelper.FILE_TYPE_FILE;
+//	        	rowId = db.insert(FileColumns.TABLE, null, values);
+//	        	break;
 	        case IMAGES:
                 if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
                     values.put(FileColumns.FILE_SYNC_FIELD , 0);
                 }
                 tablename = ImageColumns.TABLE;
-	        	type = FileUtils.FILE_TYPE_IMAGE;
+                category = FileCategoryHelper.CATEGORY_TYPE_IMAGE;
 	        	rowId = db.insert(ImageColumns.TABLE, null, values);
 	        	break;
 	        case AUDIOS:
@@ -660,7 +657,7 @@ public class FileManagerProvider extends ContentProvider{
                     values.put(FileColumns.FILE_SYNC_FIELD , 0);
                 }
                 tablename = AudioColumns.TABLE;
-	        	type = FileUtils.FILE_TYPE_AUDIO;
+                category = FileCategoryHelper.CATEGORY_TYPE_AUDIO;
 	        	rowId = db.insert(AudioColumns.TABLE, null, values);
 	        	break;
 	        case VIDEOS:
@@ -668,7 +665,7 @@ public class FileManagerProvider extends ContentProvider{
                     values.put(FileColumns.FILE_SYNC_FIELD , 0);
                 }
                 tablename = VideoColumns.TABLE;
-	        	type = FileUtils.FILE_TYPE_VIDEO;
+                category = FileCategoryHelper.CATEGORY_TYPE_VIDEO;
 	        	rowId = db.insert(VideoColumns.TABLE, null, values);
 	        	break;
 	        case APKS:
@@ -676,7 +673,7 @@ public class FileManagerProvider extends ContentProvider{
                     values.put(FileColumns.FILE_SYNC_FIELD , 0);
                 }
                 tablename = ApkColumns.TABLE;
-	        	type = FileUtils.FILE_TYPE_APK;
+                category = FileCategoryHelper.CATEGORY_TYPE_APK;
 	        	rowId = db.insert(ApkColumns.TABLE, null, values);
 	        	break;
 	        case CATEGORYS:
@@ -687,7 +684,7 @@ public class FileManagerProvider extends ContentProvider{
                     values.put(FileColumns.FILE_SYNC_FIELD , 0);
                 }
                 tablename = DocumentColumns.TABLE;
-	        	type = FileUtils.FILE_TYPE_DOCUMENT;
+                category = FileCategoryHelper.CATEGORY_TYPE_DOCUMENT;
 	        	rowId = db.insert(DocumentColumns.TABLE, null, values);
 	        	break;
 	        case ZIPS:
@@ -695,7 +692,7 @@ public class FileManagerProvider extends ContentProvider{
                     values.put(FileColumns.FILE_SYNC_FIELD , 0);
                 }
                 tablename = ZipColumns.TABLE;
-	        	type = FileUtils.FILE_TYPE_ZIP;
+                category = FileCategoryHelper.FILE_TYPE_ZIP;
 	        	rowId = db.insert(ZipColumns.TABLE, null, values);
 	        	break;
 	        case FAVORITES:
@@ -717,8 +714,8 @@ public class FileManagerProvider extends ContentProvider{
 	        	throw new SQLException("Failed to insert row into " + uri);	
         }
         if (rowId > 0) {
-        	if(type!=-1){
-                updateCategoryData(db,tablename,type);
+        	if(category!=-1){
+                updateCategoryData(db,tablename,category);
         	}
             Uri uri_with_id = ContentUris.withAppendedId(uri, rowId);
             getContext().getContentResolver().notifyChange(uri_with_id, null);
@@ -738,22 +735,19 @@ public class FileManagerProvider extends ContentProvider{
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
-        if ("doov".equals(Constants.PRODUCT_FLAVOR_NAME) && DoovUtil.isDoovVistor()) {
-            return null;
-        }
 
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		String orderBy;
         switch (URI_MATCHER.match(uri)) {
-            case FILES:
-            	qb.setTables(FileColumns.TABLE);
-            	qb.setProjectionMap(mFileProjectionMap);
-                if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = FileColumns.DEFAULT_SORT_ORDER;
-                } else {
-                    orderBy = sortOrder;
-                }
-            	break;
+//            case FILES:
+//            	qb.setTables(FileColumns.TABLE);
+//            	qb.setProjectionMap(mFileProjectionMap);
+//                if (TextUtils.isEmpty(sortOrder)) {
+//                    orderBy = FileColumns.DEFAULT_SORT_ORDER;
+//                } else {
+//                    orderBy = sortOrder;
+//                }
+//            	break;
             case FILE_ID:
             	qb.setTables(FileColumns.TABLE);
             	qb.setProjectionMap(mFileProjectionMap);
@@ -971,25 +965,28 @@ public class FileManagerProvider extends ContentProvider{
 		// TODO Auto-generated method stub
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int count  = 0;
+        int category = -1;
         switch (URI_MATCHER.match(uri)) {
-	        case FILES:
-                values.put(FileColumns.FILE_SYNC_FIELD, 0);
-	            count = db.update(FileColumns.TABLE, values, selection,
-	                    selectionArgs);
-	            break;
-	        case FILE_ID:
-                values.put(FileColumns.FILE_SYNC_FIELD, 0);
-	            selection = "_id=" + uri.getPathSegments().get(1)
-	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
-	            count = db.update(FileColumns.TABLE, values, selection,
-	                    selectionArgs);
-	            break;
+//	        case FILES:
+//                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+//	            count = db.update(FileColumns.TABLE, values, selection,
+//	                    selectionArgs);
+//	            break;
+//	        case FILE_ID:
+//                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+//	            selection = "_id=" + uri.getPathSegments().get(1)
+//	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
+//	            count = db.update(FileColumns.TABLE, values, selection,
+//	                    selectionArgs);
+//	            break;
 	        case IMAGES:
+                category = FileCategoryHelper.CATEGORY_TYPE_IMAGE;
                 values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            count = db.update(ImageColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case IMAGE_ID:
+                category = FileCategoryHelper.CATEGORY_TYPE_IMAGE;
                 values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
@@ -997,11 +994,13 @@ public class FileManagerProvider extends ContentProvider{
 	                    selectionArgs);
 	            break;
 	        case AUDIOS:
+                category = FileCategoryHelper.CATEGORY_TYPE_AUDIO;
                 values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            count = db.update(AudioColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case AUDIO_ID:
+                category = FileCategoryHelper.CATEGORY_TYPE_AUDIO;
                 values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
@@ -1009,11 +1008,13 @@ public class FileManagerProvider extends ContentProvider{
 	                    selectionArgs);
 	            break;
 	        case VIDEOS:
+                category = FileCategoryHelper.CATEGORY_TYPE_VIDEO;
                 values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            count = db.update(VideoColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case VIDEO_ID:
+                category = FileCategoryHelper.CATEGORY_TYPE_VIDEO;
                 values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
@@ -1021,11 +1022,13 @@ public class FileManagerProvider extends ContentProvider{
 	                    selectionArgs);
 	            break;
 	        case APKS:
+                category = FileCategoryHelper.CATEGORY_TYPE_APK;
                 values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            count = db.update(ApkColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case APK_ID:
+                category = FileCategoryHelper.CATEGORY_TYPE_APK;
                 values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
@@ -1033,11 +1036,13 @@ public class FileManagerProvider extends ContentProvider{
 	                    selectionArgs);
 	            break;
 	        case DOCUMENTS:
+                category = FileCategoryHelper.CATEGORY_TYPE_DOCUMENT;
                 values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            count = db.update(DocumentColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case DOCUMENT_ID:
+                category = FileCategoryHelper.CATEGORY_TYPE_DOCUMENT;
                 values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
@@ -1045,11 +1050,13 @@ public class FileManagerProvider extends ContentProvider{
 	                    selectionArgs);
 	            break;
 	        case ZIPS:
+                category = FileCategoryHelper.CATEGORY_TYPE_ZIP;
                 values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            count = db.update(ZipColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case ZIP_ID:
+                category = FileCategoryHelper.CATEGORY_TYPE_ZIP;
                 values.put(FileColumns.FILE_SYNC_FIELD, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
@@ -1145,36 +1152,36 @@ public class FileManagerProvider extends ContentProvider{
         String tablename = null;
         int type = -1;
         switch (URI_MATCHER.match(uri)) {
-        case FILES:
-        	tablename = FileColumns.TABLE;
-        	type = FileUtils.FILE_TYPE_FILE;
-        	break;
+//        case FILES:
+//        	tablename = FileColumns.TABLE;
+//        	type = FileCategoryHelper.FILE_TYPE_FILE;
+//        	break;
         case IMAGES:
         	tablename = ImageColumns.TABLE;
-        	type = FileUtils.FILE_TYPE_IMAGE;
+        	type = FileCategoryHelper.CATEGORY_TYPE_IMAGE;
         	break;
         case AUDIOS:
         	tablename = AudioColumns.TABLE;
-        	type = FileUtils.FILE_TYPE_AUDIO;
+        	type = FileCategoryHelper.CATEGORY_TYPE_AUDIO;
         	break;
         case VIDEOS:
         	tablename = VideoColumns.TABLE;
-        	type = FileUtils.FILE_TYPE_VIDEO;
+        	type = FileCategoryHelper.CATEGORY_TYPE_VIDEO;
         	break;
         case APKS:
         	tablename = ApkColumns.TABLE;
-        	type = FileUtils.FILE_TYPE_APK;
+        	type = FileCategoryHelper.CATEGORY_TYPE_APK;
         	break;
         case CATEGORYS:
         	tablename = CategoryColumns.TABLE;
         	break;
         case DOCUMENTS:
         	tablename = DocumentColumns.TABLE;
-        	type = FileUtils.FILE_TYPE_DOCUMENT;
+        	type = FileCategoryHelper.CATEGORY_TYPE_DOCUMENT;
         	break;
         case ZIPS:
         	tablename = ZipColumns.TABLE;
-        	type = FileUtils.FILE_TYPE_ZIP;
+        	type = FileCategoryHelper.CATEGORY_TYPE_ZIP;
         	break;
         case FAVORITES:
         	tablename = FavoriteColumns.TABLE;

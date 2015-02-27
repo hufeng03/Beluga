@@ -11,8 +11,7 @@ import android.text.TextUtils;
 import com.hufeng.filemanager.CategorySelectEvent;
 import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.SortPreferenceReceiver;
-import com.hufeng.filemanager.app.PackageIntentReceiver;
-import com.hufeng.filemanager.browser.BelugaSorter;
+import com.hufeng.filemanager.helper.BelugaSortHelper;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.utils.LogUtil;
 
@@ -75,8 +74,8 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<FileEntry>> {
         }
 
         // Sort the list.
-        BelugaSorter.SORTER sorter = BelugaSorter.getFileSorter(getContext(), CategorySelectEvent.CategoryType.NONE);
-        Collections.sort(entries, BelugaSorter.getComparator(sorter.field, sorter.order));
+        BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(getContext(), CategorySelectEvent.CategoryType.NONE);
+        Collections.sort(entries, BelugaSortHelper.getComparator(sorter.field, sorter.order));
 
         return entries;
     }

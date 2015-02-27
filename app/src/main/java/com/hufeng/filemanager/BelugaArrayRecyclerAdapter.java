@@ -2,18 +2,11 @@ package com.hufeng.filemanager;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
-import com.hufeng.filemanager.browser.BelugaSorter;
 import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.BelugaEntryViewHolder;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**

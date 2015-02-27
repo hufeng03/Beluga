@@ -6,8 +6,6 @@ import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.storage.StorageManager;
-import com.hufeng.filemanager.storage.StorageUtil;
 
 import java.io.File;
 

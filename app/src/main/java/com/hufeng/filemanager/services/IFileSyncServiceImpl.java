@@ -1,22 +1,24 @@
 package com.hufeng.filemanager.services;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
-import com.hufeng.filemanager.CategorySelectEvent;
 import com.hufeng.filemanager.FileManager;
-import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.helper.FileCategoryHelper;
+import com.hufeng.filemanager.mount.MountPoint;
+import com.hufeng.filemanager.mount.MountPointManager;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.scan.ApkObject;
 import com.hufeng.filemanager.scan.AudioObject;
@@ -24,13 +26,12 @@ import com.hufeng.filemanager.scan.DocumentObject;
 import com.hufeng.filemanager.scan.ImageObject;
 import com.hufeng.filemanager.scan.VideoObject;
 import com.hufeng.filemanager.scan.ZipObject;
-import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.utils.MediaStoreUtil;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.List;
 
 public class IFileSyncServiceImpl extends IFileSyncService.Stub{
 	
@@ -41,128 +42,82 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
     private boolean mFilterSmallIcon = false;
     private boolean mFilterSmallAudio = false;
 
-    public AtomicBoolean mIsScanning = new AtomicBoolean(false);
+    public boolean mIsScanning = false;
 
-    private MyHandler mHandler;
+    private BroadcastReceiver mMediaReceiver;
 
-    public class MyHandler extends Handler {
+    private Handler mMainThreadHandler = new MainThreadHandler();
 
-        public MyHandler(Looper looper) {
-            super(looper);
-        }
-
+    private class MainThreadHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
             performScan();
         }
     }
 	
 	public IFileSyncServiceImpl(Context context) {
 		mContext = context;
-        HandlerThread thread = new HandlerThread("FileSynServiceImpl");
-        thread.start();
-        mHandler = new MyHandler(thread.getLooper());
 	}
 
 
     public void onCreate() {
-        mHandler.sendEmptyMessageDelayed(0,1000);
+        //Start first time scan
+        mMainThreadHandler.sendEmptyMessageDelayed(0,1000);
+        registerMediaReceiver();
     }
 
-    public void refresh() {
-        if(mHandler.hasMessages(0))
-            mHandler.removeMessages(0);
-        mHandler.sendEmptyMessageDelayed(0,3000);
-    }
 
     public void onDestroy() {
+        unregisterMediaReceiver();
+    }
+
+
+    private void registerMediaReceiver() {
+        mMediaReceiver = new BroadcastReceiver(){
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(Intent.ACTION_MEDIA_SCANNER_FINISHED.equals(intent.getAction())){
+                    if(mMainThreadHandler.hasMessages(0))
+                        mMainThreadHandler.removeMessages(0);
+                    mMainThreadHandler.sendEmptyMessageDelayed(0,3000);
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
+        filter.addDataScheme("file");
+        mContext.registerReceiver(mMediaReceiver, filter);
+    }
+
+    private void unregisterMediaReceiver() {
+        if (mMediaReceiver != null) {
+            mContext.unregisterReceiver(mMediaReceiver);
+            mMediaReceiver = null;
+        }
     }
 
     @Override
-    public void startScan() throws RemoteException
+    public void forceScan() throws RemoteException
 	{
-		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "startScanFile");
+		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "forceScan");
 
         performScan();
 
         return;
 	}
 
-    @Override
-    public void deleteUnexist(String type) throws RemoteException {
-        if (!mIsScanning.get()) {
-            mIsScanning.set(true);
-            new DeleteUnexistTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, type);
-        }
-        return;
-    }
-
-
     private void performScan() {
-        if (!mIsScanning.get()) {
-            mIsScanning.set(true);
-//            ServiceCallUiHelper.getInstance().scanStarted();
-            FileManager.setPreference(FileManager.FILEMANAGER_LAST_SCAN, System.currentTimeMillis()+"");
-
+        if (!mIsScanning) {
+            mIsScanning = true;
             new ScanTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-
-        }
-    }
-
-    private class DeleteUnexistTask extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(String... params) {
-            deleteUnexistFiles(params[0]);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            mIsScanning.set(false);
-        }
-    }
-
-    private void deleteUnexistFiles(String type) {
-        CategorySelectEvent.CategoryType categoryType = CategorySelectEvent.CategoryType.valueOf(type);
-        switch (categoryType) {
-            case PHOTO:
-                clearUnexistFileInDatabase(DataStructures.ImageColumns.CONTENT_URI);
-                break;
-            case AUDIO:
-                clearUnexistFileInDatabase(DataStructures.AudioColumns.CONTENT_URI);
-                break;
-            case VIDEO:
-                clearUnexistFileInDatabase(DataStructures.VideoColumns.CONTENT_URI);
-                break;
-            case APK:
-                clearUnexistFileInDatabase(DataStructures.ApkColumns.CONTENT_URI);
-                break;
-            case DOC:
-                clearUnexistFileInDatabase(DataStructures.DocumentColumns.CONTENT_URI);
-                break;
-            case ZIP:
-                clearUnexistFileInDatabase(DataStructures.ZipColumns.CONTENT_URI);
-                break;
-
         }
     }
 
     private class ScanTask extends AsyncTask<Void,Void,Void>{
         @Override
         protected Void doInBackground(Void... params) {
-//            long start_time = System.currentTimeMillis();
             refreshDatabase();
-//            long duration = System.currentTimeMillis() - start_time;
-//            if (duration < 3000) {
-//                try {
-//                    Thread.sleep(5000-duration);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
             return null;
         }
 
@@ -174,11 +129,8 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            mIsScanning.set(false);
-//            ServiceCallUiHelper.getInstance().scanCompleted();
+            mIsScanning = false;
         }
-
-
     }
 	
 	private void refreshDatabase()
@@ -191,22 +143,20 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
 		if(count==0)
 		{
 			if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "we will do insert");
-			String[] paths = StorageManager.getInstance(FileManager.getAppContext()).getAllStorages();
-			for(String path:paths){
-				category_values.put(DataStructures.CategoryColumns.STORAGE_FIELD, path);
-				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileUtils.FILE_TYPE_ZIP);
+			List<MountPoint> mps = MountPointManager.getInstance().getMountPoints();
+			for(MountPoint mp: mps){
+				category_values.put(DataStructures.CategoryColumns.STORAGE_FIELD, mp.mPath);
+				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileCategoryHelper.CATEGORY_TYPE_ZIP);
 				FileManager.getAppContext().getContentResolver().insert(DataStructures.CategoryColumns.CONTENT_URI, category_values);
-				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileUtils.FILE_TYPE_APK);
+				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileCategoryHelper.CATEGORY_TYPE_APK);
 				FileManager.getAppContext().getContentResolver().insert(DataStructures.CategoryColumns.CONTENT_URI, category_values);
-				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileUtils.FILE_TYPE_DOCUMENT);
+				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileCategoryHelper.CATEGORY_TYPE_DOCUMENT);
 				FileManager.getAppContext().getContentResolver().insert(DataStructures.CategoryColumns.CONTENT_URI, category_values);
-				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileUtils.FILE_TYPE_IMAGE);
+				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileCategoryHelper.CATEGORY_TYPE_IMAGE);
 				FileManager.getAppContext().getContentResolver().insert(DataStructures.CategoryColumns.CONTENT_URI, category_values);
-				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileUtils.FILE_TYPE_AUDIO);
+				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileCategoryHelper.CATEGORY_TYPE_AUDIO);
 				FileManager.getAppContext().getContentResolver().insert(DataStructures.CategoryColumns.CONTENT_URI, category_values);
-				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileUtils.FILE_TYPE_VIDEO);
-				FileManager.getAppContext().getContentResolver().insert(DataStructures.CategoryColumns.CONTENT_URI, category_values);
-				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileUtils.FILE_TYPE_FILE);
+				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileCategoryHelper.CATEGORY_TYPE_VIDEO);
 				FileManager.getAppContext().getContentResolver().insert(DataStructures.CategoryColumns.CONTENT_URI, category_values);
 			}
 		}
@@ -227,8 +177,8 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
         String selection_where = null;
         String[] selection_arg = null;
 
-		count = FileManager.getAppContext().getContentResolver().delete(DataStructures.FileColumns.CONTENT_URI, selection_where, selection_arg);
-		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "delete all file: "+count);
+//		count = FileManager.getAppContext().getContentResolver().delete(DataStructures.FileColumns.CONTENT_URI, selection_where, selection_arg);
+//		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "delete all file: "+count);
 		count = FileManager.getAppContext().getContentResolver().delete(DataStructures.ImageColumns.CONTENT_URI, selection_where, selection_arg);
 		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "delete all image: "+count);
 		count = FileManager.getAppContext().getContentResolver().delete(DataStructures.AudioColumns.CONTENT_URI, selection_where, selection_arg);
@@ -242,15 +192,15 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
 		count = FileManager.getAppContext().getContentResolver().delete(DataStructures.ZipColumns.CONTENT_URI, selection_where, selection_arg);
 		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "delete all zip: "+count);
 
-        int[] counts = clearUnexistFileInDatabase(DataStructures.FavoriteColumns.CONTENT_URI);
-        if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "delete unexist favorite: "+counts[0]+","+counts[1]);
+        int[] counts = clearUnExistFileInDatabase(DataStructures.FavoriteColumns.CONTENT_URI);
+        if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "delete not exist favorite: "+counts[0]+","+counts[1]);
 
 
         initDatabaseFromMediaStore();
 
-        String[] important_dirs = ServiceUtil.getAllImportantDirectory();
+        List<String> important_dirs = IFolderMonitorUtil.getAllImportantFolders();
 
-        if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "get import dirs: "+ (important_dirs == null ? 0 :important_dirs.length));
+        if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "get import dirs: "+ (important_dirs == null ? 0 :important_dirs.size()));
 
         scanImportantDirectory(important_dirs,
                 save_unsyned_images,
@@ -277,25 +227,22 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                 + save_unsyned_videos.size()+","+save_unsyned_apks.size()+","
                 + save_unsyned_documents.size()+","+save_unsyned_zips.size()+",");
 
-        addFileIntoDatabase(DataStructures.ImageColumns.CONTENT_URI, FileUtils.FILE_TYPE_IMAGE, save_unsyned_images);
-        addFileIntoDatabase(DataStructures.AudioColumns.CONTENT_URI, FileUtils.FILE_TYPE_AUDIO, save_unsyned_audios);
-        addFileIntoDatabase(DataStructures.VideoColumns.CONTENT_URI, FileUtils.FILE_TYPE_VIDEO, save_unsyned_videos);
-        addFileIntoDatabase(DataStructures.ApkColumns.CONTENT_URI, FileUtils.FILE_TYPE_APK, save_unsyned_apks);
-        addFileIntoDatabase(DataStructures.DocumentColumns.CONTENT_URI, FileUtils.FILE_TYPE_DOCUMENT, save_unsyned_documents);
-        addFileIntoDatabase(DataStructures.ZipColumns.CONTENT_URI, FileUtils.FILE_TYPE_ZIP, save_unsyned_zips);
+        addFileIntoDatabase(DataStructures.ImageColumns.CONTENT_URI, FileCategoryHelper.CATEGORY_TYPE_IMAGE, save_unsyned_images);
+        addFileIntoDatabase(DataStructures.AudioColumns.CONTENT_URI, FileCategoryHelper.CATEGORY_TYPE_AUDIO, save_unsyned_audios);
+        addFileIntoDatabase(DataStructures.VideoColumns.CONTENT_URI, FileCategoryHelper.CATEGORY_TYPE_VIDEO, save_unsyned_videos);
+        addFileIntoDatabase(DataStructures.ApkColumns.CONTENT_URI, FileCategoryHelper.CATEGORY_TYPE_APK, save_unsyned_apks);
+        addFileIntoDatabase(DataStructures.DocumentColumns.CONTENT_URI, FileCategoryHelper.CATEGORY_TYPE_DOCUMENT, save_unsyned_documents);
+        addFileIntoDatabase(DataStructures.ZipColumns.CONTENT_URI, FileCategoryHelper.FILE_TYPE_ZIP, save_unsyned_zips);
 
 
 	}
 
-    private void scanImportantDirectory(String[] dirs, ArrayList<String> images,
+    private void scanImportantDirectory(List<String> dirs, ArrayList<String> images,
                                       ArrayList<String> audios, ArrayList<String> videos,
                                       ArrayList<String> apks, ArrayList<String> documents, ArrayList<String> zips) {
 
         boolean filter_small_image = (FileManager.getPreference(FileManager.IMAGE_FILTER_SMALL, "1") == "1");
         boolean filter_small_audio = (FileManager.getPreference(FileManager.AUDIO_FILTER_SMALL, "1") == "1");
-        if (dirs == null) {
-            return;
-        }
         for (String dir : dirs) {
             if (new File(dir).exists()) {
                 File[] childs = new File(dir).listFiles();
@@ -308,42 +255,44 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                         } else if (child.length() == 0) {
                             continue;
                         } else {
-                            int type = FileUtils.getFileType(child);
+                            int category = FileCategoryHelper.getFileCategoryForFile(child.getAbsolutePath());
                             String name = child.getAbsolutePath();
-                            switch (type) {
-                                case FileUtils.FILE_TYPE_IMAGE:
+                            switch (category) {
+                                case FileCategoryHelper.CATEGORY_TYPE_IMAGE:
                                     if (!images.contains(name)) {
                                         if (!filter_small_image || new File(name).length() > 30720) {
                                             images.add(name);
                                         }
                                     }
                                     break;
-                                case FileUtils.FILE_TYPE_AUDIO:
+                                case FileCategoryHelper.CATEGORY_TYPE_AUDIO:
                                     if (!audios.contains(name)) {
                                         if (!filter_small_audio || new File(name).length() > 102400) {
                                             audios.add(name);
                                         }
                                     }
                                     break;
-                                case FileUtils.FILE_TYPE_VIDEO:
+                                case FileCategoryHelper.CATEGORY_TYPE_VIDEO:
                                     if (!videos.contains(name)) {
                                         videos.add(name);
                                     }
                                     break;
-                                case FileUtils.FILE_TYPE_APK:
+                                case FileCategoryHelper.CATEGORY_TYPE_APK:
                                     if (!apks.contains(name)) {
                                         apks.add(name);
                                     }
                                     break;
-                                case FileUtils.FILE_TYPE_DOCUMENT:
+                                case FileCategoryHelper.CATEGORY_TYPE_DOCUMENT:
                                     if (!documents.contains(name)) {
                                         documents.add(name);
                                     }
                                     break;
-                                case FileUtils.FILE_TYPE_ZIP:
+                                case FileCategoryHelper.CATEGORY_TYPE_ZIP:
                                     if (!zips.contains(name)) {
                                         zips.add(name);
                                     }
+                                    break;
+                                default:
                                     break;
                             }
                         }
@@ -361,22 +310,22 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
             cvs[i] = new ContentValues();
             cvs[i].put(DataStructures.FileColumns.FILE_SYNC_FIELD, 0);
             switch (category) {
-                case FileUtils.FILE_TYPE_IMAGE:
+                case FileCategoryHelper.CATEGORY_TYPE_IMAGE:
                     new ImageObject(files.get(i)).toContentValues(cvs[i]);
                     break;
-                case FileUtils.FILE_TYPE_AUDIO:
+                case FileCategoryHelper.CATEGORY_TYPE_AUDIO:
                     new AudioObject(files.get(i)).toContentValues(cvs[i]);
                     break;
-                case FileUtils.FILE_TYPE_VIDEO:
+                case FileCategoryHelper.CATEGORY_TYPE_VIDEO:
                     new VideoObject(files.get(i)).toContentValues(cvs[i]);
                     break;
-                case FileUtils.FILE_TYPE_APK:
+                case FileCategoryHelper.CATEGORY_TYPE_APK:
                     new ApkObject(files.get(i)).toContentValues(cvs[i]);
                     break;
-                case FileUtils.FILE_TYPE_DOCUMENT:
+                case FileCategoryHelper.CATEGORY_TYPE_DOCUMENT:
                     new DocumentObject(files.get(i)).toContentValues(cvs[i]);
                     break;
-                case FileUtils.FILE_TYPE_ZIP:
+                case FileCategoryHelper.CATEGORY_TYPE_ZIP:
                     new ZipObject(files.get(i)).toContentValues(cvs[i]);
                     break;
             }
@@ -457,7 +406,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
         return unsynced_files;
     }
 
-    private int[] clearUnexistFileInDatabase(Uri uri) {
+    private int[] clearUnExistFileInDatabase(Uri uri) {
         int count = 0;
         String[] projection = new String[]{DataStructures.FileColumns.FILE_PATH_FIELD};
 
@@ -510,8 +459,8 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
         return new int[]{count, total_count-count};
     }
 
-    private void copyMediastoreToDatabase(Uri uri_mediastore, String[] projection_mediastore, String selection_mediastore,
-                                         Uri uri_database, int category_type) {
+    private void copyMediaStoreToDatabase(Uri uri_mediastore, String[] projection_mediastore, String selection_mediastore,
+                                          Uri uri_database, int category_type) {
         Cursor cursor = null;
         ArrayList<ContentValues> cva = new ArrayList<ContentValues>();
         try {
@@ -523,7 +472,6 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                     null
             );
             if (cursor!=null) {
-                StorageManager stor = StorageManager.getInstance(mContext);
                 while(cursor.moveToNext()) {
                     ContentValues cv = new ContentValues();
                     String path = cursor.getString(0);
@@ -553,17 +501,17 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                             cv.put(DataStructures.FileColumns.FILE_EXTENSION_FIELD, name.substring(i+1));
                         }
                     }
-                    String storage_path = stor.getStorageForPath(path);
+                    String storage_path = MountPointManager.getInstance().getRealMountPointPath(path);
                     cv.put(DataStructures.FileColumns.FILE_STORAGE_FIELD, storage_path);
                     switch (category_type) {
-                        case FileUtils.FILE_TYPE_IMAGE:
+                        case FileCategoryHelper.CATEGORY_TYPE_IMAGE:
                             cv.put(DataStructures.ImageColumns.IMAGE_WIDTH_FIELD, cursor.getInt(4));
                             cv.put(DataStructures.ImageColumns.IMAGE_HEIGHT_FIELD, cursor.getInt(5));
                             break;
-                        case FileUtils.FILE_TYPE_VIDEO:
+                        case FileCategoryHelper.CATEGORY_TYPE_VIDEO:
                             cv.put(DataStructures.VideoColumns.PLAY_DURATION_FIELD, cursor.getLong(4));
                             break;
-                        case FileUtils.FILE_TYPE_AUDIO:
+                        case FileCategoryHelper.CATEGORY_TYPE_AUDIO:
                             cv.put(DataStructures.AudioColumns.PLAY_DURATION_FIELD, cursor.getLong(4));
                             cv.put(DataStructures.AudioColumns.ALBUM_FIELD, cursor.getString(5));
                             cv.put(DataStructures.AudioColumns.SINGER_FIELD, cursor.getString(6));
@@ -617,7 +565,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                     selection = MediaStore.MediaColumns.SIZE+" > 30720";
         }
         Uri uri_fm = DataStructures.ImageColumns.CONTENT_URI;
-        copyMediastoreToDatabase(uri, projection, selection, uri_fm, FileUtils.FILE_TYPE_IMAGE);
+        copyMediaStoreToDatabase(uri, projection, selection, uri_fm, FileCategoryHelper.CATEGORY_TYPE_IMAGE);
 
 
         //video
@@ -631,7 +579,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                 MediaStore.Video.VideoColumns.DURATION,
         };
         uri_fm = DataStructures.VideoColumns.CONTENT_URI;
-        copyMediastoreToDatabase(uri, projection, selection, uri_fm, FileUtils.FILE_TYPE_VIDEO);
+        copyMediaStoreToDatabase(uri, projection, selection, uri_fm, FileCategoryHelper.CATEGORY_TYPE_VIDEO);
 
 
         //audio
@@ -660,7 +608,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
         if (mFilterSmallAudio) {
             selection = MediaStore.MediaColumns.SIZE+" > 102400";
         }
-        copyMediastoreToDatabase(uri, projection, selection, uri_fm, FileUtils.FILE_TYPE_AUDIO);
+        copyMediaStoreToDatabase(uri, projection, selection, uri_fm, FileCategoryHelper.CATEGORY_TYPE_AUDIO);
 
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -672,28 +620,27 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
             };
             //apk
             uri = MediaStore.Files.getContentUri(volumeName);
-            selection = MediaStoreUtil.buildSelectionByCategory(FileUtils.FILE_TYPE_APK);
+            selection = MediaStoreUtil.buildSelectionByCategory(FileCategoryHelper.CATEGORY_TYPE_APK);
             uri_fm = DataStructures.ApkColumns.CONTENT_URI;
-            copyMediastoreToDatabase(uri, projection, selection, uri_fm, FileUtils.FILE_TYPE_APK);
+            copyMediaStoreToDatabase(uri, projection, selection, uri_fm, FileCategoryHelper.CATEGORY_TYPE_APK);
 
             //zip
-            selection = MediaStoreUtil.buildSelectionByCategory(FileUtils.FILE_TYPE_ZIP);
+            selection = MediaStoreUtil.buildSelectionByCategory(FileCategoryHelper.CATEGORY_TYPE_ZIP);
             uri_fm = DataStructures.ZipColumns.CONTENT_URI;
-            copyMediastoreToDatabase(uri, projection, selection, uri_fm, FileUtils.FILE_TYPE_ZIP);
+            copyMediaStoreToDatabase(uri, projection, selection, uri_fm, FileCategoryHelper.CATEGORY_TYPE_ZIP);
 
 
             //document
-            selection = MediaStoreUtil.buildSelectionByCategory(FileUtils.FILE_TYPE_DOCUMENT);
+            selection = MediaStoreUtil.buildSelectionByCategory(FileCategoryHelper.CATEGORY_TYPE_DOCUMENT);
             uri_fm = DataStructures.DocumentColumns.CONTENT_URI;
-            copyMediastoreToDatabase(uri, projection, selection, uri_fm, FileUtils.FILE_TYPE_DOCUMENT);
+            copyMediaStoreToDatabase(uri, projection, selection, uri_fm, FileCategoryHelper.CATEGORY_TYPE_DOCUMENT);
         }
 
     }
 
 	@Override
 	public boolean isScanning() throws RemoteException {
-		return mIsScanning.get();
+		return mIsScanning;
 	}
-
 
 }

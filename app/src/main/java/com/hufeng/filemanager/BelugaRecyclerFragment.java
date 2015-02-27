@@ -3,7 +3,6 @@ package com.hufeng.filemanager;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,7 @@ import com.melnykov.fab.FloatingActionButton;
  * <p/>
  * TODO: Add a class header comment.
  */
-public abstract class BelugaRecyclerFragment extends BaseFragment implements
+public abstract class BelugaRecyclerFragment extends BelugaBaseFragment implements
         SwipeRefreshLayout.OnRefreshListener,
         View.OnClickListener {
 

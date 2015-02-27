@@ -2,19 +2,12 @@ package com.hufeng.filemanager.utils;
 
 import java.io.File;
 
-import com.hufeng.filemanager.browser.FileUtils;
 
 import android.os.Environment;
 import android.os.StatFs;
 
 public class SDCardUtil {
-	
-//    public static boolean isReady() {
-//    	if(new File("/mnt/sdcard/").canWrite())
-//    		return true;
-//    	else
-//    		return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
-//    }
+
     
     public static boolean hasDoubleSDCard()
     {

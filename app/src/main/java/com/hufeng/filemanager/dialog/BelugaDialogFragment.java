@@ -32,7 +32,7 @@ import com.hufeng.filemanager.BelugaEntryViewHolder;
 import com.hufeng.filemanager.CategorySelectEvent;
 import com.hufeng.filemanager.FileEntrySimpleListViewHolder;
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.browser.BelugaSorter;
+import com.hufeng.filemanager.helper.BelugaSortHelper;
 import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.utils.FileUtil;
@@ -255,7 +255,7 @@ public class BelugaDialogFragment extends DialogFragment{
             if (category == CategorySelectEvent.CategoryType.APP || category == CategorySelectEvent.CategoryType.APK) {
                 sortByExtension.setVisibility(View.GONE);
             }
-            BelugaSorter.SORTER sorter = BelugaSorter.getFileSorter(getActivity(), category);
+            BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(getActivity(), category);
             switch (sorter.field) {
                 case DATE:
                     sortByDate.setChecked(true);
@@ -276,20 +276,20 @@ public class BelugaDialogFragment extends DialogFragment{
                 public void onClick(View v) {
                     switch (v.getId()) {
                         case R.id.radio_sort_by_date:
-                            BelugaSorter.saveFileSorter(v.getContext(), category,
-                                    new BelugaSorter.SORTER(BelugaSorter.SORT_FIELD.DATE, BelugaSorter.SORT_ORDER.DESC));
+                            BelugaSortHelper.saveFileSorter(v.getContext(), category,
+                                    new BelugaSortHelper.SORTER(BelugaSortHelper.SORT_FIELD.DATE, BelugaSortHelper.SORT_ORDER.DESC));
                             break;
                         case R.id.radio_sort_by_name:
-                            BelugaSorter.saveFileSorter(v.getContext(), category,
-                                    new BelugaSorter.SORTER(BelugaSorter.SORT_FIELD.NAME, BelugaSorter.SORT_ORDER.ASC));
+                            BelugaSortHelper.saveFileSorter(v.getContext(), category,
+                                    new BelugaSortHelper.SORTER(BelugaSortHelper.SORT_FIELD.NAME, BelugaSortHelper.SORT_ORDER.ASC));
                             break;
                         case R.id.radio_sort_by_size:
-                            BelugaSorter.saveFileSorter(v.getContext(), category,
-                                    new BelugaSorter.SORTER(BelugaSorter.SORT_FIELD.SIZE, BelugaSorter.SORT_ORDER.DESC));
+                            BelugaSortHelper.saveFileSorter(v.getContext(), category,
+                                    new BelugaSortHelper.SORTER(BelugaSortHelper.SORT_FIELD.SIZE, BelugaSortHelper.SORT_ORDER.DESC));
                             break;
                         case R.id.radio_sort_by_extension:
-                            BelugaSorter.saveFileSorter(v.getContext(), category,
-                                    new BelugaSorter.SORTER(BelugaSorter.SORT_FIELD.EXTENSION, BelugaSorter.SORT_ORDER.ASC));
+                            BelugaSortHelper.saveFileSorter(v.getContext(), category,
+                                    new BelugaSortHelper.SORTER(BelugaSortHelper.SORT_FIELD.EXTENSION, BelugaSortHelper.SORT_ORDER.ASC));
                             break;
                     }
                     dismiss();

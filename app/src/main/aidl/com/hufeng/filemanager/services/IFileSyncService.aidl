@@ -1,7 +1,6 @@
 package com.hufeng.filemanager.services;
 
 interface IFileSyncService {
-    void startScan();
+    void forceScan();
     boolean isScanning();
-    void deleteUnexist(String type);
 }

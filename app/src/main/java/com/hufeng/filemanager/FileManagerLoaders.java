@@ -5,7 +5,7 @@ import android.net.Uri;
 import android.support.v4.content.CursorLoader;
 import android.text.TextUtils;
 
-import com.hufeng.filemanager.browser.BelugaSorter;
+import com.hufeng.filemanager.helper.BelugaSortHelper;
 import com.hufeng.filemanager.provider.DataStructures;
 
 /**
@@ -47,7 +47,7 @@ public class FileManagerLoaders {
         }
 
         if(baseUri!=null){
-            BelugaSorter.SORTER sorter = BelugaSorter.getFileSorter(context, categoryType);
+            BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(context, categoryType);
             String sort_constraint = null;
             switch(sorter.field){
                 case NAME:
@@ -64,7 +64,7 @@ public class FileManagerLoaders {
                     break;
             }
             if(!TextUtils.isEmpty(sort_constraint)){
-                if(sorter.order == BelugaSorter.SORT_ORDER.ASC){
+                if(sorter.order == BelugaSortHelper.SORT_ORDER.ASC){
                     sort_constraint += " ASC";
                 }else{
                     sort_constraint += " DESC";

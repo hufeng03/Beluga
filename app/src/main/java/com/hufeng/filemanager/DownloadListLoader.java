@@ -4,7 +4,8 @@ import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.storage.StorageUnit;
+import com.hufeng.filemanager.mount.MountPoint;
+import com.hufeng.filemanager.mount.MountPointManager;
 import com.hufeng.filemanager.utils.LogUtil;
 
 import java.io.File;
@@ -34,13 +35,13 @@ public class DownloadListLoader extends AsyncTaskLoader<List<FileEntry>> {
     public List<FileEntry> loadInBackground() {
         LogUtil.i(LOG_TAG, this.hashCode()+" load in background");
         List<FileEntry> entries = new ArrayList<FileEntry>();
-        List<StorageUnit> storageUnits = com.hufeng.filemanager.utils.StorageUtil.getMountedStorageUnits(getContext());
+        List<MountPoint> mountPoints = MountPointManager.getInstance().getMountPoints();
 
         if (mDownloadFolderObserver != null) {
             mDownloadFolderObserver.dismiss();
         }
-        for(StorageUnit storageUnit:storageUnits) {
-            String[] downloads = new File(storageUnit.path).list(new FilenameFilter() {
+        for(MountPoint mp:mountPoints) {
+            String[] downloads = new File(mp.mPath).list(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String filename) {
                     if(new File(dir, filename).isDirectory() && filename.toLowerCase().contains("download")) {
@@ -52,12 +53,12 @@ public class DownloadListLoader extends AsyncTaskLoader<List<FileEntry>> {
             });
             if (downloads != null) {
                 for (String download : downloads) {
-                    entries.add(new FileEntry(new File(storageUnit.path, download)));
+                    entries.add(new FileEntry(new File(mp.mPath, download)));
                 }
             }
 
             if (mDownloadFolderObserver != null) {
-                mDownloadFolderObserver.register(storageUnit.path);
+                mDownloadFolderObserver.register(mp.mPath);
             }
         }
         return entries;

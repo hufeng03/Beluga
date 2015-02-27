@@ -11,8 +11,7 @@ import android.preference.PreferenceManager;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
-import com.hufeng.filemanager.channel.DoovUtil;
-import com.hufeng.filemanager.provider.DataStructures.MatchColumns;
+import com.hufeng.filemanager.mount.MountPointManager;
 import com.hufeng.filemanager.provider.DataStructures.PreferenceColumns;
 import com.hufeng.filemanager.services.UiCallServiceHelper;
 import com.hufeng.filemanager.utils.LogUtil;
@@ -55,7 +54,7 @@ public class FileManager extends Application {
                     .build());
         }
 		super.onCreate();
-		
+
 		mContext = this;
 				
         String name = OSUtil.getCurrProcessName(this);
@@ -75,22 +74,22 @@ public class FileManager extends Application {
 	private void initUI(){
         Thread.setDefaultUncaughtExceptionHandler(new GlobalUncaughtExceptionHandler(this.getApplicationContext()));
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        int old_version = sp.getInt("PACKAGE_VERSION_CODE", 0);
+        int old_version = sp.getInt(PreferenceKeys.PACKAGE_VERSION_CODE, -1);
         int new_version = PackageUtil.getVersionCode(this);
-        if(new_version!=old_version){
-			FileManager.setPreference(FILEMANAGER_FIRST_OPEN, "1");
+        if(new_version != old_version){
 			Editor edit = sp.edit();
-			edit.putBoolean("has_new_version", false);
-            edit.putBoolean("need_new_refresh",true);
-			edit.putInt("PACKAGE_VERSION_CODE", PackageUtil.getVersionCode(this));
+//            edit.putBoolean(PreferenceKeys.FORCE_SCAN_REQUIRED, true);
+			edit.putInt(PreferenceKeys.PACKAGE_VERSION_CODE, PackageUtil.getVersionCode(this));
 			edit.commit();
         }
+
+        MountPointManager.getInstance().init(this);
 
         UiCallServiceHelper.getInstance().connectService(this);
 	}
 
     private void initService() {
-
+        MountPointManager.getInstance().init(this);
     }
 
     
@@ -166,12 +165,6 @@ public class FileManager extends Application {
     }
 
 
- 	@Override
- 	public void onTerminate() {
- 		// TODO Auto-generated method stub
- 		super.onTerminate();
- 	}
- 	//............................................
 
     private static final String PROPERTY_ID = "UA-59522104-1";
 

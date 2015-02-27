@@ -10,6 +10,7 @@ import android.os.RemoteException;
 import android.preference.PreferenceManager;
 
 import com.hufeng.filemanager.FileManager;
+import com.hufeng.filemanager.PreferenceKeys;
 import com.hufeng.filemanager.utils.LogUtil;
 
 /**
@@ -25,8 +26,6 @@ public class UiCallServiceHelper implements ServiceConnection {
 
     private Context mContext = null;
 
-    private IUiImpl mIUiImpl = new IUiImpl();
-
     synchronized public static UiCallServiceHelper getInstance() {
         if (mServiceHelper == null) {
             mServiceHelper = new UiCallServiceHelper();
@@ -40,58 +39,45 @@ public class UiCallServiceHelper implements ServiceConnection {
         context.bindService(service, this, Context.BIND_AUTO_CREATE);
     }
 
-    public void startScan () {
-        getIFileObserverServiceWrapper().startScan();
-    }
-
-    public void deleteUnexist (String type) {
-        getIFileObserverServiceWrapper().deleteUnexist(type);
+    public void forceScan () {
+        getIFileObserverServiceWrapper().forceScan();
     }
 
     public boolean isScanning () {
         return getIFileObserverServiceWrapper().isScanning();
     }
 
-    public boolean isMonitoring (String path) {
-        return getIDirectoryMonitorServiceWrapper().isMonitoring(path);
-    }
-
-    public void addMonitor (String path) {
-        getIDirectoryMonitorServiceWrapper().addMonitor(path);
-    }
-
-    public void removeMonitor (String path) {
-        getIDirectoryMonitorServiceWrapper().removeMonitor(path);
-    }
-
-    public void clearMonitor () {
-        getIDirectoryMonitorServiceWrapper().clearMonitor();
-    }
+//    public boolean isMonitoring (String path) {
+//        return getIFolderMonitorServiceWrapper().isMonitoring(path);
+//    }
+//    public void addMonitor (String path) {
+//        getIFolderMonitorServiceWrapper().addMonitor(path);
+//    }
+//
+//    public void removeMonitor (String path) {
+//        getIFolderMonitorServiceWrapper().removeMonitor(path);
+//    }
+//
+//    public void clearMonitor () {
+//        getIFolderMonitorServiceWrapper().clearMonitor();
+//    }
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-        LogUtil.d(LOG_TAG, "Service filobserver connected!");
+        LogUtil.d(LOG_TAG, "file manager service connected!");
         mIFileManagerService = IFileManagerService.Stub.asInterface(service);
 
-        try {
-            mIFileManagerService.setUiIBinder(mIUiImpl.asBinder());
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-
-        String last_time_str = FileManager.getPreference(FileManager.FILEMANAGER_LAST_SCAN, "0");
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
-        boolean refresh = sp.getBoolean("need_new_refresh", false);
-        long last_time = Long.parseLong(last_time_str);
-        if (refresh || last_time == 0 || Math.abs(System.currentTimeMillis() - last_time) > 1000 * 60 * 60 * 24) {
-            getIFileObserverServiceWrapper().startScan();
-            sp.edit().putBoolean("need_new_refresh", false).commit();
-        }
+//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
+//        boolean forceScan = sp.getBoolean(PreferenceKeys.FORCE_SCAN_REQUIRED, false);
+//        if (forceScan) {
+//            getIFileObserverServiceWrapper().forceScan();
+//            sp.edit().putBoolean(PreferenceKeys.FORCE_SCAN_REQUIRED, false).commit();
+//        }
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-        LogUtil.d(LOG_TAG, "Service fileobserver disconnected!");
+        LogUtil.d(LOG_TAG, "file manager service disconnected!");
         connectService(mContext);
     }
 
@@ -111,18 +97,18 @@ public class UiCallServiceHelper implements ServiceConnection {
     }
 
 
-    private IDirectoryMonitorServiceWrapper getIDirectoryMonitorServiceWrapper() {
+    private IFolderMonitorServiceWrapper getIFolderMonitorServiceWrapper() {
         if (mIFileManagerService == null)
-            return new IDirectoryMonitorServiceWrapper(null);
+            return new IFolderMonitorServiceWrapper(null);
         try {
-            IBinder binder = mIFileManagerService.getDirectoryMonitorService();
-            IDirectoryMonitorService service = IDirectoryMonitorService.Stub.asInterface(binder);
-            IDirectoryMonitorServiceWrapper wrapper = new IDirectoryMonitorServiceWrapper(service);
+            IBinder binder = mIFileManagerService.getFolderMonitorService();
+            IFolderMonitorService service = IFolderMonitorService.Stub.asInterface(binder);
+            IFolderMonitorServiceWrapper wrapper = new IFolderMonitorServiceWrapper(service);
             return wrapper;
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        return new IDirectoryMonitorServiceWrapper(null);
+        return new IFolderMonitorServiceWrapper(null);
     }
 
 

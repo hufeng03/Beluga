@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import com.hufeng.filemanager.CategorySelectEvent;
 import com.hufeng.filemanager.SortPreferenceReceiver;
-import com.hufeng.filemanager.browser.BelugaSorter;
+import com.hufeng.filemanager.helper.BelugaSortHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,8 +67,8 @@ public class AppListLoader extends AsyncTaskLoader<List<AppEntry>> {
             }
         }
         // Sort the list.
-        BelugaSorter.SORTER sorter = BelugaSorter.getFileSorter(getContext(), CategorySelectEvent.CategoryType.APP);
-        Collections.sort(entries, BelugaSorter.getComparator(sorter.field, sorter.order));
+        BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(getContext(), CategorySelectEvent.CategoryType.APP);
+        Collections.sort(entries, BelugaSortHelper.getComparator(sorter.field, sorter.order));
 
         // Done!
         return entries;

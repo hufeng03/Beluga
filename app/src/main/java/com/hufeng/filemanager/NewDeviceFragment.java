@@ -1,6 +1,8 @@
 package com.hufeng.filemanager;
 
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.os.Bundle;
@@ -13,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hufeng.filemanager.storage.StorageUnit;
+
+import com.hufeng.filemanager.mount.MountPoint;
+import com.hufeng.filemanager.mount.MountPointManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +30,66 @@ import butterknife.InjectView;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class NewDeviceFragment extends BelugaRecyclerFragment implements LoaderManager.LoaderCallbacks<List<StorageUnit>> {
+public class NewDeviceFragment extends BelugaRecyclerFragment /*implements LoaderManager.LoaderCallbacks<List<MountPoint>>*/ {
 
     public static final String TAG = "NewDeviceFragment";
 
-    private static final int LOADER_ID_DEVICE = 1;
+    BelugaMountReceiver mBelugaMountReceiver;
+    DeviceMountListener mMountListener;
+
+    public static final int MSG_DO_MOUNTED = 0;
+    public static final int MSG_DO_EJECTED = 1;
+    public static final int MSG_DO_UNMOUNTED = 2;
+    public static final int MSG_DO_SDSWAP = 3;
+
+    private Handler mHandler = new MainThreadHandler();
+
+    private class MainThreadHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_DO_MOUNTED:
+                    doOnMounted((String) msg.obj);
+                    break;
+                case MSG_DO_UNMOUNTED:
+                    doOnEjected((String) msg.obj);
+                    break;
+                case MSG_DO_EJECTED:
+                    doOnUnMounted((String) msg.obj);
+                    break;
+                case MSG_DO_SDSWAP:
+                    doOnSdSwap();
+                    break;
+            }
+        }
+    }
+
+    private void doOnMounted(String mountPointPath) {
+        // TODO: handle only files in mountPointPath
+        refreshMountPointList();
+    }
+
+    private void doOnEjected(String ejectdPointPath) {
+        // TODO: handle only files in mountPointPath
+        refreshMountPointList();
+    }
+
+    private void doOnUnMounted(String unmountedPointPath) {
+        // TODO: handle only files in mountPointPath
+        refreshMountPointList();
+    }
+
+    private void doOnSdSwap() {
+
+    }
+
+
+
+    private void refreshMountPointList() {
+        List<MountPoint> mountPoints = MountPointManager.getInstance().getMountPoints();
+
+        ((BelugaDeviceRecyclerAdapter) getRecyclerAdapter()).setData(mountPoints);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,55 +103,55 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements LoaderM
 
         setRecyclerAdapter(new BelugaDeviceRecyclerAdapter());
         setRecyclerViewShown(true);
-
-        if (getLoaderManager().getLoader(LOADER_ID_DEVICE) != null) {
-            getLoaderManager().restartLoader(LOADER_ID_DEVICE, null, this);
-        } else {
-            getLoaderManager().initLoader(LOADER_ID_DEVICE, null, this);
-        }
     }
 
     @Override
-    public Loader<List<StorageUnit>> onCreateLoader(int id, Bundle args) {
-        if (id == LOADER_ID_DEVICE) {
-            return new DeviceLoader(getActivity());
-        } else {
-            return null;
-        }
+    public void onResume() {
+        super.onResume();
+        refreshMountPointList();
+        mBelugaMountReceiver = BelugaMountReceiver.registerMountReceiver(getActivity());
+        mMountListener = new DeviceMountListener();
+        mBelugaMountReceiver.registerMountListener(mMountListener);
     }
 
     @Override
-    public void onLoadFinished(Loader<List<StorageUnit>> loader, List<StorageUnit> data) {
-        int internalCount = 0;
-        int externalCount = 0;
-
-        List<DeviceItem> items = new ArrayList<DeviceItem>();
-
-        for (StorageUnit unit: data) {
-            String path = unit.path;
-            String name;
-            if (unit.isRemovable()) {
-                externalCount++;
-                name = getResources().getString(R.string.external_storage)
-                        + (externalCount > 1 ? " "+externalCount : "");
-            } else {
-                internalCount++;
-                name = getResources().getString(R.string.internal_storage)
-                        + (internalCount > 1 ? " "+internalCount : "");
-            }
-            Drawable icon = getResources().getDrawable(
-                    unit.isRemovable()?R.drawable.ic_action_sd_card:R.drawable.ic_action_phone_android);
-            items.add(new DeviceItem(icon, name, path));
-        }
-
-        ((BelugaDeviceRecyclerAdapter) getRecyclerAdapter()).addAll(items);
+    public void onPause() {
+        super.onPause();
+        mBelugaMountReceiver.unregisterMountListener(mMountListener);
+        getActivity().unregisterReceiver(mBelugaMountReceiver);
     }
 
-    @Override
-    public void onLoaderReset(Loader<List<StorageUnit>> loader) {
-
-    }
-
+//    @Override
+//    public void onLoadFinished(Loader<List<MountPoint>> loader, List<MountPoint> data) {
+//        int internalCount = 0;
+//        int externalCount = 0;
+//
+//        List<DeviceItem> items = new ArrayList<DeviceItem>();
+//
+//        for (MountPoint unit: data) {
+//            String path = unit.path;
+//            String name;
+//            if (unit.) {
+//                externalCount++;
+//                name = getResources().getString(R.string.external_storage)
+//                        + (externalCount > 1 ? " "+externalCount : "");
+//            } else {
+//                internalCount++;
+//                name = getResources().getString(R.string.internal_storage)
+//                        + (internalCount > 1 ? " "+internalCount : "");
+//            }
+//            Drawable icon = getResources().getDrawable(
+//                    unit.isRemovable()?R.drawable.ic_action_sd_card:R.drawable.ic_action_phone_android);
+//            items.add(new DeviceItem(icon, name, path));
+//        }
+//
+//        ((BelugaDeviceRecyclerAdapter) getRecyclerAdapter()).addAll(items);
+//    }
+//
+//    @Override
+//    public void onLoaderReset(Loader<List<MountPoint>> loader) {
+//
+//    }
 //    @Override
 //    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //        inflater.inflate(R.menu.device_fragment_menu, menu);
@@ -104,7 +163,7 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements LoaderM
         @InjectView(R.id.name)
         TextView name;
 
-        private DeviceItem item;
+        private MountPoint item;
 
         public DeviceViewHolder(View itemView) {
             super(itemView);
@@ -112,33 +171,25 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements LoaderM
             itemView.setOnClickListener(this);
         }
 
-        public void bindDeviceItem(DeviceItem item) {
+        public void bindDeviceItem(MountPoint item) {
             this.item = item;
-            icon.setImageDrawable(item.icon);
-            name.setText(item.name);
+            if (item.mIsExternal) {
+                icon.setImageResource(R.drawable.ic_action_sd_card);
+            } else {
+                icon.setImageResource(R.drawable.ic_action_phone_android);
+            }
+            name.setText(item.mDescription);
         }
 
         @Override
         public void onClick(View v) {
-            BusProvider.getInstance().post(new DeviceSelectEvent(System.currentTimeMillis(), item.path));
-        }
-    }
-
-    private class DeviceItem {
-        private Drawable icon;
-        private String name;
-        private String path;
-
-        DeviceItem(Drawable icon, String name, String path) {
-            this.icon = icon;
-            this.name = name;
-            this.path = path;
+            BusProvider.getInstance().post(new DeviceSelectEvent(System.currentTimeMillis(), item.mPath));
         }
     }
 
     private class BelugaDeviceRecyclerAdapter extends RecyclerView.Adapter<DeviceViewHolder> {
 
-        List<DeviceItem> mItems = new ArrayList<DeviceItem>();
+        List<MountPoint> mItems = new ArrayList<MountPoint>();
 
         @Override
         public DeviceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -156,7 +207,7 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements LoaderM
             return mItems.size();
         }
 
-        public void setData(final List<DeviceItem> entries) {
+        public void setData(final List<MountPoint> entries) {
             clear();
             addAll(entries);
         }
@@ -167,12 +218,35 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements LoaderM
             notifyItemRangeRemoved(0, count);
         }
 
-        public void addAll(final List<DeviceItem> entries) {
+        public void addAll(final List<MountPoint> entries) {
             if (entries != null && entries.size() > 0) {
                 int count = getItemCount();
                 mItems.addAll(entries);
                 notifyItemRangeInserted(count, entries.size());
             }
         }
+    }
+
+    private class DeviceMountListener implements BelugaMountReceiver.MountListener {
+        @Override
+        public void onMounted(String mountPoint) {
+            Message.obtain(mHandler, MSG_DO_MOUNTED, mountPoint).sendToTarget();
+        }
+
+        @Override
+        public void onUnMounted(String unMountPoint) {
+            Message.obtain(mHandler, MSG_DO_UNMOUNTED, unMountPoint).sendToTarget();
+        }
+
+        @Override
+        public void onEjected(String unMountPoint) {
+            Message.obtain(mHandler, MSG_DO_EJECTED, unMountPoint).sendToTarget();
+        }
+
+        @Override
+        public void onSdSwap() {
+            Message.obtain(mHandler, MSG_DO_SDSWAP).sendToTarget();
+        }
+
     }
 }

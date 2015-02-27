@@ -2,7 +2,7 @@ package com.hufeng.filemanager.utils;
 
 import android.provider.MediaStore;
 
-import com.hufeng.filemanager.browser.FileUtils;
+import com.hufeng.filemanager.helper.FileCategoryHelper;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -59,14 +59,14 @@ public class MediaStoreUtil {
     public static String buildSelectionByCategory(int cat) {
         String selection = null;
         switch (cat) {
-            case FileUtils.FILE_TYPE_DOCUMENT:
+            case FileCategoryHelper.CATEGORY_TYPE_DOCUMENT:
                 selection = buildDocSelection();
                 break;
-            case FileUtils.FILE_TYPE_ZIP:
+            case FileCategoryHelper.CATEGORY_TYPE_ZIP:
 //                selection = "(" + MediaStore.Files.FileColumns.MIME_TYPE + " == '" + buildZipSelection + "')";
                 selection = buildZipSelection();
                 break;
-            case FileUtils.FILE_TYPE_APK:
+            case FileCategoryHelper.CATEGORY_TYPE_APK:
                 selection = MediaStore.Files.FileColumns.DATA + " LIKE '%.apk'";
                 break;
             default:

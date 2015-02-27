@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 
+import com.hufeng.filemanager.receiver.MountReceiver;
 import com.hufeng.filemanager.utils.LogUtil;
 
 public abstract class BelugaBaseActionBarActivity extends ActionBarActivity {
 
     private static final boolean DEBUG = BuildConfig.DEBUG;
+
+    private BelugaMountReceiver mBelugaMountReceiver;
 	
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -31,9 +34,10 @@ public abstract class BelugaBaseActionBarActivity extends ActionBarActivity {
                     .build());
         }
         super.onCreate(arg0);
-        if (!Constants.ENABLE_LANDSCAPE) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+
+
+        mBelugaMountReceiver = BelugaMountReceiver.registerMountReceiver(this);
+
 	}
 
     @Override
@@ -81,6 +85,7 @@ public abstract class BelugaBaseActionBarActivity extends ActionBarActivity {
         if (DEBUG)
     		LogUtil.i(((Object)this).getClass().getSimpleName(), "onDestroy");
 		super.onDestroy();
+        unregisterReceiver(mBelugaMountReceiver);
 	}
 
 }

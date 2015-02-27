@@ -7,9 +7,8 @@ import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.browser.FileUtils;
-import com.hufeng.filemanager.storage.StorageManager;
-import com.hufeng.filemanager.storage.StorageUtil;
+import com.hufeng.filemanager.helper.FileNameHelper;
+import com.hufeng.filemanager.mount.MountPointManager;
 
 import java.io.File;
 
@@ -66,16 +65,15 @@ public class BelugaMoveAsyncTask extends BelugaActionAsyncTask {
             if(file.getPath().equals(targetFile.getPath())) {
                 continue;
             }
-            StorageManager stor = StorageManager.getInstance(FileManager.getAppContext());
-            String device0 = stor.getStorageForPath(entry.path);
-            String device = stor.getStorageForPath(targetFolderPath);
+            String device0 = MountPointManager.getInstance().getRealMountPointPath(entry.path);
+            String device = MountPointManager.getInstance().getRealMountPointPath(targetFolderPath);
             if(!TextUtils.isEmpty(device) && !TextUtils.isEmpty(device0) && !device0.equals(device))
             {
                 //not in same sdcard
                 flag_copy_delete = true;
             }
 
-            String targetFile_path = FileUtils.getFilename(new File(targetFolderPath, name).getAbsolutePath());
+            String targetFile_path = FileNameHelper.generateNextNewName(new File(targetFolderPath, name)).getAbsolutePath();
             targetFile = new File(targetFile_path);
             if(isCancelled())
             {

@@ -19,6 +19,7 @@ import android.util.Base64;
 import android.util.DisplayMetrics;
 
 import com.hufeng.filemanager.FileManager;
+import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.mp3.Mp3ReadId3v2;
 import com.hufeng.filemanager.utils.ImageUtil;
 import com.hufeng.filemanager.utils.LogUtil;
@@ -51,22 +52,10 @@ public class IconUtil {
         return bmpIcon;
     }
 
-    public static Bitmap getImageThumbnail(String path){
-        return getImageThumbnail(path, MimeUtil.getMimeType(path));
-    }
-
-    public static Bitmap getVideoThumbnail(String path) {
-        return getVideoThumbnail(path, MimeUtil.getMimeType(path));
-    }
-
-    public static Bitmap getAudioThumbnail(String path){
-        return getAudioThumbnail(path, MimeUtil.getMimeType(path));
-    }
-
     public static Bitmap getImageThumbnail(String path, String mimeType) {
         Bitmap bitmap = null;
         try {
-            long id = getDbId(path, FileUtils.FILE_TYPE_IMAGE);
+            long id = getDbId(path, FileCategoryHelper.CATEGORY_TYPE_IMAGE);
             bitmap = getImageThumbnailFromDatabase(id);
         } catch (Exception e) {
           e.printStackTrace();
@@ -76,34 +65,11 @@ public class IconUtil {
             bitmap = getImageThumbnailFromFile(path, mimeType);
         }
         return bitmap;
-//        if(bitmap!=null)
-//        {
-//            int degree = ImageUtil.getImageRotateDegree(path);
-//            if(degree!=0)
-//            {
-//                Matrix mat = new Matrix();
-//                mat.postRotate(degree);
-//                bm  = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),mat,true);
-//                if(bm!=null && !bm.equals(bitmap))
-//                {
-//                    bitmap.recycle();
-//                }
-//                else
-//                {
-//                    bm = bitmap;
-//                }
-//            }
-//            else
-//            {
-//                bm = bitmap;
-//            }
-//        }
-//        return bm;
     }
     public static Bitmap getVideoThumbnail(String path, String mimeType) {
         Bitmap bitmap = null;
         try {
-            long id = getDbId(path, FileUtils.FILE_TYPE_VIDEO);
+            long id = getDbId(path, FileCategoryHelper.CATEGORY_TYPE_VIDEO);
             bitmap = getVideoThumbnailFromDatabase(id);
         } catch (Exception e) {
 
@@ -117,7 +83,7 @@ public class IconUtil {
     public static Bitmap getAudioThumbnail(String path, String mimeType) {
         Bitmap bitmap = null;
         try {
-            long id = getDbId(path, FileUtils.FILE_TYPE_AUDIO);
+            long id = getDbId(path, FileCategoryHelper.CATEGORY_TYPE_AUDIO);
             bitmap = getAudioThumbnailFromDatabase(id);
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,8 +128,6 @@ public class IconUtil {
             e.printStackTrace();
         }
 
-//      return ImageUtil.loadBitmapWithSizeLimitation(FileManager.getAppContext(),
-//                512 * 512, Uri.fromFile(new File(path)));
         return null;
     }
 
@@ -200,10 +164,6 @@ public class IconUtil {
                     }
                     bm = ImageUtil.loadBitmapWithSizeLimitation(FileManager.getAppContext(),
                             512 * 512, Uri.fromFile(imgFile));
-                    //						if(tmpBm!=null)
-                    //						{
-                    //							AudioUtil.insertAlbumArt(path, imgFile.getPath());
-                    //						}
                 }
             } catch (Exception e) {
                 // TODO Auto-generated catch block
@@ -217,15 +177,15 @@ public class IconUtil {
     private static long getDbId(String path, int cate) throws Exception{
         String volumeName = "external";
         Uri uri = null;
-        if(cate==FileUtils.FILE_TYPE_VIDEO)
+        if(cate==FileCategoryHelper.CATEGORY_TYPE_VIDEO)
         {
             uri = MediaStore.Video.Media.getContentUri(volumeName);
         }
-        else if(cate==FileUtils.FILE_TYPE_IMAGE)
+        else if(cate==FileCategoryHelper.CATEGORY_TYPE_IMAGE)
         {
             uri = MediaStore.Images.Media.getContentUri(volumeName);
         }
-        else if(cate==FileUtils.FILE_TYPE_AUDIO)
+        else if(cate==FileCategoryHelper.CATEGORY_TYPE_AUDIO)
         {
             uri = MediaStore.Audio.Media.getContentUri(volumeName);
         }

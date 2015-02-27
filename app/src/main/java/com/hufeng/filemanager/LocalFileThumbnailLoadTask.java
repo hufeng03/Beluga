@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.webkit.MimeTypeMap;
 
-import com.hufeng.filemanager.browser.FileUtils;
 import com.hufeng.filemanager.browser.IconUtil;
 import com.hufeng.filemanager.utils.MimeUtil;
 

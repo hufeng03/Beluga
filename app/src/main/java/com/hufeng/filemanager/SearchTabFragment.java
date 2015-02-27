@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.browser.FileUtils;
 
 /**
  * Created by feng on 14-5-6.
