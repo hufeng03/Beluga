@@ -326,10 +326,9 @@ public abstract class FileOperationActivity extends BaseActivity implements
                     getFileOperation().onOperationAddToCloud(this);
                 }
                 break;
-            case R.id.file_operation_hotknot:
-//                Toast.makeText(this, "HotKnot share", Toast.LENGTH_SHORT).show();
-                getFileOperation().onOperationHotknotShare(this);
-                break;
+//            case R.id.file_operation_hotknot:
+//                getFileOperation().onOperationHotknotShare(this);
+//                break;
             default:
                 break;
         }

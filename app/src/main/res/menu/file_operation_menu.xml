@@ -28,10 +28,10 @@
         android:icon="@drawable/operation_button_send"
         android:title="@string/operation_send"
         />
-    <item android:id="@+id/file_operation_hotknot"
+    <!--item android:id="@+id/file_operation_hotknot"
         android:icon="@drawable/operation_button_send"
         android:title="@string/operation_hotknot"
-        />
+        /!-->
     <group android:id="@+id/file_operation_single">
         <item android:id="@+id/file_operation_rename"
             android:title="@string/menu_rename"
