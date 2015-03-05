@@ -2,18 +2,15 @@ package com.hufeng.filemanager;
 
 import android.database.Cursor;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.PopupMenu;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hufeng.filemanager.browser.FileAction;
-import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.dialog.BelugaDialogFragment;
+import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.ui.BelugaActionController;
 import com.hufeng.filemanager.utils.SizeUtil;
 import com.hufeng.filemanager.utils.TimeUtil;
@@ -73,7 +70,7 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
             status.setText(SizeUtil.normalize(this.entry.getSize()));
         }
         description.setText(TimeUtil.getDateString(this.entry.getTime()));
-        boolean isChosen = actionController.isSelected(this.entry);
+        boolean isChosen = actionController.isEntrySelected(this.entry);
         this.itemView.setActivated(isChosen);
         this.overflow.setOnClickListener(this);
         final BelugaActionController.OPERATION_MODE operationMode = this.actionController.getOperationMode();
@@ -96,7 +93,7 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
                 showContextMenu(v);
                 break;
             case R.id.icon:
-                actionController.toggleSelection(entry);
+                actionController.toggleEntrySelection(entry);
                 break;
             default:
                 this.listener.onEntryClickedToOpen(v, entry);
@@ -106,7 +103,7 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
 
     @Override
     public boolean onLongClick(View v) {
-        actionController.toggleSelection(entry);
+        actionController.toggleEntrySelection(entry);
         return true;
     }
 
@@ -137,10 +134,11 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
                         BelugaActionDelegate.details((FragmentActivity) context, entry);
                         break;
                     case R.id.add_favorite:
-                        BelugaActionDelegate.markFavorite(entry);
+                        actionController.performFavorite(entry);
                         break;
                     case R.id.remove_favorite:
-                        BelugaActionDelegate.undoFavorite(entry);
+                        actionController.performUndoFavorite(entry);
+                        break;
                 }
                 return true;
             }

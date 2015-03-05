@@ -1,6 +1,6 @@
 package com.hufeng.filemanager;
 
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.ui.BelugaActionController;
 
 /**

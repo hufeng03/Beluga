@@ -77,36 +77,6 @@ public class BelugaSortHelper {
     }
 
 
-    public static Comparator<File> getFileComparator(final SORT_FIELD field, final SORT_ORDER order) {
-        switch(field){
-            case NAME:
-                if(SORT_ORDER.ASC == order){
-                    return FILE_COMPARATOR_NAME_ASC;
-                }else{
-                    return FILE_COMPARATOR_NAME_DESC;
-                }
-            case EXTENSION:
-                if(SORT_ORDER.ASC == order){
-                    return FILE_COMPARATOR_EXTENSION_ASC;
-                }else{
-                    return FILE_COMPARATOR_EXTENSION_DESC;
-                }
-            case SIZE:
-                if(SORT_ORDER.ASC == order){
-                    return FILE_COMPARATOR_SIZE_ASC;
-                }else{
-                    return FILE_COMPARATOR_SIZE_DESC;
-                }
-            case DATE:
-            default:
-                if(SORT_ORDER.ASC == order){
-                    return FILE_COMPARATOR_DATE_ASC;
-                }else{
-                    return FILE_COMPARATOR_DATE_DESC;
-                }
-        }
-    }
-
 	public static Comparator<BelugaSortableInterface> getComparator(final SORT_FIELD field, final SORT_ORDER order){
 		switch(field){
 		case NAME:
@@ -138,29 +108,6 @@ public class BelugaSortHelper {
 	}
 
     private static final Collator sCollator = Collator.getInstance();
-
-    public static final Comparator<File> FILE_COMPARATOR_NAME_ASC = new Comparator<File>() {
-        @Override
-        public int compare(File lhs, File rhs) {
-            return sCollator.compare(lhs.getName(), rhs.getName());
-        }
-    };
-
-
-    public static final Comparator<File> FILE_COMPARATOR_NAME_DESC = new Comparator<File>() {
-        @Override
-        public int compare(File lhs, File rhs) {
-            String lhs_name = lhs.getName();
-            String rhs_name = rhs.getName();
-            if(lhs_name.startsWith(".") && !rhs_name.startsWith(".")){
-                return 1;
-            }else if(rhs_name.startsWith(".") && !lhs_name.startsWith(".")) {
-                return -1;
-            } else {
-                return sCollator.compare(rhs_name, lhs_name);
-            }
-        }
-    };
 	
 	public static final Comparator<BelugaSortableInterface> COMPARATOR_NAME_ASC = new Comparator<BelugaSortableInterface>() {
 		@Override
@@ -176,85 +123,6 @@ public class BelugaSortHelper {
             }
 	    }
 	};
-
-    public static final Comparator<File> FILE_COMPARATOR_EXTENSION_ASC = new Comparator<File>() {
-
-        @Override
-        public int compare(File lhs, File rhs) {
-            String lhs_name = lhs.getName().toLowerCase();
-            String rhs_name = rhs.getName().toLowerCase();
-            return compare_extension_asc(lhs_name, rhs_name);
-        }
-
-    };
-
-    public static Comparator<File> FILE_COMPARATOR_EXTENSION_DESC = new Comparator<File>() {
-
-        @Override
-        public int compare(File lhs, File rhs) {
-            // TODO Auto-generated method stub
-            String lhs_name = lhs.getName().toLowerCase();
-            String rhs_name = rhs.getName().toLowerCase();
-            return compare_extension_desc (lhs_name, rhs_name);
-        }
-
-    };
-
-
-    public static Comparator<File> FILE_COMPARATOR_SIZE_ASC = new Comparator<File>() {
-
-        @Override
-        public int compare(File lhs, File rhs) {
-            // TODO Auto-generated method stub
-            long lhs_size = lhs.length();
-            long rhs_size = rhs.length();
-
-            return lhs_size>rhs_size?1:(lhs_size<rhs_size?-1:0);
-        }
-
-    };
-
-
-    public static Comparator<File> FILE_COMPARATOR_SIZE_DESC = new Comparator<File>() {
-
-        @Override
-        public int compare(File lhs, File rhs) {
-            // TODO Auto-generated method stub
-            long lhs_size = lhs.length();
-            long rhs_size = rhs.length();
-
-            return rhs_size>lhs_size?1:(rhs_size<lhs_size?-1:0);
-        }
-
-    };
-
-
-    public static Comparator<File> FILE_COMPARATOR_DATE_ASC = new Comparator<File>() {
-
-        @Override
-        public int compare(File lhs, File rhs) {
-            // TODO Auto-generated method stub
-            long lhs_date = lhs.lastModified();
-            long rhs_date = rhs.lastModified();
-
-            return lhs_date>rhs_date?1:(lhs_date<rhs_date?-1:0);
-        }
-
-    };
-
-    public static Comparator<File> FILE_COMPARATOR_DATE_DESC = new Comparator<File>() {
-
-        @Override
-        public int compare(File lhs, File rhs) {
-            // TODO Auto-generated method stub
-            long lhs_date = lhs.lastModified();
-            long rhs_date = rhs.lastModified();
-
-            return rhs_date>lhs_date?1:(rhs_date<lhs_date?-1:0);
-        }
-
-    };
-
 
     public static final Comparator<BelugaSortableInterface> COMPARATOR_NAME_DESC = new Comparator<BelugaSortableInterface>() {
         private final Collator sCollator = Collator.getInstance();

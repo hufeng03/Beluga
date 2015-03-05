@@ -19,7 +19,7 @@ import com.hufeng.filemanager.BelugaEntryViewHolder;
 import com.hufeng.filemanager.FileRecyclerFragment;
 import com.hufeng.filemanager.FileTabFragment;
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 import com.hufeng.filemanager.utils.LogUtil;
 

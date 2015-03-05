@@ -2,7 +2,8 @@ package com.hufeng.filemanager.services;
 
 import android.os.Environment;
 
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.mount.MountPoint;
 import com.hufeng.filemanager.mount.MountPointManager;
 
 import java.io.File;
@@ -31,11 +32,11 @@ public class IFolderMonitorUtil {
         List<String> dirs = new ArrayList<String>();
         MountPointManager mangaer = MountPointManager.getInstance();
         if (mangaer != null) {
-            List<FileEntry> mountPoints = mangaer.getMountPointFileEntry();
-            for (FileEntry mountPoint : mountPoints) {
-                dirs.add(mountPoint.path);
+            List<MountPoint> mountPoints = mangaer.getMountPoints();
+            for (MountPoint mountPoint : mountPoints) {
+                dirs.add(mountPoint.mPath);
                 for (String name : IMPORTANT_FOLDER) {
-                    File file = new File(mountPoint.path, name);
+                    File file = new File(mountPoint.mPath, name);
                     if (file.exists()) {
                         dirs.add(file.getAbsolutePath());
                         File[] children = file.listFiles();

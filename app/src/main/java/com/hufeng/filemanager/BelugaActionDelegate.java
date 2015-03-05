@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.hufeng.filemanager.browser.FileAction;
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 import com.hufeng.filemanager.intent.Constant;
 import com.hufeng.filemanager.utils.MimeUtil;
@@ -23,30 +23,6 @@ import java.util.ArrayList;
  */
 public class BelugaActionDelegate {
 
-//    public static void setAsWallpaper(FileEntry... entries) {
-//        if (entries.length != 1) {
-//            return;
-//        }
-//        FileAction.setAsWallpaper(entries[0].path);
-//    }
-//    public static void setAsRingTone(FileEntry... entries) {
-//        if (entries.length != 1) {
-//            return;
-//        }
-//        FileAction.setAsRingTone(entries[0].path);
-//    }
-
-    public static void view(Context context, FileEntry entry) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(new File(entry.path)), MimeUtil.getMimeType(entry.path));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        try {
-            context.startActivity(intent);
-        } catch (Exception e) {
-            Toast.makeText(context, "Can not open this file.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public static void cut(Context context, FileEntry... entries) {
         Intent intent = new Intent(Constant.ACTION_PICK_FOLDER_TO_MOVE_FILE);
         intent.putExtra(BelugaDialogFragment.FILE_ARRAY_DATA, entries);
@@ -60,31 +36,42 @@ public class BelugaActionDelegate {
     }
 
     public static void delete(FragmentActivity activity, FileEntry... entries) {
-        if (entries.length > 0) {
-            BelugaDialogFragment.showDeleteDialog(activity, entries);
-        }
+        BelugaDialogFragment.showDeleteDialog(activity, entries);
     }
 
     public static void rename(FragmentActivity activity, FileEntry... entries) {
-        if (entries.length != 1) {
+        if (entries.length > 1) {
+            Toast.makeText(activity, R.string.can_not_rename_multiple, Toast.LENGTH_SHORT);
             return;
         }
         BelugaDialogFragment.showRenameDialog(activity, entries[0]);
     }
 
     public static void details(FragmentActivity activity, FileEntry... entries) {
-        if (entries.length != 1) {
+        if (entries.length > 1) {
+            Toast.makeText(activity, R.string.can_not_details_multiple, Toast.LENGTH_SHORT);
             return;
         }
-        BelugaDialogFragment.showDetailDialog(activity, entries[0]);
+        BelugaDialogFragment.showDetailsDialog(activity, entries[0]);
     }
 
-    public static void markFavorite(FileEntry entry) {
-        FileAction.addToFavorite(entry.path);
-    }
+//    public static void markFavorite(FileEntry entry) {
+//        FileAction.addToFavorite(entry.path);
+//    }
+//
+//    public static void undoFavorite(FileEntry entry) {
+//        FileAction.removeFromFavorite(entry.path);
+//    }
 
-    public static void undoFavorite(FileEntry entry) {
-        FileAction.removeFromFavorite(entry.path);
+    public static void view(Context context, FileEntry entry) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(new File(entry.path)), MimeUtil.getMimeType(entry.path));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(context, "Can not open this file.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static void share(Context context, FileEntry... entries) {

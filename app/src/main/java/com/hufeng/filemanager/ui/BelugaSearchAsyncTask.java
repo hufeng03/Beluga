@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.provider.DataStructures;
 
 /**
@@ -21,8 +21,8 @@ public class BelugaSearchAsyncTask extends BelugaActionAsyncTask {
     public String mSearchString;
     ContentResolver mContentResolver;
 
-    public BelugaSearchAsyncTask(BelugaActionAsyncTaskCallbackDelegate actionController, String searchString) {
-        super(actionController);
+    public BelugaSearchAsyncTask(Context context, BelugaActionAsyncTaskCallbackDelegate actionController, String searchString) {
+        super(context, actionController);
         mSearchString = searchString;
         mContentResolver = FileManager.getAppContext().getContentResolver();
     }
@@ -37,7 +37,7 @@ public class BelugaSearchAsyncTask extends BelugaActionAsyncTask {
     };
 
     @Override
-    public boolean run(FileEntry[] params) {
+    public boolean run() {
 
         String searchString = mSearchString;
 

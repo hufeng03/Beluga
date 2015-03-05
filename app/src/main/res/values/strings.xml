@@ -156,7 +156,6 @@
     <string name="file_delete_has_failed">Delete failed</string>
     <string name="file_move_failed">Move failed</string>
     <string name="file_copy_failed">Copy failed</string>
-    <string name="file_favorite_finish">Add to favorite success</string>
     <string name="back_again_to_exit">Press again to exit</string>
     <string name="paste_or_cancel">Please select paste or cancel</string>
     <string name="set_ringtone_success">Set ringtone success</string>
@@ -824,4 +823,18 @@ changed later by pressing the <b>Setup</b> button.</string> -->
     <string name="settings_label">Settings</string>
     <string name="about_label">About</string>
     <string name="help_label">Help</string>
+    <string name="can_not_rename_multiple">Can not rename multiple files simultaneously.</string>
+    <string name="can_not_details_multiple">Can not show details of multiple files simultaneously.</string>
+    <string name="progress_favorite_title">Favorite</string>
+    <string name="progress_favorite_content">Marking as favorite, please wait...</string>
+    <string name="file_favorite_finish">Marking favorite success</string>
+    <string name="file_favorite_failed">Marking favorite failed</string>
+    <string name="progress_undofavorite_title">Undo Favorite</string>
+    <string name="progress_undofavorite_content">Undo marking favorite, please wait...</string>
+    <string name="file_undofavorite_finish">Undo favorite success</string>
+    <string name="file_undofavorite_failed">Undo favorite failed</string>
+    <string name="progress_rename_title">Rename</string>
+    <string name="progress_rename_content">Renaming file, please wait...</string>
+    <string name="file_rename_finish">Rename file success</string>
+    <string name="file_rename_failed">Rename file failed</string>
 </resources>

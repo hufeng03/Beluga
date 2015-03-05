@@ -9,7 +9,7 @@ import java.io.File;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class FolderPropertyHelper {
+public class FilePropertyHelper {
 
     public static boolean checkIsWritable(String path) {
         boolean can_write = new File(path).canWrite();

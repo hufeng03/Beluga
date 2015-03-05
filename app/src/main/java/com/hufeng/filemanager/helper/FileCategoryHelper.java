@@ -1,6 +1,9 @@
 package com.hufeng.filemanager.helper;
 
 import android.mtp.MtpConstants;
+import android.text.TextUtils;
+
+import com.hufeng.filemanager.utils.MimeUtil;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -149,23 +152,40 @@ public class FileCategoryHelper {
     }
 
     public static int getFileTypeForFile(String path) {
-        int lastDot = path.lastIndexOf('.');
-        if (lastDot < 0)
+        String extension = MimeUtil.getExtension(path);
+        if (TextUtils.isEmpty(extension)) {
             return 0;
-        Integer val = sExtensionToFileTypeMap.get(path.substring(lastDot + 1).toUpperCase(Locale.ROOT));
-        if (val == null)
-            return 0;
-        return val.intValue();
+        } else {
+            Integer val = sExtensionToFileTypeMap.get(extension.toUpperCase());
+            if (val == null)
+                return 0;
+            return val.intValue();
+        }
     }
 
     public static int getFileCategoryForFile(String path) {
-        int lastDot = path.lastIndexOf('.');
-        if (lastDot < 0)
+        String extension = MimeUtil.getExtension(path);
+        if (TextUtils.isEmpty(extension)) {
             return 0;
-        Integer val = sExtensionToCategoryTypeMap.get(path.substring(lastDot + 1).toUpperCase(Locale.ROOT));
-        if (val == null)
-            return 0;
-        return val.intValue();
+        } else {
+            Integer val = sExtensionToCategoryTypeMap.get(extension.toUpperCase());
+            if (val == null) {
+                String mimeType = MimeUtil.getMimeTypeByExtension(extension);
+                if (!TextUtils.isEmpty(mimeType)) {
+                    if (mimeType.startsWith("image/")) {
+                        return CATEGORY_TYPE_IMAGE;
+                    } else if (mimeType.startsWith("audio/")) {
+                        return CATEGORY_TYPE_AUDIO;
+                    } else if (mimeType.startsWith("video/")) {
+                        return CATEGORY_TYPE_VIDEO;
+                    } else if (mimeType.startsWith("text/")) {
+                        return CATEGORY_TYPE_DOCUMENT;
+                    }
+                }
+                return 0;
+            }
+            return val.intValue();
+        }
     }
 
 }

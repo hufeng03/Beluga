@@ -1,16 +1,13 @@
 package com.hufeng.filemanager.app;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 
 import com.hufeng.filemanager.BelugaEntry;
-import com.hufeng.filemanager.browser.FileEntry;
-
-import java.io.File;
+import com.hufeng.filemanager.data.FileEntry;
 
 /**
  * This class holds the per-item data in our Loader.

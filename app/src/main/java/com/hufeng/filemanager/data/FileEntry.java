@@ -1,11 +1,13 @@
-package com.hufeng.filemanager.browser;
+package com.hufeng.filemanager.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.hufeng.filemanager.BelugaEntry;
 import com.hufeng.filemanager.helper.FileCategoryHelper;
+import com.hufeng.filemanager.mount.MountPointManager;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.utils.MimeUtil;
 
@@ -15,7 +17,8 @@ public class FileEntry extends BelugaEntry {
 	public String path;
     public String name;
 	public long size;
-	public int type;
+    public int type;
+	public int category;
 	public boolean hidden;
     public String parentPath;
     public boolean exist;
@@ -31,8 +34,8 @@ public class FileEntry extends BelugaEntry {
         //This is used for Parcelable
     }
 
-    public FileEntry(String identity) {
-        File file = new File(identity);
+    public FileEntry(String path) {
+        File file = new File(path);
         init(file);
     }
 
@@ -51,13 +54,24 @@ public class FileEntry extends BelugaEntry {
         init(file);
     }
 
-    private void init (File file) {
+    public void fillContentValues(ContentValues cv) {
+        cv.put(DataStructures.FileColumns.FILE_DATE_FIELD, this.lastModified);
+        cv.put(DataStructures.FileColumns.FILE_SIZE_FIELD, this.size);
+        cv.put(DataStructures.FileColumns.FILE_EXTENSION_FIELD, this.extension);
+        cv.put(DataStructures.FileColumns.FILE_PATH_FIELD, this.path);
+        cv.put(DataStructures.FileColumns.FILE_NAME_FIELD, this.name);
+        cv.put(DataStructures.FileColumns.FILE_STORAGE_FIELD, MountPointManager.getInstance().getRealMountPointPath(this.path));
+    }
+
+
+    protected void init (File file) {
         this.exist = file.exists();
         this.path = file.getAbsolutePath();
         this.name = file.getName();
         this.size = file.length();
         this.lastModified = file.lastModified();
-        this.type = FileCategoryHelper.getFileCategoryForFile(path);
+        this.category = FileCategoryHelper.getFileCategoryForFile(path);
+        this.type = FileCategoryHelper.getFileTypeForFile(path);
         this.hidden = file.isHidden();
         this.isDirectory = file.isDirectory();
         this.isWritable = file.canWrite();
@@ -118,12 +132,52 @@ public class FileEntry extends BelugaEntry {
         return (o != null) && (o instanceof FileEntry) && ((FileEntry)o).path.equals(path);
     }
 
+    public File getFile() {
+        return new File(path);
+    }
+
+    public File getParentFile() {
+        return new File(parentPath);
+    }
+
+    // This api should not be accessed from main thread
+    public FileEntry[] listFiles() {
+        String[] filenames = new File(path).list();
+        if (filenames == null) {
+            return null;
+        }
+        int count = filenames.length;
+        FileEntry[] result = new FileEntry[count];
+        for (int i = 0; i < count; ++i) {
+            result[i] = new FileEntry(path, filenames[i]);
+        }
+        return result;
+    }
+
+    // This api should not be accessed from main thread
+    public boolean delete() {
+        boolean deleted = new File(path).delete();
+        if (deleted)
+            exist = false;
+        return deleted;
+    }
+
+    // This api should not be accessed from main thread
+    public boolean renameTo(File newPath) {
+        boolean renamed = new File(path).renameTo(newPath);
+        if (renamed)
+            exist = false;
+        return renamed;
+    }
+
+
     @Override
     public String toString() {
         return "path("+this.path+")"
                 +"name("+this.name+")"
                 +"size("+this.size+")"
                 +"type("+this.type+")"
+                +"category("+this.category+")"
                 +"hidden("+this.hidden+")"
                 +"exists("+this.exist+")"
                 +"parent_path("+this.parentPath+")"
@@ -147,6 +201,7 @@ public class FileEntry extends BelugaEntry {
         dest.writeLong(size);
         dest.writeLong(lastModified);
         dest.writeInt(type);
+        dest.writeInt(category);
         dest.writeInt(hidden? 1 : 0);
         dest.writeInt(isDirectory? 1 : 0);
         dest.writeInt(isWritable? 1 : 0);
@@ -167,6 +222,7 @@ public class FileEntry extends BelugaEntry {
             entry.size = source.readLong();
             entry.lastModified = source.readLong();
             entry.type = source.readInt();
+            entry.category = source.readInt();
             entry.hidden = source.readInt() == 1;
             entry.isDirectory = source.readInt() == 1;
             entry.isWritable = source.readInt() == 1;

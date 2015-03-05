@@ -34,7 +34,7 @@ import com.hufeng.filemanager.FileEntrySimpleListViewHolder;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.helper.BelugaSortHelper;
 import com.hufeng.filemanager.browser.FileAction;
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.utils.FileUtil;
 import com.hufeng.filemanager.utils.MimeUtil;
 import com.hufeng.filemanager.utils.TimeUtil;
@@ -124,16 +124,17 @@ public class BelugaDialogFragment extends DialogFragment{
         return dialog;
 	}
 
-    public static DialogFragment showProgressDialog(FragmentActivity activity, String title, String message){
+    public static DialogFragment showProgressDialog(FragmentActivity activity, String title, String message, int max){
         Bundle data = new Bundle();
         data.putString("title", title);
         data.putString("message", message);
+        data.putInt("max", max);
         DialogFragment dialog = BelugaDialogFragment.newInstance(PROGRESS_DIALOG, data);
         dialog.show(activity.getSupportFragmentManager(), PROGRESS_DIALOG_FRAGMENT_TAG);
         return dialog;
     }
 	
-	public static DialogFragment showDetailDialog(FragmentActivity activity, FileEntry entry){
+	public static DialogFragment showDetailsDialog(FragmentActivity activity, FileEntry entry){
 		Bundle data = new Bundle();
 		data.putParcelable(FILE_DATA, entry);
         DialogFragment dialog = BelugaDialogFragment.newInstance(DETAIL_DIALOG, data);
@@ -446,11 +447,15 @@ public class BelugaDialogFragment extends DialogFragment{
                         String dir_str = entry.parentPath;
                         File new_file = new File(dir_str, new_name);
 
-                        if(new_file.exists() && ((new_file.isDirectory() && entry.isDirectory) || (new_file.isFile() && !entry.isDirectory))) {
+                        if(new_file.exists()) {
                             Toast.makeText(getActivity(), R.string.rename_same_name_string, Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            FileAction.renameFile(getActivity(), new File(entry.path), new_file);
+                        } else {
+                            if (mListener != null) {
+                                mListener.onDialogOK(
+                                        getArguments().getInt(ARG_DIALOG_ID),
+                                        new_name,
+                                        entry);
+                            }
                         }
                     }
             })
@@ -462,9 +467,16 @@ public class BelugaDialogFragment extends DialogFragment{
         case PROGRESS_DIALOG: {
             final String title = getArguments().getString("title");
             final String message = getArguments().getString("message");
+            final int max = getArguments().getInt("max");
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             progressDialog.setTitle(title);
             progressDialog.setMessage(message);
+            if (max > 0) {
+                progressDialog.setMax(max);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            } else  {
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            }
             progressDialog.setIndeterminate(false);
             dialog = progressDialog;
             break;

@@ -6,7 +6,7 @@ import android.os.storage.StorageManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -184,20 +184,6 @@ public final class MountPointManager {
         return sInstance;
     }
 
-    /**
-     * This method gets informations of file of mount point path
-     *
-     * @return fileInfos of mount point path
-     */
-    public List<FileEntry> getMountPointFileEntry() {
-        List<FileEntry> fileInfos = new ArrayList<FileEntry>(0);
-        for (MountPoint mp : mMountPathList) {
-            if (mp.mIsMounted) {
-                fileInfos.add(new FileEntry(mp.mPath));
-            }
-        }
-        return fileInfos;
-    }
 
     /**
      * This method gets informations of file of mount point path

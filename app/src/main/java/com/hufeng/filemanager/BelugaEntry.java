@@ -11,9 +11,4 @@ import android.os.Parcelable;
  */
 public abstract class BelugaEntry implements BelugaSortableInterface, Parcelable{
     public abstract String getIdentity();
-
-    public interface CursorInterface {
-        public BelugaEntry fromCursor(Cursor cursor);
-        public ContentValues toContentValues(BelugaEntry entry);
-    }
 }

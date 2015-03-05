@@ -3,7 +3,7 @@ package com.hufeng.filemanager;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.mount.MountPoint;
 import com.hufeng.filemanager.mount.MountPointManager;
 import com.hufeng.filemanager.utils.LogUtil;

@@ -1,9 +1,6 @@
 package com.hufeng.filemanager.services;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -14,8 +11,9 @@ import android.text.TextUtils;
 
 import com.hufeng.filemanager.BelugaFolderObserver;
 import com.hufeng.filemanager.BuildConfig;
-import com.hufeng.filemanager.FileManager;
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.helper.BelugaProviderHelper;
+import com.hufeng.filemanager.mount.MountPoint;
 import com.hufeng.filemanager.mount.MountPointManager;
 
 import java.io.File;
@@ -23,7 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by feng on 14-3-6.
@@ -46,17 +43,6 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
     private HandlerThread mObserverHandlerThread;
     private ObserverHandler mObserverHandler;
 
-//    private BroadcastReceiver mMountReceiver;
-//
-//    private Handler mMainThreadHandler = new MainThreadHandler();
-//
-//    private class MainThreadHandler extends Handler {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            performMonitor();
-//        }
-//    }
-
     private class ObserverHandler extends Handler {
 
         public ObserverHandler(Looper looper) {
@@ -65,7 +51,7 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
 
         @Override
         public void handleMessage(Message msg) {
-            // If we are still init monitor folder, observer event is ignored
+            // If we are still initializing monitor folder, observer event is ignored
             if (mMonitorTask != null) {
                 return;
             }
@@ -76,8 +62,7 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
                     if (TextUtils.isEmpty(path) || new File(path).exists()) {
                         return;
                     }
-                    FileEntry oldEntry = new FileEntry(path);
-
+                    BelugaProviderHelper.deleteInBelugaDatabase(mContext, path);
                 }
                 break;
                 case 1:
@@ -86,8 +71,7 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
                     if (TextUtils.isEmpty(path) || !new File(path).exists()) {
                         return;
                     }
-                    FileEntry newEntry = new FileEntry(path);
-
+                    BelugaProviderHelper.insertInBelugaDatabase(mContext, path);
                 }
                 break;
             }
@@ -99,10 +83,7 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
         mObserverHandlerThread = new HandlerThread("BelugaFolderObserver");
         mObserverHandlerThread.start();
         mObserverHandler = new ObserverHandler(mObserverHandlerThread.getLooper());
-        // delay adding of persistent observers
-//        mMainThreadHandler.sendEmptyMessageDelayed(0,1000);
-        // Register mount receiver
-//        registerMountReceiver();
+        initMonitorFolders();
     }
 
     public void onDestroy() {
@@ -114,11 +95,13 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
     }
 
     private void clearPersistentObservers() {
-        Iterator<BelugaFolderObserver> iterator = mPersistentFolderObservers.values().iterator();
-        while(iterator.hasNext()) {
-            iterator.next().stopWatching();
+        if (mPersistentFolderObservers != null) {
+            Iterator<BelugaFolderObserver> iterator = mPersistentFolderObservers.values().iterator();
+            while (iterator.hasNext()) {
+                iterator.next().stopWatching();
+            }
+            mPersistentFolderObservers.clear();
         }
-        mPersistentFolderObservers.clear();
     }
 
     public void initMonitorFolders() {
@@ -130,35 +113,6 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
         mMonitorTask = new MonitorTask();
         mMonitorTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
-
-
-
-//    private void registerMountReceiver() {
-//        mMountReceiver = new BroadcastReceiver(){
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                if(Intent.ACTION_MEDIA_SCANNER_FINISHED.equals(intent.getAction())){
-//                    if(mMainThreadHandler.hasMessages(0))
-//                        mMainThreadHandler.removeMessages(0);
-//                    mMainThreadHandler.sendEmptyMessageDelayed(0,3000);
-//                }
-//            }
-//        };
-//
-//        IntentFilter filter = new IntentFilter();
-//        filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
-//        filter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
-//        filter.addAction(Intent.ACTION_MEDIA_EJECT);
-//        filter.addDataScheme("file");
-//        mContext.registerReceiver(mMountReceiver, filter);
-//    }
-//
-//    private void unregisterMountReceiver() {
-//        if (mMountReceiver != null) {
-//            mContext.unregisterReceiver(mMountReceiver);
-//            mMountReceiver = null;
-//        }
-//    }
 
     @Override
     public void addMonitor(String dir) throws RemoteException {
@@ -188,15 +142,15 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
             List<String> folders = new ArrayList<String>();
             MountPointManager mangaer = MountPointManager.getInstance();
             if (mangaer != null) {
-                List<FileEntry> mountPoints = mangaer.getMountPointFileEntry();
-                for (FileEntry mountPoint : mountPoints) {
+                List<MountPoint> mountPoints = mangaer.getMountPoints();
+                for (MountPoint mountPoint : mountPoints) {
                     if (isCancelled())
                         break;
-                    folders.add(mountPoint.path);
+                    folders.add(mountPoint.mPath);
                     for (String name : IFolderMonitorUtil.IMPORTANT_FOLDER) {
                         if (isCancelled())
                             break;
-                        File file = new File(mountPoint.path, name);
+                        File file = new File(mountPoint.mPath, name);
                         if (file.exists()) {
                             folders.add(file.getAbsolutePath());
                             File[] children = file.listFiles();

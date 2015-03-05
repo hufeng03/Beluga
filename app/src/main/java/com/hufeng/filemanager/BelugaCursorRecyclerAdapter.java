@@ -4,13 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
-import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.provider.DataStructures;
-import com.hufeng.filemanager.BelugaEntryViewHolder;
+import com.hufeng.filemanager.data.FileEntry;
 
 import java.util.ArrayList;
 
@@ -19,13 +15,11 @@ import java.util.ArrayList;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class BelugaCursorRecyclerAdapter<Entry extends BelugaEntry & BelugaEntry.CursorInterface,
-        EntryViewHolder extends BelugaEntryViewHolder> extends RecyclerView.Adapter<EntryViewHolder>
+public class BelugaCursorRecyclerAdapter<EntryViewHolder extends BelugaEntryViewHolder> extends RecyclerView.Adapter<EntryViewHolder>
     implements BelugaDisplayModeAdapter{
 
     private Context mContext;
     private Cursor mCursor;
-//    private int mEntryLayout;
 
     private boolean mDataValid;
     private int mRowIDColumn;
@@ -38,14 +32,13 @@ public class BelugaCursorRecyclerAdapter<Entry extends BelugaEntry & BelugaEntry
     private BelugaDisplayMode mDisplayMode = BelugaDisplayMode.LIST;
 
     public BelugaCursorRecyclerAdapter(Context context, Cursor cursor, BelugaDisplayMode mode,/*int entryLayout,*/ EntryViewHolder.Builder builder) {
-        init(context, cursor, /*entryLayout,*/mode, builder);
+        init(context, cursor, mode, builder);
     }
 
     private void init(Context context, Cursor cursor, BelugaDisplayMode mode,/*int entryLayout,*/ EntryViewHolder.Builder builder) {
         boolean cursorExists = cursor != null;
         mContext = context;
         mCursor = cursor;
-//        mEntryLayout = entryLayout;
         mDisplayMode = mode;
         mEntryViewHolderBuilder = builder;
         mRowIDColumn = cursorExists ? cursor.getColumnIndexOrThrow("_id") : -1;
@@ -57,8 +50,6 @@ public class BelugaCursorRecyclerAdapter<Entry extends BelugaEntry & BelugaEntry
 
     @Override
     public EntryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-//        View v = LayoutInflater.from(viewGroup.getContext())
-//                .inflate(mEntryLayout, viewGroup, false);
         return (EntryViewHolder)mEntryViewHolderBuilder.createViewHolder(viewGroup, i);
     }
 

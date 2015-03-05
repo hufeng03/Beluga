@@ -1,25 +1,16 @@
 package com.hufeng.filemanager;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.utils.LogUtil;
+import com.hufeng.filemanager.data.FileEntry;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;

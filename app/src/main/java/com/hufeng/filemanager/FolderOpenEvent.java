@@ -1,8 +1,6 @@
 package com.hufeng.filemanager;
 
-import android.content.Intent;
-
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
 
 /**
  * Created by feng on 2014-10-26.

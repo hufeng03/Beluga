@@ -16,16 +16,18 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.hufeng.filemanager.FileManager;
+import com.hufeng.filemanager.data.ApkEntry;
+import com.hufeng.filemanager.data.AudioEntry;
+import com.hufeng.filemanager.data.DocumentEntry;
+import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.ImageEntry;
+import com.hufeng.filemanager.data.VideoEntry;
+import com.hufeng.filemanager.data.ZipEntry;
+import com.hufeng.filemanager.helper.BelugaProviderHelper;
 import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.mount.MountPoint;
 import com.hufeng.filemanager.mount.MountPointManager;
 import com.hufeng.filemanager.provider.DataStructures;
-import com.hufeng.filemanager.scan.ApkObject;
-import com.hufeng.filemanager.scan.AudioObject;
-import com.hufeng.filemanager.scan.DocumentObject;
-import com.hufeng.filemanager.scan.ImageObject;
-import com.hufeng.filemanager.scan.VideoObject;
-import com.hufeng.filemanager.scan.ZipObject;
 import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.utils.MediaStoreUtil;
 
@@ -309,26 +311,9 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
         for (int i = 0; i < files.size(); i++) {
             cvs[i] = new ContentValues();
             cvs[i].put(DataStructures.FileColumns.FILE_SYNC_FIELD, 0);
-            switch (category) {
-                case FileCategoryHelper.CATEGORY_TYPE_IMAGE:
-                    new ImageObject(files.get(i)).toContentValues(cvs[i]);
-                    break;
-                case FileCategoryHelper.CATEGORY_TYPE_AUDIO:
-                    new AudioObject(files.get(i)).toContentValues(cvs[i]);
-                    break;
-                case FileCategoryHelper.CATEGORY_TYPE_VIDEO:
-                    new VideoObject(files.get(i)).toContentValues(cvs[i]);
-                    break;
-                case FileCategoryHelper.CATEGORY_TYPE_APK:
-                    new ApkObject(files.get(i)).toContentValues(cvs[i]);
-                    break;
-                case FileCategoryHelper.CATEGORY_TYPE_DOCUMENT:
-                    new DocumentObject(files.get(i)).toContentValues(cvs[i]);
-                    break;
-                case FileCategoryHelper.CATEGORY_TYPE_ZIP:
-                    new ZipObject(files.get(i)).toContentValues(cvs[i]);
-                    break;
-            }
+            FileEntry entry = BelugaProviderHelper.createFileEntryAccordingToCategory(
+                    files.get(i), category);
+            entry.fillContentValues(cvs[i]);
         }
         FileManager.getAppContext().getContentResolver().bulkInsert(uri, cvs);
     }

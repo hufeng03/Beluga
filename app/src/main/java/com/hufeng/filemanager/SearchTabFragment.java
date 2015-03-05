@@ -3,17 +3,12 @@ package com.hufeng.filemanager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.Spinner;
 
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
 
 /**
  * Created by feng on 14-5-6.
@@ -76,7 +71,7 @@ public class SearchTabFragment extends FileTabFragment {
 
 
     private void performSearch() {
-        getActionController().onOperationSearchFile(mSearchString);
+        getActionController().performSearch(mSearchString);
     }
 
 

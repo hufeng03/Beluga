@@ -1,4 +1,4 @@
-package com.hufeng.filemanager.data;
+package com.hufeng.filemanager.loader;
 
 /**
  * Created by feng on 14-2-15.
@@ -11,8 +11,8 @@ import android.text.TextUtils;
 import com.hufeng.filemanager.CategorySelectEvent;
 import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.SortPreferenceReceiver;
+import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.helper.BelugaSortHelper;
-import com.hufeng.filemanager.browser.FileEntry;
 import com.hufeng.filemanager.utils.LogUtil;
 
 import java.io.File;
@@ -54,9 +54,7 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<FileEntry>> {
                     if (entry.exist) {
                         if (TextUtils.isEmpty(mSearch) || entry.getName().toLowerCase().contains(mSearch.toLowerCase())) {
                             LogUtil.i(LOG_TAG, "add "+file+"!!!!!!!!!!"+entry);
-                            if (!Constants.PRODUCT_FLAVOR_NAME.equals("chenxiang") || !entry.hidden) {
-                                entries.add(entry);
-                            }
+                            entries.add(entry);
                         }
                     }
                 }

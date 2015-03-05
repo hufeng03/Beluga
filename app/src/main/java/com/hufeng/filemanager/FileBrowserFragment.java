@@ -2,7 +2,6 @@ package com.hufeng.filemanager;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.FileObserver;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -20,8 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hufeng.filemanager.helper.BelugaSortHelper;
-import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.data.FileBrowserLoader;
+import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.loader.FileBrowserLoader;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 import com.hufeng.filemanager.ui.BelugaActionController;
 
@@ -173,6 +172,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
     }
 
     // Floating Action Bar Click Listener Callback
+    // !!! This is not fragment life cycle callback function
     @Override
     protected void onCreate() {
         BelugaActionController.OPERATION_MODE operationMode = getActionController().getOperationMode();
@@ -274,10 +274,6 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    public String getRootFolder() {
-        return mRootDir;
     }
 
     @Override
@@ -397,9 +393,11 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                         return;
                     }
                     FileEntry oldEntry = new FileEntry(path);
-                    msg.getData().putParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY, oldEntry);
-                    msg.setTarget(mUIThreadHandler);
-                    mUIThreadHandler.sendMessage(msg);
+                    Message newMessage = mUIThreadHandler.obtainMessage(0);
+                    Bundle data = new Bundle();
+                    data.putParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY, oldEntry);
+                    newMessage.setData(data);
+                    newMessage.sendToTarget();
                 }
                     break;
                 case 1:
@@ -418,10 +416,12 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                         }
                         pos++;
                     }
-                    msg.getData().putParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY, newEntry);
-                    msg.getData().putInt(HANDLER_MESSAGE_POSITION_KEY, pos);
-                    msg.setTarget(mUIThreadHandler);
-                    mUIThreadHandler.sendMessage(msg);
+                    Message newMessage = mUIThreadHandler.obtainMessage(1);
+                    Bundle data = new Bundle();
+                    data.putParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY, newEntry);
+                    data.putInt(HANDLER_MESSAGE_POSITION_KEY, pos);
+                    newMessage.setData(data);
+                    newMessage.sendToTarget();
                 }
                     break;
             }
@@ -436,7 +436,8 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                 {
                     FileEntry oldEntry = msg.getData().getParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY);
                     mAdapter.remove(oldEntry);
-                    getActionController().removeSelection(oldEntry);
+                    getActionController().setEntrySelection(false, oldEntry);
+                    setEmptyViewShown(mAdapter.getItemCount() == 0);
                 }
                     break;
                 case 1:
@@ -445,6 +446,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                     int pos = msg.getData().getInt(HANDLER_MESSAGE_POSITION_KEY, 0);
                     mAdapter.add(newEntry, pos);
                     getLayoutManager().scrollToPosition(pos);
+                    setEmptyViewShown(mAdapter.getItemCount() == 0);
                 }
                     break;
             }

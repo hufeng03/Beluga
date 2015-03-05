@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,12 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.AbsListView;
 
-import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.data.FileCursorLoader;
+import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.loader.FileCursorLoader;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
-import com.hufeng.filemanager.services.UiCallServiceHelper;
 import com.hufeng.filemanager.utils.LogUtil;
 
 public class FileGrouperFragment extends FileRecyclerFragment implements

@@ -1,6 +1,7 @@
 package com.hufeng.filemanager.ui;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,10 +17,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.hufeng.filemanager.BelugaActionDelegate;
-import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.FileAction;
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 
 import java.io.File;
@@ -36,10 +36,10 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
     private static final String TAG = "BelugaActionController";
     private static final String FILE_OPERATION_MODE_ARGUMENT = "file_operation_argument";
 
-    private OPERATION_MODE mOperationMode = OPERATION_MODE.SELECT;
+    private OPERATION_MODE mOperationMode = OPERATION_MODE.NORMAL;
 
     public enum OPERATION_MODE {
-        SELECT, PICK, COPY_PASTE, CUT_PASTE;
+        NORMAL, PICK, COPY_PASTE, CUT_PASTE;
     }
 
     boolean mActionModeShowing;
@@ -66,21 +66,27 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
         @Override
         public boolean add(FileEntry entry) {
             boolean result = super.add(entry);
-            invalidate();
+            if (result) {
+                invalidate();
+            }
             return result;
         }
 
         @Override
         public boolean remove(Object entry) {
             boolean result = super.remove(entry);
-            invalidate();
+            if (result) {
+                invalidate();
+            }
             return result;
         }
 
         @Override
         public boolean removeAll(Collection<?> collection) {
             boolean result = super.removeAll(collection);
-            invalidate();
+            if (result) {
+                invalidate();
+            }
             return result;
         }
 
@@ -88,14 +94,6 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
             return super.toArray(new FileEntry[size()]);
         }
         
-        public FileEntry getSingleOne() {
-            final int size = size();
-            if (size == 0) {
-                return null;
-            } else {
-                return getAll()[0];
-            } 
-        }
     }
 
     private void invalidate() {
@@ -160,7 +158,7 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
             case PICK:
                 inflater.inflate(R.menu.file_operation_selection_menu, menu);
                 break;
-            case SELECT:
+            case NORMAL:
             default:
                 inflater.inflate(R.menu.file_operation_menu, menu);
                 break;
@@ -183,25 +181,9 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
             if (selectedNum == 1) {
                 menu.setGroupVisible(R.id.file_operation_single, true);
 
-                FileEntry entry = getSingleSelectedFile();
+                FileEntry entry = mOperationPaths.getAll()[0];
 
-                boolean can_write = entry.isWritable;
-                if (can_write && Constants.TRY_TO_TEST_WRITE) {
-                    if (entry.isDirectory) {
-                        if (new File(entry.path, ".test_writable").mkdir()) {
-                            new File(entry.path, ".test_writable").delete();
-                        } else {
-                            can_write = false;
-                        }
-                    } else {
-                        if (new File(entry.path).renameTo(new File(entry.path+"_tmp"))) {
-                            new File(entry.path+"_tmp").renameTo(new File(entry.path));
-                        } else {
-                            can_write = false;
-                        }
-                    }
-                }
-                if (!can_write) {
+                if (!entry.isWritable) {
                     MenuItem item_delete = menu.findItem(R.id.file_operation_delete);
                     if (item_delete != null) {
                         item_delete.setVisible(false);
@@ -221,7 +203,7 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
                 MenuItem item1 = menu.findItem(R.id.file_operation_selectall);
                 if (item1 != null) item1.setVisible(!isFileAllSelected());
 
-                if (isSelectedAllCanNotWrite()) {
+                if (isSelectedNoneWritable()) {
                     MenuItem item_delete = menu.findItem(R.id.file_operation_delete);
                     if (item_delete != null) {
                         item_delete.setVisible(false);
@@ -291,38 +273,11 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
                 BelugaActionDelegate.details(getActivity(), mOperationPaths.getAll());
                 break;
             case R.id.file_operation_addfavorite:
-                onOperationAddFavorite();
+                performFavorite(mOperationPaths.getAll());
                 break;
             case R.id.file_operation_removefavorite:
-                onOperationRemoveFavorite();
+                performUndoFavorite(mOperationPaths.getAll());
                 break;
-//            case R.id.file_operation_addsafe:
-//                onOperationAddToSafe();
-//                break;
-//            case R.id.file_operation_safe_delete:
-//                onOperationSafeDelete();
-//                break;
-//            case R.id.file_operation_safe_move:
-//                onOperationSafeMove();
-//                break;
-//            case R.id.file_operation_safe_selectall:
-//                onOperationSelectAll();
-//                break;
-//            case R.id.file_operation_addcloud2:
-//            case R.id.file_operation_addcloud:
-//                if (TextUtils.isEmpty(Token.getInstance().getAccessToken())) {
-//                    clearOperationFiles();
-//                    refreshActionMode();
-//                    Toast.makeText(this, R.string.please_login_kanbox, Toast.LENGTH_SHORT).show();
-//                    if (R.id.file_operation_addcloud2 == item.getItemId()) {
-//                        if (this instanceof FileManagerTabActivity) {
-//                            ((FileManagerTabActivity) this).gotoCloud();
-//                        }
-//                    }
-//                } else {
-//                    onOperationAddToCloud();
-//                }
-//                break;
             default:
                 break;
         }
@@ -338,40 +293,36 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
         }
     }
 
-    public void addEntries(FileEntry... entries) {
-        mOperationPaths.addAll(Arrays.asList(entries));
-    }
 
-    public boolean isSelected(FileEntry entry) {
+    public boolean isEntrySelected(FileEntry entry) {
         return mOperationPaths.contains(entry);
     }
 
-    public void removeSelection(FileEntry entry) {
+    public void setEntrySelection(boolean selected, FileEntry... entries) {
+        if (selected) {
+            mOperationPaths.addAll(Arrays.asList(entries));
+        } else {
+            mOperationPaths.removeAll(Arrays.asList(entries));
+        }
+    }
+
+    public void toggleEntrySelection(FileEntry entry) {
         if (mOperationPaths.contains(entry)) {
             mOperationPaths.remove(entry);
+        } else {
+            mOperationPaths.add(entry);
         }
     }
 
-    public void toggleSelection(FileEntry entry) {
-        if (mOperationMode != OPERATION_MODE.CUT_PASTE
-                && mOperationMode != OPERATION_MODE.COPY_PASTE) {
-            if (mOperationPaths.contains(entry)) {
-                mOperationPaths.remove(entry);
-            } else {
-                mOperationPaths.add(entry);
-            }
-        }
-    }
-
-    public void validateSelection() {
-        List<FileEntry> deletedEntreis = new ArrayList<FileEntry>();
+    public void validateAllSelection() {
+        List<FileEntry> deletedEntries = new ArrayList<FileEntry>();
         for (FileEntry entry : mOperationPaths) {
             if (!entry.checkExistance()) {
-                deletedEntreis.add(entry);
+                deletedEntries.add(entry);
             }
         }
-        if (deletedEntreis.size() > 0) {
-            mOperationPaths.removeAll(deletedEntreis);
+        if (deletedEntries.size() > 0) {
+            mOperationPaths.removeAll(deletedEntries);
         }
     }
 
@@ -380,28 +331,44 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
     }
 
 
-    public void onOperationCutPasteConfirm(String folder, FileEntry... entries) {
+    public void performCutPaste(String folder, FileEntry... entries) {
         if (entries.length > 0) {
-            mActionAsyncTask = new BelugaMoveAsyncTask(this, folder);
+            mActionAsyncTask = new BelugaCutPasteAsyncTask(getActivity().getApplicationContext(), this, folder);
             mActionAsyncTask.executeParallel(entries);
         }
     }
 
-    public void onOperationCopyPasteConfirm(String folder, FileEntry... entries) {
+    public void performCopyPaste(String folder, FileEntry... entries) {
         if (entries.length > 0) {
-            mActionAsyncTask = new BelugaCopyAsyncTask(this, folder);
+            mActionAsyncTask = new BelugaCopyPasteAsyncTask(getActivity().getApplicationContext(), this, folder);
             mActionAsyncTask.executeParallel(entries);
         }
     }
 
-    public void onOperationPickConfirm(Context context) {
-        getActivity().setResult(Activity.RESULT_OK);
-
+    public void performRename(String newName, FileEntry entry) {
+        BelugaRenameAsyncTask renameTask = new BelugaRenameAsyncTask(getActivity().getApplicationContext(), this);
+        renameTask.setNewName(newName);
+        mActionAsyncTask = renameTask;
+        mActionAsyncTask.executeParallel(entry);
     }
 
-	public void onOperationDeleteConfirm(FileEntry... entries) {
+	public void performDeletion(FileEntry... entries) {
         if (entries.length > 0) {
-            mActionAsyncTask = new BelugaDeleteAsyncTask(this);
+            mActionAsyncTask = new BelugaDeleteAsyncTask(getActivity().getApplicationContext(), this);
+            mActionAsyncTask.executeParallel(entries);
+        }
+    }
+
+    public void performFavorite(FileEntry... entries) {
+        if (entries.length > 0) {
+            mActionAsyncTask = new BelugaFavoriteAsyncTask(getActivity().getApplicationContext(), this);
+            mActionAsyncTask.executeParallel(entries);
+        }
+    }
+
+    public void performUndoFavorite(FileEntry... entries) {
+        if (entries.length > 0) {
+            mActionAsyncTask = new BelugaUndoFavoriteAsyncTask(getActivity().getApplicationContext(), this);
             mActionAsyncTask.executeParallel(entries);
         }
     }
@@ -432,39 +399,9 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
             }
         }
 	}
-	
-	public void onOperationAddFavorite(){
-        FileEntry[] entries = mOperationPaths.getAll();
-        // TODO: modify to use batch processing
-        boolean result = true;
-        for (FileEntry entry : entries) {
-            if (!FileAction.addToFavorite(entry.path)) {
-                result = false;
-            }
-        }
-        mOperationPaths.clear();
-        if (result) {
-            Toast.makeText(getActivity(), R.string.add_favorite_success, Toast.LENGTH_SHORT).show();
-        }
-    }
 
-    public void onOperationRemoveFavorite(){
-        FileEntry[] entries = mOperationPaths.getAll();
-        // TODO: modify to use batch processing
-        boolean result = true;
-        for (FileEntry entry : entries) {
-            if (!FileAction.removeFromFavorite(entry.path)) {
-                result = false;
-            }
-        }
-        mOperationPaths.clear();
-        if (result) {
-            Toast.makeText(getActivity(), R.string.remove_favorite_success, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void onOperationSearchFile(String searchString) {
-        mActionAsyncTask = new BelugaSearchAsyncTask(this, searchString);
+    public void performSearch(String searchString) {
+        mActionAsyncTask = new BelugaSearchAsyncTask(getActivity().getApplicationContext(), this, searchString);
         mActionAsyncTask.executeParallel();
     }
 
@@ -472,11 +409,8 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
 		return mOperationPaths.size();
 	}
 
-    public FileEntry getSingleSelectedFile() {
-        return mOperationPaths.getSingleOne();
-    }
-
-    public boolean isSelectedAllFavorite() {
+    // TODO: Need to refactor this
+    private boolean isSelectedAllFavorite() {
         FileEntry[] entries = mOperationPaths.getAll();
         String[] paths = new String[entries.length];
         int i = 0;
@@ -486,23 +420,18 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
         return FileAction.isAllFavorite(paths);
     }
 
-    public boolean isSelectedAllCanNotWrite() {
-        boolean flag = true;
+    private boolean isSelectedNoneWritable() {
+        boolean noWritable = true;
         FileEntry[] entries = mOperationPaths.getAll();
         if (entries != null) {
             for (FileEntry entry : entries) {
                 if (entry.isWritable) {
-                    flag = false;
+                    noWritable = false;
                     break;
                 }
             }
         }
-        return flag;
-    }
-
-    public boolean isSelectedAllNotFavorite() {
-//        return FileAction.isAllNotFavorite(mOperationPaths.getAll());
-        return false;
+        return noWritable;
     }
 	
 	public boolean isFileAllSelected(){
@@ -523,13 +452,32 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
         if (context != null) {
             final String title = mActionAsyncTask.getProgressDialogTitle(context);
             final String message = mActionAsyncTask.getProgressDialogContent(context);
-            BelugaDialogFragment.showProgressDialog(getActivity(), title, message);
+            int size = getFileSelectedSize();
+            if (!TextUtils.isEmpty(title) || !TextUtils.isEmpty(message)) {
+                BelugaDialogFragment.showProgressDialog(getActivity(), title, message, size);
+            }
         }
     }
 
     @Override
-    public void onAsyncTaskProgressUpdated(FileEntry... progress) {
-
+    public void onAsyncTaskProgressUpdated(FileEntry... entries) {
+        final int oldLeftSize = getFileSelectedSize();
+        mOperationPaths.removeAll(Arrays.asList(entries));
+        final int newLeftSize = getFileSelectedSize();
+        if (oldLeftSize - newLeftSize > 0) {
+            DialogFragment fragment = (DialogFragment) (getFragmentManager().findFragmentByTag(BelugaDialogFragment.PROGRESS_DIALOG_FRAGMENT_TAG));
+            if (fragment != null) {
+                ProgressDialog dialog = (ProgressDialog)fragment.getDialog();
+                int max = dialog.getMax();
+                if (max > 0) {
+                    int progress = dialog.getProgress();
+                    int newProgress = max - newLeftSize;
+                    if (newProgress != progress) {
+                        dialog.setProgress(newProgress);
+                    }
+                }
+            }
+        }
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.hufeng.filemanager.data;
+package com.hufeng.filemanager.loader;
 
 import android.content.Context;
 import android.database.Cursor;

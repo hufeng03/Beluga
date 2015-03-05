@@ -6,8 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hufeng.filemanager.browser.FileEntry;
-
 /**
  * Created by Feng Hu on 15-01-25.
  * <p/>

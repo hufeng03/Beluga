@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.ui.BelugaActionController;
 import com.hufeng.filemanager.utils.TimeUtil;
 import com.hufeng.filemanager.view.SquareLazyLoadImageView;
@@ -54,7 +54,7 @@ public class FileEntryGridViewHolder extends BelugaEntryViewHolder {
         this.name.setText(entry.getName());
         this.description.setText(TimeUtil.getDayString(this.entry.getTime()));
         icon.requestDisplayImage(this.entry.path);
-        boolean isChoosen = actionController.isSelected(this.entry);
+        boolean isChoosen = actionController.isEntrySelected(this.entry);
         this.itemView.setActivated(isChoosen);
         this.check.setVisibility(isChoosen?View.VISIBLE:View.GONE);
         this.expand.setVisibility(isChoosen?View.VISIBLE:View.GONE);
@@ -72,7 +72,7 @@ public class FileEntryGridViewHolder extends BelugaEntryViewHolder {
             this.listener.onEntryClickedToOpen(v, entry);
         } else {
             if (actionController.isActionModeShowing()) {
-                actionController.toggleSelection(entry);
+                actionController.toggleEntrySelection(entry);
             } else {
                 this.listener.onEntryClickedToOpen(v, entry);
             }
@@ -81,7 +81,7 @@ public class FileEntryGridViewHolder extends BelugaEntryViewHolder {
 
     @Override
     public boolean onLongClick(View v) {
-        actionController.toggleSelection(entry);
+        actionController.toggleEntrySelection(entry);
         return true;
     }
 }

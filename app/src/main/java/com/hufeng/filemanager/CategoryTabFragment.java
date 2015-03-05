@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
 import com.squareup.otto.Subscribe;
 
 

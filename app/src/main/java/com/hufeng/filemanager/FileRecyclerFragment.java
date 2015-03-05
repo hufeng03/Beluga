@@ -1,19 +1,11 @@
 package com.hufeng.filemanager;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.hufeng.filemanager.browser.FileEntry;
-import com.hufeng.filemanager.dialog.BelugaDialogFragment;
+import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.ui.BelugaActionController;
 
 /**

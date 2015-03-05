@@ -12,6 +12,8 @@ public class MimeUtil {
 
    public static String getExtension(String url) {
        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+       // MimeTypeMap.getFileExtensionFromUrl can not handle filename with special characters
+       // We handle this case by ourshelve
        if (TextUtils.isEmpty(extension)) {
            String processedUrl = url;
            int filenamePos = processedUrl.lastIndexOf("/");
@@ -31,5 +33,9 @@ public class MimeUtil {
        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
        return mimeType;
    }
+
+    public static String getMimeTypeByExtension(String extension) {
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+    }
 
 }

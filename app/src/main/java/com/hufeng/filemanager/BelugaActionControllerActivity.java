@@ -1,30 +1,19 @@
 package com.hufeng.filemanager;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.FragmentManager;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.hufeng.filemanager.browser.FileEntry;
+import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 import com.hufeng.filemanager.intent.Constant;
 import com.hufeng.filemanager.ui.BelugaActionController;
-
-import java.util.ArrayList;
 
 /**
  * Created by feng on 13-10-4.
  */
 public abstract class BelugaActionControllerActivity extends BelugaBaseActionControllerActivity implements
         BelugaDialogFragment.OnDialogDoneInterface/*, AnimatorViewProvider*/{
-
-    public static final int REQUEST_CODE_PICK_FILE_TO_MOVE_TO_SAFEBOX = 1;
-    public static final int REQUEST_CODE_AUTHENTICATE_KANBOX = 2;
 
     private static final String GLOBAL_ACTION_CONTROLLER_TAG = "GlobalActionController";
 
@@ -44,7 +33,7 @@ public abstract class BelugaActionControllerActivity extends BelugaBaseActionCon
         // If the Fragment is non-null, then it is currently being
         // retained across a configuration change.
         if (mGlobalBelugaActionController == null) {
-            mGlobalBelugaActionController = BelugaActionController.newInstance(BelugaActionController.OPERATION_MODE.SELECT);
+            mGlobalBelugaActionController = BelugaActionController.newInstance(BelugaActionController.OPERATION_MODE.NORMAL);
             fm.beginTransaction().add(mGlobalBelugaActionController, GLOBAL_ACTION_CONTROLLER_TAG).commit();
         }
     }
@@ -60,44 +49,28 @@ public abstract class BelugaActionControllerActivity extends BelugaBaseActionCon
 
         switch (requestCode) {
             case Constant.REQUEST_CODE_PICK_FOLDER_TO_MOVE_FILE:
-                getActionController().validateSelection();
+                getActionController().validateAllSelection();
                 break;
             case Constant.REQUEST_CODE_PICK_FOLDER_TO_COPY_FILE:
-                getActionController().validateSelection();
+                getActionController().validateAllSelection();
                 break;
         }
-
-//        if (requestCode == REQUEST_CODE_PICK_FILE_TO_MOVE_TO_SAFEBOX) {
-//            if (resultCode == RESULT_OK) {
-//                Uri uri = data.getData();
-//                String[] paths;
-//                if (uri != null) {
-//                    paths = new String[1];
-//                    paths[0] = uri.getPath();
-//                } else {
-//                    ArrayList<Uri> uris = data.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-//                    paths = new String[uris.size()];
-//                    for (int i = 0; i < uris.size(); i++) {
-//                        paths[i] = uris.get(i).getPath();
-//                    }
-//                }
-//                getActionController().setSafeboxFiles(paths);
-//                getActionController().onOperationAddToSafeConfirm();
-//            }
-//        }
     }
 
     @Override
     public void onDialogOK(int dialogId, String folder, FileEntry... entries) {
         switch(dialogId) {
+            case BelugaDialogFragment.RENAME_DIALOG:
+                getActionController().performRename(folder, entries[0]);
+                break;
             case BelugaDialogFragment.DELETE_DIALOG:
-                getActionController().onOperationDeleteConfirm(entries);
+                getActionController().performDeletion(entries);
                 break;
             case BelugaDialogFragment.CUT_PASTE_DIALOG:
-                getActionController().onOperationCutPasteConfirm(folder, entries);
+                getActionController().performCutPaste(folder, entries);
                 break;
             case BelugaDialogFragment.COPY_PASTE_DIALOG:
-                getActionController().onOperationCopyPasteConfirm(folder, entries);
+                getActionController().performCopyPaste(folder, entries);
                 break;
         }
     }
@@ -107,11 +80,13 @@ public abstract class BelugaActionControllerActivity extends BelugaBaseActionCon
     @Override
     public void onDialogCancel(int dialogId, String folder, FileEntry... entries) {
         switch (dialogId) {
+            case BelugaDialogFragment.RENAME_DIALOG:
+                break;
             case BelugaDialogFragment.DELETE_DIALOG:
                 break;
             case BelugaDialogFragment.CUT_PASTE_DIALOG:
+                break;
             case BelugaDialogFragment.COPY_PASTE_DIALOG:
-//                finish();
                 break;
         }
     }
