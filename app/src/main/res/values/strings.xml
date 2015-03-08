@@ -837,4 +837,5 @@ changed later by pressing the <b>Setup</b> button.</string> -->
     <string name="progress_rename_content">Renaming file, please wait...</string>
     <string name="file_rename_finish">Rename file success</string>
     <string name="file_rename_failed">Rename file failed</string>
+    <string name="no_search_string">No search string</string>
 </resources>

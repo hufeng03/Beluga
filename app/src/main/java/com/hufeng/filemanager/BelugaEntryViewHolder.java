@@ -22,9 +22,9 @@ public abstract class BelugaEntryViewHolder extends RecyclerView.ViewHolder impl
         itemView.setOnLongClickListener(this);
     }
 
-    public abstract void bindEntry(BelugaEntry entry);
+    public abstract void bindEntry(BelugaEntry entry, String highlightString);
 
-    protected void bindEntry(Cursor entry) {
+    protected void bindEntry(Cursor entry, String highlightString) {
 
     }
 

@@ -21,6 +21,7 @@ public class BelugaArrayRecyclerAdapter<Entry extends BelugaEntry,
     private Context mContext;
     private List<Entry> mEntries;
 //    private int mEntryLayout;
+    private String mHighlightString;
     private EntryViewHolder.Builder mEntryViewHolderBuilder;
 
     private BelugaDisplayMode mDisplayMode = BelugaDisplayMode.LIST;
@@ -44,7 +45,7 @@ public class BelugaArrayRecyclerAdapter<Entry extends BelugaEntry,
 
     @Override
     public void onBindViewHolder(EntryViewHolder fileViewHolder, int i) {
-        fileViewHolder.bindEntry(mEntries.get(i));
+        fileViewHolder.bindEntry(mEntries.get(i), mHighlightString);
     }
 
     @Override
@@ -95,6 +96,10 @@ public class BelugaArrayRecyclerAdapter<Entry extends BelugaEntry,
         int count = getItemCount();
         mEntries.clear();
         notifyItemRangeRemoved(0, count);
+    }
+
+    public void setHighlight(String highlightString) {
+        mHighlightString = highlightString;
     }
 
 //    public void addAll(final List<Entry> entries) {

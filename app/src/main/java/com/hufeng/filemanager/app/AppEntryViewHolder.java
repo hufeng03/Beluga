@@ -14,6 +14,8 @@ import com.hufeng.filemanager.BelugaEntry;
 import com.hufeng.filemanager.BelugaEntryViewHolder;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.app.AppEntry;
+import com.hufeng.filemanager.helper.BelugaHighlightHelper;
+import com.hufeng.filemanager.helper.BelugaTimeHelper;
 import com.hufeng.filemanager.utils.SizeUtil;
 import com.hufeng.filemanager.utils.TimeUtil;
 import com.hufeng.playimage.BelugaLazyLoadImageView;
@@ -45,15 +47,16 @@ public class AppEntryViewHolder extends BelugaEntryViewHolder {
     }
 
     @Override
-    public void bindEntry(BelugaEntry entry) {
+    public void bindEntry(BelugaEntry entry, String highlightString) {
         if (!(entry instanceof AppEntry)) {
             //throw new Exception("AppEntryViewHolder can only bind AppEntry");
         }
         this.entry = (AppEntry)entry;
-        name.setText(this.entry.getName());
+//        name.setText(this.entry.getName());
+        BelugaHighlightHelper.setTextWithHighlight(name, this.entry.getName(), highlightString);
         icon.setImageDrawable(this.entry.getIcon());
         status.setText(SizeUtil.normalize(this.entry.apkEntry.size));
-        description.setText(TimeUtil.getDateString(this.entry.apkEntry.lastModified));
+        description.setText(BelugaTimeHelper.getDateString(this.entry.apkEntry.lastModified));
         this.overflow.setTag(this.entry.packageName);
     }
 

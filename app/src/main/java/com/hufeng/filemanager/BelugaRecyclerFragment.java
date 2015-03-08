@@ -1,13 +1,16 @@
 package com.hufeng.filemanager;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,6 +25,8 @@ import com.melnykov.fab.FloatingActionButton;
  */
 public abstract class BelugaRecyclerFragment extends BelugaBaseFragment implements
         SwipeRefreshLayout.OnRefreshListener,
+        View.OnFocusChangeListener,
+        View.OnTouchListener,
         View.OnClickListener {
 
     View mRootView;
@@ -60,6 +65,9 @@ public abstract class BelugaRecyclerFragment extends BelugaBaseFragment implemen
 
         mRefreshContainer = (SwipeRefreshLayout)root.findViewById(R.id.list_refresh_container);
         mRefreshContainer.setOnRefreshListener(this);
+
+        mRecyclerView.setOnFocusChangeListener(this);
+        mRecyclerView.setOnTouchListener(this);
 
         mFab = (FloatingActionButton)root.findViewById(R.id.fab);
 
@@ -120,6 +128,37 @@ public abstract class BelugaRecyclerFragment extends BelugaBaseFragment implemen
         if (v.getId() == R.id.fab) {
             onCreate();
         }
+    }
+
+    private void hideSoftKeyboard() {
+        if (mContext == null) {
+            return;
+        }
+        // Hide soft keyboard, if visible
+        InputMethodManager inputMethodManager = (InputMethodManager)
+                mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(mRecyclerView.getWindowToken(), 0);
+    }
+
+    /**
+     * Dismisses the soft keyboard when the list takes focus.
+     */
+    @Override
+    public void onFocusChange(View view, boolean hasFocus) {
+        if (view == mRecyclerView && hasFocus) {
+            hideSoftKeyboard();
+        }
+    }
+
+    /**
+     * Dismisses the soft keyboard when the list is touched.
+     */
+    @Override
+    public boolean onTouch(View view, MotionEvent event) {
+        if (view == mRecyclerView) {
+            hideSoftKeyboard();
+        }
+        return false;
     }
 
     public void refresh() {

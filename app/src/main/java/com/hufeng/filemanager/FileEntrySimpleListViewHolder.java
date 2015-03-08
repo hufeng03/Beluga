@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.helper.BelugaHighlightHelper;
 import com.hufeng.playimage.BelugaLazyLoadImageView;
 
 import butterknife.ButterKnife;
@@ -30,19 +31,20 @@ public class FileEntrySimpleListViewHolder extends BelugaEntryViewHolder{
     }
 
     @Override
-    public void bindEntry(BelugaEntry entry) {
+    public void bindEntry(BelugaEntry entry, String highlightString) {
         if (!(entry instanceof FileEntry)) {
             //throw new Exception("AppEntryViewHolder can only bind AppEntry");
         }
         this.entry = (FileEntry)entry;
-        name.setText(this.entry.getName());
+//        name.setText(this.entry.getName());
+        BelugaHighlightHelper.setTextWithHighlight(name, this.entry.getName(), highlightString);
         icon.requestDisplayImage(this.entry.path);
     }
 
     @Override
-    public void bindEntry(Cursor cursor) {
+    public void bindEntry(Cursor cursor, String highlightString) {
         FileEntry entry = new FileEntry(cursor);
-        bindEntry(entry);
+        bindEntry(entry, highlightString);
     }
 
     @Override

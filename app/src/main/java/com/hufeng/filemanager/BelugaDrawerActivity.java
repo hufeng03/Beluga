@@ -15,10 +15,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 
 import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.ui.BelugaActionController;
@@ -393,8 +395,8 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         //TODO: recover this
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.beluga_options, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.beluga_options, menu);
         return true;
     }
 
@@ -488,7 +490,15 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
 
     @Override
     public void onUpButtonPressed() {
+        hideSoftKeyboard();
         onBackPressed();
+    }
+
+    private void hideSoftKeyboard() {
+        // Hide soft keyboard, if visible
+        InputMethodManager inputMethodManager = (InputMethodManager)
+                getSystemService(INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(findViewById(android.R.id.content).getWindowToken(), 0);
     }
 
     @Override

@@ -23,41 +23,41 @@ public class TimeUtil {
 		return String.format("%02d:%02d", m,s);
 	}
 
-    public static String getTimeString(long t) {
-//        final Calendar c = Calendar.getInstance();
-//        c.setTimeInMillis(t);
-//        int h = c.get(Calendar.HOUR_OF_DAY);
-//        int m = c.get(Calendar.MINUTE);
-//        int s = c.get(Calendar.SECOND);
-//        return String.valueOf(h) + ":" + String.valueOf(m) + ":" + String.valueOf(s);
-        Time time = new Time();
-        time.set(t);
-        return time.format("%T");
-    }
-
-    public static String getDateString(long t) {
-//        final Calendar c = Calendar.getInstance();
-//        c.setTimeInMillis(t);
-//        int y = c.get(Calendar.YEAR);
-//        int m = c.get(Calendar.MONTH) + 1;
-//        int d = c.get(Calendar.DAY_OF_MONTH);
-//        return String.valueOf(y) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
-        Time time = new Time();
-        time.set(t);
-        return time.format("%Y/%m/%d %H:%M");
-    }
-
-    public static String getDayString(long t) {
-//        final Calendar c = Calendar.getInstance();
-//        c.setTimeInMillis(t);
-//        int y = c.get(Calendar.YEAR);
-//        int m = c.get(Calendar.MONTH) + 1;
-//        int d = c.get(Calendar.DAY_OF_MONTH);
-//        return String.valueOf(y) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
-        Time time = new Time();
-        time.set(t);
-        return time.format("%Y/%m/%d");
-    }
+//    public static String getTimeString(long t) {
+////        final Calendar c = Calendar.getInstance();
+////        c.setTimeInMillis(t);
+////        int h = c.get(Calendar.HOUR_OF_DAY);
+////        int m = c.get(Calendar.MINUTE);
+////        int s = c.get(Calendar.SECOND);
+////        return String.valueOf(h) + ":" + String.valueOf(m) + ":" + String.valueOf(s);
+//        Time time = new Time();
+//        time.set(t);
+//        return time.format("%T");
+//    }
+//
+//    public static String getDateString(long t) {
+////        final Calendar c = Calendar.getInstance();
+////        c.setTimeInMillis(t);
+////        int y = c.get(Calendar.YEAR);
+////        int m = c.get(Calendar.MONTH) + 1;
+////        int d = c.get(Calendar.DAY_OF_MONTH);
+////        return String.valueOf(y) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+//        Time time = new Time();
+//        time.set(t);
+//        return time.format("%Y/%m/%d %H:%M");
+//    }
+//
+//    public static String getDayString(long t) {
+////        final Calendar c = Calendar.getInstance();
+////        c.setTimeInMillis(t);
+////        int y = c.get(Calendar.YEAR);
+////        int m = c.get(Calendar.MONTH) + 1;
+////        int d = c.get(Calendar.DAY_OF_MONTH);
+////        return String.valueOf(y) + "-" + String.valueOf(m) + "-" + String.valueOf(d);
+//        Time time = new Time();
+//        time.set(t);
+//        return time.format("%Y/%m/%d");
+//    }
 
     public static boolean isToday(long t) {
         final Calendar c = Calendar.getInstance();

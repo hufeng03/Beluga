@@ -6,6 +6,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.helper.BelugaHighlightHelper;
+import com.hufeng.filemanager.helper.BelugaTimeHelper;
 import com.hufeng.filemanager.ui.BelugaActionController;
 import com.hufeng.filemanager.utils.TimeUtil;
 import com.hufeng.filemanager.view.SquareLazyLoadImageView;
@@ -19,7 +21,6 @@ import butterknife.InjectView;
  * TODO: Add a class header comment.
  */
 public class FileEntryGridViewHolder extends BelugaEntryViewHolder {
-
 
     @InjectView(R.id.icon) SquareLazyLoadImageView icon;
     @InjectView(R.id.expand) ImageView expand;
@@ -46,24 +47,25 @@ public class FileEntryGridViewHolder extends BelugaEntryViewHolder {
     }
 
     @Override
-    public void bindEntry(BelugaEntry entry) {
+    public void bindEntry(BelugaEntry entry, String highlightString) {
         if (!(entry instanceof FileEntry)) {
             //throw new Exception("AppEntryViewHolder can only bind AppEntry");
         }
         this.entry = (FileEntry)entry;
-        this.name.setText(entry.getName());
-        this.description.setText(TimeUtil.getDayString(this.entry.getTime()));
+//        this.name.setText(entry.getName());
+        BelugaHighlightHelper.setTextWithHighlight(name, this.entry.getName(), highlightString);
+        this.description.setText(BelugaTimeHelper.getDayString(this.entry.getTime()));
         icon.requestDisplayImage(this.entry.path);
-        boolean isChoosen = actionController.isEntrySelected(this.entry);
-        this.itemView.setActivated(isChoosen);
-        this.check.setVisibility(isChoosen?View.VISIBLE:View.GONE);
-        this.expand.setVisibility(isChoosen?View.VISIBLE:View.GONE);
+        boolean isChosen = actionController.isEntrySelected(this.entry);
+        this.itemView.setActivated(isChosen);
+        this.check.setVisibility(isChosen?View.VISIBLE:View.GONE);
+        this.expand.setVisibility(isChosen?View.VISIBLE:View.GONE);
     }
 
     @Override
-    public void bindEntry(Cursor cursor) {
+    public void bindEntry(Cursor cursor, String highlightString) {
         FileEntry entry = new FileEntry(cursor);
-        bindEntry(entry);
+        bindEntry(entry, highlightString);
     }
 
     @Override

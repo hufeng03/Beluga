@@ -148,7 +148,6 @@ public class ActionBarAdapter implements OnCloseListener {
         mSearchView = (EditText) mSearchContainer.findViewById(R.id.search_view);
         mSearchView.setHint(mContext.getString(R.string.hint_searchFile));
         mSearchView.addTextChangedListener(new SearchTextWatcher());
-        mSearchView.setOnEditorActionListener(new SearchTextActionListener());
         mSearchContainer.findViewById(R.id.search_close_button).setOnClickListener(
                 new OnClickListener() {
                     @Override
@@ -197,19 +196,6 @@ public class ActionBarAdapter implements OnCloseListener {
         mListener = listener;
     }
 
-    private class SearchTextActionListener implements TextView.OnEditorActionListener {
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                if (mListener != null) {
-                    mListener.onAction(Listener.Action.CHANGE_SEARCH_QUERY);
-                }
-                return true;
-            }
-            return false;
-        }
-    }
-
     private class SearchTextWatcher implements TextWatcher {
 
         @Override
@@ -222,10 +208,9 @@ public class ActionBarAdapter implements OnCloseListener {
                 if (!TextUtils.isEmpty(queryString)) {
                     setSearchMode(true);
                 }
+            } else if (mListener != null) {
+                mListener.onAction(Listener.Action.CHANGE_SEARCH_QUERY);
             }
-//            else if (mListener != null) {
-//                mListener.onAction(Listener.Action.CHANGE_SEARCH_QUERY);
-//            }
         }
 
         @Override

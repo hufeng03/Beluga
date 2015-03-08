@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.hufeng.filemanager.BuildConfig;
 import com.hufeng.filemanager.FileManager;
+import com.hufeng.filemanager.helper.BelugaTimeHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -148,7 +149,7 @@ public class LogUtil {
      */
     public static void w(String tag, String msg) {
     	if(WDBG) {
-            Log.w(tag, String.valueOf(TimeUtil.getTimeString(System.currentTimeMillis())));
+            Log.w(tag, String.valueOf(BelugaTimeHelper.getTimeString(System.currentTimeMillis())));
     		Log.w(tag, msg);
     	}
     }
@@ -187,7 +188,7 @@ public class LogUtil {
      */
     public static void e(String tag, String msg) {
     	if(EDBG) {
-            Log.e(tag, String.valueOf(TimeUtil.getTimeString(System.currentTimeMillis())));
+            Log.e(tag, String.valueOf(BelugaTimeHelper.getTimeString(System.currentTimeMillis())));
     		Log.e(tag, msg);
     	}
     }

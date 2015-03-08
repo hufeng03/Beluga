@@ -73,7 +73,7 @@ public class FileEntry extends BelugaEntry {
         this.path = file.getAbsolutePath();
         this.name = file.getName();
         this.size = file.length();
-        this.lastModified = file.lastModified();
+        this.lastModified = file.lastModified()/1000;
         this.category = FileCategoryHelper.getFileCategoryForFile(path);
         this.type = FileCategoryHelper.getFileTypeForFile(path);
         this.hidden = file.isHidden();

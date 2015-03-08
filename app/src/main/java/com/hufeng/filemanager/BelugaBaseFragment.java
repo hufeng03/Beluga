@@ -1,6 +1,7 @@
 package com.hufeng.filemanager;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +15,8 @@ import com.hufeng.filemanager.utils.LogUtil;
 public class BelugaBaseFragment extends Fragment{
 
     private static final boolean DEBUG = BuildConfig.DEBUG;
+
+    protected Context mContext;
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
@@ -48,6 +51,7 @@ public class BelugaBaseFragment extends Fragment{
         if (DEBUG)
     		LogUtil.i(((Object)this).getClass().getSimpleName(), "onAttach "+this.hashCode());
 		super.onAttach(activity);
+        mContext = activity;
 	}
 
 	@Override
@@ -84,6 +88,7 @@ public class BelugaBaseFragment extends Fragment{
         if (DEBUG)
     		LogUtil.i(((Object)this).getClass().getSimpleName(), "onDetach "+this.hashCode());
 		super.onDetach();
+        mContext = null;
 	}
 
 	@Override

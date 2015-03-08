@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.helper.BelugaHighlightHelper;
+import com.hufeng.filemanager.helper.BelugaTimeHelper;
 import com.hufeng.filemanager.ui.BelugaActionController;
 import com.hufeng.filemanager.utils.SizeUtil;
 import com.hufeng.filemanager.utils.TimeUtil;
@@ -49,12 +51,13 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
     }
 
     @Override
-    public void bindEntry(BelugaEntry entry) {
+    public void bindEntry(BelugaEntry entry, String highlightString) {
         if (!(entry instanceof FileEntry)) {
             //throw new Exception("AppEntryViewHolder can only bind AppEntry");
         }
         this.entry = (FileEntry)entry;
-        name.setText(this.entry.getName());
+//        name.setText(this.entry.getName());
+        BelugaHighlightHelper.setTextWithHighlight(name, this.entry.getName(), highlightString);
         icon.requestDisplayImage(this.entry.path);
         if (this.entry.isDirectory) {
             int childCount = this.entry.childFileCount + this.entry.childFolderCount;
@@ -68,7 +71,7 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
         } else {
             status.setText(SizeUtil.normalize(this.entry.getSize()));
         }
-        description.setText(TimeUtil.getDateString(this.entry.getTime()));
+        description.setText(BelugaTimeHelper.getDateString(this.entry.getTime()));
         boolean isChosen = actionController.isEntrySelected(this.entry);
         this.itemView.setActivated(isChosen);
         this.overflow.setOnClickListener(this);
@@ -80,9 +83,9 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
     }
 
     @Override
-    public void bindEntry(Cursor cursor) {
+    public void bindEntry(Cursor cursor, String highlightString) {
         FileEntry entry = new FileEntry(cursor);
-        bindEntry(entry);
+        bindEntry(entry, highlightString);
     }
 
     @Override

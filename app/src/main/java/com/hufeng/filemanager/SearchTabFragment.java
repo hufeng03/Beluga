@@ -32,7 +32,27 @@ public class SearchTabFragment extends FileTabFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        showFileSearchFragment();
 //        showFileBrowserFragment();
+    }
+
+    public void showFileSearchFragment() {
+        final FragmentManager fm = getChildFragmentManager();
+        final FragmentTransaction ft = fm.beginTransaction();
+        final String TAG = "FileSearchFragment";
+        FileSearchFragment fragment = (FileSearchFragment) getChildFragmentManager().findFragmentByTag(TAG);
+        if (fragment == null) {
+            fragment = FileSearchFragment.newFragment(mSearchString);
+            ft.replace(R.id.fragment_container, fragment, TAG);
+            ft.commit();
+        } else {
+            if (fragment.isDetached()) {
+                ft.attach(fragment);
+                ft.commit();
+            }
+        }
+
+        mCurrentChildFragment = fragment;
     }
 
     public void showFileBrowserFragment() {
@@ -71,7 +91,8 @@ public class SearchTabFragment extends FileTabFragment {
 
 
     private void performSearch() {
-        getActionController().performSearch(mSearchString);
+//        getActionController().performSearch(mSearchString);
+        ((FileSearchFragment)mCurrentChildFragment).performSearch(mSearchString);
     }
 
 

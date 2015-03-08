@@ -28,6 +28,8 @@ public class BelugaCursorRecyclerAdapter<EntryViewHolder extends BelugaEntryView
 
     private DataSetObserver mDataSetObserver;
 
+    private String mHighlightString;
+
 
     private BelugaDisplayMode mDisplayMode = BelugaDisplayMode.LIST;
 
@@ -61,7 +63,7 @@ public class BelugaCursorRecyclerAdapter<EntryViewHolder extends BelugaEntryView
         if (!mCursor.moveToPosition(i)) {
             throw new IllegalStateException("couldn't move cursor to position "+i);
         }
-        belugaEntryViewHolder.bindEntry(mCursor);
+        belugaEntryViewHolder.bindEntry(mCursor, mHighlightString);
     }
 
     @Override

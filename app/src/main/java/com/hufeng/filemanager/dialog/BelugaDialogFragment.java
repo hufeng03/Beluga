@@ -34,6 +34,7 @@ import com.hufeng.filemanager.FileEntrySimpleListViewHolder;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.helper.BelugaSortHelper;
 import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.helper.BelugaTimeHelper;
 import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.utils.FileUtil;
 import com.hufeng.filemanager.utils.MimeUtil;
@@ -370,13 +371,13 @@ public class BelugaDialogFragment extends DialogFragment{
                         entry.name,
                         entry.parentPath,
                         dir_content,
-                        TimeUtil.getDateString(entry.lastModified));
+                        BelugaTimeHelper.getDateString(entry.lastModified));
             } else {
                 html_string = getString(R.string.details_content_file,
                         entry.name,
                         entry.parentPath,
                         FileUtil.normalize(entry.size),
-                        TimeUtil.getDateString(entry.lastModified));
+                        BelugaTimeHelper.getDateString(entry.lastModified));
             }
 
 
