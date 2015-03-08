@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.loader.FileCursorLoader;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 import com.hufeng.filemanager.utils.LogUtil;
@@ -31,23 +32,23 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
 
     private BelugaCursorRecyclerAdapter mAdapter;
 
-    private CategorySelectEvent.CategoryType mCategory;
+    private int mCategory;
 
     private static final int LOADER_ID = 1;
 
 
-    public static FileGrouperFragment newCategoryGrouperInstance(CategorySelectEvent.CategoryType category) {
+    public static FileGrouperFragment newCategoryGrouperInstance(int category) {
         FileGrouperFragment fragment = new FileGrouperFragment();
         Bundle data = new Bundle();
-        data.putString(FileGrouperFragment.FILE_GROUPER_ARGUMENT_CATEGORY, category.toString());
+        data.putInt(FileGrouperFragment.FILE_GROUPER_ARGUMENT_CATEGORY, category);
         fragment.setArguments(data);
         return fragment;
     }
 
-    public static FileGrouperFragment newSelectionGrouper(CategorySelectEvent.CategoryType category) {
+    public static FileGrouperFragment newSelectionGrouper(int category) {
         FileGrouperFragment fragment = new FileGrouperFragment();
         Bundle data = new Bundle();
-        data.putString(FileGrouperFragment.FILE_GROUPER_ARGUMENT_CATEGORY, category.toString());
+        data.putInt(FileGrouperFragment.FILE_GROUPER_ARGUMENT_CATEGORY, category);
         data.putBoolean(FILE_GROUPER_ARGUMENT_PICK, true);
         fragment.setArguments(data);
         return fragment;
@@ -69,8 +70,7 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
         LogUtil.i(TAG, "FileGrouperFragment onCreate");
         Bundle data = getArguments();
         if (data != null) {
-            String categoryValue = data.getString(FILE_GROUPER_ARGUMENT_CATEGORY);
-            mCategory = CategorySelectEvent.CategoryType.valueOf(categoryValue);
+            mCategory = data.getInt(FILE_GROUPER_ARGUMENT_CATEGORY);
         }
 	}
 
@@ -81,29 +81,26 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
 
         String empty_text;
         switch(mCategory){
-            case APK:
+            case FileCategoryHelper.CATEGORY_TYPE_APK:
                 empty_text = getResources().getString(R.string.empty_apk);
                 break;
-            case AUDIO:
+            case FileCategoryHelper.CATEGORY_TYPE_AUDIO:
                 empty_text = getResources().getString(R.string.empty_audio);
                 break;
-            case PHOTO:
+            case FileCategoryHelper.CATEGORY_TYPE_IMAGE:
                 empty_text = getResources().getString(R.string.empty_image);
                 break;
-            case VIDEO:
+            case FileCategoryHelper.CATEGORY_TYPE_VIDEO:
                 empty_text = getResources().getString(R.string.empty_video);
                 break;
-            case DOC:
+            case FileCategoryHelper.CATEGORY_TYPE_DOCUMENT:
                 empty_text = getResources().getString(R.string.empty_document);
                 break;
-            case ZIP:
+            case FileCategoryHelper.CATEGORY_TYPE_ZIP:
                 empty_text = getResources().getString(R.string.empty_zip);
                 break;
-            case FAVORITE:
-                empty_text = getResources().getString(R.string.empty_favorite);
-                break;
             default:
-                empty_text = "";
+                empty_text = getResources().getString(R.string.empty_file);
                 break;
         }
 
@@ -126,10 +123,10 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
                 });
         setRecyclerAdapter(mAdapter);
 
-        if (CategorySelectEvent.CategoryType.VIDEO == mCategory ||
-                CategorySelectEvent.CategoryType.PHOTO == mCategory ||
-                CategorySelectEvent.CategoryType.AUDIO == mCategory ||
-                CategorySelectEvent.CategoryType.APK == mCategory) {
+        if (FileCategoryHelper.CATEGORY_TYPE_VIDEO == mCategory ||
+                FileCategoryHelper.CATEGORY_TYPE_IMAGE == mCategory ||
+                FileCategoryHelper.CATEGORY_TYPE_AUDIO == mCategory ||
+                FileCategoryHelper.CATEGORY_TYPE_APK == mCategory) {
             mRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
@@ -163,19 +160,24 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.file_grouper_fragment_menu, menu);
+        if (getUserVisibleHint()) {
+            inflater.inflate(R.menu.file_grouper_fragment_menu, menu);
+        }
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
+        if (!getUserVisibleHint()) {
+            return;
+        }
         final MenuItem displayMenu = menu.findItem(R.id.menu_grouper_display);
         final MenuItem sortMenu = menu.findItem(R.id.menu_grouper_sort);
 
-        final Fragment parentFragment = getParentFragment();
-        boolean isFragmentVisible = true;
-        if(parentFragment != null && (parentFragment instanceof FileTabFragment)) {
-            isFragmentVisible = parentFragment.getUserVisibleHint();
-        }
+//        final Fragment parentFragment = getParentFragment();
+        boolean isFragmentVisible = getUserVisibleHint();
+//        if(parentFragment != null && (parentFragment instanceof FileTabFragment)) {
+//            isFragmentVisible = parentFragment.getUserVisibleHint();
+//        }
         final Activity parentActivity = getActivity();
         boolean isSearchMode = false;
         if (parentActivity != null && (parentActivity instanceof BelugaDrawerActivity)) {
@@ -192,6 +194,9 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (!getUserVisibleHint()) {
+            return false;
+        }
         switch(item.getItemId()){
             case R.id.menu_grouper_display:
                 switchDisplay();

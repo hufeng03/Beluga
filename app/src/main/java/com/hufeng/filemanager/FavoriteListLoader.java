@@ -1,9 +1,9 @@
 package com.hufeng.filemanager;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.content.AsyncTaskLoader;
+import android.text.TextUtils;
 
 import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.helper.BelugaSortHelper;
@@ -16,10 +16,7 @@ import com.hufeng.filemanager.utils.LogUtil;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -27,84 +24,53 @@ import java.util.List;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class DownloadListLoader extends AsyncTaskLoader<List<FileEntry>> {
+public class FavoriteListLoader extends AsyncTaskLoader<List<FileEntry>> {
 
-    private static final String LOG_TAG = DownloadListLoader.class.getSimpleName();
+    private static final String LOG_TAG = FavoriteListLoader.class.getSimpleName();
+
+    final ForceLoadContentObserver mObserver;
 
     private List<FileEntry> mFiles;
 
     SortPreferenceReceiver mSortObserver;
     DownloadFolderObserver mDownloadFolderObserver;
 
-    public DownloadListLoader(Context context) {
+    public FavoriteListLoader(Context context) {
         super(context);
+        mObserver = new ForceLoadContentObserver();
     }
 
     @Override
     public List<FileEntry> loadInBackground() {
         LogUtil.i(LOG_TAG, this.hashCode()+" load in background");
         List<FileEntry> entries = new ArrayList<FileEntry>();
-        List<MountPoint> mountPoints = MountPointManager.getInstance().getMountPoints();
 
-        if (mDownloadFolderObserver != null) {
-            mDownloadFolderObserver.dismiss();
-        }
-        for(MountPoint mp:mountPoints) {
-            String[] downloads = new File(mp.mPath).list(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String filename) {
-                    if(new File(dir, filename).isDirectory() && filename.toLowerCase().contains("download")) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            });
-            if (downloads != null) {
-                for (String download : downloads) {
-                    entries.add(new FileEntry(new File(mp.mPath, download)));
-                }
-            }
+        Cursor cursor = null;
+        try {
+            cursor = getContext().getContentResolver().query(DataStructures.FavoriteColumns.CONTENT_URI,
+                    new String[] {DataStructures.FavoriteColumns.PATH},
+                    null, null, null);
 
-            if (mDownloadFolderObserver != null) {
-                mDownloadFolderObserver.register(mp.mPath);
-            }
-        }
-
-        if (entries.size() > 0) {
-            // Retrieve favorite status from database
-            StringBuilder whereClause = new StringBuilder();
-            String[] whereArgs = new String[entries.size()];
-            whereClause.append("?");
-            whereArgs[0] = entries.get(0).path;
-            for (int i = 1; i < entries.size(); i++) {
-                whereClause.append(",?");
-                whereArgs[i] = entries.get(i).path;
-            }
-            String where = DataStructures.FavoriteColumns.PATH + " IN(" + whereClause.toString() + ")";
-            ContentResolver cr = getContext().getContentResolver();
-            Cursor cursor = null;
-            try {
-                cursor = cr.query(DataStructures.FavoriteColumns.CONTENT_URI, new String[]{DataStructures.FavoriteColumns.PATH}, where, whereArgs, null);
-                HashSet<String> favoritePaths = new HashSet<String>();
+            if (cursor != null) {
                 while (cursor.moveToNext()) {
                     String path = cursor.getString(0);
-                    favoritePaths.add(path);
-                }
-                for (int i = 0; i < entries.size(); i++) {
-                    FileEntry entry = entries.get(i);
-                    entry.isFavorite = favoritePaths.contains(entry.path);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
+                    FileEntry  entry = new FileEntry(path);
+                    if (entry.exist) {
+                        entry.isFavorite = true;
+                        entries.add(entry);
+                    }
                 }
             }
-
-            Collections.sort(entries, BelugaSortHelper.getComparator(getContext(), FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD));
+        } catch (Exception e) {
+          e.printStackTrace();
+        } finally {
+          if (cursor != null) {
+              cursor.close();
+          }
         }
+
+        Collections.sort(entries, BelugaSortHelper.getComparator(getContext(), FileCategoryHelper.CATEGORY_TYPE_FAVORITE));
+
         return entries;
     }
 
@@ -141,12 +107,14 @@ public class DownloadListLoader extends AsyncTaskLoader<List<FileEntry>> {
 
         // Start watching for changes in the app data.
         if (mSortObserver == null) {
-            mSortObserver = new SortPreferenceReceiver(this, FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD);
+            mSortObserver = new SortPreferenceReceiver(this, FileCategoryHelper.CATEGORY_TYPE_FAVORITE);
         }
 
         if (mDownloadFolderObserver == null) {
             mDownloadFolderObserver = new DownloadFolderObserver(this);
         }
+
+        getContext().getContentResolver().registerContentObserver(DataStructures.FavoriteColumns.CONTENT_URI, true, mObserver);
 
         if(takeContentChanged() || mFiles == null) {
             forceLoad();
@@ -183,6 +151,8 @@ public class DownloadListLoader extends AsyncTaskLoader<List<FileEntry>> {
             mDownloadFolderObserver.dismiss();
             mDownloadFolderObserver = null;
         }
+
+        getContext().getContentResolver().unregisterContentObserver(mObserver);
     }
 
     @Override
@@ -202,8 +172,4 @@ public class DownloadListLoader extends AsyncTaskLoader<List<FileEntry>> {
     private void releaseResources(List<FileEntry> data) {
         // do nothing
     }
-
-
-
-
 }

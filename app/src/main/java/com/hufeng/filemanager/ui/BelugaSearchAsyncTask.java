@@ -53,8 +53,8 @@ public class BelugaSearchAsyncTask extends BelugaActionAsyncTask {
             Cursor cursor = null;
             try {
                 cursor = mContentResolver.query(uri,
-                        new String[]{DataStructures.FileColumns.FILE_PATH_FIELD},
-                        DataStructures.FileColumns.FILE_NAME_FIELD + " LIKE '%" + searchString + "%'",
+                        new String[]{DataStructures.FileColumns.PATH},
+                        DataStructures.FileColumns.NAME + " LIKE '%" + searchString + "%'",
                         null,
                         null);
                 if (cursor != null) {
@@ -72,11 +72,6 @@ public class BelugaSearchAsyncTask extends BelugaActionAsyncTask {
                     cursor.close();
                 }
             }
-        }
-        try {
-            Thread.sleep(5000);
-        }catch (Exception e) {
-            e.printStackTrace();
         }
         return true;
     }

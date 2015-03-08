@@ -18,18 +18,23 @@ public class BelugaSortHelper {
 
     public static final String SORT_PREFERENCE_NAME = "sorter_preferences";
 
-    private static HashMap<CategorySelectEvent.CategoryType, SORTER> mCategoryDefaultSorter;
+    private static HashMap<Integer, SORTER> mCategoryDefaultSorter;
+
 
     static {
-        mCategoryDefaultSorter = new HashMap<CategorySelectEvent.CategoryType, SORTER>();
-        mCategoryDefaultSorter.put(CategorySelectEvent.CategoryType.NONE, new SORTER(SORT_FIELD.NAME, SORT_ORDER.ASC));
-        mCategoryDefaultSorter.put(CategorySelectEvent.CategoryType.PHOTO, new SORTER(SORT_FIELD.DATE, SORT_ORDER.DESC));
-        mCategoryDefaultSorter.put(CategorySelectEvent.CategoryType.AUDIO, new SORTER(SORT_FIELD.DATE, SORT_ORDER.DESC));
-        mCategoryDefaultSorter.put(CategorySelectEvent.CategoryType.VIDEO, new SORTER(SORT_FIELD.DATE, SORT_ORDER.DESC));
-        mCategoryDefaultSorter.put(CategorySelectEvent.CategoryType.DOC, new SORTER(SORT_FIELD.DATE, SORT_ORDER.DESC));
-        mCategoryDefaultSorter.put(CategorySelectEvent.CategoryType.APK, new SORTER(SORT_FIELD.DATE, SORT_ORDER.DESC));
-        mCategoryDefaultSorter.put(CategorySelectEvent.CategoryType.ZIP, new SORTER(SORT_FIELD.DATE, SORT_ORDER.DESC));
-        mCategoryDefaultSorter.put(CategorySelectEvent.CategoryType.APP, new SORTER(SORT_FIELD.NAME, SORT_ORDER.ASC));
+        mCategoryDefaultSorter = new HashMap<Integer, SORTER>();
+        mCategoryDefaultSorter.put(FileCategoryHelper.CATEGORY_TYPE_UNKNOW, new SORTER(SORT_FIELD.NAME, SORT_ORDER.ASC));
+        mCategoryDefaultSorter.put(FileCategoryHelper.CATEGORY_TYPE_IMAGE, new SORTER(SORT_FIELD.DATE, SORT_ORDER.DESC));
+        mCategoryDefaultSorter.put(FileCategoryHelper.CATEGORY_TYPE_AUDIO, new SORTER(SORT_FIELD.DATE, SORT_ORDER.DESC));
+        mCategoryDefaultSorter.put(FileCategoryHelper.CATEGORY_TYPE_VIDEO, new SORTER(SORT_FIELD.DATE, SORT_ORDER.DESC));
+        mCategoryDefaultSorter.put(FileCategoryHelper.CATEGORY_TYPE_DOCUMENT, new SORTER(SORT_FIELD.DATE, SORT_ORDER.DESC));
+        mCategoryDefaultSorter.put(FileCategoryHelper.CATEGORY_TYPE_APK, new SORTER(SORT_FIELD.DATE, SORT_ORDER.DESC));
+        mCategoryDefaultSorter.put(FileCategoryHelper.CATEGORY_TYPE_ZIP, new SORTER(SORT_FIELD.DATE, SORT_ORDER.DESC));
+
+        //Other that are not local file category
+        mCategoryDefaultSorter.put(FileCategoryHelper.CATEGORY_TYPE_APP, new SORTER(SORT_FIELD.NAME, SORT_ORDER.ASC));
+        mCategoryDefaultSorter.put(FileCategoryHelper.CATEGORY_TYPE_FAVORITE, new SORTER(SORT_FIELD.DATE, SORT_ORDER.DESC));
+        mCategoryDefaultSorter.put(FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD, new SORTER(SORT_FIELD.DATE, SORT_ORDER.DESC));
     }
 
     public static class SORTER {
@@ -55,27 +60,31 @@ public class BelugaSortHelper {
         ASC, DESC;
     }
 
-    public static void saveFileSorter(Context context, CategorySelectEvent.CategoryType type, SORTER sorter) {
+    public static void saveFileSorter(Context context, int category, SORTER sorter) {
         SharedPreferences.Editor preferenceEditor = context.getSharedPreferences(SORT_PREFERENCE_NAME, Context.MODE_PRIVATE).edit();
-        preferenceEditor.putString(type.toString()+"_sort_field", sorter.field.toString());
-        preferenceEditor.putString(type.toString()+"_sort_order", sorter.order.toString());
+        preferenceEditor.putString("sort_field_" + category, sorter.field.toString());
+        preferenceEditor.putString("sort_order_" + category, sorter.order.toString());
         preferenceEditor.commit();
     }
     
-    public static SORTER getFileSorter(Context context, CategorySelectEvent.CategoryType type) {
-        SORTER defaultSorter = mCategoryDefaultSorter.get(type);
+    public static SORTER getFileSorter(Context context, int category) {
+        SORTER defaultSorter = mCategoryDefaultSorter.get(category);
 
         if (defaultSorter == null) {
-            defaultSorter = mCategoryDefaultSorter.get(CategorySelectEvent.CategoryType.NONE);
+            defaultSorter = mCategoryDefaultSorter.get(FileCategoryHelper.CATEGORY_TYPE_UNKNOW);
         }
 
         SharedPreferences preferences = context.getSharedPreferences(SORT_PREFERENCE_NAME, Context.MODE_PRIVATE);
-        String sortField = preferences.getString(type.toString()+"_sort_field", defaultSorter.field.toString());
-        String sortOrder = preferences.getString(type.toString()+"_sort_order", defaultSorter.order.toString());
+        String sortField = preferences.getString("sort_field_" + category, defaultSorter.field.toString());
+        String sortOrder = preferences.getString("sort_order_" + category, defaultSorter.order.toString());
 
         return new SORTER(SORT_FIELD.valueOf(sortField), SORT_ORDER.valueOf(sortOrder));
     }
 
+    public static Comparator<BelugaSortableInterface> getComparator(Context context, int category){
+        SORTER sorter = getFileSorter(context, category);
+        return getComparator(sorter.field, sorter.order);
+    }
 
 	public static Comparator<BelugaSortableInterface> getComparator(final SORT_FIELD field, final SORT_ORDER order){
 		switch(field){

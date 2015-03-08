@@ -55,7 +55,7 @@ public class FileManagerProvider extends ContentProvider{
     private static final HashMap<String, String> mCloudProjectionMap;
 	
 	private static final int FILES = 1;
-	private static final int FILE_ID = 2;
+	private static final int ID = 2;
 	private static final int IMAGES = 3;
 	private static final int IMAGE_ID = 4;
 	private static final int AUDIOS = 5;
@@ -86,7 +86,7 @@ public class FileManagerProvider extends ContentProvider{
 	static{
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
         URI_MATCHER.addURI(DataStructures.AUTHORITY, FileColumns.TABLE, FILES);
-        URI_MATCHER.addURI(DataStructures.AUTHORITY, FileColumns.TABLE+"/#", FILE_ID);
+        URI_MATCHER.addURI(DataStructures.AUTHORITY, FileColumns.TABLE+"/#", ID);
         URI_MATCHER.addURI(DataStructures.AUTHORITY, ImageColumns.TABLE, IMAGES);
         URI_MATCHER.addURI(DataStructures.AUTHORITY, ImageColumns.TABLE+"/#", IMAGE_ID);
         URI_MATCHER.addURI(DataStructures.AUTHORITY, AudioColumns.TABLE, AUDIOS);
@@ -113,154 +113,161 @@ public class FileManagerProvider extends ContentProvider{
 //        URI_MATCHER.addURI(DataStructures.AUTHORITY, PreferenceColumns.TABLE+"/#", PREFERENCE_ID);
         
         mFileProjectionMap = new HashMap<String,String>();
-        mFileProjectionMap.put(FileColumns._ID, FileColumns._ID);
-        mFileProjectionMap.put(FileColumns.FILE_DATE_FIELD, FileColumns.FILE_DATE_FIELD);
-        mFileProjectionMap.put(FileColumns.FILE_TYPE_FIELD, FileColumns.FILE_TYPE_FIELD);
-        mFileProjectionMap.put(FileColumns.FILE_SIZE_FIELD, FileColumns.FILE_SIZE_FIELD);
-        mFileProjectionMap.put(FileColumns.FILE_PATH_FIELD, FileColumns.FILE_PATH_FIELD);
-        mFileProjectionMap.put(FileColumns.FILE_NAME_FIELD, FileColumns.FILE_NAME_FIELD);
-        mFileProjectionMap.put(FileColumns.FILE_EXTENSION_FIELD, FileColumns.FILE_EXTENSION_FIELD);
-        mFileProjectionMap.put(FileColumns.FILE_STORAGE_FIELD, FileColumns.FILE_STORAGE_FIELD);
-        mFileProjectionMap.put(FileColumns.FILE_SYNC_FIELD, FileColumns.FILE_SYNC_FIELD);
+        mFileProjectionMap.put(FileColumns._ID, FileColumns.TABLE + "." + FileColumns._ID);
+        mFileProjectionMap.put(FileColumns.DATE, FileColumns.TABLE + "." + FileColumns.DATE);
+        mFileProjectionMap.put(FileColumns.TYPE, FileColumns.TABLE + "." + FileColumns.TYPE);
+        mFileProjectionMap.put(FileColumns.SIZE, FileColumns.TABLE + "." + FileColumns.SIZE);
+        mFileProjectionMap.put(FileColumns.PATH, FileColumns.TABLE + "." + FileColumns.PATH);
+        mFileProjectionMap.put(FileColumns.NAME, FileColumns.TABLE + "." + FileColumns.NAME);
+        mFileProjectionMap.put(FileColumns.EXTENSION, FileColumns.TABLE + "." + FileColumns.EXTENSION);
+        mFileProjectionMap.put(FileColumns.STORAGE, FileColumns.TABLE + "." + FileColumns.STORAGE);
+        mFileProjectionMap.put(FileColumns.SYNC, FileColumns.TABLE + "." + FileColumns.SYNC);
+        mFileProjectionMap.put("favorite_id", FavoriteColumns.TABLE + "." + FavoriteColumns._ID + " AS "+"favorite_id");
         
         mImageProjectionMap = new HashMap<String,String>();
-        mImageProjectionMap.put(ImageColumns._ID, ImageColumns._ID);
-        mImageProjectionMap.put(ImageColumns.FILE_DATE_FIELD, ImageColumns.FILE_DATE_FIELD);
-        mImageProjectionMap.put(ImageColumns.FILE_TYPE_FIELD, ImageColumns.FILE_TYPE_FIELD);
-        mImageProjectionMap.put(ImageColumns.FILE_SIZE_FIELD, ImageColumns.FILE_SIZE_FIELD);
-        mImageProjectionMap.put(ImageColumns.FILE_PATH_FIELD, ImageColumns.FILE_PATH_FIELD);
-        mImageProjectionMap.put(ImageColumns.FILE_NAME_FIELD, ImageColumns.FILE_NAME_FIELD);
-        mImageProjectionMap.put(ImageColumns.FILE_EXTENSION_FIELD, ImageColumns.FILE_EXTENSION_FIELD);
-        mImageProjectionMap.put(ImageColumns.FILE_STORAGE_FIELD, ImageColumns.FILE_STORAGE_FIELD);
-        mImageProjectionMap.put(ImageColumns.FILE_SYNC_FIELD, ImageColumns.FILE_SYNC_FIELD);
-        mImageProjectionMap.put(ImageColumns.IMAGE_WIDTH_FIELD, ImageColumns.IMAGE_WIDTH_FIELD);
-        mImageProjectionMap.put(ImageColumns.IMAGE_HEIGHT_FIELD, ImageColumns.IMAGE_HEIGHT_FIELD);
+        mImageProjectionMap.put(ImageColumns._ID, ImageColumns.TABLE + "." + ImageColumns._ID);
+        mImageProjectionMap.put(ImageColumns.DATE, ImageColumns.TABLE + "." + ImageColumns.DATE);
+        mImageProjectionMap.put(ImageColumns.TYPE, ImageColumns.TABLE + "." + ImageColumns.TYPE);
+        mImageProjectionMap.put(ImageColumns.SIZE, ImageColumns.TABLE + "." + ImageColumns.SIZE);
+        mImageProjectionMap.put(ImageColumns.PATH, ImageColumns.TABLE + "." + ImageColumns.PATH);
+        mImageProjectionMap.put(ImageColumns.NAME, ImageColumns.TABLE + "." + ImageColumns.NAME);
+        mImageProjectionMap.put(ImageColumns.EXTENSION, ImageColumns.TABLE + "." + ImageColumns.EXTENSION);
+        mImageProjectionMap.put(ImageColumns.STORAGE, ImageColumns.TABLE + "." + ImageColumns.STORAGE);
+        mImageProjectionMap.put(ImageColumns.SYNC, ImageColumns.TABLE + "." + ImageColumns.SYNC);
+        mImageProjectionMap.put("favorite_id", FavoriteColumns.TABLE + "." + FavoriteColumns._ID + " AS "+"favorite_id");
+        mImageProjectionMap.put(ImageColumns.IMAGE_WIDTH, ImageColumns.TABLE + "." + ImageColumns.IMAGE_WIDTH);
+        mImageProjectionMap.put(ImageColumns.IMAGE_HEIGHT, ImageColumns.TABLE + "." + ImageColumns.IMAGE_HEIGHT);
   
         mAudioProjectionMap = new HashMap<String,String>();
-        mAudioProjectionMap.put(AudioColumns._ID, AudioColumns._ID);
-        mAudioProjectionMap.put(AudioColumns.FILE_DATE_FIELD, AudioColumns.FILE_DATE_FIELD);
-        mAudioProjectionMap.put(AudioColumns.FILE_TYPE_FIELD, AudioColumns.FILE_TYPE_FIELD);
-        mAudioProjectionMap.put(AudioColumns.FILE_SIZE_FIELD, AudioColumns.FILE_SIZE_FIELD);
-        mAudioProjectionMap.put(AudioColumns.FILE_PATH_FIELD, AudioColumns.FILE_PATH_FIELD);
-        mAudioProjectionMap.put(AudioColumns.FILE_NAME_FIELD, AudioColumns.FILE_NAME_FIELD);
-        mAudioProjectionMap.put(AudioColumns.FILE_EXTENSION_FIELD, AudioColumns.FILE_EXTENSION_FIELD);
-        mAudioProjectionMap.put(AudioColumns.FILE_STORAGE_FIELD, AudioColumns.FILE_STORAGE_FIELD);
-        mAudioProjectionMap.put(AudioColumns.FILE_SYNC_FIELD, AudioColumns.FILE_SYNC_FIELD);
-        mAudioProjectionMap.put(AudioColumns.PLAY_DURATION_FIELD, AudioColumns.PLAY_DURATION_FIELD);
-        mAudioProjectionMap.put(AudioColumns.ALBUM_FIELD, AudioColumns.ALBUM_FIELD);
-        mAudioProjectionMap.put(AudioColumns.SINGER_FIELD, AudioColumns.SINGER_FIELD);
-        mAudioProjectionMap.put(AudioColumns.TITLE_FIELD, AudioColumns.TITLE_FIELD);
+        mAudioProjectionMap.put(AudioColumns._ID, AudioColumns.TABLE + "." + AudioColumns._ID);
+        mAudioProjectionMap.put(AudioColumns.DATE, AudioColumns.TABLE + "." + AudioColumns.DATE);
+        mAudioProjectionMap.put(AudioColumns.TYPE, AudioColumns.TABLE + "." + AudioColumns.TYPE);
+        mAudioProjectionMap.put(AudioColumns.SIZE, AudioColumns.TABLE + "." + AudioColumns.SIZE);
+        mAudioProjectionMap.put(AudioColumns.PATH, AudioColumns.TABLE + "." + AudioColumns.PATH);
+        mAudioProjectionMap.put(AudioColumns.NAME, AudioColumns.TABLE + "." + AudioColumns.NAME);
+        mAudioProjectionMap.put(AudioColumns.EXTENSION, AudioColumns.TABLE + "." + AudioColumns.EXTENSION);
+        mAudioProjectionMap.put(AudioColumns.STORAGE, AudioColumns.TABLE + "." + AudioColumns.STORAGE);
+        mAudioProjectionMap.put(AudioColumns.SYNC, AudioColumns.TABLE + "." + AudioColumns.SYNC);
+        mAudioProjectionMap.put("favorite_id", FavoriteColumns.TABLE + "." + FavoriteColumns._ID + " AS "+"favorite_id");
+        mAudioProjectionMap.put(AudioColumns.PLAY_DURATION, AudioColumns.TABLE + "." + AudioColumns.PLAY_DURATION);
+        mAudioProjectionMap.put(AudioColumns.ALBUM, AudioColumns.TABLE + "." + AudioColumns.ALBUM);
+        mAudioProjectionMap.put(AudioColumns.SINGER, AudioColumns.TABLE + "." + AudioColumns.SINGER);
+        mAudioProjectionMap.put(AudioColumns.TITLE, AudioColumns.TABLE + "." + AudioColumns.TITLE);
         
         mVideoProjectionMap = new HashMap<String,String>();
-        mVideoProjectionMap.put(VideoColumns._ID, VideoColumns._ID);
-        mVideoProjectionMap.put(VideoColumns.FILE_DATE_FIELD, VideoColumns.FILE_DATE_FIELD);
-        mVideoProjectionMap.put(VideoColumns.FILE_TYPE_FIELD, VideoColumns.FILE_TYPE_FIELD);
-        mVideoProjectionMap.put(VideoColumns.FILE_SIZE_FIELD, VideoColumns.FILE_SIZE_FIELD);
-        mVideoProjectionMap.put(VideoColumns.FILE_NAME_FIELD, VideoColumns.FILE_NAME_FIELD);
-        mVideoProjectionMap.put(VideoColumns.FILE_PATH_FIELD, VideoColumns.FILE_PATH_FIELD);
-        mVideoProjectionMap.put(VideoColumns.FILE_EXTENSION_FIELD, VideoColumns.FILE_EXTENSION_FIELD);
-        mVideoProjectionMap.put(VideoColumns.FILE_STORAGE_FIELD, VideoColumns.FILE_STORAGE_FIELD);
-        mVideoProjectionMap.put(VideoColumns.FILE_SYNC_FIELD, VideoColumns.FILE_SYNC_FIELD);
-        mVideoProjectionMap.put(VideoColumns.PLAY_DURATION_FIELD, VideoColumns.PLAY_DURATION_FIELD);
+        mVideoProjectionMap.put(VideoColumns._ID, VideoColumns.TABLE + "." + VideoColumns._ID);
+        mVideoProjectionMap.put(VideoColumns.DATE, VideoColumns.TABLE + "." + VideoColumns.DATE);
+        mVideoProjectionMap.put(VideoColumns.TYPE, VideoColumns.TABLE + "." + VideoColumns.TYPE);
+        mVideoProjectionMap.put(VideoColumns.SIZE, VideoColumns.TABLE + "." + VideoColumns.SIZE);
+        mVideoProjectionMap.put(VideoColumns.NAME, VideoColumns.TABLE + "." + VideoColumns.NAME);
+        mVideoProjectionMap.put(VideoColumns.PATH, VideoColumns.TABLE + "." + VideoColumns.PATH);
+        mVideoProjectionMap.put(VideoColumns.EXTENSION, VideoColumns.TABLE + "." + VideoColumns.EXTENSION);
+        mVideoProjectionMap.put(VideoColumns.STORAGE, VideoColumns.TABLE + "." + VideoColumns.STORAGE);
+        mVideoProjectionMap.put(VideoColumns.SYNC, VideoColumns.TABLE + "." + VideoColumns.SYNC);
+        mVideoProjectionMap.put("favorite_id", FavoriteColumns.TABLE + "." + FavoriteColumns._ID + " AS "+"favorite_id");
+        mVideoProjectionMap.put(VideoColumns.PLAY_DURATION, VideoColumns.TABLE + "." + VideoColumns.PLAY_DURATION);
         
         mApkProjectionMap = new HashMap<String,String>();
-        mApkProjectionMap.put(ApkColumns._ID, ApkColumns._ID);
-        mApkProjectionMap.put(ApkColumns.FILE_DATE_FIELD, ApkColumns.FILE_DATE_FIELD);
-        mApkProjectionMap.put(ApkColumns.FILE_TYPE_FIELD, ApkColumns.FILE_TYPE_FIELD);
-        mApkProjectionMap.put(ApkColumns.FILE_SIZE_FIELD, ApkColumns.FILE_SIZE_FIELD);
-        mApkProjectionMap.put(ApkColumns.FILE_NAME_FIELD, ApkColumns.FILE_NAME_FIELD);
-        mApkProjectionMap.put(ApkColumns.FILE_PATH_FIELD, ApkColumns.FILE_PATH_FIELD);
-        mApkProjectionMap.put(ApkColumns.FILE_EXTENSION_FIELD, ApkColumns.FILE_EXTENSION_FIELD);
-        mApkProjectionMap.put(ApkColumns.FILE_STORAGE_FIELD, ApkColumns.FILE_STORAGE_FIELD);
-        mApkProjectionMap.put(ApkColumns.FILE_SYNC_FIELD, ApkColumns.FILE_SYNC_FIELD);
+        mApkProjectionMap.put(ApkColumns._ID, ApkColumns.TABLE + "." + ApkColumns._ID);
+        mApkProjectionMap.put(ApkColumns.DATE, ApkColumns.TABLE + "." + ApkColumns.DATE);
+        mApkProjectionMap.put(ApkColumns.TYPE, ApkColumns.TABLE + "." + ApkColumns.TYPE);
+        mApkProjectionMap.put(ApkColumns.SIZE, ApkColumns.TABLE + "." + ApkColumns.SIZE);
+        mApkProjectionMap.put(ApkColumns.NAME, ApkColumns.TABLE + "." + ApkColumns.NAME);
+        mApkProjectionMap.put(ApkColumns.PATH, ApkColumns.TABLE + "." + ApkColumns.PATH);
+        mApkProjectionMap.put(ApkColumns.EXTENSION, ApkColumns.TABLE + "." + ApkColumns.EXTENSION);
+        mApkProjectionMap.put(ApkColumns.STORAGE, ApkColumns.TABLE + "." + ApkColumns.STORAGE);
+        mApkProjectionMap.put(ApkColumns.SYNC, ApkColumns.TABLE + "." + ApkColumns.SYNC);
+        mApkProjectionMap.put("favorite_id", FavoriteColumns.TABLE + "." + FavoriteColumns._ID + " AS "+"favorite_id");
 
-        mCategoryProjectionMap = new HashMap<String,String>();
-        mCategoryProjectionMap.put(CategoryColumns._ID, CategoryColumns._ID);
-        mCategoryProjectionMap.put(CategoryColumns.CATEGORY_FIELD, CategoryColumns.CATEGORY_FIELD);
-        mCategoryProjectionMap.put(CategoryColumns.SIZE_FIELD, CategoryColumns.SIZE_FIELD);
-        mCategoryProjectionMap.put(CategoryColumns.NUMBER_FIELD, CategoryColumns.NUMBER_FIELD);
-        mCategoryProjectionMap.put(CategoryColumns.STORAGE_FIELD, CategoryColumns.STORAGE_FIELD);
-        
         mDocumentProjectionMap = new HashMap<String,String>();
-        mDocumentProjectionMap.put(DocumentColumns._ID, DocumentColumns._ID);
-        mDocumentProjectionMap.put(DocumentColumns.FILE_DATE_FIELD, DocumentColumns.FILE_DATE_FIELD);
-        mDocumentProjectionMap.put(DocumentColumns.FILE_TYPE_FIELD, DocumentColumns.FILE_TYPE_FIELD);
-        mDocumentProjectionMap.put(DocumentColumns.FILE_SIZE_FIELD, DocumentColumns.FILE_SIZE_FIELD);
-        mDocumentProjectionMap.put(DocumentColumns.FILE_NAME_FIELD, DocumentColumns.FILE_NAME_FIELD);
-        mDocumentProjectionMap.put(DocumentColumns.FILE_PATH_FIELD, DocumentColumns.FILE_PATH_FIELD);
-        mDocumentProjectionMap.put(DocumentColumns.FILE_STORAGE_FIELD, DocumentColumns.FILE_STORAGE_FIELD);
-        mDocumentProjectionMap.put(DocumentColumns.FILE_EXTENSION_FIELD, DocumentColumns.FILE_EXTENSION_FIELD);
-        mDocumentProjectionMap.put(DocumentColumns.FILE_SYNC_FIELD, DocumentColumns.FILE_SYNC_FIELD);
-        
+        mDocumentProjectionMap.put(DocumentColumns._ID, DocumentColumns.TABLE + "." + DocumentColumns._ID);
+        mDocumentProjectionMap.put(DocumentColumns.DATE, DocumentColumns.TABLE + "." + DocumentColumns.DATE);
+        mDocumentProjectionMap.put(DocumentColumns.TYPE, DocumentColumns.TABLE + "." + DocumentColumns.TYPE);
+        mDocumentProjectionMap.put(DocumentColumns.SIZE, DocumentColumns.TABLE + "." + DocumentColumns.SIZE);
+        mDocumentProjectionMap.put(DocumentColumns.NAME, DocumentColumns.TABLE + "." + DocumentColumns.NAME);
+        mDocumentProjectionMap.put(DocumentColumns.PATH, DocumentColumns.TABLE + "." + DocumentColumns.PATH);
+        mDocumentProjectionMap.put(DocumentColumns.STORAGE, DocumentColumns.TABLE + "." + DocumentColumns.STORAGE);
+        mDocumentProjectionMap.put(DocumentColumns.EXTENSION, DocumentColumns.TABLE + "." + DocumentColumns.EXTENSION);
+        mDocumentProjectionMap.put(DocumentColumns.SYNC, DocumentColumns.TABLE + "." + DocumentColumns.SYNC);
+        mDocumentProjectionMap.put("favorite_id", FavoriteColumns.TABLE + "." + FavoriteColumns._ID + " AS "+"favorite_id");
+
         mZipProjectionMap = new HashMap<String,String>();
-        mZipProjectionMap.put(ZipColumns._ID, ZipColumns._ID);
-        mZipProjectionMap.put(ZipColumns.FILE_DATE_FIELD, ZipColumns.FILE_DATE_FIELD);
-        mZipProjectionMap.put(ZipColumns.FILE_TYPE_FIELD, ZipColumns.FILE_TYPE_FIELD);
-        mZipProjectionMap.put(ZipColumns.FILE_SIZE_FIELD, ZipColumns.FILE_SIZE_FIELD);
-        mZipProjectionMap.put(ZipColumns.FILE_NAME_FIELD, ZipColumns.FILE_NAME_FIELD);
-        mZipProjectionMap.put(ZipColumns.FILE_PATH_FIELD, ZipColumns.FILE_PATH_FIELD);
-        mZipProjectionMap.put(ZipColumns.FILE_EXTENSION_FIELD, ZipColumns.FILE_EXTENSION_FIELD);
-        mZipProjectionMap.put(ZipColumns.FILE_STORAGE_FIELD, ZipColumns.FILE_STORAGE_FIELD);
-        mZipProjectionMap.put(ZipColumns.FILE_SYNC_FIELD, ZipColumns.FILE_SYNC_FIELD);
+        mZipProjectionMap.put(ZipColumns._ID, ZipColumns.TABLE + "." + ZipColumns._ID);
+        mZipProjectionMap.put(ZipColumns.DATE, ZipColumns.TABLE + "." + ZipColumns.DATE);
+        mZipProjectionMap.put(ZipColumns.TYPE, ZipColumns.TABLE + "." + ZipColumns.TYPE);
+        mZipProjectionMap.put(ZipColumns.SIZE, ZipColumns.TABLE + "." + ZipColumns.SIZE);
+        mZipProjectionMap.put(ZipColumns.NAME, ZipColumns.TABLE + "." + ZipColumns.NAME);
+        mZipProjectionMap.put(ZipColumns.PATH, ZipColumns.TABLE + "." + ZipColumns.PATH);
+        mZipProjectionMap.put(ZipColumns.EXTENSION, ZipColumns.TABLE + "." + ZipColumns.EXTENSION);
+        mZipProjectionMap.put(ZipColumns.STORAGE, ZipColumns.TABLE + "." + ZipColumns.STORAGE);
+        mZipProjectionMap.put(ZipColumns.SYNC, ZipColumns.TABLE + "." + ZipColumns.SYNC);
+        mZipProjectionMap.put("favorite_id", FavoriteColumns.TABLE + "." + FavoriteColumns._ID + " AS "+"favorite_id");
 
         mFavoriteProjectionMap = new HashMap<String,String>();
         mFavoriteProjectionMap.put(FavoriteColumns._ID, FavoriteColumns._ID);
-        mFavoriteProjectionMap.put(FavoriteColumns.FILE_DATE_FIELD, FavoriteColumns.FILE_DATE_FIELD);
-        mFavoriteProjectionMap.put(FavoriteColumns.FILE_TYPE_FIELD, FavoriteColumns.FILE_TYPE_FIELD);
-        mFavoriteProjectionMap.put(FavoriteColumns.FILE_SIZE_FIELD, FavoriteColumns.FILE_SIZE_FIELD);
-        mFavoriteProjectionMap.put(FavoriteColumns.FILE_PATH_FIELD, FavoriteColumns.FILE_PATH_FIELD);
-        mFavoriteProjectionMap.put(FavoriteColumns.FILE_NAME_FIELD, FavoriteColumns.FILE_NAME_FIELD);
-        mFavoriteProjectionMap.put(FavoriteColumns.FILE_EXTENSION_FIELD, FavoriteColumns.FILE_EXTENSION_FIELD);
-        mFavoriteProjectionMap.put(FavoriteColumns.FILE_STORAGE_FIELD, FavoriteColumns.FILE_STORAGE_FIELD);
-        mFavoriteProjectionMap.put(FavoriteColumns.IS_DIRECTORY_FIELD, FavoriteColumns.IS_DIRECTORY_FIELD);
-        mFavoriteProjectionMap.put(FavoriteColumns.FILE_SYNC_FIELD, FavoriteColumns.FILE_SYNC_FIELD);
+        mFavoriteProjectionMap.put(FavoriteColumns.DATE, FavoriteColumns.DATE);
+        mFavoriteProjectionMap.put(FavoriteColumns.TYPE, FavoriteColumns.TYPE);
+        mFavoriteProjectionMap.put(FavoriteColumns.SIZE, FavoriteColumns.SIZE);
+        mFavoriteProjectionMap.put(FavoriteColumns.PATH, FavoriteColumns.PATH);
+        mFavoriteProjectionMap.put(FavoriteColumns.NAME, FavoriteColumns.NAME);
+        mFavoriteProjectionMap.put(FavoriteColumns.EXTENSION, FavoriteColumns.EXTENSION);
+        mFavoriteProjectionMap.put(FavoriteColumns.STORAGE, FavoriteColumns.STORAGE);
+        mFavoriteProjectionMap.put(FavoriteColumns.IS_DIRECTORY, FavoriteColumns.IS_DIRECTORY);
+        mFavoriteProjectionMap.put(FavoriteColumns.SYNC, FavoriteColumns.SYNC);
+
+        mCategoryProjectionMap = new HashMap<String,String>();
+        mCategoryProjectionMap.put(CategoryColumns._ID, CategoryColumns._ID);
+        mCategoryProjectionMap.put(CategoryColumns.CATEGORY, CategoryColumns.CATEGORY);
+        mCategoryProjectionMap.put(CategoryColumns.SIZE, CategoryColumns.SIZE);
+        mCategoryProjectionMap.put(CategoryColumns.NUMBER, CategoryColumns.NUMBER);
+        mCategoryProjectionMap.put(CategoryColumns.STORAGE, CategoryColumns.STORAGE);
 
         mSelectedProjectionMap = new HashMap<String,String>();
         mSelectedProjectionMap.put(SelectedColumns._ID, SelectedColumns._ID);
-        mSelectedProjectionMap.put(SelectedColumns.FILE_DATE_FIELD, SelectedColumns.FILE_DATE_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.FILE_TYPE_FIELD, SelectedColumns.FILE_TYPE_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.FILE_SIZE_FIELD, SelectedColumns.FILE_SIZE_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.FILE_NAME_FIELD, SelectedColumns.FILE_NAME_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.FILE_PATH_FIELD, SelectedColumns.FILE_PATH_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.FILE_EXTENSION_FIELD, SelectedColumns.FILE_EXTENSION_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.FILE_STORAGE_FIELD, SelectedColumns.FILE_STORAGE_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.FILE_SYNC_FIELD, SelectedColumns.FILE_SYNC_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.URL_FIELD, SelectedColumns.URL_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.SERVER_NAME_FIELD, SelectedColumns.SERVER_NAME_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.PACKAGE_FIELD, SelectedColumns.PACKAGE_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.VERSION_FIELD, SelectedColumns.VERSION_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.VERSION_NAME_FIELD, SelectedColumns.VERSION_NAME_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.SERVER_DATE_FIELD, SelectedColumns.SERVER_DATE_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.DESCRIPTION_FIELD, SelectedColumns.DESCRIPTION_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.APP_CATEGORY_FIELD, SelectedColumns.APP_CATEGORY_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.ICON_FIELD, SelectedColumns.ICON_FIELD);
-        mSelectedProjectionMap.put(SelectedColumns.PHOTO_FIELD, SelectedColumns.PHOTO_FIELD);
+        mSelectedProjectionMap.put(SelectedColumns.DATE, SelectedColumns.DATE);
+        mSelectedProjectionMap.put(SelectedColumns.TYPE, SelectedColumns.TYPE);
+        mSelectedProjectionMap.put(SelectedColumns.SIZE, SelectedColumns.SIZE);
+        mSelectedProjectionMap.put(SelectedColumns.NAME, SelectedColumns.NAME);
+        mSelectedProjectionMap.put(SelectedColumns.PATH, SelectedColumns.PATH);
+        mSelectedProjectionMap.put(SelectedColumns.EXTENSION, SelectedColumns.EXTENSION);
+        mSelectedProjectionMap.put(SelectedColumns.STORAGE, SelectedColumns.STORAGE);
+        mSelectedProjectionMap.put(SelectedColumns.SYNC, SelectedColumns.SYNC);
+        mSelectedProjectionMap.put(SelectedColumns.URL, SelectedColumns.URL);
+        mSelectedProjectionMap.put(SelectedColumns.SERVER_NAME, SelectedColumns.SERVER_NAME);
+        mSelectedProjectionMap.put(SelectedColumns.PACKAGE, SelectedColumns.PACKAGE);
+        mSelectedProjectionMap.put(SelectedColumns.VERSION, SelectedColumns.VERSION);
+        mSelectedProjectionMap.put(SelectedColumns.VERSION_NAME, SelectedColumns.VERSION_NAME);
+        mSelectedProjectionMap.put(SelectedColumns.SERVER_DATE, SelectedColumns.SERVER_DATE);
+        mSelectedProjectionMap.put(SelectedColumns.DESCRIPTION, SelectedColumns.DESCRIPTION);
+        mSelectedProjectionMap.put(SelectedColumns.APP_CATEGORY, SelectedColumns.APP_CATEGORY);
+        mSelectedProjectionMap.put(SelectedColumns.ICON, SelectedColumns.ICON);
+        mSelectedProjectionMap.put(SelectedColumns.PHOTO, SelectedColumns.PHOTO);
         
         mCloudProjectionMap = new HashMap<String, String>();
         mCloudProjectionMap.put(CloudBoxColumns._ID, CloudBoxColumns._ID);
-        mCloudProjectionMap.put(CloudBoxColumns.FILE_DATE_FIELD, CloudBoxColumns.FILE_DATE_FIELD);
-        mCloudProjectionMap.put(CloudBoxColumns.FILE_TYPE_FIELD, CloudBoxColumns.FILE_TYPE_FIELD);
-        mCloudProjectionMap.put(CloudBoxColumns.FILE_SIZE_FIELD, CloudBoxColumns.FILE_SIZE_FIELD);
-        mCloudProjectionMap.put(CloudBoxColumns.FILE_NAME_FIELD, CloudBoxColumns.FILE_NAME_FIELD);
-        mCloudProjectionMap.put(CloudBoxColumns.FILE_PATH_FIELD, CloudBoxColumns.FILE_PATH_FIELD);
-        mCloudProjectionMap.put(CloudBoxColumns.FILE_EXTENSION_FIELD, CloudBoxColumns.FILE_EXTENSION_FIELD);
-        mCloudProjectionMap.put(CloudBoxColumns.FILE_STORAGE_FIELD, CloudBoxColumns.FILE_STORAGE_FIELD);
-        mCloudProjectionMap.put(CloudBoxColumns.FILE_SYNC_FIELD, CloudBoxColumns.FILE_SYNC_FIELD);
-        mCloudProjectionMap.put(CloudBoxColumns.PARENT_FOLDER_FIELD, CloudBoxColumns.PARENT_FOLDER_FIELD);
-        mCloudProjectionMap.put(CloudBoxColumns.IS_FOLDER_FIELD, CloudBoxColumns.IS_FOLDER_FIELD);
-        mCloudProjectionMap.put(CloudBoxColumns.HASH_FIELD, CloudBoxColumns.HASH_FIELD);
-        mCloudProjectionMap.put(CloudBoxColumns.LOCAL_FILE_FIELD, CloudBoxColumns.LOCAL_FILE_FIELD);
-        mCloudProjectionMap.put(CloudBoxColumns.ICON_DATA_FIELD, CloudBoxColumns.ICON_DATA_FIELD);
+        mCloudProjectionMap.put(CloudBoxColumns.DATE, CloudBoxColumns.DATE);
+        mCloudProjectionMap.put(CloudBoxColumns.TYPE, CloudBoxColumns.TYPE);
+        mCloudProjectionMap.put(CloudBoxColumns.SIZE, CloudBoxColumns.SIZE);
+        mCloudProjectionMap.put(CloudBoxColumns.NAME, CloudBoxColumns.NAME);
+        mCloudProjectionMap.put(CloudBoxColumns.PATH, CloudBoxColumns.PATH);
+        mCloudProjectionMap.put(CloudBoxColumns.EXTENSION, CloudBoxColumns.EXTENSION);
+        mCloudProjectionMap.put(CloudBoxColumns.STORAGE, CloudBoxColumns.STORAGE);
+        mCloudProjectionMap.put(CloudBoxColumns.SYNC, CloudBoxColumns.SYNC);
+        mCloudProjectionMap.put(CloudBoxColumns.PARENT_FOLDER, CloudBoxColumns.PARENT_FOLDER);
+        mCloudProjectionMap.put(CloudBoxColumns.IS_FOLDER, CloudBoxColumns.IS_FOLDER);
+        mCloudProjectionMap.put(CloudBoxColumns.HASH, CloudBoxColumns.HASH);
+        mCloudProjectionMap.put(CloudBoxColumns.LOCAL_FILE, CloudBoxColumns.LOCAL_FILE);
+        mCloudProjectionMap.put(CloudBoxColumns.ICON_DATA, CloudBoxColumns.ICON_DATA);
         
         mPreferenceProjectionMap = new HashMap<String,String>();
         mPreferenceProjectionMap.put(PreferenceColumns.NAME, PreferenceColumns.NAME);
         mPreferenceProjectionMap.put(PreferenceColumns.VALUE, PreferenceColumns.VALUE);
         
         mMatchProjectionMap = new HashMap<String, String>();
-        mMatchProjectionMap.put(MatchColumns.EXTENSION_FIELD, MatchColumns.EXTENSION_FIELD);
-        mMatchProjectionMap.put(MatchColumns.CATEGORY_FIELD, MatchColumns.CATEGORY_FIELD);
-        mMatchProjectionMap.put(MatchColumns.APP_FIELD, MatchColumns.APP_FIELD);
-        mMatchProjectionMap.put(MatchColumns.DATE_FIELD, MatchColumns.DATE_FIELD);
+        mMatchProjectionMap.put(MatchColumns.EXTENSION, MatchColumns.EXTENSION);
+        mMatchProjectionMap.put(MatchColumns.CATEGORY, MatchColumns.CATEGORY);
+        mMatchProjectionMap.put(MatchColumns.APP, MatchColumns.APP);
+        mMatchProjectionMap.put(MatchColumns.DATE, MatchColumns.DATE);
         
 	}
 	
@@ -444,12 +451,12 @@ public class FileManagerProvider extends ContentProvider{
         switch (URI_MATCHER.match(uri)) {
 //        	case FILES:
 //        		tablename = FileColumns.TABLE;
-//        		type = FileCategoryHelper.FILE_TYPE_FILE;
+//        		type = FileCategoryHelper.TYPE_FILE;
 //        		count = db.delete(FileColumns.TABLE, where, whereArgs);
 //        		break;
-//        	case FILE_ID:
+//        	case ID:
 //        		tablename = FileColumns.TABLE;
-//        		type = FileCategoryHelper.FILE_TYPE_FILE;
+//        		type = FileCategoryHelper.TYPE_FILE;
 //        		where = "_id=" + uri.getPathSegments().get(1)
 //                + (!TextUtils.isEmpty(where) ? " AND (" + where + ")" : "");
 //        		count = db.delete(FileColumns.TABLE, where, whereArgs);
@@ -579,7 +586,7 @@ public class FileManagerProvider extends ContentProvider{
 		{
 		case FILES:
 			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.file";
-		case FILE_ID:
+		case ID:
 			return "vnd.android.cursor.item/vnd.hufeng.filemanager.file";
 		case IMAGES:
 			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.image";
@@ -637,40 +644,40 @@ public class FileManagerProvider extends ContentProvider{
         int category = -1;
         switch(URI_MATCHER.match(uri)){
 //	        case FILES:
-//                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
-//                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+//                if (!values.containsKey(FileColumns.SYNC)) {
+//                    values.put(FileColumns.SYNC , 0);
 //                }
 //	        	tablename = FileColumns.TABLE;
-//	        	type = FileCategoryHelper.FILE_TYPE_FILE;
+//	        	type = FileCategoryHelper.TYPE_FILE;
 //	        	rowId = db.insert(FileColumns.TABLE, null, values);
 //	        	break;
 	        case IMAGES:
-                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
-                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+                if (!values.containsKey(FileColumns.SYNC)) {
+                    values.put(FileColumns.SYNC , 0);
                 }
                 tablename = ImageColumns.TABLE;
                 category = FileCategoryHelper.CATEGORY_TYPE_IMAGE;
 	        	rowId = db.insert(ImageColumns.TABLE, null, values);
 	        	break;
 	        case AUDIOS:
-                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
-                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+                if (!values.containsKey(FileColumns.SYNC)) {
+                    values.put(FileColumns.SYNC , 0);
                 }
                 tablename = AudioColumns.TABLE;
                 category = FileCategoryHelper.CATEGORY_TYPE_AUDIO;
 	        	rowId = db.insert(AudioColumns.TABLE, null, values);
 	        	break;
 	        case VIDEOS:
-                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
-                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+                if (!values.containsKey(FileColumns.SYNC)) {
+                    values.put(FileColumns.SYNC , 0);
                 }
                 tablename = VideoColumns.TABLE;
                 category = FileCategoryHelper.CATEGORY_TYPE_VIDEO;
 	        	rowId = db.insert(VideoColumns.TABLE, null, values);
 	        	break;
 	        case APKS:
-                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
-                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+                if (!values.containsKey(FileColumns.SYNC)) {
+                    values.put(FileColumns.SYNC , 0);
                 }
                 tablename = ApkColumns.TABLE;
                 category = FileCategoryHelper.CATEGORY_TYPE_APK;
@@ -680,19 +687,19 @@ public class FileManagerProvider extends ContentProvider{
 	        	rowId = db.insert(CategoryColumns.TABLE, null, values);
 	        	break;
 	        case DOCUMENTS:
-                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
-                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+                if (!values.containsKey(FileColumns.SYNC)) {
+                    values.put(FileColumns.SYNC , 0);
                 }
                 tablename = DocumentColumns.TABLE;
                 category = FileCategoryHelper.CATEGORY_TYPE_DOCUMENT;
 	        	rowId = db.insert(DocumentColumns.TABLE, null, values);
 	        	break;
 	        case ZIPS:
-                if (!values.containsKey(FileColumns.FILE_SYNC_FIELD)) {
-                    values.put(FileColumns.FILE_SYNC_FIELD , 0);
+                if (!values.containsKey(FileColumns.SYNC)) {
+                    values.put(FileColumns.SYNC , 0);
                 }
                 tablename = ZipColumns.TABLE;
-                category = FileCategoryHelper.FILE_TYPE_ZIP;
+                category = FileCategoryHelper.CATEGORY_TYPE_ZIP;
 	        	rowId = db.insert(ZipColumns.TABLE, null, values);
 	        	break;
 	        case FAVORITES:
@@ -748,144 +755,168 @@ public class FileManagerProvider extends ContentProvider{
 //                    orderBy = sortOrder;
 //                }
 //            	break;
-            case FILE_ID:
-            	qb.setTables(FileColumns.TABLE);
-            	qb.setProjectionMap(mFileProjectionMap);
-            	qb.appendWhere(FileColumns._ID + "=" + uri.getPathSegments().get(1));
-                if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = FileColumns.DEFAULT_SORT_ORDER;
-                } else {
-                    orderBy = sortOrder;
-                }
-            	break;
+//            case ID:
+//            	qb.setTables(FileColumns.TABLE);
+//            	qb.setProjectionMap(mFileProjectionMap);
+//            	qb.appendWhere(FileColumns._ID + "=" + uri.getPathSegments().get(1));
+//                if (TextUtils.isEmpty(sortOrder)) {
+//                    orderBy = FileColumns.DEFAULT_SORT_ORDER;
+//                } else {
+//                    orderBy = sortOrder;
+//                }
+//            	break;
             case IMAGES:
-            	qb.setTables(ImageColumns.TABLE);
+            	qb.setTables(ImageColumns.TABLE + " LEFT OUTER JOIN "+FavoriteColumns.TABLE
+                        + " ON " + ImageColumns.TABLE + "." + ImageColumns.PATH
+                        + " = " + FavoriteColumns.TABLE + "." + FavoriteColumns.PATH);
             	qb.setProjectionMap(mImageProjectionMap);
                 if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = ImageColumns.DEFAULT_SORT_ORDER;
+                    orderBy = ImageColumns.TABLE + "." + ImageColumns.DEFAULT_SORT_ORDER;
                 } else {
-                    orderBy = sortOrder;
+                    orderBy = ImageColumns.TABLE + "." + sortOrder;
                 }
             	break;
             case IMAGE_ID:
-            	qb.setTables(ImageColumns.TABLE);
+            	qb.setTables(ImageColumns.TABLE + " LEFT OUTER JOIN "+FavoriteColumns.TABLE
+                        + " ON " + ImageColumns.TABLE + "." + ImageColumns.PATH
+                        + " = " + FavoriteColumns.TABLE + "." + FavoriteColumns.PATH);
             	qb.setProjectionMap(mImageProjectionMap);
-            	qb.appendWhere(ImageColumns._ID + "=" + uri.getPathSegments().get(1));
+            	qb.appendWhere(ImageColumns.TABLE + "." + ImageColumns._ID + "=" + uri.getPathSegments().get(1));
                 if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = ImageColumns.DEFAULT_SORT_ORDER;
+                    orderBy = ImageColumns.TABLE + "." + ImageColumns.DEFAULT_SORT_ORDER;
                 } else {
-                    orderBy = sortOrder;
+                    orderBy = ImageColumns.TABLE + "." + sortOrder;
                 }
             	break;
             case AUDIOS:
-            	qb.setTables(AudioColumns.TABLE);
+            	qb.setTables(AudioColumns.TABLE + " LEFT OUTER JOIN "+FavoriteColumns.TABLE
+                        + " ON " + AudioColumns.TABLE + "." + AudioColumns.PATH
+                        + " = " + FavoriteColumns.TABLE + "." + FavoriteColumns.PATH);
             	qb.setProjectionMap(mAudioProjectionMap);
                 if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = AudioColumns.DEFAULT_SORT_ORDER;
+                    orderBy = AudioColumns.TABLE + "." + AudioColumns.DEFAULT_SORT_ORDER;
                 } else {
-                    orderBy = sortOrder;
+                    orderBy = AudioColumns.TABLE + "." + sortOrder;
                 }
             	break;
             case AUDIO_ID:
-            	qb.setTables(AudioColumns.TABLE);
+            	qb.setTables(AudioColumns.TABLE + " LEFT OUTER JOIN "+FavoriteColumns.TABLE
+                        + " ON " + AudioColumns.TABLE + "." + AudioColumns.PATH
+                        + " = " + FavoriteColumns.TABLE + "." + FavoriteColumns.PATH);
             	qb.setProjectionMap(mAudioProjectionMap);
-            	qb.appendWhere(AudioColumns._ID + "=" + uri.getPathSegments().get(1));
+            	qb.appendWhere(AudioColumns.TABLE + "." + AudioColumns._ID + "=" + uri.getPathSegments().get(1));
                 if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = AudioColumns.DEFAULT_SORT_ORDER;
+                    orderBy = AudioColumns.TABLE + "." + AudioColumns.DEFAULT_SORT_ORDER;
                 } else {
-                    orderBy = sortOrder;
+                    orderBy = AudioColumns.TABLE + "." + sortOrder;
                 }
             	break;
             case VIDEOS:
-            	qb.setTables(VideoColumns.TABLE);
+            	qb.setTables(VideoColumns.TABLE + " LEFT OUTER JOIN "+FavoriteColumns.TABLE
+                        + " ON " + VideoColumns.TABLE + "." + VideoColumns.PATH
+                        + " = " + FavoriteColumns.TABLE + "." + FavoriteColumns.PATH);
             	qb.setProjectionMap(mVideoProjectionMap);
                 if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = VideoColumns.DEFAULT_SORT_ORDER;
+                    orderBy = VideoColumns.TABLE + "." + VideoColumns.DEFAULT_SORT_ORDER;
                 } else {
-                    orderBy = sortOrder;
+                    orderBy = VideoColumns.TABLE + "." + sortOrder;
                 }
             	break;
             case VIDEO_ID:
-            	qb.setTables(VideoColumns.TABLE);
+            	qb.setTables(VideoColumns.TABLE + " LEFT OUTER JOIN "+FavoriteColumns.TABLE
+                        + " ON " + VideoColumns.TABLE + "." + VideoColumns.PATH
+                        + " = " + FavoriteColumns.TABLE + "." + FavoriteColumns.PATH);
             	qb.setProjectionMap(mVideoProjectionMap);
-            	qb.appendWhere(VideoColumns._ID + "=" + uri.getPathSegments().get(1));
+            	qb.appendWhere(VideoColumns.TABLE + "." + VideoColumns._ID + "=" + uri.getPathSegments().get(1));
                 if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = VideoColumns.DEFAULT_SORT_ORDER;
+                    orderBy = VideoColumns.TABLE + "." + VideoColumns.DEFAULT_SORT_ORDER;
                 } else {
-                    orderBy = sortOrder;
+                    orderBy = VideoColumns.TABLE + "." + sortOrder;
                 }
             	break;
             case APKS:
-            	qb.setTables(ApkColumns.TABLE);
+            	qb.setTables(ApkColumns.TABLE + " LEFT OUTER JOIN "+FavoriteColumns.TABLE
+                        + " ON " + ApkColumns.TABLE + "." + ApkColumns.PATH
+                        + " = " + FavoriteColumns.TABLE + "." + FavoriteColumns.PATH);
             	qb.setProjectionMap(mApkProjectionMap);
                 if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = ApkColumns.DEFAULT_SORT_ORDER;
+                    orderBy = ApkColumns.TABLE + "." + ApkColumns.DEFAULT_SORT_ORDER;
                 } else {
-                    orderBy = sortOrder;
+                    orderBy = ApkColumns.TABLE + "." + sortOrder;
                 }
             	break;
             case APK_ID:
-            	qb.setTables(ApkColumns.TABLE);
+            	qb.setTables(ApkColumns.TABLE + " LEFT OUTER JOIN "+FavoriteColumns.TABLE
+                        + " ON " + ApkColumns.TABLE + "." + ApkColumns.PATH
+                        + " = " + FavoriteColumns.TABLE + "." + FavoriteColumns.PATH);
             	qb.setProjectionMap(mApkProjectionMap);
-            	qb.appendWhere(ApkColumns._ID + "=" + uri.getPathSegments().get(1));
+            	qb.appendWhere(ApkColumns.TABLE + "." + ApkColumns._ID + "=" + uri.getPathSegments().get(1));
                 if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = ApkColumns.DEFAULT_SORT_ORDER;
+                    orderBy = ApkColumns.TABLE + "." + ApkColumns.DEFAULT_SORT_ORDER;
+                } else {
+                    orderBy = ApkColumns.TABLE + "." + sortOrder;
+                }
+            	break;
+            case DOCUMENTS:
+                qb.setTables(DocumentColumns.TABLE+ " LEFT OUTER JOIN "+FavoriteColumns.TABLE
+                        + " ON " + DocumentColumns.TABLE + "." + DocumentColumns.PATH
+                        + " = " + FavoriteColumns.TABLE + "." + FavoriteColumns.PATH);
+                qb.setProjectionMap(mDocumentProjectionMap);
+                if (TextUtils.isEmpty(sortOrder)) {
+                    orderBy = DocumentColumns.TABLE + "." + DocumentColumns.DEFAULT_SORT_ORDER;
+                } else {
+                    orderBy = DocumentColumns.TABLE + "." + sortOrder;
+                }
+                break;
+            case DOCUMENT_ID:
+                qb.setTables(DocumentColumns.TABLE+ " LEFT OUTER JOIN "+FavoriteColumns.TABLE
+                        + " ON " + DocumentColumns.TABLE + "." + DocumentColumns.PATH
+                        + " = " + FavoriteColumns.TABLE + "." + FavoriteColumns.PATH);
+                qb.setProjectionMap(mDocumentProjectionMap);
+                qb.appendWhere(DocumentColumns.TABLE + "." + DocumentColumns._ID + "=" + uri.getPathSegments().get(1));
+                if (TextUtils.isEmpty(sortOrder)) {
+                    orderBy = DocumentColumns.TABLE + "." + DocumentColumns.DEFAULT_SORT_ORDER;
+                } else {
+                    orderBy = DocumentColumns.TABLE + "." + sortOrder;
+                }
+                break;
+            case ZIPS:
+                qb.setTables(ZipColumns.TABLE + " LEFT OUTER JOIN "+FavoriteColumns.TABLE
+                        + " ON " + ZipColumns.TABLE + "." + ZipColumns.PATH
+                        + " = " + FavoriteColumns.TABLE + "." + FavoriteColumns.PATH);
+                qb.setProjectionMap(mZipProjectionMap);
+                if (TextUtils.isEmpty(sortOrder)) {
+                    orderBy = ZipColumns.TABLE + "." + ZipColumns.DEFAULT_SORT_ORDER;
+                } else {
+                    orderBy = ZipColumns.TABLE + "." + sortOrder;
+                }
+                break;
+            case ZIP_ID:
+                qb.setTables(ZipColumns.TABLE + " LEFT OUTER JOIN "+FavoriteColumns.TABLE
+                        + " ON " + ZipColumns.TABLE + "." + ZipColumns.PATH
+                        + " = " + FavoriteColumns.TABLE + "." + FavoriteColumns.PATH);
+                qb.setProjectionMap(mZipProjectionMap);
+                qb.appendWhere(ZipColumns.TABLE + "." + ZipColumns._ID + "=" + uri.getPathSegments().get(1));
+                if (TextUtils.isEmpty(sortOrder)) {
+                    orderBy = ZipColumns.TABLE + "." + ZipColumns.DEFAULT_SORT_ORDER;
+                } else {
+                    orderBy = ZipColumns.TABLE + "." + sortOrder;
+                }
+                break;
+            case FAVORITES:
+                qb.setTables(FavoriteColumns.TABLE);
+                qb.setProjectionMap(mFavoriteProjectionMap);
+                if (TextUtils.isEmpty(sortOrder)) {
+                    orderBy = FavoriteColumns.DEFAULT_SORT_ORDER;
                 } else {
                     orderBy = sortOrder;
                 }
-            	break;
+                break;
             case CATEGORYS:
             	qb.setTables(CategoryColumns.TABLE);
             	qb.setProjectionMap(mCategoryProjectionMap);
                 if (TextUtils.isEmpty(sortOrder)) {
                     orderBy = CategoryColumns.DEFAULT_SORT_ORDER;
-                } else {
-                    orderBy = sortOrder;
-                }
-            	break;
-            case DOCUMENTS:
-            	qb.setTables(DocumentColumns.TABLE);
-            	qb.setProjectionMap(mDocumentProjectionMap);
-                if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = DocumentColumns.DEFAULT_SORT_ORDER;
-                } else {
-                    orderBy = sortOrder;
-                }
-            	break;
-            case DOCUMENT_ID:
-            	qb.setTables(DocumentColumns.TABLE);
-            	qb.setProjectionMap(mDocumentProjectionMap);
-            	qb.appendWhere(DocumentColumns._ID + "=" + uri.getPathSegments().get(1));
-                if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = DocumentColumns.DEFAULT_SORT_ORDER;
-                } else {
-                    orderBy = sortOrder;
-                }
-            	break;
-            case ZIPS:
-            	qb.setTables(ZipColumns.TABLE);
-            	qb.setProjectionMap(mZipProjectionMap);
-                if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = ZipColumns.DEFAULT_SORT_ORDER;
-                } else {
-                    orderBy = sortOrder;
-                }
-            	break;
-            case ZIP_ID:
-            	qb.setTables(ZipColumns.TABLE);
-            	qb.setProjectionMap(mZipProjectionMap);
-            	qb.appendWhere(ZipColumns._ID + "=" + uri.getPathSegments().get(1));
-                if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = ZipColumns.DEFAULT_SORT_ORDER;
-                } else {
-                    orderBy = sortOrder;
-                }
-            	break;
-            case FAVORITES:
-            	qb.setTables(FavoriteColumns.TABLE);
-            	qb.setProjectionMap(mFavoriteProjectionMap);
-                if (TextUtils.isEmpty(sortOrder)) {
-                    orderBy = FavoriteColumns.DEFAULT_SORT_ORDER;
                 } else {
                     orderBy = sortOrder;
                 }
@@ -968,12 +999,12 @@ public class FileManagerProvider extends ContentProvider{
         int category = -1;
         switch (URI_MATCHER.match(uri)) {
 //	        case FILES:
-//                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+//                values.put(FileColumns.SYNC, 0);
 //	            count = db.update(FileColumns.TABLE, values, selection,
 //	                    selectionArgs);
 //	            break;
-//	        case FILE_ID:
-//                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+//	        case ID:
+//                values.put(FileColumns.SYNC, 0);
 //	            selection = "_id=" + uri.getPathSegments().get(1)
 //	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
 //	            count = db.update(FileColumns.TABLE, values, selection,
@@ -981,13 +1012,13 @@ public class FileManagerProvider extends ContentProvider{
 //	            break;
 	        case IMAGES:
                 category = FileCategoryHelper.CATEGORY_TYPE_IMAGE;
-                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+                values.put(FileColumns.SYNC, 0);
 	            count = db.update(ImageColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case IMAGE_ID:
                 category = FileCategoryHelper.CATEGORY_TYPE_IMAGE;
-                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+                values.put(FileColumns.SYNC, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
 	            count = db.update(ImageColumns.TABLE, values, selection,
@@ -995,13 +1026,13 @@ public class FileManagerProvider extends ContentProvider{
 	            break;
 	        case AUDIOS:
                 category = FileCategoryHelper.CATEGORY_TYPE_AUDIO;
-                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+                values.put(FileColumns.SYNC, 0);
 	            count = db.update(AudioColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case AUDIO_ID:
                 category = FileCategoryHelper.CATEGORY_TYPE_AUDIO;
-                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+                values.put(FileColumns.SYNC, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
 	            count = db.update(AudioColumns.TABLE, values, selection,
@@ -1009,13 +1040,13 @@ public class FileManagerProvider extends ContentProvider{
 	            break;
 	        case VIDEOS:
                 category = FileCategoryHelper.CATEGORY_TYPE_VIDEO;
-                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+                values.put(FileColumns.SYNC, 0);
 	            count = db.update(VideoColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case VIDEO_ID:
                 category = FileCategoryHelper.CATEGORY_TYPE_VIDEO;
-                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+                values.put(FileColumns.SYNC, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
 	            count = db.update(VideoColumns.TABLE, values, selection,
@@ -1023,13 +1054,13 @@ public class FileManagerProvider extends ContentProvider{
 	            break;
 	        case APKS:
                 category = FileCategoryHelper.CATEGORY_TYPE_APK;
-                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+                values.put(FileColumns.SYNC, 0);
 	            count = db.update(ApkColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case APK_ID:
                 category = FileCategoryHelper.CATEGORY_TYPE_APK;
-                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+                values.put(FileColumns.SYNC, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
 	            count = db.update(ApkColumns.TABLE, values, selection,
@@ -1037,13 +1068,13 @@ public class FileManagerProvider extends ContentProvider{
 	            break;
 	        case DOCUMENTS:
                 category = FileCategoryHelper.CATEGORY_TYPE_DOCUMENT;
-                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+                values.put(FileColumns.SYNC, 0);
 	            count = db.update(DocumentColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case DOCUMENT_ID:
                 category = FileCategoryHelper.CATEGORY_TYPE_DOCUMENT;
-                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+                values.put(FileColumns.SYNC, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
 	            count = db.update(DocumentColumns.TABLE, values, selection,
@@ -1051,13 +1082,13 @@ public class FileManagerProvider extends ContentProvider{
 	            break;
 	        case ZIPS:
                 category = FileCategoryHelper.CATEGORY_TYPE_ZIP;
-                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+                values.put(FileColumns.SYNC, 0);
 	            count = db.update(ZipColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
 	        case ZIP_ID:
                 category = FileCategoryHelper.CATEGORY_TYPE_ZIP;
-                values.put(FileColumns.FILE_SYNC_FIELD, 0);
+                values.put(FileColumns.SYNC, 0);
 	            selection = "_id=" + uri.getPathSegments().get(1)
 	                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
 	            count = db.update(ZipColumns.TABLE, values, selection,
@@ -1133,7 +1164,7 @@ public class FileManagerProvider extends ContentProvider{
 
                 count = db.update(MatchColumns.TABLE, values, selection, selectionArgs);
                 if (count <=0) {
-                    values.put(MatchColumns.EXTENSION_FIELD, selectionArgs[0]);
+                    values.put(MatchColumns.EXTENSION, selectionArgs[0]);
                     insert(MatchColumns.CONTENT_URI, values);
                 }
                 break;
@@ -1154,7 +1185,7 @@ public class FileManagerProvider extends ContentProvider{
         switch (URI_MATCHER.match(uri)) {
 //        case FILES:
 //        	tablename = FileColumns.TABLE;
-//        	type = FileCategoryHelper.FILE_TYPE_FILE;
+//        	type = FileCategoryHelper.TYPE_FILE;
 //        	break;
         case IMAGES:
         	tablename = ImageColumns.TABLE;
@@ -1277,13 +1308,13 @@ public class FileManagerProvider extends ContentProvider{
 	
 	private void updateCategoryData(SQLiteDatabase db, String tablename, int type){
 		
-        String[] projection = new String[] { "count(*) as count", "sum("+FileColumns.FILE_SIZE_FIELD+") as size", FileColumns.FILE_STORAGE_FIELD + " as storage"  };
+        String[] projection = new String[] { "count(*) as count", "sum("+FileColumns.SIZE+") as size", FileColumns.STORAGE + " as storage"  };
         Cursor cursor = db.query(tablename, projection, 
-        		/*FileColumns.FILE_TYPE_FIELD+"=?", 
+        		/*FileColumns.TYPE+"=?", 
         		new String[]{""+type},*/
         		null,
         		null,
-        		FileColumns.FILE_STORAGE_FIELD, 
+        		FileColumns.STORAGE, 
         		null, null);
         boolean flag = false;
         ArrayList<String> stors = new ArrayList<String>();
@@ -1296,14 +1327,14 @@ public class FileManagerProvider extends ContentProvider{
 		        String storage = cursor.getString(2);
 		        if(LogUtil.IDBG) LogUtil.i(LOG_TAG , tablename+" has count="+count+" size="+size);
 		        ContentValues cvs = new ContentValues();
-		        cvs.put(CategoryColumns.NUMBER_FIELD, count);
-		        cvs.put(CategoryColumns.SIZE_FIELD, size);
+		        cvs.put(CategoryColumns.NUMBER, count);
+		        cvs.put(CategoryColumns.SIZE, size);
 		        int row = db.update(CategoryColumns.TABLE, cvs, 
-		        		CategoryColumns.CATEGORY_FIELD+"=? AND "+CategoryColumns.STORAGE_FIELD+"=?",new String[]{type+"", storage});
+		        		CategoryColumns.CATEGORY+"=? AND "+CategoryColumns.STORAGE+"=?",new String[]{type+"", storage});
 		        long id = 0;
 		        if(row<1){
-		        	cvs.put(CategoryColumns.CATEGORY_FIELD, type);
-		        	cvs.put(CategoryColumns.STORAGE_FIELD, storage);
+		        	cvs.put(CategoryColumns.CATEGORY, type);
+		        	cvs.put(CategoryColumns.STORAGE, storage);
 		        	id = db.insert(CategoryColumns.TABLE, null, cvs);
 		        }
 		        if(row>0 || id>0){
@@ -1316,9 +1347,9 @@ public class FileManagerProvider extends ContentProvider{
         }
         if (!flag_find) {
             StringBuilder buffer = new StringBuilder();
-            buffer.append(CategoryColumns.CATEGORY_FIELD).append("=").append(type);
+            buffer.append(CategoryColumns.CATEGORY).append("=").append(type);
             if (stors.size() > 0) {
-                buffer.append(" AND ").append(CategoryColumns.STORAGE_FIELD).append(" NOT IN (");
+                buffer.append(" AND ").append(CategoryColumns.STORAGE).append(" NOT IN (");
                 for (int i = 0; i < stors.size(); i++) {
                     if (i == 0) {
                         buffer.append('\'');
@@ -1334,8 +1365,8 @@ public class FileManagerProvider extends ContentProvider{
                 buffer.append(")");
             }
             ContentValues cvs = new ContentValues();
-            cvs.put(CategoryColumns.NUMBER_FIELD, 0);
-            cvs.put(CategoryColumns.SIZE_FIELD, 0);
+            cvs.put(CategoryColumns.NUMBER, 0);
+            cvs.put(CategoryColumns.SIZE, 0);
             int row = db.update(CategoryColumns.TABLE, cvs, buffer.toString(),null);
             if (row > 0) {
                 flag = true;

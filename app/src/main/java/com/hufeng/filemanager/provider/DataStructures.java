@@ -16,33 +16,29 @@ public class DataStructures {
 		public static String CONTENT_BOX = "content://" + AUTHORITY + "/" +TABLE;
 		
 		public static Uri CONTENT_URI = Uri.parse(CONTENT_BOX);
-		
-		public static final String CATEGORY_FIELD = "category";
-		
-		public static final String SIZE_FIELD = "size";
-		
-		public static final String NUMBER_FIELD = "number";
-		
-		public static final String STORAGE_FIELD = "storage";
-		
-		public static final String DEFAULT_SORT_ORDER = "size asc";
+
+		public static final String CATEGORY = "category";
+        public static final String SIZE = "size";
+        public static final String NUMBER = "number";
+        public static final String STORAGE = "storage";
+        public static final String DEFAULT_SORT_ORDER = "size asc";
 		
 		public static final String[] PROJECTION = new String[] {
-			_ID, CATEGORY_FIELD, SIZE_FIELD, NUMBER_FIELD, STORAGE_FIELD};
+			_ID, CATEGORY, SIZE, NUMBER, STORAGE};
 		
-		public static final int CATEGORY_FIELD_INDEX = 1;
-		public static final int SIZE_FIELD_INDEX = 2;
-		public static final int NUMBER_FIELD_INDEX = 3;
-		public static final int STORAGE_FIELD_INDEX = 4;
+		public static final int CATEGORY_INDEX = 1;
+		public static final int SIZE_INDEX = 2;
+		public static final int NUMBER_INDEX = 3;
+		public static final int STORAGE_INDEX = 4;
 
 		public static final class SQL {
             
             public static final String CREATE = "Create TABLE IF NOT EXISTS " + TABLE
                 +" (_id INTEGER PRIMARY KEY, "
-                +CATEGORY_FIELD + " INTEGER, "
-                +SIZE_FIELD + " LONG, "
-                +STORAGE_FIELD + " STRING, "
-                +NUMBER_FIELD + " LONG);";
+                +CATEGORY + " INTEGER, "
+                +SIZE + " LONG, "
+                +STORAGE + " STRING, "
+                +NUMBER + " LONG);";
             
             public static final String DROP = "DROP TABLE IF EXISTS " + TABLE;                   
                     
@@ -56,50 +52,45 @@ public class DataStructures {
 		public static String CONTENT_BOX = "content://" + AUTHORITY + "/"+TABLE;
 
 		public static Uri CONTENT_URI = Uri.parse(CONTENT_BOX);
-		
-		public static final String FILE_TYPE_FIELD = "type";
-		
-		public static final String FILE_PATH_FIELD = "path";
-		
-		public static final String FILE_NAME_FIELD = "name";
-		
-		public static final String FILE_SIZE_FIELD = "size";
-		
-		public static final String FILE_DATE_FIELD = "date";
-		
-		public static final String FILE_SYNC_FIELD = "sync";
-		
-		public static final String FILE_EXTENSION_FIELD = "extension";
-		
-		public static final String FILE_STORAGE_FIELD = "storage";
-		
-		public static final String DEFAULT_SORT_ORDER = "date desc";
 
-		public static final String[] FILE_PROJECTION = new String[] {
-			_ID, FILE_TYPE_FIELD, FILE_PATH_FIELD, FILE_NAME_FIELD, FILE_SIZE_FIELD, FILE_EXTENSION_FIELD, FILE_DATE_FIELD, FILE_STORAGE_FIELD, FILE_SYNC_FIELD};
+        public static final String TYPE = "type";
+		public static final String PATH = "path";
+		public static final String NAME = "name";
+		public static final String SIZE = "size";
+		public static final String DATE = "date";
+		public static final String SYNC = "sync";
+		public static final String EXTENSION = "extension";
+		public static final String STORAGE = "storage";
+		public static final String DEFAULT_SORT_ORDER = DATE + " desc";
 
-		public static final int ID_FIELD_INDEX = 0;
-		public static final int FILE_TYPE_FIELD_INDEX = 1;
-		public static final int FILE_PATH_FIELD_INDEX = 2;
-		public static final int FILE_NAME_FIELD_INDEX = 3;
-		public static final int FILE_SIZE_FIELD_INDEX = 4;
-		public static final int FILE_EXTENSION_FIELD_INDEX = 5;
-		public static final int FILE_DATE_FIELD_INDEX = 6;
-		public static final int FILE_STORAGE_FIELD_INDEX = 7;
-		public static final int FILE_SYNC_FILED_INDEX = 8;
+        public static final String FAVORITE_ID = "favorite_id";
+
+		public static final String[] PROJECTION = new String[] {
+			_ID, TYPE, PATH, NAME, SIZE, EXTENSION, DATE, STORAGE, SYNC, FAVORITE_ID};
+
+		public static final int ID_INDEX = 0;
+		public static final int TYPE_INDEX = 1;
+		public static final int PATH_INDEX = 2;
+		public static final int NAME_INDEX = 3;
+		public static final int SIZE_INDEX = 4;
+		public static final int EXTENSION_INDEX = 5;
+		public static final int DATE_INDEX = 6;
+		public static final int STORAGE_INDEX = 7;
+		public static final int SYNC_INDEX = 8;
+        public static final int FAVORITE_ID_INDEX = 9;
 		
 		public static final class SQL {
             
             public static final String CREATE = "Create TABLE IF NOT EXISTS " + TABLE
                 +" (_id INTEGER PRIMARY KEY, "
-                +FILE_PATH_FIELD + " TEXT, "
-                +FILE_NAME_FIELD + " TEXT, "
-                +FILE_TYPE_FIELD + " TEXT, "
-                +FILE_SIZE_FIELD + " LONG, "
-                +FILE_DATE_FIELD + " LONG, "
-                +FILE_EXTENSION_FIELD + " TEXT, "
-                +FILE_STORAGE_FIELD + " TEXT, "
-            	+FILE_SYNC_FIELD + " INTEGER, UNIQUE("+FileColumns.FILE_PATH_FIELD+") "
+                +PATH + " TEXT, "
+                +NAME + " TEXT, "
+                +TYPE + " TEXT, "
+                +SIZE + " LONG, "
+                +DATE + " LONG, "
+                +EXTENSION + " TEXT, "
+                +STORAGE + " TEXT, "
+            	+SYNC + " INTEGER, UNIQUE("+FileColumns.PATH+") "
                     + ");";
             
             public static final String DROP = "DROP TABLE IF EXISTS " + TABLE;                   
@@ -115,30 +106,29 @@ public class DataStructures {
 
 		public static Uri CONTENT_URI = Uri.parse(CONTENT_BOX);
 
-		public static final String IMAGE_WIDTH_FIELD = "image_width";
-		
-		public static final String IMAGE_HEIGHT_FIELD = "image_height";
-		
-		public static final int IMAGE_WIDTH_FIELD_INDEX = 9;
-		public static final int IMAGE_HEIGHT_FIELD_INDEX = 10;
+		public static final String IMAGE_WIDTH = "image_width";
+		public static final String IMAGE_HEIGHT = "image_height";
+
+		public static final int IMAGE_WIDTH_INDEX = 9;
+		public static final int IMAGE_HEIGHT_INDEX = 10;
 		
 		public static final String[] IMAGE_PROJECTION =  new String[] {
-			_ID, FILE_TYPE_FIELD, FILE_PATH_FIELD, FILE_NAME_FIELD, FILE_SIZE_FIELD, FILE_EXTENSION_FIELD, FILE_DATE_FIELD, FILE_STORAGE_FIELD, FILE_SYNC_FIELD, IMAGE_WIDTH_FIELD, IMAGE_HEIGHT_FIELD};
+			_ID, TYPE, PATH, NAME, SIZE, EXTENSION, DATE, STORAGE, SYNC, FAVORITE_ID, IMAGE_WIDTH, IMAGE_HEIGHT};
 		
 		public static final class SQL {
             
             public static final String CREATE = "Create TABLE IF NOT EXISTS " + TABLE
                 +" (_id INTEGER PRIMARY KEY, "
-                +FILE_PATH_FIELD + " TEXT, "
-                +FILE_TYPE_FIELD + " TEXT, "
-                +FILE_NAME_FIELD + " TEXT, "
-                +FILE_SIZE_FIELD + " LONG, "
-                +FILE_DATE_FIELD + " LONG, "
-                +FILE_STORAGE_FIELD + " TEXT, "
-                +FILE_SYNC_FIELD + " INTEGER, "
-                +IMAGE_WIDTH_FIELD + " INTEGER, "
-                +IMAGE_HEIGHT_FIELD + " INTEGER, "
-                +FILE_EXTENSION_FIELD + " TEXT, UNIQUE("+ImageColumns.FILE_PATH_FIELD+") "
+                +PATH + " TEXT, "
+                +TYPE + " TEXT, "
+                +NAME + " TEXT, "
+                +SIZE + " LONG, "
+                +DATE + " LONG, "
+                +STORAGE + " TEXT, "
+                +SYNC + " INTEGER, "
+                +IMAGE_WIDTH + " INTEGER, "
+                +IMAGE_HEIGHT + " INTEGER, "
+                +EXTENSION + " TEXT, UNIQUE("+ImageColumns.PATH+") "
                     + ");";
             
             public static final String DROP = "DROP TABLE IF EXISTS " + TABLE;                   
@@ -154,42 +144,38 @@ public class DataStructures {
 
 		public static Uri CONTENT_URI = Uri.parse(CONTENT_BOX);
 
-		public static final String PLAY_DURATION_FIELD = "play_duration";
-		
-		public static final String ALBUM_FIELD = "album";
-		
-		public static final String SINGER_FIELD = "singer";
-		
-		public static final String TITLE_FIELD = "title";
-		
-		public static final String DEFAULT_SORT_ORDER = "name desc";
+		public static final String PLAY_DURATION = "play_duration";
+		public static final String ALBUM = "album";
+		public static final String SINGER = "singer";
+		public static final String TITLE = "title";
+		public static final String DEFAULT_SORT_ORDER = NAME + " desc";
 		
 		public static final String[] AUDIO_PROJECTION =  new String[] {
-			_ID, FILE_TYPE_FIELD, FILE_PATH_FIELD, FILE_NAME_FIELD, FILE_SIZE_FIELD, FILE_EXTENSION_FIELD, FILE_DATE_FIELD, FILE_STORAGE_FIELD, FILE_SYNC_FIELD, PLAY_DURATION_FIELD, SINGER_FIELD, ALBUM_FIELD, TITLE_FIELD };
+			_ID, TYPE, PATH, NAME, SIZE, EXTENSION, DATE, STORAGE, SYNC, FAVORITE_ID, PLAY_DURATION, SINGER, ALBUM, TITLE};
 	
 		
-		public static final int DURATION_FIELD_INDEX = 9;
-		public static final int SINGER_FIELD_INDEX = 10;
-		public static final int ALBUM_FIELD_INDEX = 11;
-		public static final int TITLE_FIELD_INDEX = 12;
-		public static final int NAME_FIELD_INDEX = 3;
+		public static final int DURATION_INDEX = 9;
+		public static final int SINGER_INDEX = 10;
+		public static final int ALBUM_INDEX = 11;
+		public static final int TITLE_INDEX = 12;
+		public static final int NAME_INDEX = 3;
 		
 		public static final class SQL {
             
             public static final String CREATE = "Create TABLE IF NOT EXISTS " + TABLE
                 +" (_id INTEGER PRIMARY KEY, "
-                +FILE_PATH_FIELD + " TEXT, "
-                +FILE_TYPE_FIELD + " TEXT, "
-                +FILE_NAME_FIELD + " TEXT, "
-                +FILE_SIZE_FIELD + " LONG, "
-                +FILE_DATE_FIELD + " LONG, "
-                +FILE_STORAGE_FIELD + " TEXT, "
-                +FILE_SYNC_FIELD + " INTEGER, "
-                +PLAY_DURATION_FIELD + " LONG, "
-                +SINGER_FIELD + " TEXT, "
-                +ALBUM_FIELD + " TEXT, "
-                +TITLE_FIELD + " TEXT, "
-                +FILE_EXTENSION_FIELD + " TEXT, UNIQUE("+AudioColumns.FILE_PATH_FIELD+") "
+                +PATH + " TEXT, "
+                +TYPE + " TEXT, "
+                +NAME + " TEXT, "
+                +SIZE + " LONG, "
+                +DATE + " LONG, "
+                +STORAGE + " TEXT, "
+                +SYNC + " INTEGER, "
+                +PLAY_DURATION + " LONG, "
+                +SINGER + " TEXT, "
+                +ALBUM + " TEXT, "
+                +TITLE + " TEXT, "
+                +EXTENSION + " TEXT, UNIQUE("+AudioColumns.PATH+") "
                     + ");";
             
             public static final String DROP = "DROP TABLE IF EXISTS " + TABLE;                   
@@ -205,26 +191,25 @@ public class DataStructures {
 
 		public static Uri CONTENT_URI = Uri.parse(CONTENT_BOX);
 
-		public static final String PLAY_DURATION_FIELD = "play_duration";
-		
+		public static final String PLAY_DURATION = "play_duration";
 		public static final String[] VIDEO_PROJECTION =  new String[] {
-			_ID, FILE_TYPE_FIELD, FILE_PATH_FIELD, FILE_NAME_FIELD, FILE_SIZE_FIELD, FILE_EXTENSION_FIELD, FILE_DATE_FIELD, FILE_SYNC_FIELD, FILE_STORAGE_FIELD, PLAY_DURATION_FIELD};
+			_ID, TYPE, PATH, NAME, SIZE, EXTENSION, DATE, STORAGE, SYNC, FAVORITE_ID, PLAY_DURATION};
 	
-		public static final int DURATION_FIELD_INDEX = 9;
+		public static final int DURATION_INDEX = 9;
 		
 		public static final class SQL {
             
             public static final String CREATE = "Create TABLE IF NOT EXISTS  " + TABLE
                 +" (_id INTEGER PRIMARY KEY, "
-                +FILE_PATH_FIELD + " TEXT, "
-                +FILE_TYPE_FIELD + " TEXT, "
-                +FILE_NAME_FIELD + " TEXT, "
-                +FILE_SIZE_FIELD + " LONG, "
-                +FILE_DATE_FIELD + " LONG, "
-                +FILE_STORAGE_FIELD + " TEXT, "
-                +FILE_SYNC_FIELD + " INTEGER, "
-                +PLAY_DURATION_FIELD + " LONG, "
-                +FILE_EXTENSION_FIELD + " TEXT, UNIQUE("+VideoColumns.FILE_PATH_FIELD+") "
+                +PATH + " TEXT, "
+                +TYPE + " TEXT, "
+                +NAME + " TEXT, "
+                +SIZE + " LONG, "
+                +DATE + " LONG, "
+                +STORAGE + " TEXT, "
+                +SYNC + " INTEGER, "
+                +PLAY_DURATION + " LONG, "
+                +EXTENSION + " TEXT, UNIQUE("+VideoColumns.PATH+") "
                     + ");";
             
             public static final String DROP = "DROP TABLE IF EXISTS " + TABLE;                   
@@ -241,20 +226,83 @@ public class DataStructures {
 		public static Uri CONTENT_URI = Uri.parse(CONTENT_BOX);
 		
 		public static final String[] APK_PROJECTION =  new String[] {
-			_ID, FILE_TYPE_FIELD, FILE_PATH_FIELD, FILE_NAME_FIELD, FILE_SIZE_FIELD, FILE_EXTENSION_FIELD, FILE_DATE_FIELD, FILE_STORAGE_FIELD, FILE_SYNC_FIELD};
+			_ID, TYPE, PATH, NAME, SIZE, EXTENSION, DATE, STORAGE, SYNC, FAVORITE_ID};
 		
 		public static final class SQL {
             
             public static final String CREATE = "Create TABLE IF NOT EXISTS  " + TABLE
                 +" (_id INTEGER PRIMARY KEY, "
-                +FILE_PATH_FIELD + " TEXT, "
-                +FILE_TYPE_FIELD + " TEXT, "
-                +FILE_NAME_FIELD + " TEXT, "
-                +FILE_SIZE_FIELD + " LONG, "
-                +FILE_DATE_FIELD + " LONG, "
-                +FILE_EXTENSION_FIELD + " TEXT, "
-                +FILE_STORAGE_FIELD + " TEXT, "
-                +FILE_SYNC_FIELD + " INTEGER, UNIQUE("+ApkColumns.FILE_PATH_FIELD+") "
+                +PATH + " TEXT, "
+                +TYPE + " TEXT, "
+                +NAME + " TEXT, "
+                +SIZE + " LONG, "
+                +DATE + " LONG, "
+                +EXTENSION + " TEXT, "
+                +STORAGE + " TEXT, "
+                +SYNC + " INTEGER, UNIQUE("+ApkColumns.PATH+") "
+                    + ");";
+            
+            public static final String DROP = "DROP TABLE IF EXISTS " + TABLE;                   
+                    
+        }
+	}
+
+	
+	public static final class DocumentColumns extends FileColumns {
+		
+        public static final String TABLE = "document";
+		
+		public static String CONTENT_BOX = "content://" + AUTHORITY + "/"+TABLE;
+
+		public static Uri CONTENT_URI = Uri.parse(CONTENT_BOX);
+		
+		public static final String[] DOCUMENT_PROJECTION =  new String[] {
+			_ID, TYPE, PATH, NAME, SIZE, EXTENSION, DATE, STORAGE, SYNC, FAVORITE_ID};
+		
+		public static final class SQL {
+            
+            public static final String CREATE = "Create TABLE IF NOT EXISTS  " + TABLE
+                +" (_id INTEGER PRIMARY KEY, "
+                +PATH + " TEXT, "
+                +TYPE + " TEXT, "
+                +NAME + " TEXT, "
+                +SIZE + " LONG, "
+                +DATE + " LONG, "
+                +EXTENSION + " TEXT, "
+                +STORAGE + " TEXT, "
+            	+SYNC + " INTEGER, UNIQUE("+DocumentColumns.PATH+") "
+                    + ");";
+            
+            public static final String DROP = "DROP TABLE IF EXISTS " + TABLE;                   
+                    
+        }
+	}
+	
+	public static final class ZipColumns extends FileColumns {
+		
+        public static final String TABLE = "zip";
+		
+		public static String CONTENT_BOX = "content://" + AUTHORITY + "/"+TABLE;
+
+		public static Uri CONTENT_URI = Uri.parse(CONTENT_BOX);
+		
+		public static final String DEFAULT_SORT_ORDER = EXTENSION + " asc";
+		
+		public static final String[] ZIP_PROJECTION =  new String[] {
+			_ID, TYPE, PATH, NAME, SIZE, EXTENSION, DATE, STORAGE, SYNC, FAVORITE_ID};
+		
+		public static final class SQL {
+            
+            public static final String CREATE = "Create TABLE IF NOT EXISTS  " + TABLE
+                +" (_id INTEGER PRIMARY KEY, "
+                +PATH + " TEXT, "
+                +TYPE + " TEXT, "
+                +NAME + " TEXT, "
+                +SIZE + " LONG, "
+                +DATE + " LONG, "
+                +EXTENSION + " TEXT, "
+                +STORAGE + " TEXT, "
+                +SYNC + " INTEGER, UNIQUE("+ZipColumns.PATH+") "
                     + ");";
             
             public static final String DROP = "DROP TABLE IF EXISTS " + TABLE;                   
@@ -270,40 +318,40 @@ public class DataStructures {
 
         public static Uri CONTENT_URI = Uri.parse(CONTENT_BOX);
 
-        public static final String PARENT_FOLDER_FIELD = "parent_folder";
-        public static final String IS_FOLDER_FIELD = "is_folder";
-        public static final String HASH_FIELD = "hash";
-        public static final String LOCAL_FILE_FIELD = "local_file";
-        public static final String ICON_DATA_FIELD = "local_icon";
+        public static final String PARENT_FOLDER = "parent_folder";
+        public static final String IS_FOLDER = "is_folder";
+        public static final String HASH = "hash";
+        public static final String LOCAL_FILE = "local_file";
+        public static final String ICON_DATA = "local_icon";
 
-        public static final int PARENT_FOLDER_FIELD_INDEX = 9;
-        public static final int IS_FOLDER_FIELD_INDEX = 10;
-        public static final int HASH_FIELD_INDEX = 11;
-        public static final int LOCAL_FILE_FIELD_INDEX = 12;
-        public static final int LOCAL_ICON_FIELD_INDEX = 13;
+        public static final int PARENT_FOLDER_INDEX = 9;
+        public static final int IS_FOLDER_INDEX = 10;
+        public static final int HASH_INDEX = 11;
+        public static final int LOCAL_INDEX = 12;
+        public static final int LOCAL_ICON_INDEX = 13;
 
         public static final String[] CLOUD_BOX_PROJECTION = new String[] {
-            _ID, FILE_TYPE_FIELD, FILE_PATH_FIELD, FILE_NAME_FIELD, FILE_SIZE_FIELD, FILE_EXTENSION_FIELD, FILE_DATE_FIELD, FILE_STORAGE_FIELD, FILE_SYNC_FIELD,
-            PARENT_FOLDER_FIELD, IS_FOLDER_FIELD, HASH_FIELD, LOCAL_FILE_FIELD, ICON_DATA_FIELD,
+                _ID, TYPE, PATH, NAME, SIZE, EXTENSION, DATE, STORAGE, SYNC,
+                PARENT_FOLDER, IS_FOLDER, HASH, LOCAL_FILE, ICON_DATA,
         };
 
         public static final class SQL {
 
             public static final String CREATE = "Create TABLE IF NOT EXISTS  " + TABLE
                     +" (_id INTEGER PRIMARY KEY, "
-                    +FILE_PATH_FIELD + " TEXT, "
-                    +FILE_TYPE_FIELD + " TEXT, "
-                    +FILE_NAME_FIELD + " TEXT, "
-                    +FILE_SIZE_FIELD + " LONG, "
-                    +FILE_DATE_FIELD + " LONG, "
-                    +FILE_EXTENSION_FIELD + " TEXT, "
-                    +FILE_STORAGE_FIELD + " TEXT, "
-                    +FILE_SYNC_FIELD + " INTEGER, "
-                    +PARENT_FOLDER_FIELD + " TEXT, "
-                    +IS_FOLDER_FIELD + " INTEGER, "
-                    +HASH_FIELD + " TEXT, "
-                    +LOCAL_FILE_FIELD + " TEXT, "
-                    + ICON_DATA_FIELD + " TEXT, UNIQUE("+FILE_PATH_FIELD+") "
+                    +PATH + " TEXT, "
+                    +TYPE + " TEXT, "
+                    +NAME + " TEXT, "
+                    +SIZE + " LONG, "
+                    +DATE + " LONG, "
+                    +EXTENSION + " TEXT, "
+                    +STORAGE + " TEXT, "
+                    +SYNC + " INTEGER, "
+                    +PARENT_FOLDER + " TEXT, "
+                    +IS_FOLDER + " INTEGER, "
+                    +HASH + " TEXT, "
+                    +LOCAL_FILE + " TEXT, "
+                    + ICON_DATA + " TEXT, UNIQUE("+PATH+") "
                     + ");";
 
             public static final String DROP = "DROP TABLE IF EXISTS " + TABLE;
@@ -320,126 +368,63 @@ public class DataStructures {
 
         public static Uri CONTENT_URI = Uri.parse(CONTENT_BOX);
 
-        public static final String URL_FIELD = "url";
-        public static final String SERVER_NAME_FIELD = "server_name";
-        public static final String PACKAGE_FIELD = "package";
-        public static final String VERSION_FIELD = "version";
-        public static final String VERSION_NAME_FIELD = "version_name";
-        public static final String SERVER_DATE_FIELD = "sever_date";
-        public static final String DESCRIPTION_FIELD = "description";
-        public static final String APP_CATEGORY_FIELD = "app_category";
-        public static final String ICON_FIELD = "icon";
-        public static final String PHOTO_FIELD = "photo";
+        public static final String URL = "url";
+        public static final String SERVER_NAME = "server_name";
+        public static final String PACKAGE = "package";
+        public static final String VERSION = "version";
+        public static final String VERSION_NAME = "version_name";
+        public static final String SERVER_DATE = "sever_date";
+        public static final String DESCRIPTION = "description";
+        public static final String APP_CATEGORY = "app_category";
+        public static final String ICON = "icon";
+        public static final String PHOTO = "photo";
 
         public static final int URL_FILED_INDEX = 9;
-        public static final int SERVER_NAME_FIELD_INDEX = 10;
-        public static final int PACKAGE_FIELD_INDEX = 11;
-        public static final int VERSION_FIELD_INDEX = 12;
-        public static final int VERSION_NAME_FIELD_INDEX = 13;
-        public static final int SERVER_DATE_FIELD_INDEX = 14;
-        public static final int DESCRIPTION_FIELD_INDEX = 15;
-        public static final int APP_CATEGORY_FIELD_INDEX = 16;
-        public static final int ICON_FIELD_INDEX = 17;
-        public static final int PHOTO_FIELD_INDEX = 18;
+        public static final int SERVER_NAME_INDEX = 10;
+        public static final int PACKAGE_INDEX = 11;
+        public static final int VERSION_INDEX = 12;
+        public static final int VERSION_NAME_INDEX = 13;
+        public static final int SERVER_DATE_INDEX = 14;
+        public static final int DESCRIPTION_INDEX = 15;
+        public static final int APP_CATEGORY_INDEX = 16;
+        public static final int ICON_INDEX = 17;
+        public static final int PHOTO_INDEX = 18;
 
         public static final String DEFAULT_SORT_ORDER = "sever_date desc";
 
         public static final String[] SELECTED_PROJECTION =  new String[] {
-                _ID, FILE_TYPE_FIELD, FILE_PATH_FIELD, FILE_NAME_FIELD, FILE_SIZE_FIELD, FILE_EXTENSION_FIELD, FILE_DATE_FIELD, FILE_STORAGE_FIELD, FILE_SYNC_FIELD,
-            URL_FIELD, SERVER_NAME_FIELD, PACKAGE_FIELD, VERSION_FIELD, VERSION_NAME_FIELD, SERVER_DATE_FIELD, DESCRIPTION_FIELD, APP_CATEGORY_FIELD, ICON_FIELD, PHOTO_FIELD,
+                _ID, TYPE, PATH, NAME, SIZE, EXTENSION, DATE, STORAGE, SYNC,
+                URL, SERVER_NAME, PACKAGE, VERSION, VERSION_NAME, SERVER_DATE, DESCRIPTION, APP_CATEGORY, ICON, PHOTO,
         };
 
         public static final class SQL {
 
             public static final String CREATE = "Create TABLE IF NOT EXISTS  " + TABLE
                     +" (_id INTEGER PRIMARY KEY, "
-                    +FILE_PATH_FIELD + " TEXT, "
-                    +FILE_TYPE_FIELD + " TEXT, "
-                    +FILE_NAME_FIELD + " TEXT, "
-                    +FILE_SIZE_FIELD + " LONG, "
-                    +FILE_DATE_FIELD + " LONG, "
-                    +FILE_EXTENSION_FIELD + " TEXT, "
-                    +FILE_STORAGE_FIELD + " TEXT, "
-                    +FILE_SYNC_FIELD + " INTEGER, "
-                    +URL_FIELD + " TEXT, "
-                    +SERVER_NAME_FIELD + " TEXT, "
-                    +PACKAGE_FIELD + " TEXT, "
-                    +VERSION_FIELD + " INTEGER, "
-                    +VERSION_NAME_FIELD + " TEXT, "
-                    +SERVER_DATE_FIELD + " LONG, "
-                    +DESCRIPTION_FIELD + " TEXT, "
-                    +APP_CATEGORY_FIELD + " INTEGER, "
-                    +ICON_FIELD + " TEXT, "
-                    +PHOTO_FIELD + " TEXT, UNIQUE("+SelectedColumns.URL_FIELD+") "
+                    +PATH + " TEXT, "
+                    +TYPE + " TEXT, "
+                    +NAME + " TEXT, "
+                    +SIZE + " LONG, "
+                    +DATE + " LONG, "
+                    +EXTENSION + " TEXT, "
+                    +STORAGE + " TEXT, "
+                    +SYNC + " INTEGER, "
+                    +URL + " TEXT, "
+                    +SERVER_NAME + " TEXT, "
+                    +PACKAGE + " TEXT, "
+                    +VERSION + " INTEGER, "
+                    +VERSION_NAME + " TEXT, "
+                    +SERVER_DATE + " LONG, "
+                    +DESCRIPTION + " TEXT, "
+                    +APP_CATEGORY + " INTEGER, "
+                    +ICON + " TEXT, "
+                    +PHOTO + " TEXT, UNIQUE("+SelectedColumns.URL+") "
                     + ");";
 
             public static final String DROP = "DROP TABLE IF EXISTS " + TABLE;
 
         }
     }
-	
-	public static final class DocumentColumns extends FileColumns {
-		
-        public static final String TABLE = "document";
-		
-		public static String CONTENT_BOX = "content://" + AUTHORITY + "/"+TABLE;
-
-		public static Uri CONTENT_URI = Uri.parse(CONTENT_BOX);
-		
-		public static final String[] DOCUMENT_PROJECTION =  new String[] {
-			_ID, FILE_TYPE_FIELD, FILE_PATH_FIELD, FILE_NAME_FIELD, FILE_SIZE_FIELD, FILE_EXTENSION_FIELD, FILE_DATE_FIELD, FILE_STORAGE_FIELD, FILE_SYNC_FIELD,};
-		
-		public static final class SQL {
-            
-            public static final String CREATE = "Create TABLE IF NOT EXISTS  " + TABLE
-                +" (_id INTEGER PRIMARY KEY, "
-                +FILE_PATH_FIELD + " TEXT, "
-                +FILE_TYPE_FIELD + " TEXT, "
-                +FILE_NAME_FIELD + " TEXT, "
-                +FILE_SIZE_FIELD + " LONG, "
-                +FILE_DATE_FIELD + " LONG, "
-                +FILE_EXTENSION_FIELD + " TEXT, "
-                +FILE_STORAGE_FIELD + " TEXT, "
-            	+FILE_SYNC_FIELD + " INTEGER, UNIQUE("+DocumentColumns.FILE_PATH_FIELD+") "
-                    + ");";
-            
-            public static final String DROP = "DROP TABLE IF EXISTS " + TABLE;                   
-                    
-        }
-	}
-	
-	public static final class ZipColumns extends FileColumns {
-		
-        public static final String TABLE = "zip";
-		
-		public static String CONTENT_BOX = "content://" + AUTHORITY + "/"+TABLE;
-
-		public static Uri CONTENT_URI = Uri.parse(CONTENT_BOX);
-		
-		public static final String DEFAULT_SORT_ORDER = "extension asc";
-		
-		public static final String[] ZIP_PROJECTION =  new String[] {
-			_ID, FILE_TYPE_FIELD, FILE_PATH_FIELD, FILE_NAME_FIELD, FILE_SIZE_FIELD, FILE_EXTENSION_FIELD, FILE_DATE_FIELD, FILE_STORAGE_FIELD, FILE_SYNC_FIELD,};
-		
-		public static final class SQL {
-            
-            public static final String CREATE = "Create TABLE IF NOT EXISTS  " + TABLE
-                +" (_id INTEGER PRIMARY KEY, "
-                +FILE_PATH_FIELD + " TEXT, "
-                +FILE_TYPE_FIELD + " TEXT, "
-                +FILE_NAME_FIELD + " TEXT, "
-                +FILE_SIZE_FIELD + " LONG, "
-                +FILE_DATE_FIELD + " LONG, "
-                +FILE_EXTENSION_FIELD + " TEXT, "
-                +FILE_STORAGE_FIELD + " TEXT, "
-                +FILE_SYNC_FIELD + " INTEGER, UNIQUE("+ZipColumns.FILE_PATH_FIELD+") "
-                    + ");";
-            
-            public static final String DROP = "DROP TABLE IF EXISTS " + TABLE;                   
-                    
-        }
-	}
-	
 	
     public static final class PreferenceColumns implements BaseColumns {
 
@@ -479,25 +464,25 @@ public class DataStructures {
 		public static String CONTENT_BOX = "content://" + AUTHORITY + "/"+TABLE;
 
 		public static Uri CONTENT_URI = Uri.parse(CONTENT_BOX);
-		
+
+        public static final String IS_DIRECTORY = "is_directory";
+
 		public static final String[] FAVORITE_PROJECTION =  new String[] {
-			_ID, FILE_TYPE_FIELD, FILE_PATH_FIELD, FILE_NAME_FIELD, FILE_SIZE_FIELD, FILE_EXTENSION_FIELD, FILE_DATE_FIELD, FILE_STORAGE_FIELD, FILE_SYNC_FIELD,};
-		
-		public static final String IS_DIRECTORY_FIELD = "is_directory";
+			_ID, TYPE, PATH, NAME, SIZE, EXTENSION, DATE, STORAGE, SYNC, IS_DIRECTORY};
 		
 		public static final class SQL {
             
             public static final String CREATE = "Create TABLE IF NOT EXISTS " + TABLE
                 +" (_id INTEGER PRIMARY KEY, "
-                +FILE_PATH_FIELD + " TEXT, "
-                +FILE_TYPE_FIELD + " TEXT, "
-                +FILE_NAME_FIELD + " TEXT, "
-                +FILE_SIZE_FIELD + " LONG, "
-                +FILE_DATE_FIELD + " LONG, "
-                +IS_DIRECTORY_FIELD + " INTEGER, "
-                +FILE_EXTENSION_FIELD + " TEXT, "
-                +FILE_STORAGE_FIELD + " TEXT, "
-            	+FILE_SYNC_FIELD + " INTEGER, UNIQUE("+FavoriteColumns.FILE_PATH_FIELD+") "
+                +PATH + " TEXT, "
+                +TYPE + " TEXT, "
+                +NAME + " TEXT, "
+                +SIZE + " LONG, "
+                +DATE + " LONG, "
+                +IS_DIRECTORY + " INTEGER, "
+                +EXTENSION + " TEXT, "
+                +STORAGE + " TEXT, "
+            	+SYNC + " INTEGER, UNIQUE("+FavoriteColumns.PATH+") "
                     + ");";
             
             public static final String DROP = "DROP TABLE IF EXISTS " + TABLE;                   
@@ -513,27 +498,27 @@ public class DataStructures {
 
 		public static Uri CONTENT_URI = Uri.parse(CONTENT_BOX);
 		
-		public static final String EXTENSION_FIELD = "extension";
+		public static final String EXTENSION = "extension";
 		
-		public static final String CATEGORY_FIELD = "category";
+		public static final String CATEGORY = "category";
 		
-		public static final String APP_FIELD = "app";
+		public static final String APP = "app";
 		
-		public static final String DATE_FIELD = "date";
+		public static final String DATE = "date";
 		
 		public static final String DEFAULT_SORT_ORDER = "extension asc";
 		
 		public static final String[] MATCH_PROJECTION =  new String[] {
-			EXTENSION_FIELD, CATEGORY_FIELD, APP_FIELD, DATE_FIELD};
+			EXTENSION, CATEGORY, APP, DATE};
 		
 		public static final class SQL {
             
             public static final String CREATE = "Create TABLE IF NOT EXISTS " + TABLE
                 +" ("
-                +EXTENSION_FIELD + " TEXT PRIMARY KEY, "
-                +CATEGORY_FIELD + " INTEGER, "
-                +APP_FIELD + " TEXT, "
-                +DATE_FIELD + " LONG);";
+                +EXTENSION + " TEXT PRIMARY KEY, "
+                +CATEGORY + " INTEGER, "
+                +APP + " TEXT, "
+                +DATE + " LONG);";
             
             public static final String DROP = "DROP TABLE IF EXISTS " + TABLE;                   
                     

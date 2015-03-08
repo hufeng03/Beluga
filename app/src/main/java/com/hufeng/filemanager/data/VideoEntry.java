@@ -36,6 +36,6 @@ public class VideoEntry extends FileEntry {
     @Override
     public void fillContentValues(ContentValues cv) {
         super.fillContentValues(cv);
-        cv.put(DataStructures.VideoColumns.PLAY_DURATION_FIELD, playDuration);
+        cv.put(DataStructures.VideoColumns.PLAY_DURATION, playDuration);
     }
 }

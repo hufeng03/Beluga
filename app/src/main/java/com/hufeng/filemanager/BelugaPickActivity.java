@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
+import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.intent.Constant;
 import com.hufeng.filemanager.ui.BelugaActionController;
 
@@ -47,17 +48,17 @@ public class BelugaPickActivity extends BelugaActionControllerActivity {
         if (action.equals(Constant.ACTION_PICK_FILE)) {
             String type = getIntent().getType();
             if (type.equals("image/*")) {
-                showFileGrouperPickFragment(CategorySelectEvent.CategoryType.PHOTO);
+                showFileGrouperPickFragment(FileCategoryHelper.CATEGORY_TYPE_IMAGE);
             } else if (type.equals("audio/*")) {
-                showFileGrouperPickFragment(CategorySelectEvent.CategoryType.AUDIO);
+                showFileGrouperPickFragment(FileCategoryHelper.CATEGORY_TYPE_AUDIO);
             } else if (type.equals("video/*")) {
-                showFileGrouperPickFragment(CategorySelectEvent.CategoryType.VIDEO);
+                showFileGrouperPickFragment(FileCategoryHelper.CATEGORY_TYPE_VIDEO);
             } else if (type.equals("apk/*")) {
-                showFileGrouperPickFragment(CategorySelectEvent.CategoryType.APK);
+                showFileGrouperPickFragment(FileCategoryHelper.CATEGORY_TYPE_APK);
             } else if (type.equals("zip/*")) {
-                showFileGrouperPickFragment(CategorySelectEvent.CategoryType.ZIP);
+                showFileGrouperPickFragment(FileCategoryHelper.CATEGORY_TYPE_ZIP);
             } else if (type.equals("doc/*")) {
-                showFileGrouperPickFragment(CategorySelectEvent.CategoryType.DOC);
+                showFileGrouperPickFragment(FileCategoryHelper.CATEGORY_TYPE_DOCUMENT);
             } else {
                 showFileBrowserPickFragment();
             }
@@ -100,13 +101,13 @@ public class BelugaPickActivity extends BelugaActionControllerActivity {
         }
     }
 
-    private void showFileGrouperPickFragment(CategorySelectEvent.CategoryType type) {
+    private void showFileGrouperPickFragment(int category) {
         final FragmentManager fm = getSupportFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
         final String tag = "FileGrouperSelect";
         FileGrouperFragment fragment = (FileGrouperFragment) fm.findFragmentByTag(tag);
         if(fragment == null) {
-            fragment = FileGrouperFragment.newSelectionGrouper(type);
+            fragment = FileGrouperFragment.newSelectionGrouper(category);
             ft.replace(R.id.fragment_container, fragment, tag);
         } else {
             if (fragment.isDetached()) {

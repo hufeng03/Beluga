@@ -88,4 +88,10 @@ public abstract class BelugaBaseActionBarActivity extends ActionBarActivity {
         unregisterReceiver(mBelugaMountReceiver);
 	}
 
+    @Override
+    public void supportInvalidateOptionsMenu() {
+        if (DEBUG)
+            LogUtil.i(((Object)this).getClass().getSimpleName(), "supportInvalidateOptionsMenu");
+        super.supportInvalidateOptionsMenu();
+    }
 }

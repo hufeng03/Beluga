@@ -138,8 +138,8 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
 	private void refreshDatabase()
 	{
 		ContentValues category_values = new ContentValues();
-		category_values.put(DataStructures.CategoryColumns.SIZE_FIELD, 0);
-		category_values.put(DataStructures.CategoryColumns.NUMBER_FIELD, 0);
+		category_values.put(DataStructures.CategoryColumns.SIZE, 0);
+		category_values.put(DataStructures.CategoryColumns.NUMBER, 0);
 		int count = FileManager.getAppContext().getContentResolver().update(DataStructures.CategoryColumns.CONTENT_URI, category_values, null, null);
 		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "update category size and number to 0, return "+count);
 		if(count==0)
@@ -147,18 +147,18 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
 			if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "we will do insert");
 			List<MountPoint> mps = MountPointManager.getInstance().getMountPoints();
 			for(MountPoint mp: mps){
-				category_values.put(DataStructures.CategoryColumns.STORAGE_FIELD, mp.mPath);
-				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileCategoryHelper.CATEGORY_TYPE_ZIP);
+				category_values.put(DataStructures.CategoryColumns.STORAGE, mp.mPath);
+				category_values.put(DataStructures.CategoryColumns.CATEGORY, FileCategoryHelper.CATEGORY_TYPE_ZIP);
 				FileManager.getAppContext().getContentResolver().insert(DataStructures.CategoryColumns.CONTENT_URI, category_values);
-				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileCategoryHelper.CATEGORY_TYPE_APK);
+				category_values.put(DataStructures.CategoryColumns.CATEGORY, FileCategoryHelper.CATEGORY_TYPE_APK);
 				FileManager.getAppContext().getContentResolver().insert(DataStructures.CategoryColumns.CONTENT_URI, category_values);
-				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileCategoryHelper.CATEGORY_TYPE_DOCUMENT);
+				category_values.put(DataStructures.CategoryColumns.CATEGORY, FileCategoryHelper.CATEGORY_TYPE_DOCUMENT);
 				FileManager.getAppContext().getContentResolver().insert(DataStructures.CategoryColumns.CONTENT_URI, category_values);
-				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileCategoryHelper.CATEGORY_TYPE_IMAGE);
+				category_values.put(DataStructures.CategoryColumns.CATEGORY, FileCategoryHelper.CATEGORY_TYPE_IMAGE);
 				FileManager.getAppContext().getContentResolver().insert(DataStructures.CategoryColumns.CONTENT_URI, category_values);
-				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileCategoryHelper.CATEGORY_TYPE_AUDIO);
+				category_values.put(DataStructures.CategoryColumns.CATEGORY, FileCategoryHelper.CATEGORY_TYPE_AUDIO);
 				FileManager.getAppContext().getContentResolver().insert(DataStructures.CategoryColumns.CONTENT_URI, category_values);
-				category_values.put(DataStructures.CategoryColumns.CATEGORY_FIELD, FileCategoryHelper.CATEGORY_TYPE_VIDEO);
+				category_values.put(DataStructures.CategoryColumns.CATEGORY, FileCategoryHelper.CATEGORY_TYPE_VIDEO);
 				FileManager.getAppContext().getContentResolver().insert(DataStructures.CategoryColumns.CONTENT_URI, category_values);
 			}
 		}
@@ -234,7 +234,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
         addFileIntoDatabase(DataStructures.VideoColumns.CONTENT_URI, FileCategoryHelper.CATEGORY_TYPE_VIDEO, save_unsyned_videos);
         addFileIntoDatabase(DataStructures.ApkColumns.CONTENT_URI, FileCategoryHelper.CATEGORY_TYPE_APK, save_unsyned_apks);
         addFileIntoDatabase(DataStructures.DocumentColumns.CONTENT_URI, FileCategoryHelper.CATEGORY_TYPE_DOCUMENT, save_unsyned_documents);
-        addFileIntoDatabase(DataStructures.ZipColumns.CONTENT_URI, FileCategoryHelper.FILE_TYPE_ZIP, save_unsyned_zips);
+        addFileIntoDatabase(DataStructures.ZipColumns.CONTENT_URI, FileCategoryHelper.CATEGORY_TYPE_ZIP, save_unsyned_zips);
 
 
 	}
@@ -310,7 +310,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
         ContentValues[] cvs = new ContentValues[files.size()];
         for (int i = 0; i < files.size(); i++) {
             cvs[i] = new ContentValues();
-            cvs[i].put(DataStructures.FileColumns.FILE_SYNC_FIELD, 0);
+            cvs[i].put(DataStructures.FileColumns.SYNC, 0);
             FileEntry entry = BelugaProviderHelper.createFileEntryAccordingToCategory(
                     files.get(i), category);
             entry.fillContentValues(cvs[i]);
@@ -323,7 +323,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
             return;
         }
         StringBuilder selection = new StringBuilder();
-        selection.append(DataStructures.FileColumns.FILE_PATH_FIELD + " IN ");
+        selection.append(DataStructures.FileColumns.PATH + " IN ");
         selection.append('(');
         int size = files.size();
         for(int i=0; i<size; i++)
@@ -343,7 +343,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
 
         Cursor cursor = null;
         try {
-            cursor = FileManager.getAppContext().getContentResolver().query(uri, new String[]{DataStructures.FileColumns.FILE_PATH_FIELD}, selection.toString(), null, null);
+            cursor = FileManager.getAppContext().getContentResolver().query(uri, new String[]{DataStructures.FileColumns.PATH}, selection.toString(), null, null);
             if (cursor != null) {
                 while (cursor.moveToNext()) {
                     String path = cursor.getString(0);
@@ -362,8 +362,8 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
     private ArrayList<String> saveUnsyncedFileInDatabase(Uri uri) {
 
         Cursor cursor = null;
-        String[] projection = new String[]{DataStructures.FileColumns.FILE_PATH_FIELD};
-        String selection_where = DataStructures.FileColumns.FILE_SYNC_FIELD + "==?";
+        String[] projection = new String[]{DataStructures.FileColumns.PATH};
+        String selection_where = DataStructures.FileColumns.SYNC + "==?";
         String[] selection_arg = new String[]{String.valueOf(0)};
         ArrayList<String> unsynced_files = new ArrayList<String>();
         try {
@@ -393,10 +393,10 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
 
     private int[] clearUnExistFileInDatabase(Uri uri) {
         int count = 0;
-        String[] projection = new String[]{DataStructures.FileColumns.FILE_PATH_FIELD};
+        String[] projection = new String[]{DataStructures.FileColumns.PATH};
 
         StringBuilder delete_selection = new StringBuilder();
-        delete_selection.append(DataStructures.FileColumns.FILE_PATH_FIELD + " IN ");
+        delete_selection.append(DataStructures.FileColumns.PATH + " IN ");
         delete_selection.append('(');
         boolean isFirst = true;
         Cursor cursor = null;
@@ -463,10 +463,10 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                     if (!new File(path).exists() || new File(path).isDirectory() || new File(path).length() == 0) {
                         continue;
                     }
-                    cv.put(DataStructures.FileColumns.FILE_PATH_FIELD, path);
-                    cv.put(DataStructures.FileColumns.FILE_SIZE_FIELD, cursor.getLong(1));
-                    cv.put(DataStructures.FileColumns.FILE_DATE_FIELD, cursor.getLong(2));
-                    cv.put(DataStructures.FileColumns.FILE_SYNC_FIELD, 1);
+                    cv.put(DataStructures.FileColumns.PATH, path);
+                    cv.put(DataStructures.FileColumns.SIZE, cursor.getLong(1));
+                    cv.put(DataStructures.FileColumns.DATE, cursor.getLong(2));
+                    cv.put(DataStructures.FileColumns.SYNC, 1);
                     String name = null;
                     if (!TextUtils.isEmpty(path)) {
                         int i = path.lastIndexOf("/");
@@ -480,26 +480,26 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                     }
 
                     if(!TextUtils.isEmpty(name)) {
-                        cv.put(DataStructures.FileColumns.FILE_NAME_FIELD, name);
+                        cv.put(DataStructures.FileColumns.NAME, name);
                         int i = name.lastIndexOf(".");
                         if(i>0) {
-                            cv.put(DataStructures.FileColumns.FILE_EXTENSION_FIELD, name.substring(i+1));
+                            cv.put(DataStructures.FileColumns.EXTENSION, name.substring(i+1));
                         }
                     }
                     String storage_path = MountPointManager.getInstance().getRealMountPointPath(path);
-                    cv.put(DataStructures.FileColumns.FILE_STORAGE_FIELD, storage_path);
+                    cv.put(DataStructures.FileColumns.STORAGE, storage_path);
                     switch (category_type) {
                         case FileCategoryHelper.CATEGORY_TYPE_IMAGE:
-                            cv.put(DataStructures.ImageColumns.IMAGE_WIDTH_FIELD, cursor.getInt(4));
-                            cv.put(DataStructures.ImageColumns.IMAGE_HEIGHT_FIELD, cursor.getInt(5));
+                            cv.put(DataStructures.ImageColumns.IMAGE_WIDTH, cursor.getInt(4));
+                            cv.put(DataStructures.ImageColumns.IMAGE_HEIGHT, cursor.getInt(5));
                             break;
                         case FileCategoryHelper.CATEGORY_TYPE_VIDEO:
-                            cv.put(DataStructures.VideoColumns.PLAY_DURATION_FIELD, cursor.getLong(4));
+                            cv.put(DataStructures.VideoColumns.PLAY_DURATION, cursor.getLong(4));
                             break;
                         case FileCategoryHelper.CATEGORY_TYPE_AUDIO:
-                            cv.put(DataStructures.AudioColumns.PLAY_DURATION_FIELD, cursor.getLong(4));
-                            cv.put(DataStructures.AudioColumns.ALBUM_FIELD, cursor.getString(5));
-                            cv.put(DataStructures.AudioColumns.SINGER_FIELD, cursor.getString(6));
+                            cv.put(DataStructures.AudioColumns.PLAY_DURATION, cursor.getLong(4));
+                            cv.put(DataStructures.AudioColumns.ALBUM, cursor.getString(5));
+                            cv.put(DataStructures.AudioColumns.SINGER, cursor.getString(6));
                             break;
                         default:
                             break;

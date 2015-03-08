@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class MtkFeatureOptions {
+public class MTKFeatureOptions {
 
     public static boolean isMtkSDSwapSupported() {
         try {

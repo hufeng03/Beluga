@@ -13,13 +13,13 @@ public class SortPreferenceReceiver implements SharedPreferences.OnSharedPrefere
 
     final Loader mLoader;
     final SharedPreferences mSharedPreference;
-    final CategorySelectEvent.CategoryType mCategoryType;
+    final int mCategory;
     BelugaSortHelper.SORTER mSorter;
 
-    public SortPreferenceReceiver(Loader loader, CategorySelectEvent.CategoryType categoryType) {
+    public SortPreferenceReceiver(Loader loader, int category) {
         mLoader = loader;
-        mCategoryType = categoryType;
-        mSorter = BelugaSortHelper.getFileSorter(loader.getContext(), categoryType);
+        mCategory = category;
+        mSorter = BelugaSortHelper.getFileSorter(loader.getContext(), category);
         mSharedPreference = loader.getContext().getSharedPreferences(BelugaSortHelper.SORT_PREFERENCE_NAME, Context.MODE_PRIVATE);
         mSharedPreference.registerOnSharedPreferenceChangeListener(this);
     }
@@ -30,7 +30,7 @@ public class SortPreferenceReceiver implements SharedPreferences.OnSharedPrefere
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(mLoader.getContext(), mCategoryType);
+        BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(mLoader.getContext(), mCategory);
         if (!sorter.equals(mSorter)) {
             mSorter = sorter;
             mLoader.onContentChanged();

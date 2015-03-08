@@ -33,8 +33,8 @@ import com.hufeng.filemanager.CategorySelectEvent;
 import com.hufeng.filemanager.FileEntrySimpleListViewHolder;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.helper.BelugaSortHelper;
-import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.utils.FileUtil;
 import com.hufeng.filemanager.utils.MimeUtil;
 import com.hufeng.filemanager.utils.TimeUtil;
@@ -99,9 +99,9 @@ public class BelugaDialogFragment extends DialogFragment{
     }
 
 
-    public static DialogFragment showSortDialog(FragmentActivity activity, CategorySelectEvent.CategoryType category) {
+    public static DialogFragment showSortDialog(FragmentActivity activity, int category) {
         Bundle data = new Bundle();
-        data.putString(CATEGORY_DATA, category.toString());
+        data.putInt(CATEGORY_DATA, category);
         DialogFragment dialog = BelugaDialogFragment.newInstance(SORT_DIALOG, data);
         dialog.show(activity.getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
         return dialog;
@@ -110,7 +110,7 @@ public class BelugaDialogFragment extends DialogFragment{
 
     public static DialogFragment showAppSortDialog(FragmentActivity activity) {
         Bundle data = new Bundle();
-        data.putString(CATEGORY_DATA, CategorySelectEvent.CategoryType.APP.toString());
+        data.putInt(CATEGORY_DATA, FileCategoryHelper.CATEGORY_TYPE_APP);
         DialogFragment dialog = BelugaDialogFragment.newInstance(SORT_DIALOG, data);
         dialog.show(activity.getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
         return dialog;
@@ -251,9 +251,8 @@ public class BelugaDialogFragment extends DialogFragment{
             final RadioButton sortByName = (RadioButton)view.findViewById(R.id.radio_sort_by_name);
             final RadioButton sortBySize = (RadioButton)view.findViewById(R.id.radio_sort_by_size);
             final RadioButton sortByExtension = (RadioButton)view.findViewById(R.id.radio_sort_by_extension);
-            final CategorySelectEvent.CategoryType category =
-                    CategorySelectEvent.CategoryType.valueOf(getArguments().getString(CATEGORY_DATA));
-            if (category == CategorySelectEvent.CategoryType.APP || category == CategorySelectEvent.CategoryType.APK) {
+            final int category = getArguments().getInt(CATEGORY_DATA);
+            if (category == FileCategoryHelper.CATEGORY_TYPE_APK || category == FileCategoryHelper.CATEGORY_TYPE_APP) {
                 sortByExtension.setVisibility(View.GONE);
             }
             BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(getActivity(), category);

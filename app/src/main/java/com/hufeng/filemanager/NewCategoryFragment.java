@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.hufeng.filemanager.helper.FileCategoryHelper;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -34,14 +36,14 @@ public class NewCategoryFragment extends BelugaRecyclerFragment/* implements Loa
     private int[] mGridItemSize = {0,0};
 
     private CategoryItem[] mCategoryItems = {
-        new CategoryItem(R.drawable.file_category_icon_audio, R.string.category_music, 0, CategorySelectEvent.CategoryType.AUDIO),
-        new CategoryItem(R.drawable.file_category_icon_video, R.string.category_video, 0, CategorySelectEvent.CategoryType.VIDEO),
-        new CategoryItem(R.drawable.file_category_icon_image, R.string.category_picture, 0, CategorySelectEvent.CategoryType.PHOTO),
-        new CategoryItem(R.drawable.file_category_icon_document, R.string.category_document, 0, CategorySelectEvent.CategoryType.DOC),
-        new CategoryItem(R.drawable.file_category_icon_apk, R.string.category_apk, 0, CategorySelectEvent.CategoryType.APK),
-        new CategoryItem(R.drawable.file_category_icon_zip, R.string.category_zip, 0, CategorySelectEvent.CategoryType.ZIP),
-        new CategoryItem(R.drawable.file_category_icon_download, R.string.category_download, 0, CategorySelectEvent.CategoryType.DOWNLOAD),
-        new CategoryItem(R.drawable.file_category_icon_favorite, R.string.category_favorite, 0, CategorySelectEvent.CategoryType.FAVORITE),
+        new CategoryItem(R.drawable.file_category_icon_audio, R.string.category_music, 0, FileCategoryHelper.CATEGORY_TYPE_AUDIO),
+        new CategoryItem(R.drawable.file_category_icon_video, R.string.category_video, 0, FileCategoryHelper.CATEGORY_TYPE_VIDEO),
+        new CategoryItem(R.drawable.file_category_icon_image, R.string.category_picture, 0,FileCategoryHelper.CATEGORY_TYPE_IMAGE),
+        new CategoryItem(R.drawable.file_category_icon_document, R.string.category_document, 0, FileCategoryHelper.CATEGORY_TYPE_DOCUMENT),
+        new CategoryItem(R.drawable.file_category_icon_apk, R.string.category_apk, 0, FileCategoryHelper.CATEGORY_TYPE_APK),
+        new CategoryItem(R.drawable.file_category_icon_zip, R.string.category_zip, 0, FileCategoryHelper.CATEGORY_TYPE_ZIP),
+        new CategoryItem(R.drawable.file_category_icon_download, R.string.category_download, 0, FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD),
+        new CategoryItem(R.drawable.file_category_icon_favorite, R.string.category_favorite, 0, FileCategoryHelper.CATEGORY_TYPE_FAVORITE),
 //        new CategoryItem(R.drawable.file_category_icon_app, R.string.category_app, 0, CategorySelectEvent.CategoryType.APP),
     };
 
@@ -209,7 +211,7 @@ public class NewCategoryFragment extends BelugaRecyclerFragment/* implements Loa
 
         @Override
         public void onClick(View v) {
-            BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), item.type));
+            BusProvider.getInstance().post(new CategorySelectEvent(System.currentTimeMillis(), item.category));
         }
     }
 
@@ -217,13 +219,13 @@ public class NewCategoryFragment extends BelugaRecyclerFragment/* implements Loa
         private int icon;
         private int name;
         private int count;
-        private CategorySelectEvent.CategoryType type;
+        private int category;
 
-        CategoryItem(int icon, int name, int count, CategorySelectEvent.CategoryType type) {
+        CategoryItem(int icon, int name, int count, int category) {
             this.icon = icon;
             this.name = name;
             this.count = count;
-            this.type = type;
+            this.category = category;
         }
     }
 

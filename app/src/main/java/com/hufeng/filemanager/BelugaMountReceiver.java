@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.hufeng.filemanager.mount.MountPointManager;
-import com.hufeng.filemanager.mtk.MtkFeatureOptions;
+import com.hufeng.filemanager.mtk.MTKFeatureOptions;
 
 import java.util.ArrayList;
 
@@ -136,7 +136,7 @@ public class BelugaMountReceiver extends BroadcastReceiver {
         intentFilter.addDataScheme("file");
         context.registerReceiver(receiver, intentFilter);
 
-        if (MtkFeatureOptions.isMtkSDSwapSupported()) {
+        if (MTKFeatureOptions.isMtkSDSwapSupported()) {
             IntentFilter intentFilterSDSwap = new IntentFilter();
             intentFilterSDSwap.addAction(INTENT_SD_SWAP);
             context.registerReceiver(receiver, intentFilterSDSwap);

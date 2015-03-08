@@ -48,8 +48,8 @@ public class ImageEntry extends FileEntry{
     @Override
     public void fillContentValues(ContentValues cv) {
         super.fillContentValues(cv);
-        cv.put(DataStructures.ImageColumns.IMAGE_WIDTH_FIELD, imageWidth);
-        cv.put(DataStructures.ImageColumns.IMAGE_HEIGHT_FIELD, imageHeight);
+        cv.put(DataStructures.ImageColumns.IMAGE_WIDTH, imageWidth);
+        cv.put(DataStructures.ImageColumns.IMAGE_HEIGHT, imageHeight);
     }
 
     private void fetchImageResolution(File image) {

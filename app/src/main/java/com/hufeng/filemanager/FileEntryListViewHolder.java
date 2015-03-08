@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.ui.BelugaActionController;
 import com.hufeng.filemanager.utils.SizeUtil;
@@ -150,7 +149,7 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
                 ((ImageView) view).setImageResource(R.drawable.beluga_overflow_menu);
             }
         });
-        if (FileAction.isFavorite(entry.path)) {
+        if (entry.isFavorite) {
             popupMenu.getMenu().findItem(R.id.add_favorite).setEnabled(false);
             popupMenu.getMenu().findItem(R.id.add_favorite).setVisible(false);
         } else {

@@ -26,63 +26,14 @@ import java.util.List;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class NewDownloadFragment extends FileRecyclerFragment implements LoaderManager.LoaderCallbacks<List<FileEntry>>,
+public class NewFavoriteFragment extends FileRecyclerFragment implements LoaderManager.LoaderCallbacks<List<FileEntry>>,
         BelugaEntryViewHolder.EntryClickListener {
 
-    private static final String TAG = "NewDownloadFragment";
+    private static final String TAG = "NewFavoriteFragment";
 
     private static final int LOADER_ID = 1;
 
     BelugaArrayRecyclerAdapter<FileEntry, FileEntryListViewHolder> mAdapter;
-
-    BelugaMountReceiver mBelugaMountReceiver;
-    DeviceMountListener mMountListener;
-
-    public static final int MSG_DO_MOUNTED = 0;
-    public static final int MSG_DO_EJECTED = 1;
-    public static final int MSG_DO_UNMOUNTED = 2;
-    public static final int MSG_DO_SDSWAP = 3;
-
-    private Handler mHandler = new MainThreadHandler();
-
-    private class MainThreadHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_DO_MOUNTED:
-                    doOnMounted((String) msg.obj);
-                    break;
-                case MSG_DO_UNMOUNTED:
-                    doOnEjected((String) msg.obj);
-                    break;
-                case MSG_DO_EJECTED:
-                    doOnUnMounted((String) msg.obj);
-                    break;
-                case MSG_DO_SDSWAP:
-                    doOnSdSwap();
-                    break;
-            }
-        }
-    }
-
-    private void doOnMounted(String mountPointPath) {
-        // TODO: handle only files in mountPointPath
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
-    }
-
-    private void doOnEjected(String ejectdPointPath) {
-        // TODO: handle only files in mountPointPath
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
-    }
-
-    private void doOnUnMounted(String unmountedPointPath) {
-        // TODO: handle only files in mountPointPath
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
-    }
-
-    private void doOnSdSwap() {
-
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -93,7 +44,7 @@ public class NewDownloadFragment extends FileRecyclerFragment implements LoaderM
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final String empty_text = getResources().getString(R.string.empty_download);
+        final String empty_text = getResources().getString(R.string.empty_favorite);
         setEmptyText(empty_text);
 
         mAdapter = new BelugaArrayRecyclerAdapter<FileEntry, FileEntryListViewHolder>(
@@ -106,11 +57,11 @@ public class NewDownloadFragment extends FileRecyclerFragment implements LoaderM
                         if (type == BelugaDisplayMode.GRID.ordinal()) {
                             View view = LayoutInflater.from(parent.getContext())
                                     .inflate( R.layout.file_grid_row, parent, false);
-                            return new FileEntryGridViewHolder(view, getActionController(), NewDownloadFragment.this);
+                            return new FileEntryGridViewHolder(view, getActionController(), NewFavoriteFragment.this);
                         } else {
                             View view = LayoutInflater.from(parent.getContext())
                                     .inflate( R.layout.file_list_row, parent, false);
-                            return new FileEntryListViewHolder(view, getActionController(), NewDownloadFragment.this);
+                            return new FileEntryListViewHolder(view, getActionController(), NewFavoriteFragment.this);
                         }
 
                     }
@@ -125,16 +76,11 @@ public class NewDownloadFragment extends FileRecyclerFragment implements LoaderM
     @Override
     public void onResume() {
         super.onResume();
-        mBelugaMountReceiver = BelugaMountReceiver.registerMountReceiver(getActivity());
-        mMountListener = new DeviceMountListener();
-        mBelugaMountReceiver.registerMountListener(mMountListener);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mBelugaMountReceiver.unregisterMountListener(mMountListener);
-        getActivity().unregisterReceiver(mBelugaMountReceiver);
     }
 
     @Override
@@ -182,7 +128,7 @@ public class NewDownloadFragment extends FileRecyclerFragment implements LoaderM
                 getActivity().supportInvalidateOptionsMenu();
                 return true;
             case R.id.menu_browser_sort:
-                BelugaDialogFragment.showSortDialog(getActivity(), FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD);
+                BelugaDialogFragment.showSortDialog(getActivity(), FileCategoryHelper.CATEGORY_TYPE_FAVORITE);
                 return true;
             case R.id.menu_up:
                 getActivity().onBackPressed();
@@ -196,7 +142,7 @@ public class NewDownloadFragment extends FileRecyclerFragment implements LoaderM
     public Loader<List<FileEntry>> onCreateLoader(int arg0, Bundle arg1) {
         Log.i(TAG, "onCreateLoader");
         if(arg0 ==  LOADER_ID) {
-            return new DownloadListLoader(getActivity());
+            return new FavoriteListLoader(getActivity());
         } else {
             return null;
         }
@@ -242,27 +188,4 @@ public class NewDownloadFragment extends FileRecyclerFragment implements LoaderM
         return mAdapter.getAll();
     }
 
-
-    private class DeviceMountListener implements BelugaMountReceiver.MountListener {
-        @Override
-        public void onMounted(String mountPoint) {
-            Message.obtain(mHandler, MSG_DO_MOUNTED, mountPoint).sendToTarget();
-        }
-
-        @Override
-        public void onUnMounted(String unMountPoint) {
-            Message.obtain(mHandler, MSG_DO_UNMOUNTED, unMountPoint).sendToTarget();
-        }
-
-        @Override
-        public void onEjected(String unMountPoint) {
-            Message.obtain(mHandler, MSG_DO_EJECTED, unMountPoint).sendToTarget();
-        }
-
-        @Override
-        public void onSdSwap() {
-            Message.obtain(mHandler, MSG_DO_SDSWAP).sendToTarget();
-        }
-
-    }
 }

@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
-import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 import com.hufeng.filemanager.intent.Constant;

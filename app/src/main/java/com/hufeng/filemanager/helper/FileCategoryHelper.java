@@ -15,12 +15,18 @@ import java.util.Locale;
  */
 public class FileCategoryHelper {
 
+    public static final int CATEGORY_TYPE_UNKNOW = 0;
     public static final int CATEGORY_TYPE_AUDIO = 1;
     public static final int CATEGORY_TYPE_VIDEO = 2;
     public static final int CATEGORY_TYPE_IMAGE = 3;
     public static final int CATEGORY_TYPE_APK = 4;
     public static final int CATEGORY_TYPE_DOCUMENT = 5;
     public static final int CATEGORY_TYPE_ZIP = 6;
+
+    // This is not file type, but for convenient, we define as category
+    public static final int CATEGORY_TYPE_APP = 100;
+    public static final int CATEGORY_TYPE_FAVORITE = 101;
+    public static final int CATEGORY_TYPE_DOWNLOAD = 102;
 
     // Audio file types
     public static final int FILE_TYPE_MP3     = 1;

@@ -49,11 +49,12 @@ public class BelugaFavoriteAsyncTask extends BelugaActionAsyncTask {
 
     private boolean favoriteFileEntryOneByOne() {
         boolean result = true;
-        for (FileEntry entry : mFileEntries) {
+        for (FileEntry entry : mOriginalEntries) {
             if (isCancelled()) {
                 return false;
             }
             BelugaProviderHelper.setFavoriteInBelugaDatabase(mContext, entry.path);
+            entry.isFavorite = true;
             publishActionProgress(entry);
         }
         return result;

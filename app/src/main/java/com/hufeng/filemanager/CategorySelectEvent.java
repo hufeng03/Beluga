@@ -8,25 +8,25 @@ import android.os.Bundle;
  */
 public class CategorySelectEvent {
 
-    public enum CategoryType {
-        NONE,
-        AUDIO,
-        VIDEO,
-        PHOTO,
-        DOC,
-        APK,
-        ZIP,
-        DOWNLOAD,
-        FAVORITE,
-        APP
-    }
+//    public enum CategoryType {
+//        NONE,
+//        AUDIO,
+//        VIDEO,
+//        PHOTO,
+//        DOC,
+//        APK,
+//        ZIP,
+//        DOWNLOAD,
+//        FAVORITE,
+//        APP
+//    }
 
     public final long time;
-    public final CategoryType category;
+    public final int category;
 
     public static final String INTENT_ACTION = "CATEGORY_SELECT_EVENT";
 
-    public CategorySelectEvent(long time, CategoryType category) {
+    public CategorySelectEvent(long time, int category) {
         this.time =time;
         this.category = category;
     }

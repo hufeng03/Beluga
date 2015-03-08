@@ -51,8 +51,8 @@ public class AudioEntry extends FileEntry {
     public void fillContentValues(ContentValues cv) {
         super.fillContentValues(cv);
 
-        cv.put(DataStructures.AudioColumns.PLAY_DURATION_FIELD, this.playDuration);
-        cv.put(DataStructures.AudioColumns.ALBUM_FIELD, this.album);
-        cv.put(DataStructures.AudioColumns.SINGER_FIELD, this.singer);
+        cv.put(DataStructures.AudioColumns.PLAY_DURATION, this.playDuration);
+        cv.put(DataStructures.AudioColumns.ALBUM, this.album);
+        cv.put(DataStructures.AudioColumns.SINGER, this.singer);
     }
 }

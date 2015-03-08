@@ -35,11 +35,10 @@ public class BelugaUndoFavoriteAsyncTask extends BelugaActionAsyncTask {
     @Override
     public String getCompleteToastContent(Context context, boolean rst) {
         int toast_info_id;
-        if (rst){
+        if (rst) {
             toast_info_id =  R.string.file_undofavorite_finish;
         }
-        else
-        {
+        else {
             toast_info_id = R.string.file_undofavorite_failed;
         }
         return toast_info_id == 0 ? "" : context.getString(toast_info_id);
@@ -47,11 +46,12 @@ public class BelugaUndoFavoriteAsyncTask extends BelugaActionAsyncTask {
 
     private boolean unFavoriteFileEntryOneByOne() {
         boolean result = true;
-        for (FileEntry entry : mFileEntries) {
+        for (FileEntry entry : mOriginalEntries) {
             if (isCancelled()) {
                 return false;
             }
             BelugaProviderHelper.setUndoFavoriteInBelugaDatabase(mContext, entry.path);
+            entry.isFavorite = false;
             publishActionProgress(entry);
         }
         return result;

@@ -104,7 +104,7 @@ public class BelugaProviderHelper {
 
         try {
             count = contentResolver.update(uri, values,
-                    DataStructures.FileColumns.FILE_PATH_FIELD + "=?",
+                    DataStructures.FileColumns.PATH + "=?",
                     new String[]{oldPath});
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,14 +126,14 @@ public class BelugaProviderHelper {
 
         if (count > 0) {
             values.clear();
-            values.put(DataStructures.FavoriteColumns.FILE_NAME_FIELD, newFileEntry.name);
-            values.put(DataStructures.FavoriteColumns.FILE_PATH_FIELD, newFileEntry.path);
-            values.put(DataStructures.FavoriteColumns.FILE_DATE_FIELD, newFileEntry.lastModified);
-            values.put(DataStructures.FavoriteColumns.FILE_EXTENSION_FIELD, newFileEntry.extension);
+            values.put(DataStructures.FavoriteColumns.NAME, newFileEntry.name);
+            values.put(DataStructures.FavoriteColumns.PATH, newFileEntry.path);
+            values.put(DataStructures.FavoriteColumns.DATE, newFileEntry.lastModified);
+            values.put(DataStructures.FavoriteColumns.EXTENSION, newFileEntry.extension);
             try {
                 count = contentResolver.update(DataStructures.FavoriteColumns.CONTENT_URI,
                         values,
-                        DataStructures.FavoriteColumns.FILE_PATH_FIELD + "=?",
+                        DataStructures.FavoriteColumns.PATH + "=?",
                         new String[]{oldPath});
             } catch (Exception e) {
                 e.printStackTrace();
@@ -192,7 +192,7 @@ public class BelugaProviderHelper {
 
         try {
             count = contentResolver.delete(uri,
-                    DataStructures.FileColumns.FILE_PATH_FIELD + "=?",
+                    DataStructures.FileColumns.PATH + "=?",
                     new String[]{path});
         } catch (Exception e) {
             e.printStackTrace();
@@ -202,7 +202,7 @@ public class BelugaProviderHelper {
         try {
             favorite_count = contentResolver.delete(
                     DataStructures.FavoriteColumns.CONTENT_URI,
-                    DataStructures.FileColumns.FILE_PATH_FIELD + "=?",
+                    DataStructures.FileColumns.PATH + "=?",
                     new String[]{path});
         } catch (Exception e) {
             e.printStackTrace();
@@ -218,15 +218,15 @@ public class BelugaProviderHelper {
     	FileEntry fileEntry = new FileEntry(path);
         fileEntry.fillContentValues(values);
     	if(new File(path).isDirectory()){
-    		values.put(DataStructures.FavoriteColumns.IS_DIRECTORY_FIELD, 1);
-    		values.put(DataStructures.FileColumns.FILE_SIZE_FIELD, 0);
+    		values.put(DataStructures.FavoriteColumns.IS_DIRECTORY, 1);
+    		values.put(DataStructures.FileColumns.SIZE, 0);
     	} else {
-    		values.put(DataStructures.FavoriteColumns.IS_DIRECTORY_FIELD, 0);
+    		values.put(DataStructures.FavoriteColumns.IS_DIRECTORY, 0);
     	}
     	Uri uri = DataStructures.FavoriteColumns.CONTENT_URI;
 		int count = 0;
         try {
-            count = contentResolver.update(uri, values, DataStructures.FileColumns.FILE_PATH_FIELD + "=?", new String[]{path});
+            count = contentResolver.update(uri, values, DataStructures.FileColumns.PATH + "=?", new String[]{path});
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -248,7 +248,7 @@ public class BelugaProviderHelper {
         ContentResolver contentResolver = context.getContentResolver();
         Uri uri = DataStructures.FavoriteColumns.CONTENT_URI;
         try {
-            contentResolver.delete(uri, DataStructures.FileColumns.FILE_PATH_FIELD + "=?", new String[]{path});
+            contentResolver.delete(uri, DataStructures.FileColumns.PATH + "=?", new String[]{path});
         } catch (Exception e) {
             e.printStackTrace();
         }

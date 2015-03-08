@@ -9,7 +9,7 @@ public abstract class FileTabFragment extends BelugaBaseFragment implements
         BelugaFragmentInterface {
 	private final String LOG_TAG = ((Object)this).getClass().getSimpleName();
 
-    public BelugaFragmentInterface mCurrentChildFragment;
+    public FileRecyclerFragment mCurrentChildFragment;
 
     @Override
     public BelugaActionController getActionController() {
@@ -54,8 +54,8 @@ public abstract class FileTabFragment extends BelugaBaseFragment implements
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (getActivity() != null) {
-            getActivity().supportInvalidateOptionsMenu();
+        if (mCurrentChildFragment != null) {
+            mCurrentChildFragment.setUserVisibleHint(isVisibleToUser);
         }
     }
 

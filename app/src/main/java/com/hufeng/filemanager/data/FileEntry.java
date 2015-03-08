@@ -29,6 +29,7 @@ public class FileEntry extends BelugaEntry {
     public int childFileCount;
     public int childFolderCount;
     public String extension;
+    public boolean isFavorite;
 
     public FileEntry() {
         //This is used for Parcelable
@@ -49,18 +50,21 @@ public class FileEntry extends BelugaEntry {
     }
 
     public FileEntry(Cursor cursor) {
-        this.path = cursor.getString(DataStructures.FileColumns.FILE_PATH_FIELD_INDEX);
-        File file = new File(this.path);
-        init(file);
+        this.path = cursor.getString(DataStructures.FileColumns.PATH_INDEX);
+        this.name = cursor.getString(DataStructures.FileColumns.NAME_INDEX);
+        this.size = cursor.getLong(DataStructures.FileColumns.SIZE_INDEX);
+        this.extension = cursor.getString(DataStructures.FileColumns.EXTENSION_INDEX);
+        this.lastModified = cursor.getLong(DataStructures.FileColumns.DATE_INDEX);
+        this.isFavorite = !cursor.isNull(DataStructures.FileColumns.FAVORITE_ID_INDEX);
     }
 
     public void fillContentValues(ContentValues cv) {
-        cv.put(DataStructures.FileColumns.FILE_DATE_FIELD, this.lastModified);
-        cv.put(DataStructures.FileColumns.FILE_SIZE_FIELD, this.size);
-        cv.put(DataStructures.FileColumns.FILE_EXTENSION_FIELD, this.extension);
-        cv.put(DataStructures.FileColumns.FILE_PATH_FIELD, this.path);
-        cv.put(DataStructures.FileColumns.FILE_NAME_FIELD, this.name);
-        cv.put(DataStructures.FileColumns.FILE_STORAGE_FIELD, MountPointManager.getInstance().getRealMountPointPath(this.path));
+        cv.put(DataStructures.FileColumns.DATE, this.lastModified);
+        cv.put(DataStructures.FileColumns.SIZE, this.size);
+        cv.put(DataStructures.FileColumns.EXTENSION, this.extension);
+        cv.put(DataStructures.FileColumns.PATH, this.path);
+        cv.put(DataStructures.FileColumns.NAME, this.name);
+        cv.put(DataStructures.FileColumns.STORAGE, MountPointManager.getInstance().getRealMountPointPath(this.path));
     }
 
 
@@ -95,8 +99,6 @@ public class FileEntry extends BelugaEntry {
             this.extension = MimeUtil.getExtension(path);
         }
     }
-
-
 
     @Override
     public String getIdentity() {
@@ -185,7 +187,8 @@ public class FileEntry extends BelugaEntry {
                 +"is_directory("+this.isDirectory+")"
                 +"is_writable("+this.isWritable+")"
                 +"is_readable("+this.isReadable+")"
-                +"extension("+this.extension+")";
+                +"extension("+this.extension+")"
+                +"isFavorite("+this.isFavorite+")";
     }
 
     @Override
@@ -210,6 +213,7 @@ public class FileEntry extends BelugaEntry {
         dest.writeInt(childFileCount);
         dest.writeInt(childFolderCount);
         dest.writeString(extension);
+        dest.writeInt(isFavorite? 1 : 0);
     }
 
     public static final Creator<FileEntry> CREATOR = new Creator<FileEntry>() {
@@ -231,6 +235,7 @@ public class FileEntry extends BelugaEntry {
             entry.childFileCount = source.readInt();
             entry.childFolderCount = source.readInt();
             entry.extension = source.readString();
+            entry.isFavorite = source.readInt() == 1;
             return entry;
         }
 

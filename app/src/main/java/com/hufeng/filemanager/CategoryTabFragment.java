@@ -12,27 +12,27 @@ import android.view.ViewGroup;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.squareup.otto.Subscribe;
 
 
 
 public class CategoryTabFragment extends FileTabFragment {
 
-	private static final String CATEGORY_TYPE = "category_type";
+	private static final String CATEGORY = "category";
     private static final String FOLDER_PATH = "folder_path";
-    private CategorySelectEvent.CategoryType mCategory = CategorySelectEvent.CategoryType.NONE;
-    private Fragment mCategoryFragment;
-
+    private static final String FAVORITE_SELECTED = "favorite_selected";
+    private static final String DOWNLOAD_SELECTED = "download_selected";
+    private int mCategory;
     private String mFolderPath;
+
+    public Fragment mCategoryFragment;
 
     @Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            String categoryValue = savedInstanceState.getString(CATEGORY_TYPE);
-            if (categoryValue != null) {
-                mCategory = CategorySelectEvent.CategoryType.valueOf(categoryValue);
-            }
+            mCategory = savedInstanceState.getInt(CATEGORY);
             mFolderPath = savedInstanceState.getString(FOLDER_PATH);
         }
 	}
@@ -45,7 +45,7 @@ public class CategoryTabFragment extends FileTabFragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-        outState.putString(CATEGORY_TYPE, mCategory.toString());
+        outState.putInt(CATEGORY, mCategory);
         outState.putString(FOLDER_PATH, mFolderPath);
 	}
 
@@ -107,30 +107,27 @@ public class CategoryTabFragment extends FileTabFragment {
         if ( super.onBackPressed() ){
             return true;
         }
-        switch (mCategory) {
-            case DOWNLOAD:
-                if (!TextUtils.isEmpty(mFolderPath)) {
-                    toDownloadList();
-                    mFolderPath  = null;
-                    return true;
-                }
-                break;
-            case FAVORITE:
-                if (!TextUtils.isEmpty(mFolderPath)) {
-                    toFileGrouper();
-                    mFolderPath  = null;
-                    return true;
-                }
-                break;
-            case NONE:
-                return false;
-            default:
-                break;
+        if (!TextUtils.isEmpty(mFolderPath)) {
+            if (FileCategoryHelper.CATEGORY_TYPE_FAVORITE == mCategory) {
+                toFavoriteList();
+                mFolderPath  = null;
+                return true;
+            } else if (FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD == mCategory) {
+                toDownloadList();
+                mFolderPath  = null;
+                return true;
+            } else {
+                //Something wired is happening
+            }
         }
-        mCategory = CategorySelectEvent.CategoryType.NONE;
-        showSingleCategoryPanel();
 
-		return true;
+        if (mCategory != FileCategoryHelper.CATEGORY_TYPE_UNKNOW) {
+            mCategory = FileCategoryHelper.CATEGORY_TYPE_UNKNOW;
+            showSingleCategoryPanel();
+            return true;
+        }
+
+        return false;
 	}
 
     private void toCategoryPanel() {
@@ -148,7 +145,7 @@ public class CategoryTabFragment extends FileTabFragment {
         ft.commit();
         mCategoryFragment = fragment;
         mCurrentChildFragment = null;
-        mCategory = CategorySelectEvent.CategoryType.NONE;
+        mCategory = FileCategoryHelper.CATEGORY_TYPE_UNKNOW;
 
         Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
         t.setScreenName("Category Panel");
@@ -175,6 +172,29 @@ public class CategoryTabFragment extends FileTabFragment {
 
         Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
         t.setScreenName("File Grouper: "+mCategory);
+        t.send(new HitBuilders.AppViewBuilder().build());
+    }
+
+    private void toFavoriteList() {
+        final FragmentManager fm = getChildFragmentManager();
+        final FragmentTransaction ft = fm.beginTransaction();
+        final String tag = "FavoriteList";
+        NewFavoriteFragment fragment = (NewFavoriteFragment) fm.findFragmentByTag(tag);
+        if (fragment == null) {
+            fragment = new NewFavoriteFragment();
+            ft.replace(R.id.fragment_container, fragment, tag);
+            ft.commit();
+        } else {
+            if (fragment.isDetached()) {
+                ft.attach(fragment);
+                ft.commit();
+            }
+        }
+        mCurrentChildFragment = fragment;
+        mCategoryFragment = null;
+
+        Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
+        t.setScreenName("Favorite List: "+mCategory);
         t.send(new HitBuilders.AppViewBuilder().build());
     }
 
@@ -225,30 +245,30 @@ public class CategoryTabFragment extends FileTabFragment {
     }
 
     private void showSingleCategoryPanel() {
-        switch(mCategory) {
-            case NONE:
-                toCategoryPanel();
-                break;
-            case FAVORITE:
+        switch (mCategory) {
+            case FileCategoryHelper.CATEGORY_TYPE_FAVORITE:
                 if (TextUtils.isEmpty(mFolderPath)) {
-                    toFileGrouper();
+                    toFavoriteList();
                 } else {
                     toFileBrowser();
                 }
                 break;
-            case DOWNLOAD:
+            case FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD:
                 if (TextUtils.isEmpty(mFolderPath)) {
                     toDownloadList();
                 } else {
                     toFileBrowser();
                 }
                 break;
-            case AUDIO:
-            case PHOTO:
-            case VIDEO:
-            case APK:
-            case DOC:
-            case ZIP:
+            case FileCategoryHelper.CATEGORY_TYPE_UNKNOW:
+                toCategoryPanel();
+                break;
+            case FileCategoryHelper.CATEGORY_TYPE_AUDIO:
+            case FileCategoryHelper.CATEGORY_TYPE_IMAGE:
+            case FileCategoryHelper.CATEGORY_TYPE_VIDEO:
+            case FileCategoryHelper.CATEGORY_TYPE_APK:
+            case FileCategoryHelper.CATEGORY_TYPE_DOCUMENT:
+            case FileCategoryHelper.CATEGORY_TYPE_ZIP:
                 toFileGrouper();
                 break;
             default:

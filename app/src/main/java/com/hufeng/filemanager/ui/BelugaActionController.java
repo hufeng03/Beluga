@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.hufeng.filemanager.BelugaActionDelegate;
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.browser.FileAction;
 import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 
@@ -412,12 +411,12 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
     // TODO: Need to refactor this
     private boolean isSelectedAllFavorite() {
         FileEntry[] entries = mOperationPaths.getAll();
-        String[] paths = new String[entries.length];
-        int i = 0;
         for (FileEntry entry : entries) {
-            paths[i++] = entry.path;
+            if (!entry.isFavorite) {
+                return false;
+            }
         }
-        return FileAction.isAllFavorite(paths);
+        return true;
     }
 
     private boolean isSelectedNoneWritable() {

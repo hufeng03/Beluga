@@ -4,7 +4,9 @@ package com.hufeng.filemanager.loader;
  * Created by feng on 14-2-15.
  */
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 
@@ -13,11 +15,14 @@ import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.SortPreferenceReceiver;
 import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.helper.BelugaSortHelper;
+import com.hufeng.filemanager.helper.FileCategoryHelper;
+import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.utils.LogUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -71,10 +76,40 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<FileEntry>> {
                 }
         }
 
-        // Sort the list.
-        BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(getContext(), CategorySelectEvent.CategoryType.NONE);
-        Collections.sort(entries, BelugaSortHelper.getComparator(sorter.field, sorter.order));
-
+        if (entries.size() > 0) {
+            // Retrieve favorite status from database
+            StringBuilder whereClause = new StringBuilder();
+            String[] whereArgs = new String[entries.size()];
+            whereClause.append("?");
+            whereArgs[0] = entries.get(0).path;
+            for (int i = 1; i < entries.size(); i++) {
+                whereClause.append(",?");
+                whereArgs[i] = entries.get(i).path;
+            }
+            String where = DataStructures.FavoriteColumns.PATH + " IN(" + whereClause.toString() + ")";
+            ContentResolver cr = getContext().getContentResolver();
+            Cursor cursor = null;
+            try {
+                cursor = cr.query(DataStructures.FavoriteColumns.CONTENT_URI, new String[]{DataStructures.FavoriteColumns.PATH}, where, whereArgs, null);
+                HashSet<String> favoritePaths = new HashSet<String>();
+                while (cursor.moveToNext()) {
+                    String path = cursor.getString(0);
+                    favoritePaths.add(path);
+                }
+                for (int i = 0; i < entries.size(); i++) {
+                    FileEntry entry = entries.get(i);
+                    entry.isFavorite = favoritePaths.contains(entry.path);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+            // Sort the list.
+            Collections.sort(entries, BelugaSortHelper.getComparator(getContext(), FileCategoryHelper.CATEGORY_TYPE_UNKNOW));
+        }
         return entries;
     }
 
@@ -111,7 +146,7 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<FileEntry>> {
 
         // Start watching for changes in the app data.
         if (mSortObserver == null) {
-            mSortObserver = new SortPreferenceReceiver(this, CategorySelectEvent.CategoryType.NONE);
+            mSortObserver = new SortPreferenceReceiver(this, FileCategoryHelper.CATEGORY_TYPE_UNKNOW);
         }
 
         if(takeContentChanged() || mFiles == null) {

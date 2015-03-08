@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import com.hufeng.filemanager.helper.BelugaSortHelper;
 import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.loader.FileBrowserLoader;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 import com.hufeng.filemanager.ui.BelugaActionController;
@@ -220,22 +221,28 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
         return false;
     }
 
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.file_browser_fragment_menu, menu);
+        if (getUserVisibleHint()) {
+            inflater.inflate(R.menu.file_browser_fragment_menu, menu);
+        }
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
+        if (!getUserVisibleHint()) {
+            return;
+        }
         final MenuItem displayMenu = menu.findItem(R.id.menu_browser_display);
         final MenuItem sortMenu = menu.findItem(R.id.menu_browser_sort);
         final MenuItem upMenu = menu.findItem(R.id.menu_up);
 
-        final Fragment parentFragment = getParentFragment();
-        boolean isFragmentVisible = true;
-        if(parentFragment != null && (parentFragment instanceof FileTabFragment)) {
-            isFragmentVisible = parentFragment.getUserVisibleHint();
-        }
+//        final Fragment parentFragment = getParentFragment();
+        boolean isFragmentVisible = getUserVisibleHint();
+//        if(parentFragment != null && (parentFragment instanceof FileTabFragment)) {
+//            isFragmentVisible = parentFragment.getUserVisibleHint();
+//        }
         final Activity parentActivity = getActivity();
         boolean isSearchMode = false;
         if (parentActivity != null && (parentActivity instanceof BelugaDrawerActivity)) {
@@ -260,13 +267,16 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (!getUserVisibleHint()) {
+            return false;
+        }
         switch(item.getItemId()){
             case R.id.menu_browser_display:
                 switchDisplay();
                 getActivity().supportInvalidateOptionsMenu();
                 return true;
             case R.id.menu_browser_sort:
-                BelugaDialogFragment.showSortDialog(getActivity(), CategorySelectEvent.CategoryType.NONE);
+                BelugaDialogFragment.showSortDialog(getActivity(), FileCategoryHelper.CATEGORY_TYPE_UNKNOW);
                 return true;
             case R.id.menu_up:
                 getActivity().onBackPressed();
@@ -407,8 +417,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                         return;
                     }
                     FileEntry newEntry = new FileEntry(path);
-                    BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(getActivity(), CategorySelectEvent.CategoryType.NONE);
-                    Comparator<BelugaSortableInterface> comparator = BelugaSortHelper.getComparator(sorter.field, sorter.order);
+                    Comparator<BelugaSortableInterface> comparator = BelugaSortHelper.getComparator(getActivity(), FileCategoryHelper.CATEGORY_TYPE_UNKNOW);
                     int pos = 0;
                     for (FileEntry entry : mAdapter.getAll()) {
                         if (comparator.compare(entry, newEntry) >= 0) {
