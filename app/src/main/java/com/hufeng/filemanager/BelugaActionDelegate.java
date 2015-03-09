@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 import com.hufeng.filemanager.intent.Constant;
 import com.hufeng.filemanager.utils.MimeUtil;
@@ -22,23 +22,23 @@ import java.util.ArrayList;
  */
 public class BelugaActionDelegate {
 
-    public static void cut(Context context, FileEntry... entries) {
+    public static void cut(Context context, BelugaFileEntry... entries) {
         Intent intent = new Intent(Constant.ACTION_PICK_FOLDER_TO_MOVE_FILE);
         intent.putExtra(BelugaDialogFragment.FILE_ARRAY_DATA, entries);
         ((Activity)context).startActivityForResult(intent, Constant.REQUEST_CODE_PICK_FOLDER_TO_MOVE_FILE);
     }
 
-    public static void copy(Context context, FileEntry... entries) {
+    public static void copy(Context context, BelugaFileEntry... entries) {
         Intent intent = new Intent(Constant.ACTION_PICK_FOLDER_TO_COPY_FILE);
         intent.putExtra(BelugaDialogFragment.FILE_ARRAY_DATA, entries);
         ((Activity)context).startActivityForResult(intent, Constant.REQUEST_CODE_PICK_FOLDER_TO_COPY_FILE);
     }
 
-    public static void delete(FragmentActivity activity, FileEntry... entries) {
+    public static void delete(FragmentActivity activity, BelugaFileEntry... entries) {
         BelugaDialogFragment.showDeleteDialog(activity, entries);
     }
 
-    public static void rename(FragmentActivity activity, FileEntry... entries) {
+    public static void rename(FragmentActivity activity, BelugaFileEntry... entries) {
         if (entries.length > 1) {
             Toast.makeText(activity, R.string.can_not_rename_multiple, Toast.LENGTH_SHORT);
             return;
@@ -46,7 +46,7 @@ public class BelugaActionDelegate {
         BelugaDialogFragment.showRenameDialog(activity, entries[0]);
     }
 
-    public static void details(FragmentActivity activity, FileEntry... entries) {
+    public static void details(FragmentActivity activity, BelugaFileEntry... entries) {
         if (entries.length > 1) {
             Toast.makeText(activity, R.string.can_not_details_multiple, Toast.LENGTH_SHORT);
             return;
@@ -62,7 +62,7 @@ public class BelugaActionDelegate {
 //        FileAction.removeFromFavorite(entry.path);
 //    }
 
-    public static void view(Context context, FileEntry entry) {
+    public static void view(Context context, BelugaFileEntry entry) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(new File(entry.path)), MimeUtil.getMimeType(entry.path));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -73,7 +73,7 @@ public class BelugaActionDelegate {
         }
     }
 
-    public static void share(Context context, FileEntry... entries) {
+    public static void share(Context context, BelugaFileEntry... entries) {
         if (entries.length == 0) {
             return;
         }
@@ -87,7 +87,7 @@ public class BelugaActionDelegate {
             String mimeTypeFirstPart = null;
             boolean sameMimeType = true;
             boolean sameMimeTypeFirstPart = true;
-            for (FileEntry entry : entries) {
+            for (BelugaFileEntry entry : entries) {
                 arrayUri.add(Uri.fromFile(new File(entry.path)));
                 if (mimeType == null) {
                     mimeType = MimeUtil.getMimeType(entry.path);

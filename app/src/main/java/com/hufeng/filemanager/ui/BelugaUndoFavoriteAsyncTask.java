@@ -3,7 +3,7 @@ package com.hufeng.filemanager.ui;
 import android.content.Context;
 
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.BelugaProviderHelper;
 
 /**
@@ -46,7 +46,7 @@ public class BelugaUndoFavoriteAsyncTask extends BelugaActionAsyncTask {
 
     private boolean unFavoriteFileEntryOneByOne() {
         boolean result = true;
-        for (FileEntry entry : mOriginalEntries) {
+        for (BelugaFileEntry entry : mOriginalEntries) {
             if (isCancelled()) {
                 return false;
             }

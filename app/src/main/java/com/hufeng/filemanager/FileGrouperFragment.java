@@ -3,7 +3,6 @@ package com.hufeng.filemanager;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -15,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.loader.FileCursorLoader;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
@@ -139,7 +138,7 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
         }
 
         setEmptyViewShown(false);
-        setListShownNoAnimation(false);
+        setRecyclerViewShownNoAnimation(false);
 	}
 
     @Override
@@ -212,14 +211,14 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
 
 
     @Override
-    public FileEntry[] getAllFiles() {
+    public BelugaFileEntry[] getAllFiles() {
         return mAdapter.getAll();
     }
 
     @Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
         Log.i(TAG, "onCreateLoader");
-        return new FileCursorLoader(getActivity(), mCategory, mSearchString);
+        return new FileCursorLoader(getActivity(), mCategory);
 	}
 
 	@Override
@@ -240,11 +239,13 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
 
     @Override
     public void onEntryClickedToOpen(View view, BelugaEntry entry) {
-        FileEntry fileEntry = (FileEntry)entry;
-        if (fileEntry.isDirectory) {
-            BusProvider.getInstance().post(new FolderOpenEvent(System.currentTimeMillis(), fileEntry));
+        BelugaFileEntry belugaFileEntry = (BelugaFileEntry)entry;
+        if (belugaFileEntry.isDirectory) {
+            BusProvider.getInstance().post(new FolderOpenEvent(System.currentTimeMillis(), belugaFileEntry));
+        } else if (belugaFileEntry.type == FileCategoryHelper.FILE_TYPE_ZIP) {
+            BusProvider.getInstance().post(new ZipViewEvent(System.currentTimeMillis(), belugaFileEntry.path));
         } else {
-            BelugaActionDelegate.view(view.getContext(), fileEntry);
+            BelugaActionDelegate.view(view.getContext(), belugaFileEntry);
         }
     }
 }

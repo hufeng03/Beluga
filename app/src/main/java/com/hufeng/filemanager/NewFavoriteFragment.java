@@ -2,9 +2,6 @@ package com.hufeng.filemanager;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -15,7 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 import com.hufeng.filemanager.helper.FileCategoryHelper;
 
@@ -26,14 +23,14 @@ import java.util.List;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class NewFavoriteFragment extends FileRecyclerFragment implements LoaderManager.LoaderCallbacks<List<FileEntry>>,
+public class NewFavoriteFragment extends FileRecyclerFragment implements LoaderManager.LoaderCallbacks<List<BelugaFileEntry>>,
         BelugaEntryViewHolder.EntryClickListener {
 
     private static final String TAG = "NewFavoriteFragment";
 
     private static final int LOADER_ID = 1;
 
-    BelugaArrayRecyclerAdapter<FileEntry, FileEntryListViewHolder> mAdapter;
+    BelugaArrayRecyclerAdapter<BelugaFileEntry> mAdapter;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -47,7 +44,7 @@ public class NewFavoriteFragment extends FileRecyclerFragment implements LoaderM
         final String empty_text = getResources().getString(R.string.empty_favorite);
         setEmptyText(empty_text);
 
-        mAdapter = new BelugaArrayRecyclerAdapter<FileEntry, FileEntryListViewHolder>(
+        mAdapter = new BelugaArrayRecyclerAdapter<BelugaFileEntry>(
                 getActivity(),
                 BelugaDisplayMode.LIST,
                 new BelugaEntryViewHolder.Builder() {
@@ -70,7 +67,7 @@ public class NewFavoriteFragment extends FileRecyclerFragment implements LoaderM
         setRecyclerAdapter(mAdapter);
 
         setEmptyViewShown(false);
-        setListShownNoAnimation(false);
+        setRecyclerViewShownNoAnimation(false);
     }
 
     @Override
@@ -139,7 +136,7 @@ public class NewFavoriteFragment extends FileRecyclerFragment implements LoaderM
     }
 
     @Override
-    public Loader<List<FileEntry>> onCreateLoader(int arg0, Bundle arg1) {
+    public Loader<List<BelugaFileEntry>> onCreateLoader(int arg0, Bundle arg1) {
         Log.i(TAG, "onCreateLoader");
         if(arg0 ==  LOADER_ID) {
             return new FavoriteListLoader(getActivity());
@@ -149,8 +146,8 @@ public class NewFavoriteFragment extends FileRecyclerFragment implements LoaderM
     }
 
     @Override
-    public void onLoadFinished(Loader<List<FileEntry>> arg0,
-                               List<FileEntry> arg1) {
+    public void onLoadFinished(Loader<List<BelugaFileEntry>> arg0,
+                               List<BelugaFileEntry> arg1) {
         Log.i(TAG, "onLoadFinished");
 
         mAdapter.setData(arg1);
@@ -160,19 +157,21 @@ public class NewFavoriteFragment extends FileRecyclerFragment implements LoaderM
     }
 
     @Override
-    public void onLoaderReset(Loader<List<FileEntry>> arg0) {
+    public void onLoaderReset(Loader<List<BelugaFileEntry>> arg0) {
         Log.i(TAG, "onCreateReset");
         mAdapter.clear();
     }
 
     @Override
     public void onEntryClickedToOpen(View view, BelugaEntry entry) {
-        FileEntry fileEntry = (FileEntry)entry;
-        if (fileEntry.isDirectory) {
+        BelugaFileEntry belugaFileEntry = (BelugaFileEntry)entry;
+        if (belugaFileEntry.isDirectory) {
             //TODO: switch to show child folder
-            BusProvider.getInstance().post(new FolderOpenEvent(System.currentTimeMillis(), fileEntry));
+            BusProvider.getInstance().post(new FolderOpenEvent(System.currentTimeMillis(), belugaFileEntry));
+        } else if (belugaFileEntry.type == FileCategoryHelper.FILE_TYPE_ZIP) {
+            BusProvider.getInstance().post(new ZipViewEvent(System.currentTimeMillis(), ((BelugaFileEntry) entry).path));
         } else {
-            BelugaActionDelegate.view(view.getContext(), fileEntry);
+            BelugaActionDelegate.view(view.getContext(), belugaFileEntry);
         }
     }
 
@@ -184,7 +183,7 @@ public class NewFavoriteFragment extends FileRecyclerFragment implements LoaderM
     }
 
     @Override
-    public FileEntry[] getAllFiles() {
+    public BelugaFileEntry[] getAllFiles() {
         return mAdapter.getAll();
     }
 

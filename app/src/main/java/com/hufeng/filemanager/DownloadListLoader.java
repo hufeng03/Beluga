@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.BelugaSortHelper;
 import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.mount.MountPoint;
@@ -16,9 +16,7 @@ import com.hufeng.filemanager.utils.LogUtil;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -27,11 +25,11 @@ import java.util.List;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class DownloadListLoader extends AsyncTaskLoader<List<FileEntry>> {
+public class DownloadListLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
 
     private static final String LOG_TAG = DownloadListLoader.class.getSimpleName();
 
-    private List<FileEntry> mFiles;
+    private List<BelugaFileEntry> mFiles;
 
     SortPreferenceReceiver mSortObserver;
     DownloadFolderObserver mDownloadFolderObserver;
@@ -41,9 +39,9 @@ public class DownloadListLoader extends AsyncTaskLoader<List<FileEntry>> {
     }
 
     @Override
-    public List<FileEntry> loadInBackground() {
+    public List<BelugaFileEntry> loadInBackground() {
         LogUtil.i(LOG_TAG, this.hashCode()+" load in background");
-        List<FileEntry> entries = new ArrayList<FileEntry>();
+        List<BelugaFileEntry> entries = new ArrayList<BelugaFileEntry>();
         List<MountPoint> mountPoints = MountPointManager.getInstance().getMountPoints();
 
         if (mDownloadFolderObserver != null) {
@@ -62,7 +60,7 @@ public class DownloadListLoader extends AsyncTaskLoader<List<FileEntry>> {
             });
             if (downloads != null) {
                 for (String download : downloads) {
-                    entries.add(new FileEntry(new File(mp.mPath, download)));
+                    entries.add(new BelugaFileEntry(new File(mp.mPath, download)));
                 }
             }
 
@@ -92,7 +90,7 @@ public class DownloadListLoader extends AsyncTaskLoader<List<FileEntry>> {
                     favoritePaths.add(path);
                 }
                 for (int i = 0; i < entries.size(); i++) {
-                    FileEntry entry = entries.get(i);
+                    BelugaFileEntry entry = entries.get(i);
                     entry.isFavorite = favoritePaths.contains(entry.path);
                 }
             } catch (Exception e) {
@@ -109,7 +107,7 @@ public class DownloadListLoader extends AsyncTaskLoader<List<FileEntry>> {
     }
 
     @Override
-    public void deliverResult(List<FileEntry> data) {
+    public void deliverResult(List<BelugaFileEntry> data) {
         LogUtil.i(LOG_TAG, this.hashCode()+" FileListLoader deliverResult with "+(data==null?0:data.size()));
         if (isReset()) {
             if (data != null) {
@@ -118,7 +116,7 @@ public class DownloadListLoader extends AsyncTaskLoader<List<FileEntry>> {
             }
         }
 
-        List<FileEntry> oldFiles = mFiles;
+        List<BelugaFileEntry> oldFiles = mFiles;
         mFiles = data;
 
         if (isStarted()) {
@@ -186,7 +184,7 @@ public class DownloadListLoader extends AsyncTaskLoader<List<FileEntry>> {
     }
 
     @Override
-    public void onCanceled(List<FileEntry> data) {
+    public void onCanceled(List<BelugaFileEntry> data) {
         LogUtil.i(LOG_TAG, this.hashCode()+" FileListLoader onCanceled");
         if (data != null) {
             releaseResources(data);
@@ -199,7 +197,7 @@ public class DownloadListLoader extends AsyncTaskLoader<List<FileEntry>> {
         super.forceLoad();
     }
 
-    private void releaseResources(List<FileEntry> data) {
+    private void releaseResources(List<BelugaFileEntry> data) {
         // do nothing
     }
 

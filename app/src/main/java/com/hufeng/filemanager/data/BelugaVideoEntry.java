@@ -11,24 +11,24 @@ import java.io.File;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class VideoEntry extends FileEntry {
+public class BelugaVideoEntry extends BelugaFileEntry {
 
     public long playDuration;
 
-    public VideoEntry() {
+    public BelugaVideoEntry() {
         //This is used for Parcelable
     }
 
-    public VideoEntry(String path) {
+    public BelugaVideoEntry(String path) {
         File file = new File(path);
         init(file);
     }
 
-    public VideoEntry(File file) {
+    public BelugaVideoEntry(File file) {
         init(file);
     }
 
-    public VideoEntry(String dir, String name) {
+    public BelugaVideoEntry(String dir, String name) {
         File file = new File(dir, name);
         init(file);
     }

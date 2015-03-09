@@ -3,7 +3,7 @@ package com.hufeng.filemanager.ui;
 import android.content.Context;
 
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.BelugaProviderHelper;
 import com.hufeng.filemanager.helper.MultiMediaStoreHelper;
 
@@ -65,13 +65,13 @@ public class BelugaRenameAsyncTask extends BelugaActionAsyncTask {
 
     private boolean renameFileEntry() {
         boolean result = true;
-        FileEntry entry = mOriginalEntries.get(0);
+        BelugaFileEntry entry = mOriginalEntries.get(0);
         File newFile = new File(entry.parentPath, mNewName);
         newFile = checkFileNameAndRename(newFile);
         if(entry.getFile().renameTo(newFile)) {
             if (entry.isDirectory) {
                 mMediaProviderHelper.updateInMediaStore(entry.path, newFile.getAbsolutePath());
-                for (FileEntry oldEntry : mFileEntries) {
+                for (BelugaFileEntry oldEntry : mFileEntries) {
                     if (oldEntry.category > 0) {
                         String newEntryPath = oldEntry.path.replace(entry.path, newFile.getAbsolutePath());
                         BelugaProviderHelper.updateInBelugaDatabase(mContext, oldEntry.path, newEntryPath);

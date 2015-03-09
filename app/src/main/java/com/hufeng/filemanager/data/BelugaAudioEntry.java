@@ -13,26 +13,26 @@ import java.io.File;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class AudioEntry extends FileEntry {
+public class BelugaAudioEntry extends BelugaFileEntry {
 
     private long playDuration;
     private String album;
     private String singer;
 
-    public AudioEntry() {
+    public BelugaAudioEntry() {
         //This is used for Parcelable
     }
 
-    public AudioEntry(String path) {
+    public BelugaAudioEntry(String path) {
         File file = new File(path);
         init(file);
     }
 
-    public AudioEntry(File file) {
+    public BelugaAudioEntry(File file) {
         init(file);
     }
 
-    public AudioEntry(String dir, String name) {
+    public BelugaAudioEntry(String dir, String name) {
         File file = new File(dir, name);
         init(file);
     }

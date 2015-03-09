@@ -7,14 +7,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 
 import com.hufeng.filemanager.BelugaEntry;
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 
 /**
  * This class holds the per-item data in our Loader.
  */
 public class AppEntry extends BelugaEntry {
 
-    public FileEntry apkEntry;
+    public BelugaFileEntry apkEntry;
     public String appName;
     public Drawable appIcon;
     public String packageName;
@@ -35,7 +35,7 @@ public class AppEntry extends BelugaEntry {
             appIcon = info.applicationInfo.loadIcon(context.getPackageManager());
             versionCode = info.versionCode;
             versionName = info.versionName;
-            apkEntry = new FileEntry(info.applicationInfo.sourceDir);
+            apkEntry = new BelugaFileEntry(info.applicationInfo.sourceDir);
         }
     }
 

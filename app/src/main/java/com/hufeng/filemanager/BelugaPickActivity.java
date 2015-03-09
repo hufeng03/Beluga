@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.intent.Constant;
@@ -66,13 +66,13 @@ public class BelugaPickActivity extends BelugaActionControllerActivity {
         } else {
             if (action.equals(Constant.ACTION_PICK_FOLDER_TO_COPY_FILE)) {
                 setTitle("Paste");
-                FileEntry[] entries = FileEntry.toFileEntries(getIntent().getParcelableArrayExtra(BelugaDialogFragment.FILE_ARRAY_DATA));
+                BelugaFileEntry[] entries = BelugaFileEntry.toFileEntries(getIntent().getParcelableArrayExtra(BelugaDialogFragment.FILE_ARRAY_DATA));
                 getActionController().setEntrySelection(true, entries);
                 getActionController().setOperationMode(BelugaActionController.OPERATION_MODE.COPY_PASTE);
                 showFileBrowserPasteFragment();
             } else if (action.equals(Constant.ACTION_PICK_FOLDER_TO_MOVE_FILE)) {
                 setTitle("Paste");
-                FileEntry[] entries = FileEntry.toFileEntries(getIntent().getParcelableArrayExtra(BelugaDialogFragment.FILE_ARRAY_DATA));
+                BelugaFileEntry[] entries = BelugaFileEntry.toFileEntries(getIntent().getParcelableArrayExtra(BelugaDialogFragment.FILE_ARRAY_DATA));
                 getActionController().setEntrySelection(true, entries);
                 getActionController().setOperationMode(BelugaActionController.OPERATION_MODE.CUT_PASTE);
                 showFileBrowserPasteFragment();
@@ -162,7 +162,7 @@ public class BelugaPickActivity extends BelugaActionControllerActivity {
     }
 
     @Override
-    public FileEntry[] getAllEntries() {
+    public BelugaFileEntry[] getAllEntries() {
         return mCurrentFragment.getAllFiles();
     }
 

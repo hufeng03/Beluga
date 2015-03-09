@@ -19,7 +19,7 @@ import com.hufeng.filemanager.BelugaEntryViewHolder;
 import com.hufeng.filemanager.FileRecyclerFragment;
 import com.hufeng.filemanager.FileTabFragment;
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 import com.hufeng.filemanager.utils.LogUtil;
 
@@ -31,7 +31,7 @@ public class AppManagerFragment extends FileRecyclerFragment implements LoaderMa
 
     private static final int LOADER_ID = 1;
 
-    private BelugaArrayRecyclerAdapter<AppEntry, AppEntryViewHolder> mAdapter;
+    private BelugaArrayRecyclerAdapter<AppEntry> mAdapter;
 
     public AppManagerFragment(){
         super();
@@ -60,7 +60,7 @@ public class AppManagerFragment extends FileRecyclerFragment implements LoaderMa
 
         setEmptyText(getResources().getString(R.string.empty_apk));
 //        mAdapter = new AppListAdapter(getActivity());
-        mAdapter = new BelugaArrayRecyclerAdapter<AppEntry, AppEntryViewHolder>(
+        mAdapter = new BelugaArrayRecyclerAdapter<AppEntry>(
                 getActivity(),
 //                R.layout.app_list_row,
                 BelugaDisplayMode.LIST,
@@ -74,7 +74,7 @@ public class AppManagerFragment extends FileRecyclerFragment implements LoaderMa
                 });
         setRecyclerAdapter(mAdapter);
         setEmptyViewShown(false);
-        setListShownNoAnimation(false);
+        setRecyclerViewShownNoAnimation(false);
         registerForContextMenu(getRecyclerView());
     }
 
@@ -95,8 +95,8 @@ public class AppManagerFragment extends FileRecyclerFragment implements LoaderMa
 
 
     @Override
-    public FileEntry[] getAllFiles() {
-        return new FileEntry[0];
+    public BelugaFileEntry[] getAllFiles() {
+        return new BelugaFileEntry[0];
     }
 
 
@@ -104,7 +104,7 @@ public class AppManagerFragment extends FileRecyclerFragment implements LoaderMa
     public Loader<List<AppEntry>> onCreateLoader(int arg0, Bundle arg1) {
         LogUtil.i(LOG_TAG, "FileBrowserFragment onCreateLoader " + arg0);
         if(arg0 ==  LOADER_ID) {
-            return new AppListLoader(getActivity(), mSearchString);
+            return new AppListLoader(getActivity());
         } else {
             return null;
         }

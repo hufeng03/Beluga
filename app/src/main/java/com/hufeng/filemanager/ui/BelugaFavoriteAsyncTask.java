@@ -3,9 +3,8 @@ package com.hufeng.filemanager.ui;
 import android.content.Context;
 
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.BelugaProviderHelper;
-import com.hufeng.filemanager.helper.MultiMediaStoreHelper;
 
 /**
  * Created by Feng Hu on 15-03-01.
@@ -49,7 +48,7 @@ public class BelugaFavoriteAsyncTask extends BelugaActionAsyncTask {
 
     private boolean favoriteFileEntryOneByOne() {
         boolean result = true;
-        for (FileEntry entry : mOriginalEntries) {
+        for (BelugaFileEntry entry : mOriginalEntries) {
             if (isCancelled()) {
                 return false;
             }

@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.provider.DataStructures;
 
 /**
@@ -42,10 +42,10 @@ public class BelugaSearchAsyncTask extends BelugaActionAsyncTask {
         String searchString = mSearchString;
 
         if(!TextUtils.isEmpty(searchString)) {
-            searchString.replace("[","[[]");
-            searchString.replace("%","[%]");
-            searchString.replace("_","[_]");
-            searchString.replace("^","[^]");
+            searchString = searchString.replace("[","[[]");
+            searchString = searchString.replace("%","[%]");
+            searchString = searchString.replace("_","[_]");
+            searchString = searchString.replace("^","[^]");
             searchString = searchString.replace("'", "''");
         }
 
@@ -58,10 +58,10 @@ public class BelugaSearchAsyncTask extends BelugaActionAsyncTask {
                         null,
                         null);
                 if (cursor != null) {
-                    FileEntry[] entries = new FileEntry[cursor.getCount()];
+                    BelugaFileEntry[] entries = new BelugaFileEntry[cursor.getCount()];
                     int idx = 0;
                     while (cursor.moveToNext()) {
-                        entries[idx++] = new FileEntry(cursor.getString(0));
+                        entries[idx++] = new BelugaFileEntry(cursor.getString(0));
                     }
                     publishProgress(entries);
                 }

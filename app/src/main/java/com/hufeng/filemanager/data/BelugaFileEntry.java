@@ -13,7 +13,7 @@ import com.hufeng.filemanager.utils.MimeUtil;
 
 import java.io.File;
 
-public class FileEntry extends BelugaEntry {
+public class BelugaFileEntry extends BelugaEntry {
 	public String path;
     public String name;
 	public long size;
@@ -31,31 +31,34 @@ public class FileEntry extends BelugaEntry {
     public String extension;
     public boolean isFavorite;
 
-    public FileEntry() {
+    public BelugaFileEntry() {
         //This is used for Parcelable
     }
 
-    public FileEntry(String path) {
+    public BelugaFileEntry(String path) {
         File file = new File(path);
         init(file);
     }
 
-    public FileEntry(File file) {
+    public BelugaFileEntry(File file) {
         init(file);
     }
 
-    public FileEntry(String dir, String name) {
+    public BelugaFileEntry(String dir, String name) {
         File file = new File(dir, name);
         init(file);
     }
 
-    public FileEntry(Cursor cursor) {
+    public BelugaFileEntry(Cursor cursor) {
         this.path = cursor.getString(DataStructures.FileColumns.PATH_INDEX);
         this.name = cursor.getString(DataStructures.FileColumns.NAME_INDEX);
         this.size = cursor.getLong(DataStructures.FileColumns.SIZE_INDEX);
         this.extension = cursor.getString(DataStructures.FileColumns.EXTENSION_INDEX);
         this.lastModified = cursor.getLong(DataStructures.FileColumns.DATE_INDEX);
         this.isFavorite = !cursor.isNull(DataStructures.FileColumns.FAVORITE_ID_INDEX);
+
+        this.category = FileCategoryHelper.getFileCategoryForFile(path);
+        this.type = FileCategoryHelper.getFileTypeForFile(path);
     }
 
     public void fillContentValues(ContentValues cv) {
@@ -120,18 +123,13 @@ public class FileEntry extends BelugaEntry {
         return lastModified;
     }
 
-    @Override
-    public int hashCode() {
-        return path.hashCode();
-    }
-
     public boolean checkExistance() {
         return new File(path).exists();
     }
 
     @Override
     public boolean equals(Object o) {
-        return (o != null) && (o instanceof FileEntry) && ((FileEntry)o).path.equals(path);
+        return (o != null) && (o instanceof BelugaFileEntry) && ((BelugaFileEntry)o).path.equals(path);
     }
 
     public File getFile() {
@@ -143,15 +141,15 @@ public class FileEntry extends BelugaEntry {
     }
 
     // This api should not be accessed from main thread
-    public FileEntry[] listFiles() {
+    public BelugaFileEntry[] listFiles() {
         String[] filenames = new File(path).list();
         if (filenames == null) {
             return null;
         }
         int count = filenames.length;
-        FileEntry[] result = new FileEntry[count];
+        BelugaFileEntry[] result = new BelugaFileEntry[count];
         for (int i = 0; i < count; ++i) {
-            result[i] = new FileEntry(path, filenames[i]);
+            result[i] = new BelugaFileEntry(path, filenames[i]);
         }
         return result;
     }
@@ -216,10 +214,10 @@ public class FileEntry extends BelugaEntry {
         dest.writeInt(isFavorite? 1 : 0);
     }
 
-    public static final Creator<FileEntry> CREATOR = new Creator<FileEntry>() {
+    public static final Creator<BelugaFileEntry> CREATOR = new Creator<BelugaFileEntry>() {
         @Override
-        public FileEntry createFromParcel(Parcel source) {
-            FileEntry entry = new FileEntry();
+        public BelugaFileEntry createFromParcel(Parcel source) {
+            BelugaFileEntry entry = new BelugaFileEntry();
             entry.exist = source.readInt() == 1;
             entry.path = source.readString();
             entry.name = source.readString();
@@ -240,13 +238,13 @@ public class FileEntry extends BelugaEntry {
         }
 
         @Override
-        public FileEntry[] newArray(int size) {
-            return new FileEntry[size];
+        public BelugaFileEntry[] newArray(int size) {
+            return new BelugaFileEntry[size];
         }
     };
 
-    public static FileEntry[] toFileEntries(Parcelable[] parcelables) {
-        FileEntry[] objects = new FileEntry[parcelables.length];
+    public static BelugaFileEntry[] toFileEntries(Parcelable[] parcelables) {
+        BelugaFileEntry[] objects = new BelugaFileEntry[parcelables.length];
         System.arraycopy(parcelables, 0, objects, 0, parcelables.length);
         return objects;
     }

@@ -11,4 +11,9 @@ import android.os.Parcelable;
  */
 public abstract class BelugaEntry implements BelugaSortableInterface, Parcelable{
     public abstract String getIdentity();
+
+    @Override
+    public int hashCode() {
+        return getIdentity().hashCode();
+    }
 }

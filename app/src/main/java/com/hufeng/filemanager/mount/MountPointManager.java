@@ -6,7 +6,7 @@ import android.os.storage.StorageManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -390,14 +390,14 @@ public final class MountPointManager {
     /**
      * This method checks weather certain file is External File.
      *
-     * @param fileEntry certain file needs to be checked
+     * @param belugaFileEntry certain file needs to be checked
      * @return true for external file, and false for not external file
      */
-    public boolean isExternalFile(FileEntry fileEntry) {
+    public boolean isExternalFile(BelugaFileEntry belugaFileEntry) {
         boolean ret = false;
-        if (fileEntry != null) {
-            String mountPath = getRealMountPointPath(fileEntry.path);
-            if (mountPath.equals(fileEntry.path)) {
+        if (belugaFileEntry != null) {
+            String mountPath = getRealMountPointPath(belugaFileEntry.path);
+            if (mountPath.equals(belugaFileEntry.path)) {
                 Log.d(TAG, "isExternalFile,return false .mountPath = " + mountPath);
                 ret = false;
             }

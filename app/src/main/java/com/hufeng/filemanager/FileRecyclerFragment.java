@@ -5,15 +5,13 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.ui.BelugaActionController;
 
 /**
  * Created by feng on 13-9-9.
  */
 public abstract class FileRecyclerFragment extends BelugaRecyclerFragment implements BelugaFragmentInterface{
-
-    protected String mSearchString;
 
     private BelugaDisplayModeAdapter mDisplayModeAdapter;
 
@@ -66,10 +64,6 @@ public abstract class FileRecyclerFragment extends BelugaRecyclerFragment implem
         getLayoutManager().scrollToPosition(position);
     }
 
-    protected void changeSort() {
-
-    }
-
 
     protected void refreshLayoutManager() {
         int padding = getResources().getDimensionPixelSize(R.dimen.recycler_view_padding);
@@ -93,7 +87,7 @@ public abstract class FileRecyclerFragment extends BelugaRecyclerFragment implem
         adapter.notifyDataSetChanged();
     }
 
-    public abstract FileEntry[] getAllFiles();
+    public abstract BelugaFileEntry[] getAllFiles();
 
     public BelugaDisplayMode getDisplayMode() {
         return mDisplayModeAdapter.getDisplayMode();

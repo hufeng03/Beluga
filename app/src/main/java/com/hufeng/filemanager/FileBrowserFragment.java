@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
@@ -18,8 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.BelugaSortHelper;
-import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.loader.FileBrowserLoader;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
@@ -30,46 +29,46 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-public class FileBrowserFragment extends FileRecyclerFragment implements LoaderManager.LoaderCallbacks<List<FileEntry>>,
+public class FileBrowserFragment extends FileRecyclerFragment implements LoaderManager.LoaderCallbacks<List<BelugaFileEntry>>,
         BelugaEntryViewHolder.EntryClickListener{
 
     private static final String TAG = FileBrowserFragment.class.getSimpleName();
 
-    BelugaArrayRecyclerAdapter<FileEntry, FileEntryListViewHolder> mAdapter;
-
+    BelugaArrayRecyclerAdapter<BelugaFileEntry> mAdapter;
 
     private String mRootDir;
-    private String mSelectedDir = null;
-    private int mSelectedPostion = -1;
+    private String mSelectedPath;
 
     private static final int LOADER_ID = 1;
 
     public static final String ARGUMENT_BROWSER_ROOT_FOLDER = "browser_root_folder";
+    public static final String ARGUMENT_BROWSER_LOCATE_FILE = "browser_locate_file";
     public static final String ARGUMENT_BROWSER_ROOT_FILE_LIST = "browser_root_file_list";
 
     private static final String SAVE_INSTANCE_KEY_ROOT_FOLDER = "rootFolder";
 
-    public static FileBrowserFragment newRootFolderBrowser(String rootFolder) {
+    public static FileBrowserFragment newRootFolderBrowser(String rootFolder, String locateFile) {
         if (TextUtils.isEmpty(rootFolder)) {
             return null;
         }
         FileBrowserFragment fragment = new FileBrowserFragment();
         Bundle data = new Bundle();
         data.putString(ARGUMENT_BROWSER_ROOT_FOLDER, rootFolder);
+        data.putString(ARGUMENT_BROWSER_LOCATE_FILE, locateFile);
         fragment.setArguments(data);
         return fragment;
     }
 
-    public static FileBrowserFragment newRootFileListBrowser(String[] fileList) {
-        if (fileList == null) {
-            return null;
-        }
-        FileBrowserFragment fragment = new FileBrowserFragment();
-        Bundle data = new Bundle();
-        data.putStringArray(ARGUMENT_BROWSER_ROOT_FILE_LIST, fileList);
-        fragment.setArguments(data);
-        return fragment;
-    }
+//    public static FileBrowserFragment newRootFileListBrowser(String[] fileList) {
+//        if (fileList == null) {
+//            return null;
+//        }
+//        FileBrowserFragment fragment = new FileBrowserFragment();
+//        Bundle data = new Bundle();
+//        data.putStringArray(ARGUMENT_BROWSER_ROOT_FILE_LIST, fileList);
+//        fragment.setArguments(data);
+//        return fragment;
+//    }
 
 
     @Override
@@ -85,10 +84,18 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        Bundle arguments = getArguments();
         if (savedInstanceState == null) {
+            Bundle arguments = getArguments();
             if (arguments != null) {
                 mRootDir = arguments.getString(ARGUMENT_BROWSER_ROOT_FOLDER);
+                String locateFile = arguments.getString(ARGUMENT_BROWSER_LOCATE_FILE);
+                if (!TextUtils.isEmpty(locateFile)) {
+                    BelugaFileEntry entry = new BelugaFileEntry(locateFile);
+                    if (entry.exist) {
+                        mSelectedPath = entry.path;
+                        mRootDir = entry.parentPath;
+                    }
+                }
             }
         } else {
             mRootDir = savedInstanceState.getString(SAVE_INSTANCE_KEY_ROOT_FOLDER, null);
@@ -106,7 +113,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
         final String empty_text = getResources().getString(R.string.empty_file);
         setEmptyText(empty_text);
 
-        mAdapter = new BelugaArrayRecyclerAdapter<FileEntry, FileEntryListViewHolder>(
+        mAdapter = new BelugaArrayRecyclerAdapter<BelugaFileEntry>(
                 getActivity(),
                 BelugaDisplayMode.LIST,
                 new BelugaEntryViewHolder.Builder() {
@@ -129,7 +136,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
         setRecyclerAdapter(mAdapter);
 
         setEmptyViewShown(false);
-        setListShownNoAnimation(false);
+        setRecyclerViewShownNoAnimation(false);
 
         if (isPasteMode()) {
             setFloatingActionBarImage(R.drawable.ic_paste);
@@ -193,6 +200,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                 || mode == BelugaActionController.OPERATION_MODE.CUT_PASTE;
     }
 
+    @Override
     public boolean onBackPressed() {
         if (mRootDir != null) {
             String[] initDirs = getArguments().getStringArray(ARGUMENT_BROWSER_ROOT_FILE_LIST);
@@ -298,40 +306,42 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
     }
 
     @Override
-    public FileEntry[] getAllFiles() {
+    public BelugaFileEntry[] getAllFiles() {
         return mAdapter.getAll();
     }
 
     public void showDir(String path) {
-        mSelectedDir = mRootDir;
+        mSelectedPath = mRootDir;
         mRootDir = path;
         getLoaderManager().restartLoader(LOADER_ID, null, this);
         getActivity().supportInvalidateOptionsMenu();
     }
 
     @Override
-	public Loader<List<FileEntry>> onCreateLoader(int arg0, Bundle arg1) {
+	public Loader<List<BelugaFileEntry>> onCreateLoader(int arg0, Bundle arg1) {
         Log.i(TAG, "onCreateLoader");
         if(arg0 ==  LOADER_ID) {
             String[] initDirs = getArguments().getStringArray(ARGUMENT_BROWSER_ROOT_FILE_LIST);
-            return new FileBrowserLoader(getActivity(), mRootDir, initDirs, mSearchString);
+            return new FileBrowserLoader(getActivity(), mRootDir, initDirs);
         } else {
             return null;
         }
 	}
 
 	@Override
-	public void onLoadFinished(Loader<List<FileEntry>> arg0,
-			List<FileEntry> arg1) {
+	public void onLoadFinished(Loader<List<BelugaFileEntry>> arg0,
+			List<BelugaFileEntry> arg1) {
         Log.i(TAG, "onLoadFinished");
-        Iterator<FileEntry> iterator =  arg1.iterator();
-        int pos = 0;
-        while (iterator.hasNext()) {
-            FileEntry entry = iterator.next();
-            if (mSelectedPostion == -1 && !TextUtils.isEmpty(mSelectedDir) && entry.path.equals(mSelectedDir)) {
-                mSelectedPostion = pos;
+        int pos = -1;
+        if (!TextUtils.isEmpty(mSelectedPath)) {
+            Iterator<BelugaFileEntry> iterator =  arg1.iterator();
+            while (iterator.hasNext()) {
+                pos++;
+                BelugaFileEntry entry = iterator.next();
+                if (entry.path.equals(mSelectedPath)){
+                    break;
+                }
             }
-            pos++;
         }
 
         if (!TextUtils.isEmpty(mRootDir)) {
@@ -344,18 +354,17 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
 
         mAdapter.setData(arg1);
         //TODO: recover this
-        if ( mSelectedPostion > 5 ) {
-            getLayoutManager().scrollToPosition(mSelectedPostion);
+        if ( pos > 5 ) {
+            getLayoutManager().scrollToPosition(pos);
         }
 
-        mSelectedDir = null;
-        mSelectedPostion = -1;
+        mSelectedPath = null;
         setRecyclerViewShown(true);
         setEmptyViewShown(arg1.size()==0);
 	}
 
 	@Override
-	public void onLoaderReset(Loader<List<FileEntry>> arg0) {
+	public void onLoaderReset(Loader<List<BelugaFileEntry>> arg0) {
         Log.i(TAG, "onCreateReset");
         mAdapter.clear();
 
@@ -373,11 +382,13 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
 
     @Override
     public void onEntryClickedToOpen(View view, BelugaEntry entry) {
-        FileEntry fileEntry = (FileEntry)entry;
-        if (fileEntry.isDirectory) {
-            showDir(fileEntry.path);
+        BelugaFileEntry belugaFileEntry = (BelugaFileEntry)entry;
+        if (belugaFileEntry.isDirectory) {
+            showDir(belugaFileEntry.path);
+        } else if (belugaFileEntry.type == FileCategoryHelper.FILE_TYPE_ZIP) {
+            BusProvider.getInstance().post(new ZipViewEvent(System.currentTimeMillis(), ((BelugaFileEntry) entry).path));
         } else {
-            BelugaActionDelegate.view(getActivity(), fileEntry);
+            BelugaActionDelegate.view(getActivity(), belugaFileEntry);
         }
     }
 
@@ -402,7 +413,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                     if (TextUtils.isEmpty(path) || new File(path).exists()) {
                         return;
                     }
-                    FileEntry oldEntry = new FileEntry(path);
+                    BelugaFileEntry oldEntry = new BelugaFileEntry(path);
                     Message newMessage = mUIThreadHandler.obtainMessage(0);
                     Bundle data = new Bundle();
                     data.putParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY, oldEntry);
@@ -416,10 +427,10 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                     if (TextUtils.isEmpty(path) || !new File(path).exists()) {
                         return;
                     }
-                    FileEntry newEntry = new FileEntry(path);
+                    BelugaFileEntry newEntry = new BelugaFileEntry(path);
                     Comparator<BelugaSortableInterface> comparator = BelugaSortHelper.getComparator(getActivity(), FileCategoryHelper.CATEGORY_TYPE_UNKNOW);
                     int pos = 0;
-                    for (FileEntry entry : mAdapter.getAll()) {
+                    for (BelugaFileEntry entry : mAdapter.getAll()) {
                         if (comparator.compare(entry, newEntry) >= 0) {
                             break;
                         }
@@ -443,7 +454,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
             switch (msg.what) {
                 case 0:
                 {
-                    FileEntry oldEntry = msg.getData().getParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY);
+                    BelugaFileEntry oldEntry = msg.getData().getParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY);
                     mAdapter.remove(oldEntry);
                     getActionController().setEntrySelection(false, oldEntry);
                     setEmptyViewShown(mAdapter.getItemCount() == 0);
@@ -451,7 +462,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                     break;
                 case 1:
                 {
-                    FileEntry newEntry = msg.getData().getParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY);
+                    BelugaFileEntry newEntry = msg.getData().getParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY);
                     int pos = msg.getData().getInt(HANDLER_MESSAGE_POSITION_KEY, 0);
                     mAdapter.add(newEntry, pos);
                     getLayoutManager().scrollToPosition(pos);

@@ -7,14 +7,11 @@ import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 
-import com.hufeng.filemanager.data.FileEntry;
-import com.hufeng.filemanager.helper.BelugaSortHelper;
-import com.hufeng.filemanager.helper.FileCategoryHelper;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.utils.LogUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,11 +19,11 @@ import java.util.List;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class FileSearchLoader extends AsyncTaskLoader<List<FileEntry>> {
+public class FileSearchLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
 
     private static final String LOG_TAG = FileSearchLoader.class.getSimpleName();
 
-    private List<FileEntry> mFiles;
+    private List<BelugaFileEntry> mFiles;
 
     private String mSearchString;
 
@@ -54,9 +51,9 @@ public class FileSearchLoader extends AsyncTaskLoader<List<FileEntry>> {
     }
 
     @Override
-    public List<FileEntry> loadInBackground() {
+    public List<BelugaFileEntry> loadInBackground() {
         LogUtil.i(LOG_TAG, this.hashCode()+" load in background: "+mSearchString);
-        List<FileEntry> entries = new ArrayList<FileEntry>();
+        List<BelugaFileEntry> entries = new ArrayList<BelugaFileEntry>();
 
         if (TextUtils.isEmpty(mSearchString)) {
             return entries;
@@ -65,10 +62,10 @@ public class FileSearchLoader extends AsyncTaskLoader<List<FileEntry>> {
         String searchString = mSearchString;
 
         if(!TextUtils.isEmpty(searchString)) {
-            searchString.replace("[","[[]");
-            searchString.replace("%","[%]");
-            searchString.replace("_","[_]");
-            searchString.replace("^","[^]");
+            searchString = searchString.replace("[","[[]");
+            searchString = searchString.replace("%","[%]");
+            searchString = searchString.replace("_","[_]");
+            searchString = searchString.replace("^","[^]");
             searchString = searchString.replace("'", "''");
         }
 
@@ -84,7 +81,7 @@ public class FileSearchLoader extends AsyncTaskLoader<List<FileEntry>> {
                         null);
                 if (cursor != null) {
                     while (cursor.moveToNext()) {
-                        entries.add(new FileEntry(cursor));
+                        entries.add(new BelugaFileEntry(cursor));
                     }
                 }
             } catch (Exception e) {
@@ -97,17 +94,11 @@ public class FileSearchLoader extends AsyncTaskLoader<List<FileEntry>> {
             idx++;
         }
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         return entries;
     }
 
     @Override
-    public void deliverResult(List<FileEntry> data) {
+    public void deliverResult(List<BelugaFileEntry> data) {
         LogUtil.i(LOG_TAG, this.hashCode()+" FileListLoader deliverResult with "+(data==null?0:data.size()));
         if (isReset()) {
             if (data != null) {
@@ -116,7 +107,7 @@ public class FileSearchLoader extends AsyncTaskLoader<List<FileEntry>> {
             }
         }
 
-        List<FileEntry> oldFiles = mFiles;
+        List<BelugaFileEntry> oldFiles = mFiles;
         mFiles = data;
 
         if (isStarted()) {
@@ -163,7 +154,7 @@ public class FileSearchLoader extends AsyncTaskLoader<List<FileEntry>> {
     }
 
     @Override
-    public void onCanceled(List<FileEntry> data) {
+    public void onCanceled(List<BelugaFileEntry> data) {
         LogUtil.i(LOG_TAG, this.hashCode()+" FileListLoader onCanceled");
         if (data != null) {
             releaseResources(data);
@@ -176,7 +167,7 @@ public class FileSearchLoader extends AsyncTaskLoader<List<FileEntry>> {
         super.forceLoad();
     }
 
-    private void releaseResources(List<FileEntry> data) {
+    private void releaseResources(List<BelugaFileEntry> data) {
         // do nothing
     }
 }

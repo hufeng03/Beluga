@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.view.View;
 import android.widget.TextView;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.BelugaHighlightHelper;
 import com.hufeng.playimage.BelugaLazyLoadImageView;
 
@@ -23,7 +23,7 @@ public class FileEntrySimpleListViewHolder extends BelugaEntryViewHolder{
     BelugaLazyLoadImageView icon;
     @InjectView(R.id.name) TextView name;
 
-    private FileEntry entry;
+    private BelugaFileEntry entry;
 
     public FileEntrySimpleListViewHolder(View itemView) {
         super(itemView);
@@ -32,10 +32,10 @@ public class FileEntrySimpleListViewHolder extends BelugaEntryViewHolder{
 
     @Override
     public void bindEntry(BelugaEntry entry, String highlightString) {
-        if (!(entry instanceof FileEntry)) {
+        if (!(entry instanceof BelugaFileEntry)) {
             //throw new Exception("AppEntryViewHolder can only bind AppEntry");
         }
-        this.entry = (FileEntry)entry;
+        this.entry = (BelugaFileEntry)entry;
 //        name.setText(this.entry.getName());
         BelugaHighlightHelper.setTextWithHighlight(name, this.entry.getName(), highlightString);
         icon.requestDisplayImage(this.entry.path);
@@ -43,7 +43,7 @@ public class FileEntrySimpleListViewHolder extends BelugaEntryViewHolder{
 
     @Override
     public void bindEntry(Cursor cursor, String highlightString) {
-        FileEntry entry = new FileEntry(cursor);
+        BelugaFileEntry entry = new BelugaFileEntry(cursor);
         bindEntry(entry, highlightString);
     }
 

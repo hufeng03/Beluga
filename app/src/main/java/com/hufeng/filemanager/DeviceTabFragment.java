@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -23,13 +23,17 @@ public class DeviceTabFragment extends FileTabFragment {
     private String mDevicePath;
     private NewDeviceFragment mDeviceFragment;
 
+    private String mZipPath;
+
     private static final String DEVICE_TAB_ROOT_DIR = "device_tab_root_dir";
+    private static final String ZIP_FILE_PATH = "zip_file_path";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mDevicePath = savedInstanceState.getString(DEVICE_TAB_ROOT_DIR);
+            mZipPath = savedInstanceState.getString(ZIP_FILE_PATH);
         }
 	}
 
@@ -47,9 +51,17 @@ public class DeviceTabFragment extends FileTabFragment {
 
     @Subscribe
     public void onDeviceSelected(DeviceSelectEvent event) {
-        if (event != null) {
+        if (getUserVisibleHint() && event != null) {
             mDevicePath = event.path;
             showFileBrowserFragment();
+        }
+    }
+
+    @Subscribe
+    public void onZipView(ZipViewEvent event) {
+        if (getUserVisibleHint() && event != null) {
+            mZipPath = event.path;
+            showZipBrowserFragment();
         }
     }
 
@@ -79,6 +91,9 @@ public class DeviceTabFragment extends FileTabFragment {
         if (!TextUtils.isEmpty(mDevicePath)) {
             outState.putString(DEVICE_TAB_ROOT_DIR, mDevicePath);
         }
+        if (!TextUtils.isEmpty(mZipPath)) {
+            outState.putString(ZIP_FILE_PATH, mZipPath);
+        }
     }
 
 
@@ -89,10 +104,12 @@ public class DeviceTabFragment extends FileTabFragment {
 
 
     private void showSingleDevicePanel() {
-        if (TextUtils.isEmpty(mDevicePath) || !new File(mDevicePath).isDirectory()) {
-            showDevicePanel();
-        } else {
+        if (!TextUtils.isEmpty(mZipPath) && new File(mZipPath).exists()) {
+            showZipBrowserFragment();
+        } else if (!TextUtils.isEmpty(mDevicePath) && new File(mDevicePath).exists()) {
             showFileBrowserFragment();
+        } else {
+            showDevicePanel();
         }
     }
 
@@ -123,14 +140,13 @@ public class DeviceTabFragment extends FileTabFragment {
     }
 
 
-
     public void showFileBrowserFragment() {
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
         final String TAG = "FileBrowserFragment";
         FileBrowserFragment fragment = (FileBrowserFragment) fm.findFragmentByTag(TAG);
         if (fragment == null) {
-            fragment = FileBrowserFragment.newRootFolderBrowser(mDevicePath);
+            fragment = FileBrowserFragment.newRootFolderBrowser(mDevicePath, mZipPath);
             ft.replace(R.id.fragment_container, fragment, TAG);
             ft.commit();
         } else {
@@ -147,15 +163,42 @@ public class DeviceTabFragment extends FileTabFragment {
         t.send(new HitBuilders.AppViewBuilder().build());
     }
 
+    public void showZipBrowserFragment() {
+        final FragmentManager fm = getChildFragmentManager();
+        final FragmentTransaction ft = fm.beginTransaction();
+        final String TAG = "ZipBrowserFragment";
+        ZipBrowserFragment fragment = (ZipBrowserFragment) fm.findFragmentByTag(TAG);
+        if (fragment == null) {
+            fragment = ZipBrowserFragment.newFragment(mZipPath);
+            ft.replace(R.id.fragment_container, fragment, TAG);
+            ft.commit();
+        } else {
+            if (fragment.isDetached()) {
+                ft.attach(fragment);
+                ft.commit();
+            }
+        }
+        mCurrentChildFragment = fragment;
+        mDeviceFragment = null;
+
+        Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
+        t.setScreenName("Zip Browser: "+mZipPath);
+        t.send(new HitBuilders.AppViewBuilder().build());
+    }
+
 	@Override
 	public boolean onBackPressed() {
         if ( super.onBackPressed() ){
             return true;
         }
-        if (mDeviceFragment == null) {
-            showDevicePanel();
-            return true;
+        if (!TextUtils.isEmpty(mZipPath)) {
+            mZipPath = null;
+        } else if (!TextUtils.isEmpty(mDevicePath)) {
+            mDevicePath = null;
+        } else {
+            return false;
         }
+        showSingleDevicePanel();
 
         return false;
 	}
@@ -173,7 +216,7 @@ public class DeviceTabFragment extends FileTabFragment {
     }
 
     @Override
-    public FileEntry[] getAllFiles() {
+    public BelugaFileEntry[] getAllFiles() {
         if (mCurrentChildFragment != null)
             return mCurrentChildFragment.getAllFiles();
         else

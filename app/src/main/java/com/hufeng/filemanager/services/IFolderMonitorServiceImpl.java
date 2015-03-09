@@ -11,7 +11,6 @@ import android.text.TextUtils;
 
 import com.hufeng.filemanager.BelugaFolderObserver;
 import com.hufeng.filemanager.BuildConfig;
-import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.helper.BelugaProviderHelper;
 import com.hufeng.filemanager.mount.MountPoint;
 import com.hufeng.filemanager.mount.MountPointManager;

@@ -5,13 +5,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 
-import com.hufeng.filemanager.data.ApkEntry;
-import com.hufeng.filemanager.data.AudioEntry;
-import com.hufeng.filemanager.data.DocumentEntry;
-import com.hufeng.filemanager.data.FileEntry;
-import com.hufeng.filemanager.data.ImageEntry;
-import com.hufeng.filemanager.data.VideoEntry;
-import com.hufeng.filemanager.data.ZipEntry;
+import com.hufeng.filemanager.data.BelugaApkEntry;
+import com.hufeng.filemanager.data.BelugaAudioEntry;
+import com.hufeng.filemanager.data.BelugaDocumentEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
+import com.hufeng.filemanager.data.BelugaImageEntry;
+import com.hufeng.filemanager.data.BelugaVideoEntry;
+import com.hufeng.filemanager.data.BelugaZipEntry;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.utils.LogUtil;
 
@@ -55,26 +55,26 @@ public class BelugaProviderHelper {
         return uri;
     }
 
-    public static FileEntry createFileEntryAccordingToCategory(String path, int category) {
-        FileEntry entry = null;
+    public static BelugaFileEntry createFileEntryAccordingToCategory(String path, int category) {
+        BelugaFileEntry entry = null;
         switch (category) {
             case FileCategoryHelper.CATEGORY_TYPE_APK:
-                entry = new ApkEntry(path);
+                entry = new BelugaApkEntry(path);
                 break;
             case FileCategoryHelper.CATEGORY_TYPE_AUDIO:
-                entry = new AudioEntry(path);
+                entry = new BelugaAudioEntry(path);
                 break;
             case FileCategoryHelper.CATEGORY_TYPE_DOCUMENT:
-                entry = new DocumentEntry(path);
+                entry = new BelugaDocumentEntry(path);
                 break;
             case FileCategoryHelper.CATEGORY_TYPE_ZIP:
-                entry = new ZipEntry(path);
+                entry = new BelugaZipEntry(path);
                 break;
             case FileCategoryHelper.CATEGORY_TYPE_IMAGE:
-                entry = new ImageEntry(path);
+                entry = new BelugaImageEntry(path);
                 break;
             case FileCategoryHelper.CATEGORY_TYPE_VIDEO:
-                entry = new VideoEntry(path);
+                entry = new BelugaVideoEntry(path);
                 break;
             default:
                 break;
@@ -89,9 +89,9 @@ public class BelugaProviderHelper {
             return;
         }
         Uri uri = getUriAccordingToCategory(category);
-        FileEntry newFileEntry = createFileEntryAccordingToCategory(newPath, category);
+        BelugaFileEntry newBelugaFileEntry = createFileEntryAccordingToCategory(newPath, category);
 
-        if (uri == null || newFileEntry == null) {
+        if (uri == null || newBelugaFileEntry == null) {
             //Something unexpected happened
             return;
         }
@@ -100,7 +100,7 @@ public class BelugaProviderHelper {
         ContentValues values = new ContentValues();
 
         int count = 0;
-        newFileEntry.fillContentValues(values);
+        newBelugaFileEntry.fillContentValues(values);
 
         try {
             count = contentResolver.update(uri, values,
@@ -126,10 +126,10 @@ public class BelugaProviderHelper {
 
         if (count > 0) {
             values.clear();
-            values.put(DataStructures.FavoriteColumns.NAME, newFileEntry.name);
-            values.put(DataStructures.FavoriteColumns.PATH, newFileEntry.path);
-            values.put(DataStructures.FavoriteColumns.DATE, newFileEntry.lastModified);
-            values.put(DataStructures.FavoriteColumns.EXTENSION, newFileEntry.extension);
+            values.put(DataStructures.FavoriteColumns.NAME, newBelugaFileEntry.name);
+            values.put(DataStructures.FavoriteColumns.PATH, newBelugaFileEntry.path);
+            values.put(DataStructures.FavoriteColumns.DATE, newBelugaFileEntry.lastModified);
+            values.put(DataStructures.FavoriteColumns.EXTENSION, newBelugaFileEntry.extension);
             try {
                 count = contentResolver.update(DataStructures.FavoriteColumns.CONTENT_URI,
                         values,
@@ -152,8 +152,8 @@ public class BelugaProviderHelper {
         }
 
         Uri uri = getUriAccordingToCategory(category);
-        FileEntry newFileEntry = createFileEntryAccordingToCategory(path, category);
-        if (uri == null || newFileEntry == null) {
+        BelugaFileEntry newBelugaFileEntry = createFileEntryAccordingToCategory(path, category);
+        if (uri == null || newBelugaFileEntry == null) {
             //Something unexpected happened
             return;
         }
@@ -161,7 +161,7 @@ public class BelugaProviderHelper {
         ContentResolver contentResolver = context.getContentResolver();
         ContentValues values = new ContentValues();
 
-        newFileEntry.fillContentValues(values);
+        newBelugaFileEntry.fillContentValues(values);
         Uri newFileUri = null;
 
         try {
@@ -171,7 +171,7 @@ public class BelugaProviderHelper {
         }
 
         if (LogUtil.IDBG)
-            LogUtil.i(TAG, "insert " + path + " return " + newFileUri==null?"null":newFileUri.toString());
+            LogUtil.i(TAG, "insert " + path + " return " + ((newFileUri==null)?"null":newFileUri.toString()));
     }
 
     public static void deleteInBelugaDatabase(Context context, String path) {
@@ -215,8 +215,8 @@ public class BelugaProviderHelper {
         ContentResolver contentResolver = context.getContentResolver();
 
         ContentValues values = new ContentValues();
-    	FileEntry fileEntry = new FileEntry(path);
-        fileEntry.fillContentValues(values);
+    	BelugaFileEntry belugaFileEntry = new BelugaFileEntry(path);
+        belugaFileEntry.fillContentValues(values);
     	if(new File(path).isDirectory()){
     		values.put(DataStructures.FavoriteColumns.IS_DIRECTORY, 1);
     		values.put(DataStructures.FileColumns.SIZE, 0);

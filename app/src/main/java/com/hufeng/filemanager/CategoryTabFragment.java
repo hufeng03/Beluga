@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.squareup.otto.Subscribe;
 
@@ -21,10 +21,12 @@ public class CategoryTabFragment extends FileTabFragment {
 
 	private static final String CATEGORY = "category";
     private static final String FOLDER_PATH = "folder_path";
+    private static final String ZIP_FILE_PATH = "zip_file_path";
     private static final String FAVORITE_SELECTED = "favorite_selected";
     private static final String DOWNLOAD_SELECTED = "download_selected";
     private int mCategory;
     private String mFolderPath;
+    private String mZipPath;
 
     public Fragment mCategoryFragment;
 
@@ -34,6 +36,7 @@ public class CategoryTabFragment extends FileTabFragment {
         if (savedInstanceState != null) {
             mCategory = savedInstanceState.getInt(CATEGORY);
             mFolderPath = savedInstanceState.getString(FOLDER_PATH);
+            mZipPath = savedInstanceState.getString(ZIP_FILE_PATH);
         }
 	}
 
@@ -46,7 +49,12 @@ public class CategoryTabFragment extends FileTabFragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
         outState.putInt(CATEGORY, mCategory);
-        outState.putString(FOLDER_PATH, mFolderPath);
+        if (!TextUtils.isEmpty(mFolderPath)) {
+            outState.putString(FOLDER_PATH, mFolderPath);
+        }
+        if (!TextUtils.isEmpty(mZipPath)) {
+            outState.putString(ZIP_FILE_PATH, mZipPath);
+        }
 	}
 
 	@Override
@@ -83,7 +91,7 @@ public class CategoryTabFragment extends FileTabFragment {
 
     @Subscribe
     public void onCategorySelected(CategorySelectEvent event) {
-        if (event != null) {
+        if (getUserVisibleHint() && event != null) {
             mCategory = event.category;
             showSingleCategoryPanel();
         }
@@ -91,9 +99,17 @@ public class CategoryTabFragment extends FileTabFragment {
 
     @Subscribe
     public void onFolderOpen(FolderOpenEvent event) {
-        if (event != null) {
+        if (getUserVisibleHint() && event != null) {
             mFolderPath = event.entry.path;
             toFileBrowser();
+        }
+    }
+
+    @Subscribe
+    public void onZipView(ZipViewEvent event) {
+        if (getUserVisibleHint() && event != null) {
+            mZipPath = event.path;
+            toZipBrowser();
         }
     }
 
@@ -107,27 +123,19 @@ public class CategoryTabFragment extends FileTabFragment {
         if ( super.onBackPressed() ){
             return true;
         }
-        if (!TextUtils.isEmpty(mFolderPath)) {
-            if (FileCategoryHelper.CATEGORY_TYPE_FAVORITE == mCategory) {
-                toFavoriteList();
-                mFolderPath  = null;
-                return true;
-            } else if (FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD == mCategory) {
-                toDownloadList();
-                mFolderPath  = null;
-                return true;
-            } else {
-                //Something wired is happening
-            }
-        }
 
-        if (mCategory != FileCategoryHelper.CATEGORY_TYPE_UNKNOW) {
+        if (!TextUtils.isEmpty(mZipPath)) {
+            mZipPath = null;
+        } else if (!TextUtils.isEmpty(mFolderPath)) {
+            mFolderPath  = null;
+        } else if (mCategory != FileCategoryHelper.CATEGORY_TYPE_UNKNOW) {
             mCategory = FileCategoryHelper.CATEGORY_TYPE_UNKNOW;
-            showSingleCategoryPanel();
-            return true;
+        } else {
+            return false;
         }
+        showSingleCategoryPanel();
 
-        return false;
+        return true;
 	}
 
     private void toCategoryPanel() {
@@ -227,7 +235,7 @@ public class CategoryTabFragment extends FileTabFragment {
         final String tag = "FileBrowser";
         FileBrowserFragment fragment = (FileBrowserFragment) fm.findFragmentByTag(tag);
         if (fragment == null) {
-            fragment = FileBrowserFragment.newRootFolderBrowser(mFolderPath);
+            fragment = FileBrowserFragment.newRootFolderBrowser(mFolderPath, null);
             ft.replace(R.id.fragment_container, fragment, tag);
             ft.commit();
         } else {
@@ -244,35 +252,56 @@ public class CategoryTabFragment extends FileTabFragment {
         t.send(new HitBuilders.AppViewBuilder().build());
     }
 
+    private void toZipBrowser() {
+        final FragmentManager fm = getChildFragmentManager();
+        final FragmentTransaction ft = fm.beginTransaction();
+        final String TAG = "ZipBrowser";
+        ZipBrowserFragment fragment = (ZipBrowserFragment) fm.findFragmentByTag(TAG);
+        if (fragment == null) {
+            fragment = ZipBrowserFragment.newFragment(mZipPath);
+            ft.replace(R.id.fragment_container, fragment, TAG);
+            ft.commit();
+        } else {
+            if (fragment.isDetached()) {
+                ft.attach(fragment);
+                ft.commit();
+            }
+        }
+        mCurrentChildFragment = fragment;
+        mCategoryFragment = null;
+
+        Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
+        t.setScreenName("Zip Browser: "+mZipPath);
+        t.send(new HitBuilders.AppViewBuilder().build());
+    }
+
     private void showSingleCategoryPanel() {
-        switch (mCategory) {
-            case FileCategoryHelper.CATEGORY_TYPE_FAVORITE:
-                if (TextUtils.isEmpty(mFolderPath)) {
+        if (!TextUtils.isEmpty(mZipPath)) {
+            toZipBrowser();
+        } else if (!TextUtils.isEmpty(mFolderPath)) {
+            toFileBrowser();
+        } else {
+            switch (mCategory) {
+                case FileCategoryHelper.CATEGORY_TYPE_FAVORITE:
                     toFavoriteList();
-                } else {
-                    toFileBrowser();
-                }
-                break;
-            case FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD:
-                if (TextUtils.isEmpty(mFolderPath)) {
+                    break;
+                case FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD:
                     toDownloadList();
-                } else {
-                    toFileBrowser();
-                }
-                break;
-            case FileCategoryHelper.CATEGORY_TYPE_UNKNOW:
-                toCategoryPanel();
-                break;
-            case FileCategoryHelper.CATEGORY_TYPE_AUDIO:
-            case FileCategoryHelper.CATEGORY_TYPE_IMAGE:
-            case FileCategoryHelper.CATEGORY_TYPE_VIDEO:
-            case FileCategoryHelper.CATEGORY_TYPE_APK:
-            case FileCategoryHelper.CATEGORY_TYPE_DOCUMENT:
-            case FileCategoryHelper.CATEGORY_TYPE_ZIP:
-                toFileGrouper();
-                break;
-            default:
-                break;
+                    break;
+                case FileCategoryHelper.CATEGORY_TYPE_UNKNOW:
+                    toCategoryPanel();
+                    break;
+                case FileCategoryHelper.CATEGORY_TYPE_AUDIO:
+                case FileCategoryHelper.CATEGORY_TYPE_IMAGE:
+                case FileCategoryHelper.CATEGORY_TYPE_VIDEO:
+                case FileCategoryHelper.CATEGORY_TYPE_APK:
+                case FileCategoryHelper.CATEGORY_TYPE_DOCUMENT:
+                case FileCategoryHelper.CATEGORY_TYPE_ZIP:
+                    toFileGrouper();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -290,7 +319,7 @@ public class CategoryTabFragment extends FileTabFragment {
     }
 
     @Override
-    public FileEntry[] getAllFiles() {
+    public BelugaFileEntry[] getAllFiles() {
         if(mCurrentChildFragment != null) {
             return mCurrentChildFragment.getAllFiles();
         } else {

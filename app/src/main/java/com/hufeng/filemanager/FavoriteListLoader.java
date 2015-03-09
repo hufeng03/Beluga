@@ -3,18 +3,13 @@ package com.hufeng.filemanager;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.content.AsyncTaskLoader;
-import android.text.TextUtils;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.BelugaSortHelper;
 import com.hufeng.filemanager.helper.FileCategoryHelper;
-import com.hufeng.filemanager.mount.MountPoint;
-import com.hufeng.filemanager.mount.MountPointManager;
 import com.hufeng.filemanager.provider.DataStructures;
 import com.hufeng.filemanager.utils.LogUtil;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,13 +19,13 @@ import java.util.List;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class FavoriteListLoader extends AsyncTaskLoader<List<FileEntry>> {
+public class FavoriteListLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
 
     private static final String LOG_TAG = FavoriteListLoader.class.getSimpleName();
 
     final ForceLoadContentObserver mObserver;
 
-    private List<FileEntry> mFiles;
+    private List<BelugaFileEntry> mFiles;
 
     SortPreferenceReceiver mSortObserver;
     DownloadFolderObserver mDownloadFolderObserver;
@@ -41,9 +36,9 @@ public class FavoriteListLoader extends AsyncTaskLoader<List<FileEntry>> {
     }
 
     @Override
-    public List<FileEntry> loadInBackground() {
+    public List<BelugaFileEntry> loadInBackground() {
         LogUtil.i(LOG_TAG, this.hashCode()+" load in background");
-        List<FileEntry> entries = new ArrayList<FileEntry>();
+        List<BelugaFileEntry> entries = new ArrayList<BelugaFileEntry>();
 
         Cursor cursor = null;
         try {
@@ -54,7 +49,7 @@ public class FavoriteListLoader extends AsyncTaskLoader<List<FileEntry>> {
             if (cursor != null) {
                 while (cursor.moveToNext()) {
                     String path = cursor.getString(0);
-                    FileEntry  entry = new FileEntry(path);
+                    BelugaFileEntry entry = new BelugaFileEntry(path);
                     if (entry.exist) {
                         entry.isFavorite = true;
                         entries.add(entry);
@@ -75,7 +70,7 @@ public class FavoriteListLoader extends AsyncTaskLoader<List<FileEntry>> {
     }
 
     @Override
-    public void deliverResult(List<FileEntry> data) {
+    public void deliverResult(List<BelugaFileEntry> data) {
         LogUtil.i(LOG_TAG, this.hashCode()+" FileListLoader deliverResult with "+(data==null?0:data.size()));
         if (isReset()) {
             if (data != null) {
@@ -84,7 +79,7 @@ public class FavoriteListLoader extends AsyncTaskLoader<List<FileEntry>> {
             }
         }
 
-        List<FileEntry> oldFiles = mFiles;
+        List<BelugaFileEntry> oldFiles = mFiles;
         mFiles = data;
 
         if (isStarted()) {
@@ -156,7 +151,7 @@ public class FavoriteListLoader extends AsyncTaskLoader<List<FileEntry>> {
     }
 
     @Override
-    public void onCanceled(List<FileEntry> data) {
+    public void onCanceled(List<BelugaFileEntry> data) {
         LogUtil.i(LOG_TAG, this.hashCode()+" FileListLoader onCanceled");
         if (data != null) {
             releaseResources(data);
@@ -169,7 +164,7 @@ public class FavoriteListLoader extends AsyncTaskLoader<List<FileEntry>> {
         super.forceLoad();
     }
 
-    private void releaseResources(List<FileEntry> data) {
+    private void releaseResources(List<BelugaFileEntry> data) {
         // do nothing
     }
 }

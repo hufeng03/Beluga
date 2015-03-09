@@ -3,7 +3,7 @@ package com.hufeng.filemanager.ui;
 import android.content.Context;
 
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.BelugaProviderHelper;
 import com.hufeng.filemanager.helper.MultiMediaStoreHelper;
 
@@ -56,7 +56,7 @@ public class BelugaCopyPasteAsyncTask extends BelugaActionAsyncTask {
     private boolean copyFileEntryOneByOne() {
         boolean result = true;
         byte[] buffer = new byte[BUFFER_SIZE];
-        for(FileEntry entry : mFileEntries) {
+        for(BelugaFileEntry entry : mFileEntries) {
             if(isCancelled()) {
                 mPasteMediaStoreHelper.updateRecords();
                 return false;

@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.dialog.BelugaDialogFragment;
 import com.hufeng.filemanager.intent.Constant;
 import com.hufeng.filemanager.ui.BelugaActionController;
@@ -58,7 +58,7 @@ public abstract class BelugaActionControllerActivity extends BelugaBaseActionCon
     }
 
     @Override
-    public void onDialogOK(int dialogId, String folder, FileEntry... entries) {
+    public void onDialogOK(int dialogId, String folder, BelugaFileEntry... entries) {
         switch(dialogId) {
             case BelugaDialogFragment.RENAME_DIALOG:
                 getActionController().performRename(folder, entries[0]);
@@ -78,7 +78,7 @@ public abstract class BelugaActionControllerActivity extends BelugaBaseActionCon
 
 
     @Override
-    public void onDialogCancel(int dialogId, String folder, FileEntry... entries) {
+    public void onDialogCancel(int dialogId, String folder, BelugaFileEntry... entries) {
         switch (dialogId) {
             case BelugaDialogFragment.RENAME_DIALOG:
                 break;

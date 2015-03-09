@@ -2,7 +2,6 @@ package com.hufeng.filemanager.services;
 
 import android.os.Environment;
 
-import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.mount.MountPoint;
 import com.hufeng.filemanager.mount.MountPointManager;
 

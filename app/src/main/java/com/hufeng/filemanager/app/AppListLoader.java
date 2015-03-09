@@ -28,9 +28,9 @@ public class AppListLoader extends AsyncTaskLoader<List<AppEntry>> {
     SortPreferenceReceiver mSortObserver;
     String mSearch;
 
-    public AppListLoader(Context context, String search) {
+    public AppListLoader(Context context) {
         super(context);
-        mSearch = search;
+//        mSearch = search;
 
         // Retrieve the package manager for later use; note we don't
         // use 'context' directly but instead the save global application

@@ -3,7 +3,7 @@ package com.hufeng.filemanager.ui;
 import android.content.Context;
 
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.BelugaProviderHelper;
 import com.hufeng.filemanager.helper.MultiMediaStoreHelper;
 
@@ -51,7 +51,7 @@ public class BelugaDeleteAsyncTask extends BelugaActionAsyncTask {
 
     private boolean deleteFileEntryOneByOne() {
         boolean result = true;
-        for (FileEntry entry : mFileEntries) {
+        for (BelugaFileEntry entry : mFileEntries) {
             if (isCancelled()) {
                 mDeleteMediaStoreHelper.updateRecords();
                 return false;

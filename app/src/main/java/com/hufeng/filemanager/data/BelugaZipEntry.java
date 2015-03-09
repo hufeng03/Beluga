@@ -7,22 +7,22 @@ import java.io.File;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class DocumentEntry extends FileEntry{
+public class BelugaZipEntry extends BelugaFileEntry {
 
-    public DocumentEntry() {
+    public BelugaZipEntry() {
         //This is used for Parcelable
     }
 
-    public DocumentEntry(String path) {
+    public BelugaZipEntry(String path) {
         File file = new File(path);
         init(file);
     }
 
-    public DocumentEntry(File file) {
+    public BelugaZipEntry(File file) {
         init(file);
     }
 
-    public DocumentEntry(String dir, String name) {
+    public BelugaZipEntry(String dir, String name) {
         File file = new File(dir, name);
         init(file);
     }

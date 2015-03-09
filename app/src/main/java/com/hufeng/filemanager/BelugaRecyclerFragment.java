@@ -234,7 +234,7 @@ public abstract class BelugaRecyclerFragment extends BelugaBaseFragment implemen
      * Like {@link #setRecyclerViewShown(boolean, boolean)}, but no animation is used when
      * transitioning from the previous state.
      */
-    public void setListShownNoAnimation(boolean shown) {
+    public void setRecyclerViewShownNoAnimation(boolean shown) {
         setRecyclerViewShown(shown, false);
     }
 

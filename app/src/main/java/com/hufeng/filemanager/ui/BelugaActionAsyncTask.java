@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.BelugaSortHelper;
 import com.hufeng.filemanager.helper.FileNameHelper;
 import com.hufeng.filemanager.helper.MediaStoreHelper;
@@ -17,14 +17,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
  * Created by feng on 14-2-10.
  */
-public abstract class BelugaActionAsyncTask extends AsyncTask<FileEntry, FileEntry, Boolean> {
+public abstract class BelugaActionAsyncTask extends AsyncTask<BelugaFileEntry, BelugaFileEntry, Boolean> {
 
     private static final String TAG = "BelugaActionAsyncTask";
 
@@ -33,11 +31,11 @@ public abstract class BelugaActionAsyncTask extends AsyncTask<FileEntry, FileEnt
     protected String mFolderPath;
     protected MediaStoreHelper mMediaProviderHelper;
 
-    protected List<FileEntry> mOriginalEntries = new ArrayList<FileEntry>();
+    protected List<BelugaFileEntry> mOriginalEntries = new ArrayList<BelugaFileEntry>();
 
-    protected List<FileEntry> mFileEntries = new ArrayList<FileEntry>();
+    protected List<BelugaFileEntry> mFileEntries = new ArrayList<BelugaFileEntry>();
 
-    protected List<FileEntry> mUnReportedEntries = new ArrayList<FileEntry>();
+    protected List<BelugaFileEntry> mUnReportedEntries = new ArrayList<BelugaFileEntry>();
 
     //to increase the copy/paste speed
     protected static final int BUFFER_SIZE = 2048 * 1024;
@@ -54,7 +52,7 @@ public abstract class BelugaActionAsyncTask extends AsyncTask<FileEntry, FileEnt
 
     public interface BelugaActionAsyncTaskCallbackDelegate {
         public void onAsyncTaskStarted();
-        public void onAsyncTaskProgressUpdated(FileEntry... progress);
+        public void onAsyncTaskProgressUpdated(BelugaFileEntry... progress);
         public void onAsyncTaskCompleted(boolean result);
     }
 
@@ -72,7 +70,7 @@ public abstract class BelugaActionAsyncTask extends AsyncTask<FileEntry, FileEnt
     }
 
     @Override
-    protected Boolean doInBackground(FileEntry... params) {
+    protected Boolean doInBackground(BelugaFileEntry... params) {
         mOriginalEntries.addAll(Arrays.asList(params));
         getAllActionFileEntryList(mFileEntries, params);
         mStartOperationTime = System.currentTimeMillis();
@@ -90,16 +88,16 @@ public abstract class BelugaActionAsyncTask extends AsyncTask<FileEntry, FileEnt
     }
 
     @Override
-    protected void onProgressUpdate(FileEntry... values) {
+    protected void onProgressUpdate(BelugaFileEntry... values) {
         mCallbackDelegate.onAsyncTaskProgressUpdated(values);
     }
 
-    protected void publishActionProgress(FileEntry... entries) {
+    protected void publishActionProgress(BelugaFileEntry... entries) {
         final long operationTime = System.currentTimeMillis() - mStartOperationTime;
         if (operationTime > NEED_UPDATE_TIME) {
             if (mUnReportedEntries.size() > 0) {
                 mUnReportedEntries.addAll(Arrays.asList(entries));
-                super.publishProgress(mUnReportedEntries.toArray(new FileEntry[mUnReportedEntries.size()]));
+                super.publishProgress(mUnReportedEntries.toArray(new BelugaFileEntry[mUnReportedEntries.size()]));
                 mUnReportedEntries.clear();
             } else {
                 super.publishProgress(entries);
@@ -111,7 +109,7 @@ public abstract class BelugaActionAsyncTask extends AsyncTask<FileEntry, FileEnt
 
     }
 
-    public void executeParallel(FileEntry... params) {
+    public void executeParallel(BelugaFileEntry... params) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             execute(params);
         } else {
@@ -119,9 +117,9 @@ public abstract class BelugaActionAsyncTask extends AsyncTask<FileEntry, FileEnt
         }
     }
 
-    protected boolean getAllActionFileEntryList(List<FileEntry> entryList, FileEntry... entries) {
+    protected boolean getAllActionFileEntryList(List<BelugaFileEntry> entryList, BelugaFileEntry... entries) {
         if (entries != null) {
-            for (FileEntry entry : entries) {
+            for (BelugaFileEntry entry : entries) {
                 if (entry.isDirectory) {
                     getAllActionFileEntryList(entryList, entry.listFiles());
                 }

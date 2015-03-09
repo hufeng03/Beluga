@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,23 +14,22 @@ import java.util.List;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class BelugaArrayRecyclerAdapter<Entry extends BelugaEntry,
-        EntryViewHolder extends BelugaEntryViewHolder>
-        extends RecyclerView.Adapter<EntryViewHolder> implements BelugaDisplayModeAdapter{
+public class BelugaArrayRecyclerAdapter<Entry extends BelugaEntry>
+        extends RecyclerView.Adapter<BelugaEntryViewHolder> implements BelugaDisplayModeAdapter{
 
     private Context mContext;
     private List<Entry> mEntries;
 //    private int mEntryLayout;
     private String mHighlightString;
-    private EntryViewHolder.Builder mEntryViewHolderBuilder;
+    private BelugaEntryViewHolder.Builder mEntryViewHolderBuilder;
 
     private BelugaDisplayMode mDisplayMode = BelugaDisplayMode.LIST;
 
-    public BelugaArrayRecyclerAdapter(Context context, BelugaDisplayMode mode,/*int entryLayout,*/ EntryViewHolder.Builder builder) {
+    public BelugaArrayRecyclerAdapter(Context context, BelugaDisplayMode mode,/*int entryLayout,*/ BelugaEntryViewHolder.Builder builder) {
         init(context, new ArrayList<Entry>(), mode, /*entryLayout,*/ builder);
     }
 
-    private void init(Context context, ArrayList<Entry> entries, BelugaDisplayMode mode,/*int entryLayout,*/ EntryViewHolder.Builder builder) {
+    private void init(Context context, ArrayList<Entry> entries, BelugaDisplayMode mode,/*int entryLayout,*/ BelugaEntryViewHolder.Builder builder) {
         mContext = context;
         mEntries = entries;
 //        mEntryLayout = entryLayout;
@@ -39,12 +38,12 @@ public class BelugaArrayRecyclerAdapter<Entry extends BelugaEntry,
     }
 
     @Override
-    public EntryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        return (EntryViewHolder)mEntryViewHolderBuilder.createViewHolder(viewGroup, i);
+    public BelugaEntryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        return mEntryViewHolderBuilder.createViewHolder(viewGroup, i);
     }
 
     @Override
-    public void onBindViewHolder(EntryViewHolder fileViewHolder, int i) {
+    public void onBindViewHolder(BelugaEntryViewHolder fileViewHolder, int i) {
         fileViewHolder.bindEntry(mEntries.get(i), mHighlightString);
     }
 
@@ -77,7 +76,7 @@ public class BelugaArrayRecyclerAdapter<Entry extends BelugaEntry,
         notifyItemInserted(pos);
     }
 
-    public void remove(FileEntry entry) {
+    public void remove(BelugaFileEntry entry) {
         int position = mEntries.indexOf(entry);
         if (position != -1) {
             mEntries.remove(position);
@@ -110,8 +109,8 @@ public class BelugaArrayRecyclerAdapter<Entry extends BelugaEntry,
 //        }
 //    }
 
-    public FileEntry[] getAll() {
-        return mEntries.toArray(new FileEntry[mEntries.size()]);
+    public BelugaFileEntry[] getAll() {
+        return mEntries.toArray(new BelugaFileEntry[mEntries.size()]);
     }
 
 }

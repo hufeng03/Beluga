@@ -1,6 +1,6 @@
 package com.hufeng.filemanager;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 
 /**
  * Created by feng on 2014-10-26.
@@ -8,11 +8,11 @@ import com.hufeng.filemanager.data.FileEntry;
 public class FolderOpenEvent {
 
     public final long time;
-    public final FileEntry entry;
+    public final BelugaFileEntry entry;
 
     public static final String INTENT_ACTION = "DEVICE_SELECT_EVENT";
 
-    public FolderOpenEvent(long time, FileEntry entry) {
+    public FolderOpenEvent(long time, BelugaFileEntry entry) {
         this.time =time;
         this.entry = entry;
     }

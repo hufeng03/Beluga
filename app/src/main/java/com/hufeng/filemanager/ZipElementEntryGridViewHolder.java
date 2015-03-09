@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hufeng.filemanager.data.BelugaFileEntry;
+import com.hufeng.filemanager.data.BelugaZipElementEntry;
 import com.hufeng.filemanager.helper.BelugaHighlightHelper;
 import com.hufeng.filemanager.helper.BelugaTimeHelper;
 import com.hufeng.filemanager.ui.BelugaActionController;
@@ -19,7 +20,7 @@ import butterknife.InjectView;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class FileEntryGridViewHolder extends BelugaEntryViewHolder {
+public class ZipElementEntryGridViewHolder extends BelugaEntryViewHolder {
 
     @InjectView(R.id.icon) SquareLazyLoadImageView icon;
     @InjectView(R.id.expand) ImageView expand;
@@ -28,12 +29,12 @@ public class FileEntryGridViewHolder extends BelugaEntryViewHolder {
     @InjectView(R.id.name) TextView name;
     @InjectView(R.id.description) TextView description;
 
-    private BelugaFileEntry entry;
+    private BelugaZipElementEntry entry;
     private BelugaActionController actionController;
     private EntryClickListener listener;
 
-    public FileEntryGridViewHolder(View itemView, BelugaActionController actionController,
-                                   EntryClickListener listener) {
+    public ZipElementEntryGridViewHolder(View itemView, BelugaActionController actionController,
+                                         EntryClickListener listener) {
         super(itemView);
         ButterKnife.inject(this, itemView);
         icon.setOnClickListener(this);
@@ -47,15 +48,16 @@ public class FileEntryGridViewHolder extends BelugaEntryViewHolder {
 
     @Override
     public void bindEntry(BelugaEntry entry, String highlightString) {
-        if (!(entry instanceof BelugaFileEntry)) {
+        if (!(entry instanceof BelugaZipElementEntry)) {
             //throw new Exception("AppEntryViewHolder can only bind AppEntry");
         }
-        this.entry = (BelugaFileEntry)entry;
+        this.entry = (BelugaZipElementEntry)entry;
 //        this.name.setText(entry.getName());
         BelugaHighlightHelper.setTextWithHighlight(name, this.entry.getName(), highlightString);
         this.description.setText(BelugaTimeHelper.getDayString(this.entry.getTime()));
-        icon.requestDisplayImage(this.entry.path);
-        boolean isChosen = actionController.isEntrySelected(this.entry);
+        icon.requestDisplayImageForZipElement(this.entry);
+//        boolean isChosen = actionController.isEntrySelected(this.entry);
+        boolean isChosen = false;
         this.itemView.setActivated(isChosen);
         this.check.setVisibility(isChosen?View.VISIBLE:View.GONE);
         this.expand.setVisibility(isChosen?View.VISIBLE:View.GONE);
@@ -73,7 +75,7 @@ public class FileEntryGridViewHolder extends BelugaEntryViewHolder {
             this.listener.onEntryClickedToOpen(v, entry);
         } else {
             if (actionController.isActionModeShowing()) {
-                actionController.toggleEntrySelection(entry);
+//                actionController.toggleEntrySelection(entry);
             } else {
                 this.listener.onEntryClickedToOpen(v, entry);
             }
@@ -82,7 +84,7 @@ public class FileEntryGridViewHolder extends BelugaEntryViewHolder {
 
     @Override
     public boolean onLongClick(View v) {
-        actionController.toggleEntrySelection(entry);
+//        actionController.toggleEntrySelection(entry);
         return true;
     }
 }

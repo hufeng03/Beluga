@@ -16,25 +16,25 @@ import java.io.InputStream;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class ImageEntry extends FileEntry{
+public class BelugaImageEntry extends BelugaFileEntry {
 
     public int imageWidth;
     public int imageHeight;
 
-    public ImageEntry() {
+    public BelugaImageEntry() {
         //This is used for Parcelable
     }
 
-    public ImageEntry(String path) {
+    public BelugaImageEntry(String path) {
         File file = new File(path);
         init(file);
     }
 
-    public ImageEntry(File file) {
+    public BelugaImageEntry(File file) {
         init(file);
     }
 
-    public ImageEntry(String dir, String name) {
+    public BelugaImageEntry(String dir, String name) {
         File file = new File(dir, name);
         init(file);
     }

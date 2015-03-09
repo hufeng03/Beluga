@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.hufeng.filemanager.R;
+import com.hufeng.filemanager.data.BelugaZipElementEntry;
 import com.hufeng.filemanager.helper.IconLoaderHelper;
 import com.hufeng.filemanager.utils.MimeUtil;
 
@@ -99,6 +100,19 @@ public class BelugaLazyLoadImageView extends BaseLazyLoadImageView {
 //        }
 //        super.requestDisplayImage(path);
 //    }
+
+    public void requestDisplayImageForZipElement(BelugaZipElementEntry entry) {
+        if (entry.isDirectory) {
+            setDefaultResource(R.drawable.file_icon_folder);
+            setMimeType(DocumentsContract.Document.MIME_TYPE_DIR);
+        } else {
+            setDefaultResource(IconLoaderHelper.getFileIcon(getContext(), entry.path));
+            setMimeType(MimeUtil.getMimeType(entry.path));
+        }
+        targetUri = entry.path;
+        useDefaultResource();;
+        currentUri = entry.path;
+    }
 
     @Override
     public void requestDisplayImage(String uri) {

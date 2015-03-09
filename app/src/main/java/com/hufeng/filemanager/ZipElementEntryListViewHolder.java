@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hufeng.filemanager.data.BelugaFileEntry;
+import com.hufeng.filemanager.data.BelugaZipElementEntry;
 import com.hufeng.filemanager.helper.BelugaHighlightHelper;
 import com.hufeng.filemanager.helper.BelugaTimeHelper;
 import com.hufeng.filemanager.ui.BelugaActionController;
@@ -25,7 +26,7 @@ import butterknife.InjectView;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class FileEntryListViewHolder extends BelugaEntryViewHolder{
+public class ZipElementEntryListViewHolder extends BelugaEntryViewHolder{
 
     @InjectView(R.id.icon)
     BelugaLazyLoadImageView icon;
@@ -35,12 +36,12 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
     @InjectView(R.id.check) ImageView check;
     @InjectView(R.id.overflow) ImageView overflow;
 
-    private BelugaFileEntry entry;
+    private BelugaZipElementEntry entry;
     private BelugaActionController actionController;
     private EntryClickListener listener;
 
-    public FileEntryListViewHolder(View itemView, BelugaActionController actionController,
-                                   EntryClickListener listener) {
+    public ZipElementEntryListViewHolder(View itemView, BelugaActionController actionController,
+                                         EntryClickListener listener) {
         super(itemView);
         ButterKnife.inject(this, itemView);
         icon.setOnClickListener(this);
@@ -51,13 +52,13 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
 
     @Override
     public void bindEntry(BelugaEntry entry, String highlightString) {
-        if (!(entry instanceof BelugaFileEntry)) {
+        if (!(entry instanceof BelugaZipElementEntry)) {
             //throw new Exception("AppEntryViewHolder can only bind AppEntry");
         }
-        this.entry = (BelugaFileEntry)entry;
+        this.entry = (BelugaZipElementEntry)entry;
 //        name.setText(this.entry.getName());
         BelugaHighlightHelper.setTextWithHighlight(name, this.entry.getName(), highlightString);
-        icon.requestDisplayImage(this.entry.path);
+        icon.requestDisplayImageForZipElement(this.entry);
         if (this.entry.isDirectory) {
             int childCount = this.entry.childFileCount + this.entry.childFolderCount;
             if (childCount == 0) {
@@ -71,13 +72,14 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
             status.setText(SizeUtil.normalize(this.entry.getSize()));
         }
         description.setText(BelugaTimeHelper.getDateString(this.entry.getTime()));
-        boolean isChosen = actionController.isEntrySelected(this.entry);
+//        boolean isChosen = actionController.isEntrySelected(this.entry);
+        boolean isChosen = false;
         this.itemView.setActivated(isChosen);
         this.overflow.setOnClickListener(this);
         final BelugaActionController.OPERATION_MODE operationMode = this.actionController.getOperationMode();
         final boolean isPasteMode =  operationMode == BelugaActionController.OPERATION_MODE.COPY_PASTE
                 || operationMode == BelugaActionController.OPERATION_MODE.CUT_PASTE;
-        this.overflow.setVisibility(isPasteMode? View.GONE:View.VISIBLE);
+        this.overflow.setVisibility(/*isPasteMode?*/ View.GONE/*:View.VISIBLE*/);
         this.status.setVisibility(isPasteMode? View.GONE:View.VISIBLE);
     }
 
@@ -94,7 +96,7 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
                 showContextMenu(v);
                 break;
             case R.id.icon:
-                actionController.toggleEntrySelection(entry);
+//                actionController.toggleEntrySelection(entry);
                 break;
             default:
                 this.listener.onEntryClickedToOpen(v, entry);
@@ -104,7 +106,7 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
 
     @Override
     public boolean onLongClick(View v) {
-        actionController.toggleEntrySelection(entry);
+//        actionController.toggleEntrySelection(entry);
         return true;
     }
 
@@ -117,28 +119,28 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.share:
-                        BelugaActionDelegate.share(context, entry);
+//                        BelugaActionDelegate.share(context, entry);
                         break;
                     case R.id.copy:
-                        BelugaActionDelegate.copy(context, entry);
+//                        BelugaActionDelegate.copy(context, entry);
                         break;
                     case R.id.cut:
-                        BelugaActionDelegate.cut(context, entry);
+//                        BelugaActionDelegate.cut(context, entry);
                         break;
                     case R.id.delete:
-                        BelugaActionDelegate.delete((FragmentActivity) context, entry);
+//                        BelugaActionDelegate.delete((FragmentActivity) context, entry);
                         break;
                     case R.id.rename:
-                        BelugaActionDelegate.rename((FragmentActivity) context, entry);
+//                        BelugaActionDelegate.rename((FragmentActivity) context, entry);
                         break;
                     case R.id.details:
-                        BelugaActionDelegate.details((FragmentActivity) context, entry);
+//                        BelugaActionDelegate.details((FragmentActivity) context, entry);
                         break;
                     case R.id.add_favorite:
-                        actionController.performFavorite(entry);
+//                        actionController.performFavorite(entry);
                         break;
                     case R.id.remove_favorite:
-                        actionController.performUndoFavorite(entry);
+//                        actionController.performUndoFavorite(entry);
                         break;
                 }
                 return true;
@@ -151,13 +153,13 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
                 ((ImageView) view).setImageResource(R.drawable.beluga_overflow_menu);
             }
         });
-        if (entry.isFavorite) {
-            popupMenu.getMenu().findItem(R.id.add_favorite).setEnabled(false);
-            popupMenu.getMenu().findItem(R.id.add_favorite).setVisible(false);
-        } else {
-            popupMenu.getMenu().findItem(R.id.remove_favorite).setEnabled(false);
-            popupMenu.getMenu().findItem(R.id.remove_favorite).setVisible(false);
-        }
+//        if (entry.isFavorite) {
+//            popupMenu.getMenu().findItem(R.id.add_favorite).setEnabled(false);
+//            popupMenu.getMenu().findItem(R.id.add_favorite).setVisible(false);
+//        } else {
+//            popupMenu.getMenu().findItem(R.id.remove_favorite).setEnabled(false);
+//            popupMenu.getMenu().findItem(R.id.remove_favorite).setVisible(false);
+//        }
         popupMenu.show();
     }
 

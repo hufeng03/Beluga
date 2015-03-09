@@ -3,7 +3,7 @@ package com.hufeng.filemanager.ui;
 import android.content.Context;
 
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.BelugaProviderHelper;
 import com.hufeng.filemanager.helper.MultiMediaStoreHelper;
 import com.hufeng.filemanager.mount.MountPointManager;
@@ -63,7 +63,7 @@ public class BelugaCutPasteAsyncTask extends BelugaActionAsyncTask {
         byte[] buffer = new byte[BUFFER_SIZE];
         String dstMountPoint = MountPointManager.getInstance().getRealMountPointPath(mFolderPath);
         File dstFolder = new File(mFolderPath);
-        for (FileEntry entry : mFileEntries) {
+        for (BelugaFileEntry entry : mFileEntries) {
             if(isCancelled()) {
                 return false;
             }
@@ -88,9 +88,9 @@ public class BelugaCutPasteAsyncTask extends BelugaActionAsyncTask {
                                 //if cut directory, update the files in this directory also.
                                 mMediaProviderHelper.updateInMediaStore(
                                         entry.path, newFile.getAbsolutePath());
-                                List<FileEntry> children = new ArrayList<FileEntry>();
-                                getAllActionFileEntryList(children, new FileEntry(newFile));
-                                for (FileEntry child : children) {
+                                List<BelugaFileEntry> children = new ArrayList<BelugaFileEntry>();
+                                getAllActionFileEntryList(children, new BelugaFileEntry(newFile));
+                                for (BelugaFileEntry child : children) {
                                     if (child.category > 0) {
                                         String oldChildPath = child.path.replace(newFile.getAbsolutePath(), entry.path);
                                         BelugaProviderHelper.updateInBelugaDatabase(mContext, oldChildPath, child.path);

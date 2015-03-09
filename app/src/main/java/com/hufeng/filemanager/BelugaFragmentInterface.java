@@ -1,6 +1,6 @@
 package com.hufeng.filemanager;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.ui.BelugaActionController;
 
 /**
@@ -12,7 +12,7 @@ public interface BelugaFragmentInterface {
     public boolean onBackPressed();
     public BelugaActionController getActionController();
 
-    public FileEntry[] getAllFiles();
+    public BelugaFileEntry[] getAllFiles();
 //    public FileEntry getParentFile();
     public void refreshUI();
 }

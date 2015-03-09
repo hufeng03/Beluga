@@ -6,7 +6,7 @@ import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 
 import java.util.ArrayList;
 
@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class BelugaCursorRecyclerAdapter<EntryViewHolder extends BelugaEntryViewHolder> extends RecyclerView.Adapter<EntryViewHolder>
+public class BelugaCursorRecyclerAdapter extends RecyclerView.Adapter<BelugaEntryViewHolder>
     implements BelugaDisplayModeAdapter{
 
     private Context mContext;
@@ -24,7 +24,7 @@ public class BelugaCursorRecyclerAdapter<EntryViewHolder extends BelugaEntryView
     private boolean mDataValid;
     private int mRowIDColumn;
 
-    private EntryViewHolder.Builder mEntryViewHolderBuilder;
+    private BelugaEntryViewHolder.Builder mEntryViewHolderBuilder;
 
     private DataSetObserver mDataSetObserver;
 
@@ -33,11 +33,11 @@ public class BelugaCursorRecyclerAdapter<EntryViewHolder extends BelugaEntryView
 
     private BelugaDisplayMode mDisplayMode = BelugaDisplayMode.LIST;
 
-    public BelugaCursorRecyclerAdapter(Context context, Cursor cursor, BelugaDisplayMode mode,/*int entryLayout,*/ EntryViewHolder.Builder builder) {
+    public BelugaCursorRecyclerAdapter(Context context, Cursor cursor, BelugaDisplayMode mode,/*int entryLayout,*/ BelugaEntryViewHolder.Builder builder) {
         init(context, cursor, mode, builder);
     }
 
-    private void init(Context context, Cursor cursor, BelugaDisplayMode mode,/*int entryLayout,*/ EntryViewHolder.Builder builder) {
+    private void init(Context context, Cursor cursor, BelugaDisplayMode mode,/*int entryLayout,*/ BelugaEntryViewHolder.Builder builder) {
         boolean cursorExists = cursor != null;
         mContext = context;
         mCursor = cursor;
@@ -51,12 +51,12 @@ public class BelugaCursorRecyclerAdapter<EntryViewHolder extends BelugaEntryView
     }
 
     @Override
-    public EntryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        return (EntryViewHolder)mEntryViewHolderBuilder.createViewHolder(viewGroup, i);
+    public BelugaEntryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        return mEntryViewHolderBuilder.createViewHolder(viewGroup, i);
     }
 
     @Override
-    public void onBindViewHolder(EntryViewHolder belugaEntryViewHolder, int i) {
+    public void onBindViewHolder(BelugaEntryViewHolder belugaEntryViewHolder, int i) {
         if (!mDataValid) {
             throw new IllegalStateException("this should only be called when the cursor is valid");
         }
@@ -138,15 +138,15 @@ public class BelugaCursorRecyclerAdapter<EntryViewHolder extends BelugaEntryView
         }
     }
 
-    public FileEntry[] getAll() {
+    public BelugaFileEntry[] getAll() {
         Cursor cursor = getCursor();
-        ArrayList<FileEntry> files = new ArrayList<FileEntry>();
+        ArrayList<BelugaFileEntry> files = new ArrayList<BelugaFileEntry>();
         if(cursor!=null && cursor.moveToFirst()) {
             do {
-                files.add(new FileEntry(cursor));
+                files.add(new BelugaFileEntry(cursor));
             } while(cursor.moveToNext());
         }
-        return files.toArray(new FileEntry[files.size()]);
+        return files.toArray(new BelugaFileEntry[files.size()]);
     }
 
     public Cursor swapCursor(Cursor newCursor) {

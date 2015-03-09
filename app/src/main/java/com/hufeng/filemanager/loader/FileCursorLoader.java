@@ -21,10 +21,13 @@ public class FileCursorLoader extends CursorLoader {
 
     SortPreferenceReceiver mSortObserver;
     final int mCategory;
+    private String mSearch;
 
-    public FileCursorLoader(Context context, int category, String search) {
+    public FileCursorLoader(Context context, int category) {
         super(context);
         mCategory = category;
+//        mSearch = string;
+
         Uri baseUri;
         String[] projection = null;
         switch (category) {
@@ -83,12 +86,12 @@ public class FileCursorLoader extends CursorLoader {
             }
 
             String search_constraint = null;
-            String search_string = search;
+            String search_string = mSearch;
             if (!TextUtils.isEmpty(search_string)) {
-                search_string.replace("[", "[[]");
-                search_string.replace("%", "[%]");
-                search_string.replace("_", "[_]");
-                search_string.replace("^", "[^]");
+                search_string = search_string.replace("[", "[[]");
+                search_string = search_string.replace("%", "[%]");
+                search_string = search_string.replace("_", "[_]");
+                search_string = search_string.replace("^", "[^]");
                 search_string = search_string.replace("'", "''");
                 search_constraint = DataStructures.FileColumns.NAME + " LIKE '%" + search_string + "%'";
             }

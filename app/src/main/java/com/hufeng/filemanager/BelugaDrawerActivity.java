@@ -22,7 +22,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.ui.BelugaActionController;
 import com.hufeng.filemanager.ui.FileViewPager;
 
@@ -785,7 +785,7 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
 
 
     @Override
-    public FileEntry[] getAllEntries() {
+    public BelugaFileEntry[] getAllEntries() {
         Fragment fragment = getCurrentFragment();
         if (fragment instanceof BelugaFragmentInterface) {
             return ((BelugaFragmentInterface) fragment).getAllFiles();

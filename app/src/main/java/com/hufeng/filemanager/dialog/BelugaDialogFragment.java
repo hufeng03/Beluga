@@ -29,16 +29,14 @@ import android.widget.Toast;
 import com.hufeng.filemanager.BelugaArrayRecyclerAdapter;
 import com.hufeng.filemanager.BelugaDisplayMode;
 import com.hufeng.filemanager.BelugaEntryViewHolder;
-import com.hufeng.filemanager.CategorySelectEvent;
 import com.hufeng.filemanager.FileEntrySimpleListViewHolder;
 import com.hufeng.filemanager.R;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.BelugaSortHelper;
-import com.hufeng.filemanager.data.FileEntry;
 import com.hufeng.filemanager.helper.BelugaTimeHelper;
 import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.utils.FileUtil;
 import com.hufeng.filemanager.utils.MimeUtil;
-import com.hufeng.filemanager.utils.TimeUtil;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -80,8 +78,8 @@ public class BelugaDialogFragment extends DialogFragment{
 
 
     public static abstract interface OnDialogDoneInterface {
-        public abstract void onDialogOK(int dialogId, String folder, FileEntry... entries);
-        public abstract void onDialogCancel(int dialoId, String folder, FileEntry... entries);
+        public abstract void onDialogOK(int dialogId, String folder, BelugaFileEntry... entries);
+        public abstract void onDialogCancel(int dialoId, String folder, BelugaFileEntry... entries);
     }
 
     private OnDialogDoneInterface mListener;
@@ -117,7 +115,7 @@ public class BelugaDialogFragment extends DialogFragment{
         return dialog;
     }
 
-	public static DialogFragment showRenameDialog(FragmentActivity activity, FileEntry entry){
+	public static DialogFragment showRenameDialog(FragmentActivity activity, BelugaFileEntry entry){
 		Bundle data = new Bundle();
 		data.putParcelable(FILE_DATA, entry);
         DialogFragment dialog = BelugaDialogFragment.newInstance(RENAME_DIALOG, data);
@@ -135,7 +133,7 @@ public class BelugaDialogFragment extends DialogFragment{
         return dialog;
     }
 	
-	public static DialogFragment showDetailsDialog(FragmentActivity activity, FileEntry entry){
+	public static DialogFragment showDetailsDialog(FragmentActivity activity, BelugaFileEntry entry){
 		Bundle data = new Bundle();
 		data.putParcelable(FILE_DATA, entry);
         DialogFragment dialog = BelugaDialogFragment.newInstance(DETAIL_DIALOG, data);
@@ -151,7 +149,7 @@ public class BelugaDialogFragment extends DialogFragment{
         return dialog;
 	}
 
-    public static DialogFragment showCopyPasteDialog(FragmentActivity activity, String path, FileEntry... entries) {
+    public static DialogFragment showCopyPasteDialog(FragmentActivity activity, String path, BelugaFileEntry... entries) {
         Bundle data = new Bundle();
         data.putString(FOLDER_PATH_DATA, path);
         data.putParcelableArray(FILE_ARRAY_DATA, entries);
@@ -160,7 +158,7 @@ public class BelugaDialogFragment extends DialogFragment{
         return dialog;
     }
 
-    public static DialogFragment showCutPasteDialog(FragmentActivity activity, String path, FileEntry... entries) {
+    public static DialogFragment showCutPasteDialog(FragmentActivity activity, String path, BelugaFileEntry... entries) {
         Bundle data = new Bundle();
         data.putString(FOLDER_PATH_DATA, path);
         data.putParcelableArray(FILE_ARRAY_DATA, entries);
@@ -192,7 +190,7 @@ public class BelugaDialogFragment extends DialogFragment{
 //    }
 
 	
-	public static DialogFragment showDeleteDialog(FragmentActivity activity, FileEntry... paths){
+	public static DialogFragment showDeleteDialog(FragmentActivity activity, BelugaFileEntry... paths){
 		Bundle data = new Bundle();
         data.putParcelableArray(FILE_ARRAY_DATA, paths);
         DialogFragment dialog = BelugaDialogFragment.newInstance(DELETE_DIALOG, data);
@@ -342,7 +340,7 @@ public class BelugaDialogFragment extends DialogFragment{
 		case DETAIL_DIALOG:
 		{
 			View contents = View.inflate(getActivity(), R.layout.detail_dialog, null);
-			final FileEntry entry = getArguments().getParcelable(FILE_DATA);
+			final BelugaFileEntry entry = getArguments().getParcelable(FILE_DATA);
 			final TextView content = (TextView)contents.findViewById(R.id.detail_dialog_content);
             String html_string;
             if (entry.isDirectory) {
@@ -422,7 +420,7 @@ public class BelugaDialogFragment extends DialogFragment{
 		case RENAME_DIALOG:
 		{
             View contents = View.inflate(getActivity(), R.layout.rename_dialog, null);
-            final FileEntry entry = getArguments().getParcelable(FILE_DATA);
+            final BelugaFileEntry entry = getArguments().getParcelable(FILE_DATA);
             final EditText edit = (EditText)contents.findViewById(R.id.rename_dialog_edit);
             edit.setText(entry.name);
             dialog = new AlertDialog.Builder(getActivity())
@@ -530,13 +528,13 @@ public class BelugaDialogFragment extends DialogFragment{
     private Dialog buildOperationDialog(String title, String info){
         View contents = View.inflate(getActivity(), R.layout.delete_dialog, null);
 
-        final FileEntry[] entries = (FileEntry[])getArguments().getParcelableArray(FILE_ARRAY_DATA);
+        final BelugaFileEntry[] entries = (BelugaFileEntry[])getArguments().getParcelableArray(FILE_ARRAY_DATA);
         final TextView text = (TextView)contents.findViewById(R.id.delete_dialog_content);
         final RecyclerView list = (RecyclerView)contents.findViewById(R.id.delete_dialog_file_list);
         text.setText(info);
         list.setLayoutManager(new LinearLayoutManager(getActivity()));
         final int content_height = getResources().getDimensionPixelSize(R.dimen.simple_file_list_row_height)*entries.length;
-        BelugaArrayRecyclerAdapter<FileEntry, FileEntrySimpleListViewHolder> adapter = new BelugaArrayRecyclerAdapter<FileEntry, FileEntrySimpleListViewHolder>(
+        BelugaArrayRecyclerAdapter<BelugaFileEntry> adapter = new BelugaArrayRecyclerAdapter<BelugaFileEntry>(
                 getActivity(),
                 BelugaDisplayMode.LIST,
                 new BelugaEntryViewHolder.Builder() {
@@ -565,7 +563,7 @@ public class BelugaDialogFragment extends DialogFragment{
                             mListener.onDialogOK(
                                     getArguments().getInt(ARG_DIALOG_ID),
                                     getArguments().getString(FOLDER_PATH_DATA),
-                                    (FileEntry[]) getArguments().getParcelableArray(FILE_ARRAY_DATA));
+                                    (BelugaFileEntry[]) getArguments().getParcelableArray(FILE_ARRAY_DATA));
                         }
                     }
                 })
@@ -577,7 +575,7 @@ public class BelugaDialogFragment extends DialogFragment{
                             mListener.onDialogCancel(
                                     getArguments().getInt(ARG_DIALOG_ID),
                                     getArguments().getString(FOLDER_PATH_DATA),
-                                    (FileEntry[]) getArguments().getParcelableArray(FILE_ARRAY_DATA));
+                                    (BelugaFileEntry[]) getArguments().getParcelableArray(FILE_ARRAY_DATA));
                         }
                     }
                 })

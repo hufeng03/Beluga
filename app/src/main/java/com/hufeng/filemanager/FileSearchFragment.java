@@ -9,7 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
+import com.hufeng.filemanager.helper.FileCategoryHelper;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
  * Created by feng on 14-5-6.
  */
 public class FileSearchFragment extends FileRecyclerFragment implements
-        LoaderManager.LoaderCallbacks<List<FileEntry>>,
+        LoaderManager.LoaderCallbacks<List<BelugaFileEntry>>,
         BelugaEntryViewHolder.EntryClickListener{
 
     private static final String TAG = "SearchFragment";
@@ -26,17 +27,39 @@ public class FileSearchFragment extends FileRecyclerFragment implements
 
     private static final int LOADER_ID = 1;
 
-    BelugaArrayRecyclerAdapter<FileEntry, FileEntryListViewHolder> mAdapter;
+    BelugaArrayRecyclerAdapter<BelugaFileEntry> mAdapter;
+
+    public static final String ARGUMENT_SEARCH_STRING = "search_string";
+
+    private static final String SAVE_INSTANCE_SEARCH_STRING = "searchString";
 
     public static FileSearchFragment newFragment(String searchString) {
         FileSearchFragment fragment = new FileSearchFragment();
-        fragment.mSearchString = searchString;
+        Bundle bundle = new Bundle();
+        bundle.putString(ARGUMENT_SEARCH_STRING, searchString);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            Bundle arguments = getArguments();
+            if (arguments != null) {
+                mSearchString = arguments.getString(ARGUMENT_SEARCH_STRING);
+            }
+        } else {
+            mSearchString = savedInstanceState.getString(SAVE_INSTANCE_SEARCH_STRING, null);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (!TextUtils.isEmpty(mSearchString)) {
+            outState.putString(SAVE_INSTANCE_SEARCH_STRING, mSearchString);
+        }
     }
 
     @Override
@@ -48,10 +71,14 @@ public class FileSearchFragment extends FileRecyclerFragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final String empty_text = getResources().getString(R.string.empty_file);
-        setEmptyText(empty_text);
 
-        mAdapter = new BelugaArrayRecyclerAdapter<FileEntry, FileEntryListViewHolder>(
+        if (TextUtils.isEmpty(mSearchString)) {
+            setEmptyText(getResources().getString(R.string.no_search_string));
+        } else {
+            setEmptyText(getResources().getString(R.string.empty_file));
+        }
+
+        mAdapter = new BelugaArrayRecyclerAdapter<BelugaFileEntry>(
                 getActivity(),
                 BelugaDisplayMode.LIST,
                 new BelugaEntryViewHolder.Builder() {
@@ -74,18 +101,20 @@ public class FileSearchFragment extends FileRecyclerFragment implements
         setRecyclerAdapter(mAdapter);
 
         setEmptyViewShown(false);
-        setListShownNoAnimation(false);
+        setRecyclerViewShownNoAnimation(false);
     }
 
     public void performSearch(String searchString) {
         if (mSearchString == null || !mSearchString.equalsIgnoreCase(searchString)) {
             mSearchString = searchString;
+            setEmptyViewShown(false);
+            setRecyclerViewShown(false);
             getLoaderManager().restartLoader(LOADER_ID, null, this);
         }
     }
 
     @Override
-    public Loader<List<FileEntry>> onCreateLoader(int arg0, Bundle arg1) {
+    public Loader<List<BelugaFileEntry>> onCreateLoader(int arg0, Bundle arg1) {
         Log.i(TAG, "onCreateLoader");
         if(arg0 ==  LOADER_ID) {
             return new FileSearchLoader(getActivity(), mSearchString);
@@ -95,8 +124,8 @@ public class FileSearchFragment extends FileRecyclerFragment implements
     }
 
     @Override
-    public void onLoadFinished(Loader<List<FileEntry>> arg0,
-                               List<FileEntry> arg1) {
+    public void onLoadFinished(Loader<List<BelugaFileEntry>> arg0,
+                               List<BelugaFileEntry> arg1) {
         Log.i(TAG, "onLoadFinished");
 
         mAdapter.setHighlight(mSearchString);
@@ -114,25 +143,27 @@ public class FileSearchFragment extends FileRecyclerFragment implements
     }
 
     @Override
-    public void onLoaderReset(Loader<List<FileEntry>> arg0) {
+    public void onLoaderReset(Loader<List<BelugaFileEntry>> arg0) {
         Log.i(TAG, "onCreateReset");
         mAdapter.clear();
     }
 
     @Override
     public void onEntryClickedToOpen(View view, BelugaEntry entry) {
-        FileEntry fileEntry = (FileEntry)entry;
-        if (fileEntry.isDirectory) {
+        BelugaFileEntry belugaFileEntry = (BelugaFileEntry)entry;
+        if (belugaFileEntry.isDirectory) {
             //TODO: switch to show child folder
-            BusProvider.getInstance().post(new FolderOpenEvent(System.currentTimeMillis(), fileEntry));
+            BusProvider.getInstance().post(new FolderOpenEvent(System.currentTimeMillis(), belugaFileEntry));
+        } else if (belugaFileEntry.type == FileCategoryHelper.FILE_TYPE_ZIP) {
+            BusProvider.getInstance().post(new ZipViewEvent(System.currentTimeMillis(), ((BelugaFileEntry) entry).path));
         } else {
-            BelugaActionDelegate.view(view.getContext(), fileEntry);
+            BelugaActionDelegate.view(view.getContext(), belugaFileEntry);
         }
     }
 
 
     @Override
-    public FileEntry[] getAllFiles() {
+    public BelugaFileEntry[] getAllFiles() {
         return mAdapter.getAll();
     }
 }

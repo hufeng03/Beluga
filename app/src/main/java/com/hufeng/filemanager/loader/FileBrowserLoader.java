@@ -10,10 +10,8 @@ import android.database.Cursor;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 
-import com.hufeng.filemanager.CategorySelectEvent;
-import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.SortPreferenceReceiver;
-import com.hufeng.filemanager.data.FileEntry;
+import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.BelugaSortHelper;
 import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.provider.DataStructures;
@@ -28,34 +26,33 @@ import java.util.List;
 /**
  * A custom Loader that loads all of the installed applications.
  */
-public class FileBrowserLoader extends AsyncTaskLoader<List<FileEntry>> {
+public class FileBrowserLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
 
     private static final String LOG_TAG = FileBrowserLoader.class.getSimpleName();
 
     private String mRoot;
     private String[] mDirs;
-    private List<FileEntry> mFiles;
+    private List<BelugaFileEntry> mFiles;
     private String mSearch;
 
     SortPreferenceReceiver mSortObserver;
 
-    public FileBrowserLoader(Context context, String root, String[] dirs, String search) {
+    public FileBrowserLoader(Context context, String root, String[] dirs) {
         super(context);
         mRoot = root;
         mDirs = dirs;
-        mSearch = search;
     }
 
     @Override
-    public List<FileEntry> loadInBackground() {
+    public List<BelugaFileEntry> loadInBackground() {
         LogUtil.i(LOG_TAG, this.hashCode() + " FileListLoader loadinbackground()");
-        List<FileEntry> entries = new ArrayList<FileEntry>();
+        List<BelugaFileEntry> entries = new ArrayList<BelugaFileEntry>();
         if (!TextUtils.isEmpty(mRoot) && new File(mRoot).exists() && new File(mRoot).isDirectory()) {
             String[] files = new File(mRoot).list();
             if (files != null) {
-                FileEntry entry;
+                BelugaFileEntry entry;
                 for (String file : files) {
-                    entry = new FileEntry(mRoot, file);
+                    entry = new BelugaFileEntry(mRoot, file);
                     if (entry.exist) {
                         if (TextUtils.isEmpty(mSearch) || entry.getName().toLowerCase().contains(mSearch.toLowerCase())) {
                             LogUtil.i(LOG_TAG, "add "+file+"!!!!!!!!!!"+entry);
@@ -65,9 +62,9 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<FileEntry>> {
                 }
             }
         } else if (mDirs != null && mDirs.length > 0) {
-                FileEntry entry;
+                BelugaFileEntry entry;
                 for (String dir : mDirs) {
-                    entry = new FileEntry(dir);
+                    entry = new BelugaFileEntry(dir);
                     if (entry.exist) {
                         if (TextUtils.isEmpty(mSearch) || entry.getName().toLowerCase().contains(mSearch.toLowerCase())) {
                             entries.add(entry);
@@ -97,7 +94,7 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<FileEntry>> {
                     favoritePaths.add(path);
                 }
                 for (int i = 0; i < entries.size(); i++) {
-                    FileEntry entry = entries.get(i);
+                    BelugaFileEntry entry = entries.get(i);
                     entry.isFavorite = favoritePaths.contains(entry.path);
                 }
             } catch (Exception e) {
@@ -114,7 +111,7 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<FileEntry>> {
     }
 
     @Override
-    public void deliverResult(List<FileEntry> data) {
+    public void deliverResult(List<BelugaFileEntry> data) {
         LogUtil.i(LOG_TAG, this.hashCode()+" FileListLoader deliverResult with "+(data==null?0:data.size()));
         if (isReset()) {
             if (data != null) {
@@ -123,7 +120,7 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<FileEntry>> {
             }
         }
 
-        List<FileEntry> oldFiles = mFiles;
+        List<BelugaFileEntry> oldFiles = mFiles;
         mFiles = data;
 
         if (isStarted()) {
@@ -182,7 +179,7 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<FileEntry>> {
 
 
     @Override
-    public void onCanceled(List<FileEntry> data) {
+    public void onCanceled(List<BelugaFileEntry> data) {
         LogUtil.i(LOG_TAG, this.hashCode()+" FileListLoader onCanceled");
         super.onCanceled(data);
         releaseResources(data);
@@ -194,7 +191,7 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<FileEntry>> {
         super.forceLoad();
     }
 
-    private void releaseResources(List<FileEntry> data) {
+    private void releaseResources(List<BelugaFileEntry> data) {
         // do nothing
     }
 }
