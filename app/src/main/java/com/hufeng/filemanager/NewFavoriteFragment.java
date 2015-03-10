@@ -83,7 +83,7 @@ public class NewFavoriteFragment extends FileRecyclerFragment implements LoaderM
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (getUserVisibleHint()) {
-            inflater.inflate(R.menu.file_browser_fragment_menu, menu);
+            inflater.inflate(R.menu.favorite_browser_fragment_menu, menu);
         }
     }
 
@@ -107,7 +107,7 @@ public class NewFavoriteFragment extends FileRecyclerFragment implements LoaderM
 
         displayMenu.setVisible(menuVisible);
         sortMenu.setVisible(menuVisible);
-        upMenu.setVisible(false);
+        upMenu.setVisible(menuVisible);
 
         displayMenu.setIcon(getDisplayMode() == BelugaDisplayMode.LIST ?
                 R.drawable.ic_action_view_as_grid : R.drawable.ic_action_view_as_list);

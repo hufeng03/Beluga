@@ -171,6 +171,7 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
         }
         final MenuItem displayMenu = menu.findItem(R.id.menu_grouper_display);
         final MenuItem sortMenu = menu.findItem(R.id.menu_grouper_sort);
+        final MenuItem upMenu = menu.findItem(R.id.menu_up);
 
 //        final Fragment parentFragment = getParentFragment();
         boolean isFragmentVisible = getUserVisibleHint();
@@ -186,6 +187,7 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
         final boolean menuVisible = isFragmentVisible && !isSearchMode;
         displayMenu.setVisible(menuVisible);
         sortMenu.setVisible(menuVisible);
+        upMenu.setVisible(menuVisible);
 
         displayMenu.setIcon(getDisplayMode() == BelugaDisplayMode.LIST ?
                 R.drawable.ic_action_view_as_grid : R.drawable.ic_action_view_as_list);
@@ -203,6 +205,9 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
                 return true;
             case R.id.menu_grouper_sort:
                 BelugaDialogFragment.showSortDialog(getActivity(), mCategory);
+                return true;
+            case R.id.menu_up:
+                getActivity().onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
