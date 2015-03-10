@@ -138,8 +138,22 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
         setEmptyViewShown(false);
         setRecyclerViewShownNoAnimation(false);
 
-        if (isPasteMode()) {
-            setFloatingActionBarImage(R.drawable.ic_paste);
+        switch (getActionController().getOperationMode()) {
+            case NORMAL:
+                setFloatingActionBarImage(R.drawable.ic_action_content_new);
+                break;
+            case PICK:
+                break;
+            case COPY_PASTE:
+            case CUT_PASTE:
+                setFloatingActionBarImage(R.drawable.ic_paste);
+                break;
+            case EXTRACT_ARCHIVE:
+                setFloatingActionBarImage(R.drawable.ic_action_archive);
+                break;
+            case CREATE_ARCHIVE:
+                setFloatingActionBarImage(R.drawable.ic_action_archive);
+                break;
         }
 	}
 
@@ -188,16 +202,19 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
             BelugaDialogFragment.showCopyPasteDialog(getActivity(), mRootDir, getActionController().getAllActionFiles());
         } else if (operationMode == BelugaActionController.OPERATION_MODE.CUT_PASTE) {
             BelugaDialogFragment.showCutPasteDialog(getActivity(), mRootDir, getActionController().getAllActionFiles());
+        } else if (operationMode == BelugaActionController.OPERATION_MODE.EXTRACT_ARCHIVE) {
+            BelugaDialogFragment.showExtractArchiveDialog(getActivity(), mRootDir, getActionController().getAllActionFiles());
+        } else if (operationMode == BelugaActionController.OPERATION_MODE.CREATE_ARCHIVE) {
+            BelugaDialogFragment.showCreateArchiveDialog(getActivity(), mRootDir, getActionController().getAllActionFiles());
         } else {
             BelugaDialogFragment.showCreateFolderDialog(getActivity(), mRootDir);
         }
     }
 
 
-    private boolean isPasteMode() {
+    private boolean isActionMode() {
         final BelugaActionController.OPERATION_MODE mode = getActionController().getOperationMode();
-        return mode == BelugaActionController.OPERATION_MODE.COPY_PASTE
-                || mode == BelugaActionController.OPERATION_MODE.CUT_PASTE;
+        return mode != BelugaActionController.OPERATION_MODE.NORMAL;
     }
 
     @Override
@@ -245,12 +262,9 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
         final MenuItem displayMenu = menu.findItem(R.id.menu_browser_display);
         final MenuItem sortMenu = menu.findItem(R.id.menu_browser_sort);
         final MenuItem upMenu = menu.findItem(R.id.menu_up);
+        final MenuItem createMenu = menu.findItem(R.id.menu_create);
 
-//        final Fragment parentFragment = getParentFragment();
         boolean isFragmentVisible = getUserVisibleHint();
-//        if(parentFragment != null && (parentFragment instanceof FileTabFragment)) {
-//            isFragmentVisible = parentFragment.getUserVisibleHint();
-//        }
         final Activity parentActivity = getActivity();
         boolean isSearchMode = false;
         if (parentActivity != null && (parentActivity instanceof BelugaDrawerActivity)) {
@@ -262,6 +276,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
         displayMenu.setVisible(menuVisible);
         sortMenu.setVisible(menuVisible);
         upMenu.setVisible(menuVisible && !TextUtils.isEmpty(mRootDir));
+        createMenu.setVisible(menuVisible && !TextUtils.isEmpty(mRootDir) && isActionMode());
 
         displayMenu.setIcon(getDisplayMode() == BelugaDisplayMode.LIST ?
                 R.drawable.ic_action_view_as_grid : R.drawable.ic_action_view_as_list);
@@ -289,6 +304,9 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
             case R.id.menu_up:
                 getActivity().onBackPressed();
                 return true;
+            case R.id.menu_create:
+                BelugaDialogFragment.showCreateFolderDialog(getActivity(), mRootDir);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -299,7 +317,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
-        if (isPasteMode() && getActionController().getFileSelectedSize() == 0) {
+        if (isActionMode() && getActionController().getFileSelectedSize() == 0) {
             mFab.hide(true);
             disableFloatingActionButton();
         }
@@ -333,12 +351,14 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
 			List<BelugaFileEntry> arg1) {
         Log.i(TAG, "onLoadFinished");
         int pos = -1;
+        boolean flag = false;
         if (!TextUtils.isEmpty(mSelectedPath)) {
             Iterator<BelugaFileEntry> iterator =  arg1.iterator();
             while (iterator.hasNext()) {
                 pos++;
                 BelugaFileEntry entry = iterator.next();
                 if (entry.path.equals(mSelectedPath)){
+                    flag = true;
                     break;
                 }
             }
@@ -354,7 +374,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
 
         mAdapter.setData(arg1);
         //TODO: recover this
-        if ( pos > 5 ) {
+        if ( flag ) {
             getLayoutManager().scrollToPosition(pos);
         }
 

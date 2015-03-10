@@ -16,5 +16,11 @@
         android:title="@string/overflow_add_favorite"/>
     <item android:id="@+id/remove_favorite"
         android:title="@string/overflow_remove_favorite"/>
+    <item android:id="@+id/zip"
+        android:title="@string/overflow_zip"
+        />
+    <item android:id="@+id/unzip"
+        android:title="@string/overflow_unzip"
+        />
 
 </menu>

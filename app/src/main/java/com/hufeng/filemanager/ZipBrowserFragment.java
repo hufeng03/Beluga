@@ -125,19 +125,21 @@ public class ZipBrowserFragment extends FileRecyclerFragment implements LoaderMa
     public void onLoadFinished(Loader<List<BelugaZipElementEntry>> listLoader, List<BelugaZipElementEntry> zipElementEntries) {
         Log.i(TAG, "onLoadFinished");
         int pos = -1;
+        boolean flag = false;
         if (!TextUtils.isEmpty(mSelectedPath)) {
             Iterator<BelugaZipElementEntry> iterator =  zipElementEntries.iterator();
             while (iterator.hasNext()) {
                 pos++;
                 BelugaZipElementEntry entry = iterator.next();
                 if (entry.path.equals(mSelectedPath)){
+                    flag = true;
                     break;
                 }
             }
         }
 
         mAdapter.setData(zipElementEntries);
-        if ( pos > 5 ) {
+        if ( flag ) {
             getLayoutManager().scrollToPosition(pos);
         }
 

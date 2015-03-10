@@ -6,10 +6,15 @@
         android:title="@string/menu_up"
         beluga:showAsAction="always" />
 
+    <item android:id="@+id/menu_create"
+        android:icon="@drawable/ic_action_content_new"
+        android:title="@string/menu_create"
+        beluga:showAsAction="always" />
+
     <item android:id="@+id/menu_browser_sort"
           android:icon="@drawable/ic_action_sort_asc"
           android:title="@string/menu_sort"
-          beluga:showAsAction="always">
+          beluga:showAsAction="ifRoom">
         <!--menu>
             <item android:id="@+id/menu_browser_sort_by_date"
                   android:icon="@drawable/ic_action_sort_desc"

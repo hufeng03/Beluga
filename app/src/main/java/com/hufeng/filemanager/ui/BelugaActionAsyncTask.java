@@ -127,7 +127,7 @@ public abstract class BelugaActionAsyncTask extends AsyncTask<BelugaFileEntry, B
             }
         }
         // Sort by name, desc to make sure that child files are always handled before their parent folder
-        Collections.sort(entryList, BelugaSortHelper.getComparator(BelugaSortHelper.SORT_FIELD.NAME, BelugaSortHelper.SORT_ORDER.DESC));
+        Collections.sort(entryList, BelugaSortHelper.getComparator(BelugaSortHelper.SORT_FIELD.IDENTITY, BelugaSortHelper.SORT_ORDER.DESC));
         return false;
     }
 

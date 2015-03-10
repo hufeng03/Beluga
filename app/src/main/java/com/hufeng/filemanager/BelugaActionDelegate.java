@@ -22,6 +22,18 @@ import java.util.ArrayList;
  */
 public class BelugaActionDelegate {
 
+    public static void zip(Context context, BelugaFileEntry... entries) {
+        Intent intent = new Intent(Constant.ACTION_PICK_FOLDER_TO_CREATE_ARCHIVE);
+        intent.putExtra(BelugaDialogFragment.FILE_ARRAY_DATA, entries);
+        ((Activity)context).startActivityForResult(intent, Constant.REQUEST_CODE_PICK_FOLDER_TO_CREATE_ARCHIVE);
+    }
+
+    public static void unzip(Context context, BelugaFileEntry... entries) {
+        Intent intent = new Intent(Constant.ACTION_PICK_FOLDER_TO_EXTRACT_ARCHIVE);
+        intent.putExtra(BelugaDialogFragment.FILE_ARRAY_DATA, entries);
+        ((Activity)context).startActivityForResult(intent, Constant.REQUEST_CODE_PICK_FOLDER_TO_EXTRACT_ARCHIVE);
+    }
+
     public static void cut(Context context, BelugaFileEntry... entries) {
         Intent intent = new Intent(Constant.ACTION_PICK_FOLDER_TO_MOVE_FILE);
         intent.putExtra(BelugaDialogFragment.FILE_ARRAY_DATA, entries);

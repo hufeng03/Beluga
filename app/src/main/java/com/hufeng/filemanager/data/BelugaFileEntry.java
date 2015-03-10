@@ -19,15 +19,19 @@ public class BelugaFileEntry extends BelugaEntry {
 	public long size;
     public int type;
 	public int category;
+
 	public boolean hidden;
     public String parentPath;
     public boolean exist;
+
     public long lastModified;
+
     public boolean isDirectory;
     public boolean isReadable;
     public boolean isWritable;
     public int childFileCount;
     public int childFolderCount;
+
     public String extension;
     public boolean isFavorite;
 
@@ -59,6 +63,17 @@ public class BelugaFileEntry extends BelugaEntry {
 
         this.category = FileCategoryHelper.getFileCategoryForFile(path);
         this.type = FileCategoryHelper.getFileTypeForFile(path);
+        File file = new File(this.path);
+        this.exist = file.exists();
+        if (this.exist) {
+            this.isWritable = file.canWrite();
+            this.isReadable = file.canRead();
+            this.hidden = file.isHidden();
+            this.isDirectory = file.isDirectory();
+        }
+        if (!this.isDirectory) {
+            this.extension = MimeUtil.getExtension(path);
+        }
     }
 
     public void fillContentValues(ContentValues cv) {

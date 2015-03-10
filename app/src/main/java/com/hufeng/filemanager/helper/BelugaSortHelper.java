@@ -53,7 +53,7 @@ public class BelugaSortHelper {
     }
 
     public enum SORT_FIELD{
-        DATE, NAME, SIZE, EXTENSION, PACKAGE;
+        DATE, NAME, SIZE, EXTENSION, IDENTITY;
     }
 
     public enum SORT_ORDER {
@@ -106,6 +106,12 @@ public class BelugaSortHelper {
 			}else{
 				return COMPARATOR_SIZE_DESC;
 			}
+        case IDENTITY:
+            if(SORT_ORDER.ASC == order){
+                return COMPARATOR_IDENTITY_ASC;
+            }else{
+                return COMPARATOR_IDENTITY_DESC;
+            }
 		case DATE:
 		default:
 			if(SORT_ORDER.ASC == order){
@@ -133,12 +139,28 @@ public class BelugaSortHelper {
 	    }
 	};
 
+    public static final Comparator<BelugaSortableInterface> COMPARATOR_IDENTITY_ASC = new Comparator<BelugaSortableInterface>() {
+        @Override
+        public int compare(BelugaSortableInterface lhs, BelugaSortableInterface rhs) {
+            return sCollator.compare(lhs.getIdentity(), rhs.getIdentity());
+        }
+    };
+
     public static final Comparator<BelugaSortableInterface> COMPARATOR_NAME_DESC = new Comparator<BelugaSortableInterface>() {
         private final Collator sCollator = Collator.getInstance();
 
         @Override
         public int compare(BelugaSortableInterface lhs, BelugaSortableInterface rhs) {
             return sCollator.compare(rhs.getName(), lhs.getName());
+        }
+    };
+
+    public static final Comparator<BelugaSortableInterface> COMPARATOR_IDENTITY_DESC = new Comparator<BelugaSortableInterface>() {
+        private final Collator sCollator = Collator.getInstance();
+
+        @Override
+        public int compare(BelugaSortableInterface lhs, BelugaSortableInterface rhs) {
+            return sCollator.compare(rhs.getIdentity(), lhs.getIdentity());
         }
     };
 

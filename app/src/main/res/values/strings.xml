@@ -838,4 +838,18 @@ changed later by pressing the <b>Setup</b> button.</string> -->
     <string name="file_rename_finish">Rename file success</string>
     <string name="file_rename_failed">Rename file failed</string>
     <string name="no_search_string">No search string</string>
+    <string name="overflow_zip">Zip</string>
+    <string name="overflow_unzip">Unzip</string>
+    <string name="extract_archive_confirm_dialog_title">Extract</string>
+    <string name="extract_archive_confirm_text">Are you sure that you want to extract archive in %s?</string>
+    <string name="create_archive_confirm_dialog_title">Archive</string>
+    <string name="create_archive_confirm_text">Are you sure that you want to create and save archive in %s?</string>
+    <string name="progress_extract_archive_title">Extracting</string>
+    <string name="progress_extract_archive_content">Extract files from archive, please wait...</string>
+    <string name="extract_archive_success">Extract archive success</string>
+    <string name="extract_archive_failed">Extract archive failed</string>
+    <string name="progress_create_archive_title">Archiving</string>
+    <string name="progress_create_archive_content">Compressing files into archive, please wait...</string>
+    <string name="create_archive_success">Create archive success</string>
+    <string name="create_archive_failed">Create archive failed</string>
 </resources>

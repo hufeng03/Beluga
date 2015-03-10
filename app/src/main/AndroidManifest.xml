@@ -28,8 +28,6 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/BelugaTheme">
-        <activity android:name=".TestActivity">
-        </activity>
         <activity
             android:name=".BelugaDrawerActivity"
             android:launchMode="singleTop"
@@ -48,6 +46,8 @@
             <intent-filter>
                 <action android:name="beluga.action.COPY_FILE" />
                 <action android:name="beluga.action.MOVE_FILE" />
+                <action android:name="beluga.action.EXTRACT_ARCHIVE" />
+                <action android:name="beluga.action.CREATE_ARCHIVE" />
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
             <intent-filter>

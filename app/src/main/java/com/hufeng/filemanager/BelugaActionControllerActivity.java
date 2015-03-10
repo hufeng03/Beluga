@@ -72,6 +72,12 @@ public abstract class BelugaActionControllerActivity extends BelugaBaseActionCon
             case BelugaDialogFragment.COPY_PASTE_DIALOG:
                 getActionController().performCopyPaste(folder, entries);
                 break;
+            case BelugaDialogFragment.EXTRACT_ARCHIVE_DIALOG:
+                getActionController().performExtractArchive(folder, entries);
+                break;
+            case BelugaDialogFragment.CREATE_ARCHIVE_DIALOG:
+                getActionController().performCreateArchive(folder, entries);
+                break;
         }
     }
 

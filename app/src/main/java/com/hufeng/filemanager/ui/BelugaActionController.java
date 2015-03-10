@@ -38,7 +38,7 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
     private OPERATION_MODE mOperationMode = OPERATION_MODE.NORMAL;
 
     public enum OPERATION_MODE {
-        NORMAL, PICK, COPY_PASTE, CUT_PASTE;
+        NORMAL, PICK, COPY_PASTE, CUT_PASTE, EXTRACT_ARCHIVE, CREATE_ARCHIVE;
     }
 
     boolean mActionModeShowing;
@@ -177,30 +177,10 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
             mode.finish();
         } else {
             mode.setTitle(String.valueOf(selectedNum));
-            if (selectedNum == 1) {
-                menu.setGroupVisible(R.id.file_operation_single, true);
+            menu.setGroupVisible(R.id.file_operation_single, selectedNum == 1);
 
-                BelugaFileEntry entry = mOperationPaths.getAll()[0];
-
-                if (!entry.isWritable) {
-                    MenuItem item_delete = menu.findItem(R.id.file_operation_delete);
-                    if (item_delete != null) {
-                        item_delete.setVisible(false);
-                    }
-                    MenuItem item_rename = menu.findItem(R.id.file_operation_rename);
-                    if (item_rename != null) {
-                        item_rename.setVisible(false);
-                    }
-                    MenuItem item_move = menu.findItem(R.id.file_operation_move);
-                    if (item_move != null) {
-                        item_move.setVisible(false);
-                    }
-                }
-
-            } else {
-                menu.setGroupVisible(R.id.file_operation_single, false);
-                MenuItem item1 = menu.findItem(R.id.file_operation_selectall);
-                if (item1 != null) item1.setVisible(!isFileAllSelected());
+            MenuItem item = menu.findItem(R.id.file_operation_selectall);
+            if (item != null) item.setVisible(true);
 
                 if (isSelectedNoneWritable()) {
                     MenuItem item_delete = menu.findItem(R.id.file_operation_delete);
@@ -212,7 +192,6 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
                         item_move.setVisible(false);
                     }
                 }
-            }
 
             if (isSelectedAllFavorite()){
                 MenuItem item1 = menu.findItem(R.id.file_operation_removefavorite);
@@ -220,10 +199,10 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
                 MenuItem item2 = menu.findItem(R.id.file_operation_addfavorite);
                 if (item2 != null) item2.setVisible(false);
             } else {
-                MenuItem item2 = menu.findItem(R.id.file_operation_addfavorite);
-                if (item2 != null) item2.setVisible(true);
                 MenuItem item1 = menu.findItem(R.id.file_operation_removefavorite);
                 if (item1 != null) item1.setVisible(false);
+                MenuItem item2 = menu.findItem(R.id.file_operation_addfavorite);
+                if (item2 != null) item2.setVisible(true);
             }
 
         }
@@ -329,6 +308,19 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
         return mOperationPaths.getAll();
     }
 
+    public void performExtractArchive(String folder, BelugaFileEntry... entries) {
+        if (entries.length > 0) {
+            mActionAsyncTask = new BelugaExtractArchiveAsyncTask(getActivity().getApplicationContext(), this, folder);
+            mActionAsyncTask.executeParallel(entries);
+        }
+    }
+
+    public void performCreateArchive(String folder, BelugaFileEntry... entries) {
+        if (entries.length > 0) {
+            mActionAsyncTask = new BelugaCreateArchiveAsyncTask(getActivity().getApplicationContext(), this, folder);
+            mActionAsyncTask.executeParallel(entries);
+        }
+    }
 
     public void performCutPaste(String folder, BelugaFileEntry... entries) {
         if (entries.length > 0) {

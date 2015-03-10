@@ -26,6 +26,11 @@
         android:icon="@drawable/ic_action_share"
         android:title="@string/operation_send"
         />
+    <item android:id="@+id/file_operation_addfavorite"
+        android:title="@string/menu_add_favorite"
+        beluga:showAsAction="never"/>
+    <item android:id="@+id/file_operation_removefavorite"
+        android:title="@string/menu_remove_favorite" />
     <group android:id="@+id/file_operation_single">
         <item android:id="@+id/file_operation_rename"
             android:title="@string/menu_rename"
@@ -33,12 +38,6 @@
         <item android:id="@+id/file_operation_details"
             android:title="@string/menu_view_detail"
             beluga:showAsAction="never"/>
-        <item android:id="@+id/file_operation_addfavorite"
-            android:title="@string/menu_add_favorite"
-            beluga:showAsAction="never"/>
-        <item android:id="@+id/file_operation_removefavorite"
-            android:title="@string/menu_remove_favorite" />
-
     </group>
 
 

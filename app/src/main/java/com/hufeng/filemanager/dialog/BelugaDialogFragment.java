@@ -71,10 +71,12 @@ public class BelugaDialogFragment extends DialogFragment{
 	public static final int NEW_FOLDER_DIALOG = 5;
     public static final int COPY_PASTE_DIALOG = 6;
     public static final int CUT_PASTE_DIALOG = 7;
+    public static final int EXTRACT_ARCHIVE_DIALOG = 8;
+    public static final int CREATE_ARCHIVE_DIALOG = 9;
 
-    public static final int APP_SORT_DIALOG = 8;
+    public static final int APP_SORT_DIALOG = 10;
 
-    public static final int PROGRESS_DIALOG = 9;
+    public static final int PROGRESS_DIALOG = 11;
 
 
     public static abstract interface OnDialogDoneInterface {
@@ -163,6 +165,24 @@ public class BelugaDialogFragment extends DialogFragment{
         data.putString(FOLDER_PATH_DATA, path);
         data.putParcelableArray(FILE_ARRAY_DATA, entries);
         DialogFragment dialog = BelugaDialogFragment.newInstance(CUT_PASTE_DIALOG, data);
+        dialog.show(activity.getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
+        return dialog;
+    }
+
+    public static DialogFragment showExtractArchiveDialog(FragmentActivity activity, String path, BelugaFileEntry... entries) {
+        Bundle data = new Bundle();
+        data.putString(FOLDER_PATH_DATA, path);
+        data.putParcelableArray(FILE_ARRAY_DATA, entries);
+        DialogFragment dialog = BelugaDialogFragment.newInstance(EXTRACT_ARCHIVE_DIALOG, data);
+        dialog.show(activity.getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
+        return dialog;
+    }
+
+    public static DialogFragment showCreateArchiveDialog(FragmentActivity activity, String path, BelugaFileEntry... entries) {
+        Bundle data = new Bundle();
+        data.putString(FOLDER_PATH_DATA, path);
+        data.putParcelableArray(FILE_ARRAY_DATA, entries);
+        DialogFragment dialog = BelugaDialogFragment.newInstance(CREATE_ARCHIVE_DIALOG, data);
         dialog.show(activity.getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
         return dialog;
     }
@@ -480,14 +500,14 @@ public class BelugaDialogFragment extends DialogFragment{
             break;
         }
             case CUT_PASTE_DIALOG: {
-                String path = getArguments().getString(FOLDER_PATH_DATA);
+                final String path = getArguments().getString(FOLDER_PATH_DATA);
                 final String title = getString(R.string.cut_paste_confirm_title);
                 final String info = getString(R.string.cut_paste_confirm_text, path);
                 dialog = buildOperationDialog(title, info);
                 break;
             }
             case COPY_PASTE_DIALOG: {
-                String path = getArguments().getString(FOLDER_PATH_DATA);
+                final String path = getArguments().getString(FOLDER_PATH_DATA);
                 final String title = getString(R.string.copy_paste_confirm_title);
                 final String info = getString(R.string.copy_paste_confirm_text, path);
                 dialog = buildOperationDialog(title, info);
@@ -497,6 +517,22 @@ public class BelugaDialogFragment extends DialogFragment{
             {
                 final String title = getString(R.string.delete_confirm_dialog_title);
                 final String info = getString(R.string.delete_confirm_text);
+                dialog = buildOperationDialog(title, info);
+                break;
+            }
+            case EXTRACT_ARCHIVE_DIALOG:
+            {
+                final String path = getArguments().getString(FOLDER_PATH_DATA);
+                final String title = getString(R.string.extract_archive_confirm_dialog_title);
+                final String info = getString(R.string.extract_archive_confirm_text, path);
+                dialog = buildOperationDialog(title, info);
+                break;
+            }
+            case CREATE_ARCHIVE_DIALOG:
+            {
+                final String path = getArguments().getString(FOLDER_PATH_DATA);
+                final String title = getString(R.string.create_archive_confirm_dialog_title);
+                final String info = getString(R.string.create_archive_confirm_text, path);
                 dialog = buildOperationDialog(title, info);
                 break;
             }

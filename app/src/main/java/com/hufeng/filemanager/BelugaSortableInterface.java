@@ -9,4 +9,5 @@ public interface BelugaSortableInterface {
     public String getName();
     public long getSize();
     public long getTime();
+    public String getIdentity();
 }

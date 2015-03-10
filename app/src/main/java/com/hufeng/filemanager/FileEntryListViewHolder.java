@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.hufeng.filemanager.data.BelugaFileEntry;
 import com.hufeng.filemanager.helper.BelugaHighlightHelper;
 import com.hufeng.filemanager.helper.BelugaTimeHelper;
+import com.hufeng.filemanager.helper.FileCategoryHelper;
 import com.hufeng.filemanager.ui.BelugaActionController;
 import com.hufeng.filemanager.utils.SizeUtil;
 import com.hufeng.playimage.BelugaLazyLoadImageView;
@@ -140,6 +141,11 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
                     case R.id.remove_favorite:
                         actionController.performUndoFavorite(entry);
                         break;
+                    case R.id.zip:
+                        BelugaActionDelegate.zip(context, entry);
+                        break;
+                    case R.id.unzip:
+                        BelugaActionDelegate.unzip(context, entry);
                 }
                 return true;
             }
@@ -152,11 +158,23 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
             }
         });
         if (entry.isFavorite) {
-            popupMenu.getMenu().findItem(R.id.add_favorite).setEnabled(false);
-            popupMenu.getMenu().findItem(R.id.add_favorite).setVisible(false);
+            MenuItem item = popupMenu.getMenu().findItem(R.id.add_favorite);
+            item.setEnabled(false);
+            item.setVisible(false);
         } else {
-            popupMenu.getMenu().findItem(R.id.remove_favorite).setEnabled(false);
-            popupMenu.getMenu().findItem(R.id.remove_favorite).setVisible(false);
+            MenuItem item = popupMenu.getMenu().findItem(R.id.remove_favorite);
+            item.setEnabled(false);
+            item.setVisible(false);
+        }
+        if (!entry.isDirectory) {
+            MenuItem item = popupMenu.getMenu().findItem(R.id.zip);
+            item.setEnabled(false);
+            item.setVisible(false);
+        }
+        if (entry.type != FileCategoryHelper.FILE_TYPE_ZIP) {
+            MenuItem item = popupMenu.getMenu().findItem(R.id.unzip);
+            item.setEnabled(false);
+            item.setVisible(false);
         }
         popupMenu.show();
     }

@@ -200,7 +200,7 @@ public class DeviceTabFragment extends FileTabFragment {
         }
         showSingleDevicePanel();
 
-        return false;
+        return true;
 	}
 
     @Override

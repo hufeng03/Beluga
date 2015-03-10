@@ -76,7 +76,21 @@ public class BelugaPickActivity extends BelugaActionControllerActivity {
                 getActionController().setEntrySelection(true, entries);
                 getActionController().setOperationMode(BelugaActionController.OPERATION_MODE.CUT_PASTE);
                 showFileBrowserPasteFragment();
-            } else {
+            } else if (action.equals(Constant.ACTION_PICK_FOLDER_TO_EXTRACT_ARCHIVE)) {
+                setTitle("Extract");
+                BelugaFileEntry[] entries = BelugaFileEntry.toFileEntries(getIntent().getParcelableArrayExtra(BelugaDialogFragment.FILE_ARRAY_DATA));
+                getActionController().setEntrySelection(true, entries);
+                getActionController().setOperationMode(BelugaActionController.OPERATION_MODE.EXTRACT_ARCHIVE);
+                showFileBrowserPasteFragment();
+            } else if (action.equals(Constant.ACTION_PICK_FOLDER_TO_CREATE_ARCHIVE)) {
+                setTitle("Archive");
+                BelugaFileEntry[] entries = BelugaFileEntry.toFileEntries(getIntent().getParcelableArrayExtra(BelugaDialogFragment.FILE_ARRAY_DATA));
+                getActionController().setEntrySelection(true, entries);
+                getActionController().setOperationMode(BelugaActionController.OPERATION_MODE.CREATE_ARCHIVE);
+                showFileBrowserPasteFragment();
+            }
+
+            else {
                 getActionController().setOperationMode(BelugaActionController.OPERATION_MODE.PICK);
                 showFileBrowserPickFragment();
             }
