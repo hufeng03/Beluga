@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-    <!--com.hufeng.filemanager.view.SquareLayout
+    <!--com.belugamobile.filemanager.view.SquareLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4dp"
@@ -32,9 +32,9 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             />
-    </com.hufeng.filemanager.view.SquareLayout!-->
+    </com.belugamobile.filemanager.view.SquareLayout!-->
 
-    <com.hufeng.filemanager.view.SquareLayout
+    <com.belugamobile.filemanager.view.SquareLayout
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
         android:background="@color/gray"
         />
 
-        <com.hufeng.filemanager.view.SquareLazyLoadImageView
+        <com.belugamobile.filemanager.view.SquareLazyLoadImageView
             android:id="@+id/icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

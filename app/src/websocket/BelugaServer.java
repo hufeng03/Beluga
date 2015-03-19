@@ -1,4 +1,4 @@
-package com.hufeng.filemanager;
+package com.belugamobile.filemanager;
 
 
 import org.java_websocket.server.WebSocketServer;

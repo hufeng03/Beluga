@@ -40,7 +40,7 @@ import android.widget.EditText;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
-import com.hufeng.filemanager.R;
+import com.belugamobile.filemanager.R;
 
 import refactor.com.android.contacts.list.BelugaRequest;
 

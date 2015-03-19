@@ -24,7 +24,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.hufeng.filemanager.R;
+import com.belugamobile.filemanager.R;
 
 
 public class ViewPagerTabStrip extends LinearLayout {

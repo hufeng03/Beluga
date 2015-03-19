@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.hufeng.filemanager.BelugaDrawerActivity">
+    tools:context="com.belugamobile.filemanager.BelugaDrawerActivity">
 
 <LinearLayout
     android:layout_width="match_parent"
@@ -24,7 +24,7 @@
         android:id="@+id/toolbar_parent"
         />
 
-    <com.hufeng.filemanager.ui.FileViewPager
+    <com.belugamobile.filemanager.ui.FileViewPager
         android:id="@+id/tab_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -35,7 +35,7 @@
         layout="@layout/layout_image_detail" /-->
 </LinearLayout>
 
-    <com.hufeng.filemanager.ScrimInsetsFrameLayout
+    <com.belugamobile.filemanager.ScrimInsetsFrameLayout
         android:layout_width="304dp"
         android:layout_height="match_parent"
         android:layout_gravity="left|start"
@@ -46,8 +46,8 @@
             android:id="@+id/navigation_drawer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="com.hufeng.filemanager.BelugaNavigationDrawerFragment"
+            android:name="com.belugamobile.filemanager.BelugaNavigationDrawerFragment"
             android:layout_gravity="left"/>
-    </com.hufeng.filemanager.ScrimInsetsFrameLayout>
+    </com.belugamobile.filemanager.ScrimInsetsFrameLayout>
 
     </android.support.v4.widget.DrawerLayout>

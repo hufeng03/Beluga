@@ -26,7 +26,7 @@ import android.provider.ContactsContract.Intents.Insert;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.hufeng.filemanager.intent.Constant;
+import com.belugamobile.filemanager.intent.Constant;
 
 /**
  * Parses a Beluga intent, extracting all relevant parts and packaging them

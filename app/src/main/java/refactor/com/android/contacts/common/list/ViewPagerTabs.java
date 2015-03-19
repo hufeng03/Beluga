@@ -33,7 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hufeng.filemanager.R;
+import com.belugamobile.filemanager.R;
 
 
 /**

@@ -9,8 +9,8 @@
              android:title="@string/others_about_developer">
              <!--intent  
             android:action="android.intent.action.MAIN"  
-            android:targetPackage="com.hufeng.filemanager"  
-            android:targetClass="com.hufeng.filemanager.AboutDeveloperActivity" /-->
+            android:targetPackage="com.belugamobile.filemanager"  
+            android:targetClass="com.belugamobile.filemanager.AboutDeveloperActivity" /-->
 			<Preference
 	    		android:title="@string/developer_name"
 	    		android:summary="@string/kanbox_developer_name" />
@@ -27,7 +27,7 @@
              android:summary="@string/others_about_market_summary">
              <intent  
 	            android:action="android.intent.action.VIEW"  
-	            android:data="market://details?id=com.hufeng.filemanager" />            
+	            android:data="market://details?id=com.belugamobile.filemanager" />            
          </PreferenceScreen-->
     </PreferenceCategory> 
     
@@ -47,8 +47,8 @@
     		android:key="new_version" />
         <!--intent  
             android:action="android.intent.action.MAIN"  
-            android:targetPackage="com.hufeng.filemanager"  
-            android:targetClass="com.hufeng.filemanager.UpgradeActivity" /-->  
+            android:targetPackage="com.belugamobile.filemanager"  
+            android:targetClass="com.belugamobile.filemanager.UpgradeActivity" /-->  
     </PreferenceCategory> 
     
     <PreferenceCategory 
@@ -59,8 +59,8 @@
              android:title="@string/others_help_faq">
              <!--intent  
             android:action="android.intent.action.MAIN"  
-            android:targetPackage="com.hufeng.filemanager"  
-            android:targetClass="com.hufeng.filemanager.FaqActivity" /-->
+            android:targetPackage="com.belugamobile.filemanager"  
+            android:targetClass="com.belugamobile.filemanager.FaqActivity" /-->
             			<Preference
 	    		android:title="@string/faq_q_1"
 	    		android:summary="@string/faq_a_1" />  

@@ -1,4 +1,4 @@
-package com.hufeng.filemanager;
+package com.belugamobile.filemanager;
 
 public class Constants {
     public static final boolean TRY_TO_TEST_WRITE = false;

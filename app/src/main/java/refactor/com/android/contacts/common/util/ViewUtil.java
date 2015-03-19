@@ -23,7 +23,7 @@ import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.ListView;
 
-import com.hufeng.filemanager.R;
+import com.belugamobile.filemanager.R;
 
 /**
  * Provides static functions to work with views

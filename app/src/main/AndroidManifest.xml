@@ -134,11 +134,14 @@
  		    android:exported="false"
             android:name=".provider.FileManagerProvider"
             android:process=":scan"
-            android:authorities="com.hufeng.filemanager" />
+            android:authorities="com.belugamobile.filemanager" />
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="56cebd9e1be125a9a7d298054b39f0fee3cd8ae2" />
     </application>
 
 </manifest>
