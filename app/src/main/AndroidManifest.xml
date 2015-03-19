@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hufeng.filemanager"
+    package="com.belugamobile.filemanager"
     android:versionCode="50"
     android:versionName="5.0" >
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
