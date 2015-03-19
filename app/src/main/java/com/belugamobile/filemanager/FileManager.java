@@ -56,8 +56,7 @@ public class FileManager extends Application {
                     .build());
         }
 		super.onCreate();
-		Fabric.with(this, new Crashlytics());
-
+        Fabric.with(this, new Crashlytics());
 		mContext = this;
 				
         String name = OSUtil.getCurrProcessName(this);
@@ -75,7 +74,7 @@ public class FileManager extends Application {
 	}
 	
 	private void initUI(){
-        Thread.setDefaultUncaughtExceptionHandler(new GlobalUncaughtExceptionHandler(this.getApplicationContext()));
+//        Thread.setDefaultUncaughtExceptionHandler(new GlobalUncaughtExceptionHandler(this.getApplicationContext()));
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         int old_version = sp.getInt(PreferenceKeys.PACKAGE_VERSION_CODE, -1);
         int new_version = PackageUtil.getVersionCode(this);
