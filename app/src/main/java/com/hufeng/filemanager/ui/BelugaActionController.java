@@ -159,7 +159,7 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
                 break;
             case NORMAL:
             default:
-                inflater.inflate(R.menu.file_operation_menu, menu);
+                inflater.inflate(R.menu.beluga_context_action_menu, menu);
                 break;
         }
         mActionModeShowing = true;

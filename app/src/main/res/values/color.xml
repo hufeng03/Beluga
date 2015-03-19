@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="primary_color_dark">#1565C0</color>
+    <color name="primary_color">#1976D2</color>
+    <color name="accent_color">#e91e63</color>
+
     <!-- Divider color for header separator -->
     <color name="primary_text_color">#363636</color>
     <color name="secondary_text_color">@color/dialtacts_secondary_text_color</color>
@@ -10,8 +14,6 @@
 
     <color name="actionbar_background_color">@color/primary_color</color>
     <color name="actionbar_background_color_dark">@color/primary_color_dark</color>
-    <color name="primary_color_dark">#0277bd</color>
-    <color name="primary_color">#0288d1</color>
     <color name="actionbar_text_color">#ffffff</color>
     <color name="actionbar_unselected_text_color">#a6ffffff</color>
     <color name="tab_ripple_color">@color/tab_accent_color</color>
@@ -30,7 +32,7 @@
 
     <color name="primary">#ffff00</color>
     <color name="primary_dark">#00ffff</color>
-    <color name="accent">#ff00ff</color>
+
     <color name="white">#ffffffff</color>
     <color name="white_light">#ffdddddd</color>
     <color name="yellow">#fffff000</color>
@@ -64,7 +66,7 @@
     <color name="file_date_highlight">#ff807f7f</color>
     <color name="file_date_copying">#ff0000</color>
     <color name="file_date_moving">#ff0000</color>
-    <color name="file_info_normal">#ff888888</color>
+    <color name="file_info_normal">#ff9E9E9E</color>
     <color name="file_info_pressed">#ffffffff</color>
     <color name="progress_start">#00ff00</color>
     <color name="progress_end">#00ff00</color>

@@ -1,7 +1,6 @@
 package com.hufeng.filemanager;
 
 import android.database.Cursor;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
@@ -113,7 +112,7 @@ public class ZipElementEntryListViewHolder extends BelugaEntryViewHolder{
     private void showContextMenu(final View view) {
         ContextThemeWrapper contextWrapper = new ContextThemeWrapper(context, R.style.Widget_AppCompat_Light_PopupMenu);
         PopupMenu popupMenu = new PopupMenu(contextWrapper, view);
-        popupMenu.inflate(R.menu.file_overflow);
+        popupMenu.inflate(R.menu.file_item_overflow_menu);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

@@ -174,9 +174,9 @@ public class NewDeviceFragment extends BelugaRecyclerFragment /*implements Loade
         public void bindDeviceItem(MountPoint item) {
             this.item = item;
             if (item.mIsExternal) {
-                icon.setImageResource(R.drawable.ic_action_sd_card);
+                icon.setImageResource(R.drawable.ic_sd_storage);
             } else {
-                icon.setImageResource(R.drawable.ic_action_phone_android);
+                icon.setImageResource(R.drawable.ic_phone_android);
             }
             name.setText(item.mDescription);
         }

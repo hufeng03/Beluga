@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:beluga="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menu_up"
-        android:icon="@drawable/ic_up"
+        android:icon="@drawable/ic_action_up"
         android:title="@string/menu_up"
         beluga:showAsAction="always" />
         <item android:id="@+id/menu_grouper_sort"
@@ -33,7 +33,7 @@
             android:title="@string/menu_display"
             beluga:showAsAction="ifRoom" />
         <!--item android:id="@+id/menu_grouper_search"
-            android:icon="@drawable/ic_ab_search"
+            android:icon="@drawable/ic_action_search"
             android:title="@string/menu_search"
             beluga:showAsAction="never"/!-->
 

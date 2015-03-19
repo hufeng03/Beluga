@@ -74,6 +74,7 @@ public class BelugaFileEntry extends BelugaEntry {
         if (!this.isDirectory) {
             this.extension = MimeUtil.getExtension(path);
         }
+        this.parentPath = this.path.substring(0, this.path.length() - this.name.length()-1);
     }
 
     public void fillContentValues(ContentValues cv) {

@@ -16,41 +16,35 @@ public class IconLoaderHelper {
 	
     static {
         addItem(new String[] {
-            "mp3"
-        }, R.drawable.file_icon_mp3);
-        addItem(new String[] {
-            "wma"
-        }, R.drawable.file_icon_wma);
-        addItem(new String[] {
-            "wav"
-        }, R.drawable.file_icon_wav);
-        addItem(new String[] {
-            "mid"
-        }, R.drawable.file_icon_mid);
-        addItem(new String[] {
-                "mp4", "wmv", "mpeg", "m4v", "3gp", "3g2", "3gpp2", "asf",
-        }, R.drawable.file_icon_video);
-        addItem(new String[] {
-                "jpg", "jpeg", "gif", "png", "bmp", "wbmp"
-        }, R.drawable.file_icon_picture);
-        addItem(new String[] {
                 "txt", "log", "xml", "ini", "lrc"
-        }, R.drawable.file_icon_txt);
+        }, R.drawable.ic_type_txt);
         addItem(new String[] {
-                "doc", "ppt", "docx", "pptx", "xsl", "xslx",
-        }, R.drawable.file_icon_office);
+                "xml",
+        }, R.drawable.ic_type_xml);
+        addItem(new String[] {
+                "html", "htm"
+        }, R.drawable.ic_type_htm);
+        addItem(new String[] {
+                "doc", "docx",
+        }, R.drawable.ic_type_doc);
+        addItem(new String[] {
+                "ppt", "pptx",
+        }, R.drawable.ic_type_ppt);
+        addItem(new String[] {
+                "xsl", "xslx",
+        }, R.drawable.ic_type_xsl);
         addItem(new String[] {
             "pdf"
-        }, R.drawable.file_icon_pdf);
+        }, R.drawable.ic_type_pdf);
         addItem(new String[] {
             "zip"
-        }, R.drawable.file_icon_zip);
+        }, R.drawable.ic_type_zip);
         addItem(new String[] {
             "rar"
-        }, R.drawable.file_icon_rar);
+        }, R.drawable.ic_type_rar);
         addItem(new String[] {
-                "apk"
-            }, R.drawable.file_icon_apk);
+                "tar"
+        }, R.drawable.ic_type_tar);
     }
     
     private static void addItem(String[] exts, int resId) {
@@ -65,20 +59,20 @@ public class IconLoaderHelper {
     public static int getFileIcon(Context context, String path) {
         if (path.endsWith("/") || new File(path).isDirectory()) {
             if (path.equals("/")) {
-                return R.drawable.ic_action_phone_android;
+                return R.drawable.ic_sd_storage;
             } else if (MountPointManager.getInstance().isExternalMountPath(path)) {
-                return R.drawable.ic_action_sd_card;
+                return R.drawable.ic_sd_storage;
             } else if (MountPointManager.getInstance().isInternalMountPath(path)) {
-                return R.drawable.ic_action_sd_card;
+                return R.drawable.ic_sd_storage;
             }
             else {
-                return R.drawable.ic_action_phone_android;
+                return R.drawable.ic_sd_storage;
             }
         } else {
             String ext = MimeUtil.getExtension(path);
             if(TextUtils.isEmpty(ext))
             {
-                return R.drawable.file_icon_default;
+                return R.drawable.ic_type_unknown;
             }
             Integer i = fileExtToIcons.get(ext.toLowerCase());
             if (i != null) {
@@ -89,16 +83,25 @@ public class IconLoaderHelper {
                 switch(type)
                 {
                 case FileCategoryHelper.CATEGORY_TYPE_IMAGE:
-                    id = R.drawable.file_category_icon_image;
+                    id = R.drawable.ic_type_photo;
                     break;
                 case FileCategoryHelper.CATEGORY_TYPE_VIDEO:
-                    id = R.drawable.file_category_icon_video;
+                    id = R.drawable.ic_type_video;
                     break;
                 case FileCategoryHelper.CATEGORY_TYPE_AUDIO:
-                    id = R.drawable.file_category_icon_audio;
+                    id = R.drawable.ic_type_audio;
+                    break;
+                case FileCategoryHelper.CATEGORY_TYPE_ZIP:
+                    id = R.drawable.ic_type_zip_unknown;
+                    break;
+                case FileCategoryHelper.CATEGORY_TYPE_DOCUMENT:
+                    id = R.drawable.ic_type_doc_unknown;
+                    break;
+                case FileCategoryHelper.CATEGORY_TYPE_APK:
+                    id = R.drawable.ic_type_apk;
                     break;
                 default:
-                    id= R.drawable.file_icon_default;
+                    id= R.drawable.ic_type_unknown;
                 }
                 return id;
             }

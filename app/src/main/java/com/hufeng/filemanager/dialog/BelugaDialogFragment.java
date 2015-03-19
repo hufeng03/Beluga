@@ -265,7 +265,7 @@ public class BelugaDialogFragment extends DialogFragment{
 		switch(mDialogId)
 		{
         case SORT_DIALOG: {
-            View view = View.inflate(getActivity(), R.layout.sort_dialog, null);
+            View view = View.inflate(getActivity(), R.layout.beluga_sort_dialog, null);
             final RadioButton sortByDate = (RadioButton)view.findViewById(R.id.radio_sort_by_date);
             final RadioButton sortByName = (RadioButton)view.findViewById(R.id.radio_sort_by_name);
             final RadioButton sortBySize = (RadioButton)view.findViewById(R.id.radio_sort_by_size);
@@ -331,7 +331,7 @@ public class BelugaDialogFragment extends DialogFragment{
             final String path = getArguments().getString(FOLDER_PATH_DATA);
             final EditText edit = (EditText)contents.findViewById(R.id.new_directory_dialog_edit);
             dialog = new AlertDialog.Builder(getActivity())
-            .setTitle(R.string.new_directory_dialog_title)
+            .setTitle(R.string.create_folder_dialog_title)
             .setView(contents)
             .setNegativeButton(android.R.string.cancel, null)
             .setPositiveButton(android.R.string.ok,
@@ -341,14 +341,14 @@ public class BelugaDialogFragment extends DialogFragment{
                     	File file = new File(path, name);
                     	if(file.exists() && file.isDirectory())
                     	{
-                    		Toast.makeText(getActivity(), R.string.new_directory_alreay_exist, Toast.LENGTH_SHORT).show();
+                    		Toast.makeText(getActivity(), R.string.folder_already_exist, Toast.LENGTH_SHORT).show();
                     	}
                     	else
                     	{
                             if (file.mkdirs()) {
-                                Toast.makeText(getActivity(), R.string.create_directory_success, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), R.string.create_folder_success, Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(getActivity(), R.string.create_directory_fail, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), R.string.create_folder_fail, Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -359,14 +359,14 @@ public class BelugaDialogFragment extends DialogFragment{
 		}
 		case DETAIL_DIALOG:
 		{
-			View contents = View.inflate(getActivity(), R.layout.detail_dialog, null);
+			View contents = View.inflate(getActivity(), R.layout.beluga_detail_dialog, null);
 			final BelugaFileEntry entry = getArguments().getParcelable(FILE_DATA);
 			final TextView content = (TextView)contents.findViewById(R.id.detail_dialog_content);
             String html_string;
             if (entry.isDirectory) {
                 String dir_content = null;
                 if (entry.childFileCount == 0 && entry.childFolderCount == 0) {
-                   dir_content = getString(R.string.empty_dir);
+                   dir_content = getString(R.string.empty_folder);
                 } else {
                     if (entry.childFileCount == 1) {
                         dir_content = getString(R.string.single_file, entry.childFileCount);
@@ -379,13 +379,13 @@ public class BelugaDialogFragment extends DialogFragment{
                     }
 
                     if (entry.childFolderCount == 1) {
-                        dir_content += getString(R.string.single_dir, entry.childFolderCount);
+                        dir_content += getString(R.string.single_folder, entry.childFolderCount);
                     } else if (entry.childFolderCount > 1) {
-                        dir_content += getString(R.string.multiple_dirs, entry.childFolderCount);
+                        dir_content += getString(R.string.multiple_folders, entry.childFolderCount);
                     }
                 }
 
-                html_string = getString(R.string.details_content_dir,
+                html_string = getString(R.string.details_content_folder,
                         entry.name,
                         entry.parentPath,
                         dir_content,
@@ -562,7 +562,7 @@ public class BelugaDialogFragment extends DialogFragment{
     }
 
     private Dialog buildOperationDialog(String title, String info){
-        View contents = View.inflate(getActivity(), R.layout.delete_dialog, null);
+        View contents = View.inflate(getActivity(), R.layout.beluga_delete_dialog, null);
 
         final BelugaFileEntry[] entries = (BelugaFileEntry[])getArguments().getParcelableArray(FILE_ARRAY_DATA);
         final TextView text = (TextView)contents.findViewById(R.id.delete_dialog_content);

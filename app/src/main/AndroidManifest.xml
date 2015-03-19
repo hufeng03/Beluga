@@ -23,15 +23,14 @@
               android:targetSdkVersion="17" /> <!--  4.4 -->
     <application
         xmlns:tools="http://schemas.android.com/tools"
-        tools:replace="android:name,android:label,android:icon"
+        tools:replace="android:name,android:icon"
         android:name=".FileManager"
-        android:icon="@drawable/icon"
-        android:label="@string/app_name"
+        android:icon="@drawable/launcher"
         android:theme="@style/BelugaTheme">
         <activity
             android:name=".BelugaDrawerActivity"
             android:launchMode="singleTop"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -42,7 +41,8 @@
             <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
         </activity>
         <activity android:name=".BelugaPickActivity"
-            android:label="@string/select_file_title">
+            android:icon="@drawable/launcher"
+            android:label="@string/pick_file_label">
             <intent-filter>
                 <action android:name="beluga.action.COPY_FILE" />
                 <action android:name="beluga.action.MOVE_FILE" />
@@ -100,6 +100,7 @@
 
 
         <activity android:name=".app.AppManagerActivity"
+            android:icon="@drawable/launcher"
             android:label="@string/app_manager_label">
         </activity>
 

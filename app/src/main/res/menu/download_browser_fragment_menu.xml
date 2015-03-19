@@ -3,7 +3,7 @@
     xmlns:beluga="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/menu_up"
-        android:icon="@drawable/ic_up"
+        android:icon="@drawable/ic_action_up"
         android:title="@string/menu_up"
         beluga:showAsAction="always" />
     <item android:id="@+id/menu_browser_sort"

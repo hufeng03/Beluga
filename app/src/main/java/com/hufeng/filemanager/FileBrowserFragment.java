@@ -140,13 +140,13 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
 
         switch (getActionController().getOperationMode()) {
             case NORMAL:
-                setFloatingActionBarImage(R.drawable.ic_action_content_new);
+                setFloatingActionBarImage(R.drawable.ic_action_add);
                 break;
             case PICK:
                 break;
             case COPY_PASTE:
             case CUT_PASTE:
-                setFloatingActionBarImage(R.drawable.ic_paste);
+                setFloatingActionBarImage(R.drawable.ic_action_paste);
                 break;
             case EXTRACT_ARCHIVE:
                 setFloatingActionBarImage(R.drawable.ic_action_archive);

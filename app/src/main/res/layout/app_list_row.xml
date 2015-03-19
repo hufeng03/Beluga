@@ -31,7 +31,7 @@
             android:adjustViewBounds="true"
             android:duplicateParentState="true"
             android:scaleType="centerInside"
-            android:src="@drawable/file_icon_file" />
+            android:src="@drawable/ic_type_unknown" />
 
         <ImageView
             android:id="@+id/overflow"

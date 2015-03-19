@@ -103,7 +103,7 @@ public class BelugaLazyLoadImageView extends BaseLazyLoadImageView {
 
     public void requestDisplayImageForZipElement(BelugaZipElementEntry entry) {
         if (entry.isDirectory) {
-            setDefaultResource(R.drawable.file_icon_folder);
+            setDefaultResource(R.drawable.ic_type_folder);
             setMimeType(DocumentsContract.Document.MIME_TYPE_DIR);
         } else {
             setDefaultResource(IconLoaderHelper.getFileIcon(getContext(), entry.path));
@@ -118,7 +118,7 @@ public class BelugaLazyLoadImageView extends BaseLazyLoadImageView {
     public void requestDisplayImage(String uri) {
         boolean needToLoad = false;
         if (new File(uri).isDirectory()) {
-            setDefaultResource(R.drawable.file_icon_folder);
+            setDefaultResource(R.drawable.ic_type_folder);
             setMimeType(DocumentsContract.Document.MIME_TYPE_DIR);
         } else {
             setDefaultResource(IconLoaderHelper.getFileIcon(getContext(), uri));

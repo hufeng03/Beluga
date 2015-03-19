@@ -36,14 +36,14 @@ public class NewCategoryFragment extends BelugaRecyclerFragment/* implements Loa
     private int[] mGridItemSize = {0,0};
 
     private CategoryItem[] mCategoryItems = {
-        new CategoryItem(R.drawable.file_category_icon_audio, R.string.category_music, 0, FileCategoryHelper.CATEGORY_TYPE_AUDIO),
-        new CategoryItem(R.drawable.file_category_icon_video, R.string.category_video, 0, FileCategoryHelper.CATEGORY_TYPE_VIDEO),
-        new CategoryItem(R.drawable.file_category_icon_image, R.string.category_picture, 0,FileCategoryHelper.CATEGORY_TYPE_IMAGE),
-        new CategoryItem(R.drawable.file_category_icon_document, R.string.category_document, 0, FileCategoryHelper.CATEGORY_TYPE_DOCUMENT),
-        new CategoryItem(R.drawable.file_category_icon_apk, R.string.category_apk, 0, FileCategoryHelper.CATEGORY_TYPE_APK),
-        new CategoryItem(R.drawable.file_category_icon_zip, R.string.category_zip, 0, FileCategoryHelper.CATEGORY_TYPE_ZIP),
-        new CategoryItem(R.drawable.file_category_icon_download, R.string.category_download, 0, FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD),
-        new CategoryItem(R.drawable.file_category_icon_favorite, R.string.category_favorite, 0, FileCategoryHelper.CATEGORY_TYPE_FAVORITE),
+        new CategoryItem(R.drawable.ic_category_audio, R.string.category_audio, 0, FileCategoryHelper.CATEGORY_TYPE_AUDIO),
+        new CategoryItem(R.drawable.ic_category_video, R.string.category_video, 0, FileCategoryHelper.CATEGORY_TYPE_VIDEO),
+        new CategoryItem(R.drawable.ic_category_photo, R.string.category_picture, 0,FileCategoryHelper.CATEGORY_TYPE_IMAGE),
+        new CategoryItem(R.drawable.ic_category_doc, R.string.category_document, 0, FileCategoryHelper.CATEGORY_TYPE_DOCUMENT),
+        new CategoryItem(R.drawable.ic_category_apk, R.string.category_apk, 0, FileCategoryHelper.CATEGORY_TYPE_APK),
+        new CategoryItem(R.drawable.ic_category_zip, R.string.category_zip, 0, FileCategoryHelper.CATEGORY_TYPE_ZIP),
+        new CategoryItem(R.drawable.ic_category_download, R.string.category_download, 0, FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD),
+        new CategoryItem(R.drawable.ic_category_favorite, R.string.category_favorite, 0, FileCategoryHelper.CATEGORY_TYPE_FAVORITE),
 //        new CategoryItem(R.drawable.file_category_icon_app, R.string.category_app, 0, CategorySelectEvent.CategoryType.APP),
     };
 

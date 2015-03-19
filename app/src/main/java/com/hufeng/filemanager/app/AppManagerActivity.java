@@ -29,9 +29,9 @@ public class AppManagerActivity extends BelugaBaseActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_manager_activity);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_color_dark));
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_color_dark));
+//        }
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -39,7 +39,7 @@ public class AppManagerActivity extends BelugaBaseActionBarActivity {
         mNavigationDrawerFragment = (BelugaNavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         final DrawerLayout drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        mNavigationDrawerFragment.setUp(drawerLayout, toolbar);
+        mNavigationDrawerFragment.setUp(drawerLayout, toolbar, R.id.drawer_item_my_apps);
 
         showAppManagerFragment();
 

@@ -24,12 +24,12 @@ public class BelugaUndoFavoriteAsyncTask extends BelugaActionAsyncTask {
 
     @Override
     public String getProgressDialogTitle(Context context) {
-        return context.getString(R.string.progress_undofavorite_title);
+        return context.getString(R.string.progress_undo_favorite_title);
     }
 
     @Override
     public String getProgressDialogContent(Context context) {
-        return context.getString(R.string.progress_undofavorite_content);
+        return context.getString(R.string.progress_undo_favorite_content);
     }
 
     @Override

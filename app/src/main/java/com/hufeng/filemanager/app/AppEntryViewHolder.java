@@ -8,16 +8,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hufeng.filemanager.BelugaEntry;
 import com.hufeng.filemanager.BelugaEntryViewHolder;
 import com.hufeng.filemanager.R;
-import com.hufeng.filemanager.app.AppEntry;
 import com.hufeng.filemanager.helper.BelugaHighlightHelper;
 import com.hufeng.filemanager.helper.BelugaTimeHelper;
 import com.hufeng.filemanager.utils.SizeUtil;
-import com.hufeng.filemanager.utils.TimeUtil;
 import com.hufeng.playimage.BelugaLazyLoadImageView;
 
 import butterknife.ButterKnife;
@@ -81,7 +78,7 @@ public class AppEntryViewHolder extends BelugaEntryViewHolder {
     private void showAppMenu(final View view) {
         ContextThemeWrapper contextWrapper = new ContextThemeWrapper(context, R.style.Widget_AppCompat_Light_PopupMenu);
         PopupMenu popupMenu = new PopupMenu(contextWrapper, view);
-        popupMenu.inflate(R.menu.app_overflow);
+        popupMenu.inflate(R.menu.app_item_overflow_menu);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

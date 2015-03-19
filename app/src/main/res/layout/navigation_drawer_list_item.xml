@@ -8,15 +8,16 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:adjustViewBounds="true"
         android:duplicateParentState="true"
         android:scaleType="centerInside"
-        android:src="@drawable/file_icon_file"
+        android:src="@drawable/ic_type_unknown"
         />
 
     <TextView
@@ -27,6 +28,7 @@
         android:layout_toRightOf="@id/icon"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:textSize="16dp"
         />
 
     <View

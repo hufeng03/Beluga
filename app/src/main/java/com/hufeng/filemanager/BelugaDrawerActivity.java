@@ -113,8 +113,8 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
         final FragmentTransaction transaction = fragmentManager.beginTransaction();
 
         mTabTitles = new String[ActionBarAdapter.TabState.COUNT];
-        mTabTitles[ActionBarAdapter.TabState.CATEGORY] = getString(R.string.category);
-        mTabTitles[ActionBarAdapter.TabState.DEVICE] = getString(R.string.directory);
+        mTabTitles[ActionBarAdapter.TabState.CATEGORY] = getString(R.string.tab_category);
+        mTabTitles[ActionBarAdapter.TabState.DEVICE] = getString(R.string.tab_device);
         mTabPager = (FileViewPager) findViewById(R.id.tab_pager);
         mTabPagerAdapter = new TabPagerAdapter();
         mTabPager.setAdapter(mTabPagerAdapter);
@@ -122,6 +122,7 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTitle(R.string.file_manager_label);
         final ViewPagerTabs portraitViewPagerTabs
                 = (ViewPagerTabs) findViewById(R.id.lists_pager_header);
         ViewPagerTabs landscapeViewPagerTabs = null;
@@ -172,7 +173,7 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
         mNavigationDrawerFragment = (BelugaNavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         final DrawerLayout drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        mNavigationDrawerFragment.setUp(drawerLayout, toolbar);
+        mNavigationDrawerFragment.setUp(drawerLayout, toolbar, R.id.drawer_item_my_files);
 
         mActionBarAdapter = new ActionBarAdapter(this, this, getSupportActionBar(),
                 portraitViewPagerTabs, landscapeViewPagerTabs, toolbar, mNavigationDrawerFragment.getDrawerToggle());
@@ -396,7 +397,7 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
         super.onCreateOptionsMenu(menu);
         //TODO: recover this
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.beluga_options, menu);
+        inflater.inflate(R.menu.beluga_drawer_activity_menu, menu);
         return true;
     }
 

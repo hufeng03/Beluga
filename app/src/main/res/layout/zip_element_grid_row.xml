@@ -70,8 +70,7 @@
             android:id="@+id/icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/file_icon_default_square"/>
+            android:scaleType="centerCrop"/>
 
     <View
         android:id="@+id/mask"
@@ -89,7 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@drawable/ic_check_white"
+        android:src="@drawable/ic_checkmark_48dp"
         />
 
             <ImageView
@@ -100,7 +99,7 @@
                 android:layout_alignRight="@id/icon"
                 android:layout_marginRight="4dp"
                 android:layout_marginTop="4dp"
-                android:src="@drawable/ic_aspect_ratio"
+                android:src="@drawable/ic_aspect_ratio_24dp"
                 />
 
 

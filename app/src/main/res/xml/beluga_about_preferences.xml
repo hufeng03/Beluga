@@ -3,16 +3,16 @@
     <Preference
         android:title="Version"
         android:icon="@null"
-        android:summary="1.0">
+        android:summary="1.0.6">
         <intent android:action="android.intent.action.VIEW"
-            android:data="market://details?id=com.hufeng.filemanager" />
+            android:data="market://details?id=com.belugamobile.filemanager" />
     </Preference>
     <Preference
         android:title="Developer"
         android:icon="@null"
         android:summary="Feng Hu">
         <intent android:action="android.intent.action.VIEW"
-            android:data="http://hufeng.info/me" />
+            android:data="http://hufeng.info" />
     </Preference>
     <Preference
         android:title="Website"

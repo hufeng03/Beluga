@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:beluga="http://schemas.android.com/apk/res-auto">
-   	<item android:id="@+id/menu_send" android:title="@string/menu_send" />
-    <item android:id="@+id/menu_rename" android:title="@string/menu_rename" />
-    <!--item android:id="@+id/menu_add_favorite" android:title="@string/menu_add_favorite" /-->
-    <item android:id="@+id/menu_view_detail" android:title="@string/menu_view_detail" />
-    <item android:id="@+id/menu_unzip" android:title="@string/menu_unzip" />
-</menu>

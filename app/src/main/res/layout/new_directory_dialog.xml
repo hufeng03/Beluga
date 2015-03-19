@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/enter_new_folder_name"
+        android:text="@string/enter_folder_name"
         android:textAppearance="@style/TextAppearanceSecondary"
         android:singleLine="true"
         />

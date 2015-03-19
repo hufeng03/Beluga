@@ -69,7 +69,7 @@ public class DeviceTabFragment extends FileTabFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.directory_tab_fragment, container, false);
+        View view = inflater.inflate(R.layout.device_tab_fragment, container, false);
         return view;
 	}
 

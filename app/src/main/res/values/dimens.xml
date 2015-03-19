@@ -16,7 +16,7 @@
     <!-- Padding around the icon in the search box. -->
     <dimen name="search_box_icon_margin">4dp</dimen>
     <!-- Size of the icon (voice search, back arrow) in the search box. -->
-    <dimen name="search_box_icon_size">28dp</dimen>
+    <dimen name="search_box_icon_size">24dp</dimen>
     <!-- Size of the close icon.
          Because it expands diagonally, it needs to be shrunk to look relatively the same size -->
     <dimen name="search_box_close_icon_size">24dp</dimen>
