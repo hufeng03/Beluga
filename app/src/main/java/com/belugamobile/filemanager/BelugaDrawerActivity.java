@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +24,7 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 
 import com.belugamobile.filemanager.data.BelugaFileEntry;
+import com.belugamobile.filemanager.dialog.BelugaDialogFragment;
 import com.belugamobile.filemanager.ui.BelugaActionController;
 import com.belugamobile.filemanager.ui.FileViewPager;
 
@@ -98,9 +100,11 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
 
         createViewsAndFragments(savedInstanceState);
 
-//        getWindow().setBackgroundDrawable(null);
 
-
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PreferenceKeys.NEW_VERSION_FIRST_LAUNCH, false)) {
+            BelugaDialogFragment.showChangeLogDialog(this);
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean(PreferenceKeys.NEW_VERSION_FIRST_LAUNCH, false).commit();
+        }
     }
 
 

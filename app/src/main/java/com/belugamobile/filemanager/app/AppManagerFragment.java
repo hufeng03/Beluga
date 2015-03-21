@@ -133,25 +133,8 @@ public class AppManagerFragment extends FileRecyclerFragment implements LoaderMa
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         final MenuItem displayMenu = menu.findItem(R.id.menu_app_display);
-        final MenuItem sortMenu = menu.findItem(R.id.menu_app_sort);
 
-        final Fragment parentFragment = getParentFragment();
-        boolean isFragmentVisible = true;
-        if(parentFragment != null && (parentFragment instanceof FileTabFragment)) {
-            isFragmentVisible = parentFragment.getUserVisibleHint();
-        }
-        final Activity parentActivity = getActivity();
-        boolean isSearchMode = false;
-        if (parentActivity != null && (parentActivity instanceof BelugaDrawerActivity)) {
-            isSearchMode = ((BelugaDrawerActivity)getActivity()).isSearchMode();
-        }
-
-        final boolean menuVisible = isFragmentVisible && !isSearchMode;
-        displayMenu.setVisible(menuVisible);
-        sortMenu.setVisible(menuVisible);
-
-
-        displayMenu.setIcon(getDisplayMode() == BelugaDisplayMode.LIST ?
+        if (displayMenu != null) displayMenu.setIcon(getDisplayMode() == BelugaDisplayMode.LIST ?
                 R.drawable.ic_action_view_as_list : R.drawable.ic_action_view_as_grid);
     }
 

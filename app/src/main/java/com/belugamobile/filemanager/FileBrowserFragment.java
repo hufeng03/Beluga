@@ -273,12 +273,12 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
 
         final boolean menuVisible = isFragmentVisible && !isSearchMode;
 
-        displayMenu.setVisible(menuVisible);
-        sortMenu.setVisible(menuVisible);
-        upMenu.setVisible(menuVisible && !TextUtils.isEmpty(mRootDir));
-        createMenu.setVisible(menuVisible && !TextUtils.isEmpty(mRootDir) && isActionMode());
+        if (displayMenu != null) displayMenu.setVisible(menuVisible);
+        if (sortMenu != null) sortMenu.setVisible(menuVisible);
+        if (upMenu != null) upMenu.setVisible(menuVisible && !TextUtils.isEmpty(mRootDir));
+        if (createMenu != null) createMenu.setVisible(menuVisible && !TextUtils.isEmpty(mRootDir) && isActionMode());
 
-        displayMenu.setIcon(getDisplayMode() == BelugaDisplayMode.LIST ?
+        if (displayMenu != null) displayMenu.setIcon(getDisplayMode() == BelugaDisplayMode.LIST ?
                 R.drawable.ic_action_view_as_grid : R.drawable.ic_action_view_as_list);
 
         if (!TextUtils.isEmpty(mRootDir) && new File(mRootDir).canWrite()) {

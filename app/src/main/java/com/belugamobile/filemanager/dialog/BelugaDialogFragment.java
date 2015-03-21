@@ -78,6 +78,7 @@ public class BelugaDialogFragment extends DialogFragment{
 
     public static final int PROGRESS_DIALOG = 11;
 
+    public static final int CHANGE_LOG_DIALOG = 20;
 
     public static abstract interface OnDialogDoneInterface {
         public abstract void onDialogOK(int dialogId, String folder, BelugaFileEntry... entries);
@@ -99,6 +100,12 @@ public class BelugaDialogFragment extends DialogFragment{
         return f;
     }
 
+    public static DialogFragment showChangeLogDialog(FragmentActivity activity) {
+        Bundle data = new Bundle();
+        DialogFragment dialog = BelugaDialogFragment.newInstance(CHANGE_LOG_DIALOG, data);
+        dialog.show(activity.getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
+        return dialog;
+    }
 
     public static DialogFragment showSortDialog(FragmentActivity activity, int category) {
         Bundle data = new Bundle();
@@ -264,6 +271,17 @@ public class BelugaDialogFragment extends DialogFragment{
         Dialog dialog = null;
 		switch(mDialogId)
 		{
+        case CHANGE_LOG_DIALOG: {
+            View view = View.inflate(getActivity(), R.layout.changelog_dialog, null);
+            dialog = new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.changelog_dialog_title)
+                    .setView(view)
+                    .setPositiveButton(android.R.string.ok,null)
+                    .setCancelable(false)
+                    .setCancelable(false)
+                    .create();
+            break;
+        }
         case SORT_DIALOG: {
             View view = View.inflate(getActivity(), R.layout.beluga_sort_dialog, null);
             final RadioButton sortByDate = (RadioButton)view.findViewById(R.id.radio_sort_by_date);

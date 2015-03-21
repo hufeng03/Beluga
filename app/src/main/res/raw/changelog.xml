@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog bulletedList="false">
+
+    <changelogversion versionName="1.0.9" changeDate="Mar 21, 2013">
+        <changelogtext>Add Changelog dialog for app upgrade</changelogtext>
+        <changelogtext>Fix Apk Icon generation bug</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="1.0.8" changeDate="Mar 18, 2015">
+        <changelogtext>[b]New![/b] Integrate Crashlytics</changelogtext>
+        <changelogtext>Fixed log while parsing </changelogtext>
+    </changelogversion>
+
+</changelog>

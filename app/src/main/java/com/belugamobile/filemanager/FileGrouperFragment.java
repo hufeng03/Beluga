@@ -173,11 +173,7 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
         final MenuItem sortMenu = menu.findItem(R.id.menu_grouper_sort);
         final MenuItem upMenu = menu.findItem(R.id.menu_up);
 
-//        final Fragment parentFragment = getParentFragment();
         boolean isFragmentVisible = getUserVisibleHint();
-//        if(parentFragment != null && (parentFragment instanceof FileTabFragment)) {
-//            isFragmentVisible = parentFragment.getUserVisibleHint();
-//        }
         final Activity parentActivity = getActivity();
         boolean isSearchMode = false;
         if (parentActivity != null && (parentActivity instanceof BelugaDrawerActivity)) {
@@ -185,11 +181,11 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
         }
 
         final boolean menuVisible = isFragmentVisible && !isSearchMode;
-        displayMenu.setVisible(menuVisible);
-        sortMenu.setVisible(menuVisible);
-        upMenu.setVisible(menuVisible);
+        if (displayMenu != null) displayMenu.setVisible(menuVisible);
+        if (sortMenu != null) sortMenu.setVisible(menuVisible);
+        if (upMenu != null) upMenu.setVisible(menuVisible);
 
-        displayMenu.setIcon(getDisplayMode() == BelugaDisplayMode.LIST ?
+        if (displayMenu != null) displayMenu.setIcon(getDisplayMode() == BelugaDisplayMode.LIST ?
                 R.drawable.ic_action_view_as_grid : R.drawable.ic_action_view_as_list);
     }
 

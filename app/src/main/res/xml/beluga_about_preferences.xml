@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference
+        android:key="PACKAGE_VERSION_NAME"
         android:title="Version"
         android:icon="@null"
-        android:summary="1.0.8">
-        <intent android:action="android.intent.action.VIEW"
-            android:data="market://details?id=com.belugamobile.filemanager" />
+        android:summary="1.0.0">
+        <!--intent android:action="android.intent.action.VIEW"
+            android:data="market://details?id=com.belugamobile.filemanager" /!-->
     </Preference>
     <Preference
         android:title="Developer"

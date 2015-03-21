@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
+import android.text.TextUtils;
 
 import com.belugamobile.filemanager.BelugaEntry;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
@@ -46,7 +47,13 @@ public class AppEntry extends BelugaEntry {
 
     @Override
     public String getName() {
-        return appName;
+        if (!TextUtils.isEmpty(appName) ){
+            return appName;
+        } else if (!TextUtils.isEmpty(packageName)){
+            return packageName;
+        } else {
+            return "";
+        }
     }
 
     @Override

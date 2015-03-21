@@ -128,4 +128,5 @@
     <string name="search_complete">Search complete</string>
     <string name="file_delete_finish">Delete success</string>
     <string name="file_delete_failed">Delete failed</string>
+    <string name="changelog_dialog_title">Change Log</string>
 </resources>

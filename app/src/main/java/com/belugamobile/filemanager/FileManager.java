@@ -74,14 +74,14 @@ public class FileManager extends Application {
 	}
 	
 	private void initUI(){
-//        Thread.setDefaultUncaughtExceptionHandler(new GlobalUncaughtExceptionHandler(this.getApplicationContext()));
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         int old_version = sp.getInt(PreferenceKeys.PACKAGE_VERSION_CODE, -1);
         int new_version = PackageUtil.getVersionCode(this);
         if(new_version != old_version){
 			Editor edit = sp.edit();
-//            edit.putBoolean(PreferenceKeys.FORCE_SCAN_REQUIRED, true);
-			edit.putInt(PreferenceKeys.PACKAGE_VERSION_CODE, PackageUtil.getVersionCode(this));
+            edit.putInt(PreferenceKeys.PACKAGE_VERSION_CODE, new_version);
+			edit.putString(PreferenceKeys.PACKAGE_VERSION_NAME, PackageUtil.getVersionName(this));
+            edit.putBoolean(PreferenceKeys.NEW_VERSION_FIRST_LAUNCH, true);
 			edit.commit();
         }
 
