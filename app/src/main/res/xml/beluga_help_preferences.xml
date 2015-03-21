@@ -21,4 +21,11 @@
         <intent android:action="android.intent.action.VIEW"
             android:data="mailto:belugamobile@gmail.com" />
     </Preference>
+    <Preference
+        android:title="Github"
+        android:icon="@null"
+        android:summary="Report issue or request feature.">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="https://github.com/hufeng03/beluga-issue-tracker" />
+    </Preference>
 </PreferenceScreen>

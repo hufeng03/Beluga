@@ -26,6 +26,7 @@
         tools:replace="android:name,android:icon"
         android:name=".FileManager"
         android:icon="@drawable/launcher"
+        android:label="@string/app_name"
         android:theme="@style/BelugaTheme">
         <activity
             android:name=".BelugaDrawerActivity"
