@@ -107,11 +107,13 @@ public class BelugaFileEntry extends BelugaEntry {
             File[] children = file.listFiles();
             this.childFileCount = 0;
             this.childFolderCount = 0;
-            for (File child:children) {
-                if (child.isDirectory()) {
-                    this.childFileCount++;
-                } else {
-                    this.childFolderCount++;
+            if (children != null) {
+                for (File child : children) {
+                    if (child.isDirectory()) {
+                        this.childFileCount++;
+                    } else {
+                        this.childFolderCount++;
+                    }
                 }
             }
         } else {
