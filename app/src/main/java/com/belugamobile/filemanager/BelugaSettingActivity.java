@@ -1,12 +1,18 @@
 package com.belugamobile.filemanager;
 
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.preference.CheckBoxPreference;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import com.belugamobile.filemanager.root.BelugaRootManager;
 
 
 /**
@@ -39,12 +45,22 @@ public class BelugaSettingActivity extends BelugaBaseActionBarActivity {
     }
 
 
-    public static class BelugaSettingFragment extends PreferenceFragment {
+    public static class BelugaSettingFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener{
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.beluga_setting_preferences);
+            Preference rootExplorerPreference = findPreference(PreferenceKeys.ROOT_EXPLORER_ENABLE);
+            rootExplorerPreference.setOnPreferenceClickListener(this);
+        }
+
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            if (((CheckBoxPreference)preference).isChecked()) {
+                BelugaRootManager.getInstance().init(getActivity());
+            }
+            return true;
         }
     }
 

@@ -1,12 +1,14 @@
 package com.belugamobile.filemanager;
 
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -84,10 +86,18 @@ public class NewDeviceFragment extends BelugaRecyclerFragment /*implements Loade
     }
 
 
-
     private void refreshMountPointList() {
         List<MountPoint> mountPoints = MountPointManager.getInstance().getMountPoints();
-
+        MountPoint mountPoint = new MountPoint();
+        mountPoint.mDescription = "Root explorer (/)";
+        mountPoint.mPath = "/";
+        mountPoint.mIsMounted = true;
+        mountPoint.mIsExternal = false;
+        mountPoint.mMaxFileSize = 0;
+        Log.d(TAG, "init,description :" + mountPoint.mDescription + ",path : "
+                + mountPoint.mPath + ",isMounted : " + mountPoint.mIsMounted
+                + ",isExternal : " + mountPoint.mIsExternal + ", mMaxFileSize: " + mountPoint.mMaxFileSize);
+        mountPoints.add(0, mountPoint);
         ((BelugaDeviceRecyclerAdapter) getRecyclerAdapter()).setData(mountPoints);
     }
 

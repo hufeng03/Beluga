@@ -61,14 +61,14 @@ public class BelugaDialogFragment extends DialogFragment{
 
     public static final String FOLDER_PATH_DATA = "folder";
     public static final String FILE_ARRAY_DATA = "files";
-    public static final String FILE_DATA = "file";
+    public static final String FILE_DATA = "file";          //FileEntry
     public static final String CATEGORY_DATA = "category";
 	
 	public static final int RENAME_DIALOG = 1;
 	public static final int DETAIL_DIALOG = 2;
 	public static final int DELETE_DIALOG = 3;
     public static final int SORT_DIALOG = 4;
-	public static final int NEW_FOLDER_DIALOG = 5;
+	public static final int CREATE_FOLDER_DIALOG = 5;
     public static final int COPY_PASTE_DIALOG = 6;
     public static final int CUT_PASTE_DIALOG = 7;
     public static final int EXTRACT_ARCHIVE_DIALOG = 8;
@@ -82,7 +82,7 @@ public class BelugaDialogFragment extends DialogFragment{
 
     public static abstract interface OnDialogDoneInterface {
         public abstract void onDialogOK(int dialogId, String folder, BelugaFileEntry... entries);
-        public abstract void onDialogCancel(int dialoId, String folder, BelugaFileEntry... entries);
+        public abstract void onDialogCancel(int dialogId, String folder, BelugaFileEntry... entries);
     }
 
     private OnDialogDoneInterface mListener;
@@ -153,7 +153,7 @@ public class BelugaDialogFragment extends DialogFragment{
 	public static DialogFragment showCreateFolderDialog(FragmentActivity activity, String path){
 		Bundle data = new Bundle();
 		data.putString(FOLDER_PATH_DATA, path);
-        DialogFragment dialog = BelugaDialogFragment.newInstance(NEW_FOLDER_DIALOG, data);
+        DialogFragment dialog = BelugaDialogFragment.newInstance(CREATE_FOLDER_DIALOG, data);
         dialog.show(activity.getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
         return dialog;
 	}
@@ -343,7 +343,7 @@ public class BelugaDialogFragment extends DialogFragment{
                     .create();
             break;
         }
-		case NEW_FOLDER_DIALOG:
+		case CREATE_FOLDER_DIALOG:
 		{
             View contents = View.inflate(getActivity(), R.layout.new_directory_dialog, null);
             final String path = getArguments().getString(FOLDER_PATH_DATA);
@@ -356,17 +356,15 @@ public class BelugaDialogFragment extends DialogFragment{
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                     	String name = edit.getText().toString();
-                    	File file = new File(path, name);
-                    	if(file.exists() && file.isDirectory())
-                    	{
+                    	File folder = new File(path, name);
+                    	if(folder.exists() && folder.isDirectory()) {
                     		Toast.makeText(getActivity(), R.string.folder_already_exist, Toast.LENGTH_SHORT).show();
-                    	}
-                    	else
-                    	{
-                            if (file.mkdirs()) {
-                                Toast.makeText(getActivity(), R.string.create_folder_success, Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getActivity(), R.string.create_folder_fail, Toast.LENGTH_SHORT).show();
+                    	} else {
+                            if (mListener != null) {
+                                mListener.onDialogOK(
+                                        CREATE_FOLDER_DIALOG,
+                                        folder.getAbsolutePath(),
+                                        null);
                             }
                         }
                     }
@@ -488,7 +486,7 @@ public class BelugaDialogFragment extends DialogFragment{
                         } else {
                             if (mListener != null) {
                                 mListener.onDialogOK(
-                                        getArguments().getInt(ARG_DIALOG_ID),
+                                        RENAME_DIALOG,
                                         new_name,
                                         entry);
                             }

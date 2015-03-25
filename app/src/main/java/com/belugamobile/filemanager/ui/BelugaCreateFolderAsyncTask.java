@@ -8,25 +8,22 @@ import com.belugamobile.filemanager.helper.BelugaProviderHelper;
 import com.belugamobile.filemanager.helper.MultiMediaStoreHelper;
 import com.belugamobile.filemanager.root.BelugaRootManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by feng on 14-2-15.
  */
-public class BelugaDeleteAsyncTask extends BelugaActionAsyncTask {
+public class BelugaCreateFolderAsyncTask extends BelugaActionAsyncTask {
 
-    MultiMediaStoreHelper.DeleteMediaStoreHelper mDeleteMediaStoreHelper;
-
-    public BelugaDeleteAsyncTask(Context context, BelugaActionAsyncTaskCallbackDelegate bac) {
-        super(context, bac);
-        mDeleteMediaStoreHelper = new MultiMediaStoreHelper.DeleteMediaStoreHelper(
-                mMediaProviderHelper);
+    public BelugaCreateFolderAsyncTask(Context context, BelugaActionAsyncTaskCallbackDelegate bac, String folder) {
+        super(context, bac, folder);
     }
 
     @Override
     public boolean run() {
-        boolean result = deleteFileEntryOneByOne();
+        boolean result = createFolder();
         return result;
     }
 
@@ -53,26 +50,14 @@ public class BelugaDeleteAsyncTask extends BelugaActionAsyncTask {
         return toast_info_id == 0 ? "" : context.getString(toast_info_id);
     }
 
-    private boolean deleteFileEntryOneByOne() {
+    private boolean createFolder() {
         boolean result = true;
-        List<BelugaFileEntry> failed = new ArrayList<BelugaFileEntry>();
-        for (BelugaFileEntry entry : mFileEntries) {
-            if (isCancelled()) {
-                mDeleteMediaStoreHelper.updateRecords();
-                return false;
-            }
-            if (entry.delete()) {
-                mDeleteMediaStoreHelper.addRecord(entry.path);
-                BelugaProviderHelper.deleteInBelugaDatabase(mContext, entry.path);
-                publishActionProgress(entry);
-            } else {
-                failed.add(entry);
-            }
+
+        result = new File(mFolderPath).mkdirs();
+
+        if (!result) {
+            BelugaRootManager.getInstance().createFolderAsRoot(mFolderPath);
         }
-        if (failed.size() > 0) {
-            result = BelugaRootManager.getInstance().deleteAsRoot(failed);
-        }
-        mDeleteMediaStoreHelper.updateRecords();
         return result;
     }
 

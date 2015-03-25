@@ -6,6 +6,7 @@ import com.belugamobile.filemanager.R;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.helper.BelugaProviderHelper;
 import com.belugamobile.filemanager.helper.MultiMediaStoreHelper;
+import com.belugamobile.filemanager.root.BelugaRootManager;
 
 import java.io.File;
 
@@ -83,7 +84,7 @@ public class BelugaRenameAsyncTask extends BelugaActionAsyncTask {
                 BelugaProviderHelper.updateInBelugaDatabase(mContext, entry.path, newFile.getAbsolutePath());
             }
         } else {
-            result = false;
+            result = BelugaRootManager.getInstance().renameFileAsRoot(entry.path, newFile.getAbsolutePath());
         }
         mPasteMediaStoreHelper.updateRecords();
         mDeleteMediaStoreHelper.updateRecords();

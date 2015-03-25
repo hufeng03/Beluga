@@ -20,6 +20,7 @@ import com.belugamobile.filemanager.BelugaActionDelegate;
 import com.belugamobile.filemanager.R;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.dialog.BelugaDialogFragment;
+import com.belugamobile.filemanager.utils.LogUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+
+import eu.chainfire.libsuperuser.Shell;
 
 
 public class BelugaActionController extends Fragment implements ActionMode.Callback,
@@ -350,6 +353,13 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
         }
     }
 
+    public void performCreateFolder(String folder) {
+        if (!TextUtils.isEmpty(folder)) {
+            mActionAsyncTask = new BelugaCreateFolderAsyncTask(getActivity().getApplicationContext(), this, folder);
+            mActionAsyncTask.executeParallel();
+        }
+    }
+
     public void performFavorite(BelugaFileEntry... entries) {
         if (entries.length > 0) {
             mActionAsyncTask = new BelugaFavoriteAsyncTask(getActivity().getApplicationContext(), this);
@@ -485,4 +495,5 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
             }
         }
     }
+
 }
