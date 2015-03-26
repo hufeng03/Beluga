@@ -129,4 +129,23 @@
     <string name="file_delete_finish">Delete success</string>
     <string name="file_delete_failed">Delete failed</string>
     <string name="changelog_dialog_title">Change Log</string>
+    <string name="version_label">Version</string>
+    <string name="developer_label">Developer</string>
+    <string name="website_label">Website</string>
+    <string name="review_label">Review</string>
+    <string name="email_label">Email</string>
+    <string name="github_label">Github</string>
+    <string name="help_write_fail_question">Can not copy/create/delete file in SD card</string>
+    <string name="help_write_fail_answer">Google has restricted third party apps to write to secondary external storage device, except in their package-specific directories whereas there is no such restriction in case of some custom ROMs.</string>
+    <string name="send_us_email">Send us email to tell your encountered problems and suggestions or just say hi.</string>
+    <string name="report_bug">Report issue or request feature.</string>
+    <string name="good_review_request">Give it a five star rating.</string>
+    <string name="hidden_file_label">Hidden file</string>
+    <string name="no_media_label">.Nomedia</string>
+    <string name="hidden_file_description">Show hidden files and directories preceding filename with \'.\'</string>
+    <string name="no_media_description">Enable media scanning in specific Android directories with a .nomedia file</string>
+    <string name="translation_label">Translation</string>
+    <string name="translation_summary">%1$d languages supported thanks to %2$d contributors</string>
+    <string name="translation_contribution_dialog_title">Contributors</string>
+    <string name="thanks_to_contributor">Thanks to our contributors</string>
 </resources>

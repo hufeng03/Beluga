@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="menu_app_open">Aç</string>
+    <string name="menu_app_market">Market</string>
+    <string name="menu_select_ok">Aç</string>
+    <string name="menu_up">Yukarı</string>
+    <string name="menu_create">Klasör Oluştur</string>
+    <string name="menu_search">Dosya Ara</string>
+    <string name="menu_sort">Dosyaları Sırala</string>
+    <string name="menu_display">Görünümü Değiştir</string>
+    <string name="menu_delete">Sil</string>
+    <string name="menu_copy">Kopyala</string>
+    <string name="menu_move">Taşı</string>
+    <string name="menu_select_all">Hepsini Seç</string>
+    <string name="menu_share">Paylaş</string>
+    <string name="menu_mark_favorite">Favorilere Ekle</string>
+    <string name="menu_remove_favorite">Favoriyi Geri Al</string>
+    <string name="menu_rename">Yeniden Adlandır</string>
+    <string name="menu_details">Ayrıntılar</string>
+    <string name="menu_cut">Kes</string>
+    <string name="menu_zip">Sıkıştır</string>
+    <string name="menu_unzip">Çıkar</string>
+</resources>

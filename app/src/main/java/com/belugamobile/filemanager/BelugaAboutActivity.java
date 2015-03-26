@@ -52,12 +52,19 @@ public class BelugaAboutActivity extends BelugaBaseActionBarActivity {
             Preference versionPreference = findPreference(PreferenceKeys.PACKAGE_VERSION_NAME);
             versionPreference.setSummary(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(PreferenceKeys.PACKAGE_VERSION_NAME, "1.0.0"));
             versionPreference.setOnPreferenceClickListener(this);
+
+            Preference translationPreference = findPreference(PreferenceKeys.TRANSLATION_CONTRIBUTION);
+            translationPreference.setSummary(getResources().getString(R.string.translation_summary, 3, 4));
+            translationPreference.setOnPreferenceClickListener(this);
         }
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
             if (PreferenceKeys.PACKAGE_VERSION_NAME.equals(preference.getKey())) {
                 BelugaDialogFragment.showChangeLogDialog((FragmentActivity)getActivity());
+                return true;
+            } else if (PreferenceKeys.TRANSLATION_CONTRIBUTION.equals(preference.getKey())) {
+                BelugaDialogFragment.showTranslationContributionDialog((FragmentActivity)getActivity());
                 return true;
             } else {
                 return false;

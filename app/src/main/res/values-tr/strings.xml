@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Beluga</string>
+    <string name="open_drawer">Menüyü Aç</string>
+    <string name="close_drawer">Menüyü Kapat</string>
+    <string name="my_apps">Uygulamalarım</string>
+    <string name="my_files">Dosyalarım</string>
+    <string name="help_and_feedback">Yardım &amp; Geribildirim</string>
+    <string name="pick_file_label">Dosyayı Seç</string>
+    <string name="file_manager_label">Dosya Yöneticisi</string>
+    <string name="app_manager_label">Uygulama Yöneticisi</string>
+    <string name="settings_label">Ayarlar</string>
+    <string name="about_label">Hakkında</string>
+    <string name="help_label">Yardım</string>
+    <string name="search_hint">Dosya Ara</string>
+    <string name="sort_by_date">Son düzenleme</string>
+    <string name="sort_by_name">Dosya adı</string>
+    <string name="sort_by_size">Dosya boyutu</string>
+    <string name="sort_by_extension">Dosya uzantısı</string>
+    <string name="enter_folder_name">Klasör adını girin:</string>
+    <string name="enter_new_name">Yeni ismi giriniz:</string>
+    <string name="action_menu_back_from_search">Aramayı durdur</string>
+    <!--  String describing the icon used to clear the search field -->
+    <string name="description_clear_search">Aramayı temizle</string>
+    <!-- Query hint displayed inside the search field [CHAR LIMIT=64] -->
+    <string name="hint_searchFile">Dosya ara</string>
+    <string name="content_description_options">Seçenekler</string>
+    <string name="empty_folder">Boş</string>
+    <string name="single_file">%1$d dosya</string>
+    <string name="multiple_files">%1$d dosya</string>
+    <string name="single_folder">%1$d klasör</string>
+    <string name="multiple_folders">%1$d klasör</string>
+    <string name="empty_audio">Ses yok</string>
+    <string name="empty_image">Resim yok</string>
+    <string name="empty_video">Video yok</string>
+    <string name="empty_zip">Sıkıştırılmış dosya yok</string>
+    <string name="empty_document">Belge yok</string>
+    <string name="empty_apk">APK yok</string>
+    <string name="empty_file">Dosya yok</string>
+    <string name="cancel">İptal</string>
+    <string name="category_apk">APK</string>
+    <string name="category_document">Belgeler</string>
+    <string name="category_favorite">Favoriler</string>
+    <string name="category_audio">Sesler</string>
+    <string name="category_picture">Resimler</string>
+    <string name="category_download">İndirilenler</string>
+    <string name="category_video">Videolar</string>
+    <string name="category_zip">Sıkıştırılmış Dosyalar</string>
+    <string name="empty_favorite">Favori dosya yok</string>
+    <string name="empty_download">İndirilen dosya yok</string>
+    <string name="tab_category">Kategoriler</string>
+    <string name="tab_device">Cihaz</string>
+    <string name="none_child_file">Boş</string>
+    <string name="multiple_child_file">%d Dosya</string>
+    <string name="single_child_file">1 Dosya</string>
+    <string name="no_search_string">Arama metni yok</string>
+    <string name="click_to_select">Seçmek için tıklayın</string>
+    <string name="sort_dialog_title">Sırala</string>
+    <string name="folder_already_exist">Bu klasör bulunuyor</string>
+    <string name="create_folder_success">Klasör oluşturma başarılı</string>
+    <string name="create_folder_fail">Klasör oluşturma başarısız</string>
+    <string name="create_folder_dialog_title">Yeni Klasör</string>
+    <string name="detail_dialog_title">Detaylar</string>
+    <string name="rename_dialog_title">Yeniden adlandır</string>
+    <string name="rename_empty_string">Boş dosya ismine izin verilmiyor</string>
+    <string name="rename_same_name_string">Dosya adı bulunuyor, lütfen değiştirin</string>
+    <string name="details_content_file"><![CDATA[
+ <b>Ad:</b>&nbsp;&nbsp;%1$s<br/>
+<b>Dosya Yolu:</b>&nbsp;&nbsp;%2$s<br/>
+<b>Boyut:</b>&nbsp;&nbsp;%3$s<br/>
+<b>Değiştirme:</b>&nbsp;&nbsp;%4$s
+    ]]></string>
+    <string name="details_content_folder"><![CDATA[
+ <b>Ad:</b>&nbsp;&nbsp;%1$s<br/>
+<b>Dosya Yolu:</b>&nbsp;&nbsp;%2$s<br/>
+<b>İçerik:</b>&nbsp;&nbsp;%3$s<br/>
+ <b>Modified:</b>&nbsp;&nbsp;%4$s
+    ]]></string>
+    <string name="details_permission_owner"><![CDATA[
+<br/><b>İzin:</b>&nbsp;&nbsp;%1$s<br/>
+<b>Sahip:</b>&nbsp;&nbsp;%2$s
+    ]]></string>
+    <string name="progress_delete_title">Sil</string>
+    <string name="progress_delete_content">Dosyalar siliniyor, lütfen bekleyin...</string>
+    <string name="progress_paste_title">Yapıştır</string>
+    <string name="progress_paste_content">Dosyalar yapıştırılıyor, lütfen bekleyin...</string>
+    <string name="progress_favorite_title">Favori</string>
+    <string name="progress_favorite_content">Favori olarak işaretleniyor, lütfen bekleyin...</string>
+    <string name="progress_undo_favorite_title">Favoriyi Geri Al</string>
+    <string name="progress_undo_favorite_content">Favori olarak işaretlendirme geri alınıyor, lütfen bekleyin...</string>
+    <string name="progress_rename_title">Yeniden adlandır</string>
+    <string name="progress_rename_content">Dosya yeniden adlandırılıyor, lütfen bekleyin...</string>
+    <string name="copy_paste_confirm_title">Yapıştır</string>
+    <string name="copy_paste_confirm_text">"Kopyalamak ve %s'ye yapıştırmak istediğinizden emin misiniz? "</string>
+    <string name="cut_paste_confirm_title">Yapıştır</string>
+    <string name="cut_paste_confirm_text">"Kesmek ve %s'ye yapıştırmak istediğinizden emin misiniz? "</string>
+    <string name="delete_confirm_dialog_title">Sil</string>
+    <string name="delete_confirm_text">Silmek istediğinizden emin misiniz?</string>
+    <string name="extract_archive_confirm_dialog_title">Çıkar</string>
+    <string name="extract_archive_confirm_text">Arşivi %s\'ye çıkarmak istediğinizden emin misiniz?</string>
+    <string name="create_archive_confirm_dialog_title">Arşiv</string>
+    <string name="create_archive_confirm_text">Arşiv oluşturmak ve %s\'ye kaydetmek istediğinizden emin misiniz?</string>
+    <string name="progress_extract_archive_title">Çıkarılıyor</string>
+    <string name="progress_extract_archive_content">Dosyalar arşivden çıkarılıyor, lütfen bekleyin...</string>
+    <string name="extract_archive_success">Arşivden çıkarma başarılı</string>
+    <string name="extract_archive_failed">Arşivden çıkarma başarısız</string>
+    <string name="progress_create_archive_title">Arşivliyor</string>
+    <string name="progress_create_archive_content">Dosyaları arşive sıkıştırılıyor, lütfen bekleyin...</string>
+    <string name="create_archive_success">Arşiv oluşturma başarılı</string>
+    <string name="create_archive_failed">Arşiv oluşturma başarısız</string>
+    <string name="can_not_rename_multiple">Aynı anda birden çok dosya yeniden adlandırılamıyor.</string>
+    <string name="can_not_details_multiple">Aynı anda birden çok dosyanın ayrıntıları gösterilemiyor.</string>
+    <string name="file_copy_finish">Kopyalama başarılı</string>
+    <string name="file_move_finish">Taşıma başarılı</string>
+    <string name="file_copy_failed">Kopyalama başarısız</string>
+    <string name="file_move_failed">Taşıma başarısız</string>
+    <string name="file_favorite_finish">Favorilere ekleme başarılı</string>
+    <string name="file_favorite_failed">Favorilere ekleme başarısız</string>
+    <string name="file_undofavorite_finish">Favoriyi geri alma başarılı</string>
+    <string name="file_undofavorite_failed">Favoriyi geri alma başarısız</string>
+    <string name="file_rename_finish">Yeniden adlandırma başarılı</string>
+    <string name="file_rename_failed">Yeniden adlandırma başarısız</string>
+    <string name="search_progress_dialog_title">Aranıyor</string>
+    <string name="search_progress_dialog_message">Dosya aranıyor</string>
+    <string name="search_complete">Arama bitti</string>
+    <string name="file_delete_finish">Silme başarılı</string>
+    <string name="file_delete_failed">Silme başarısız</string>
+    <string name="changelog_dialog_title">Değişiklik Kaydı</string>
+    <string name="version_label">Sürüm</string>
+    <string name="developer_label">Geliştirici</string>
+    <string name="website_label">Web Sitesi</string>
+    <string name="help_write_fail_question">SD kart dosyayı kopyalamak/oluşturmak/silmek Can not</string>
+    <string name="help_write_fail_answer">"Google bazı özel ROM'lar durumunda böyle bir sınırlama yoktur oysa onların paketi özel dizinlere dışında, ikincil harici depolama aygıtına yazmak için üçüncü parti uygulamaları kısıtladı."</string>
+    <string name="send_us_email">"Bize karşılaşılan sorunları ve önerileri anlatmak ya da sadece merhaba demek için e-posta gönder."</string>
+    <string name="report_bug">Rapor sorunu veya istek özelliği.</string>
+    <string name="review_label">İnceleme</string>
+    <string name="email_label">E-posta</string>
+    <string name="github_label">Github</string>
+    <string name="good_review_request">Bize beş yıldız ver</string>
+    <string name="hidden_file_label">Gizli dosyalar</string>
+    <string name="no_media_label">.Nomedia</string>
+    <string name="hidden_file_description">Dosya önceki ile gizli dosyaları ve dizinleri göster.</string>
+    <string name="no_media_description">Bir .nomedia dosyası ile, Android belirli dizinlere medya tarama etkinleştirin</string>
+    <string name="translation_label">çeviri</string>
+    <string name="translation_summary">%1$d dil %2$d katkıda sayesinde desteklenen</string>
+    <string name="translation_contribution_dialog_title">Sanatçılar</string>
+    <string name="thanks_to_contributor">Katkıda bulunanlara teşekkürler</string>
+</resources>

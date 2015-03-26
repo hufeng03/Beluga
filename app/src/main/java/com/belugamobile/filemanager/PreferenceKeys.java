@@ -10,4 +10,5 @@ public class PreferenceKeys {
     public static final String PACKAGE_VERSION_NAME = "PACKAGE_VERSION_NAME";
     public static final String NEW_VERSION_FIRST_LAUNCH = "NEW_VERSION_FIRST_LAUNCH";
     public static final String FORCE_SCAN_REQUIRED = "FORCE_SCAN_REQUIRED";
+    public static final String TRANSLATION_CONTRIBUTION = "TRANSLATION_CONTRIBUTION";
 }

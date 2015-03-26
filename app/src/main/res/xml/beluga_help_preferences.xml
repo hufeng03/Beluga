@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference
-        android:title="Can not copy/create/delete file in SD card"
+        android:title="@string/help_write_fail_question"
         android:icon="@null"
-        android:summary="Google has restricted third party apps to write to secondary external storage device, except in their package-specific directories whereas there is no such restriction in case of some custom ROMs.">
+        android:summary="@string/help_write_fail_answer">
+    </Preference>
+    <Preference
+        android:title="@string/review_label"
+        android:icon="@null"
+        android:summary="@string/good_review_request">
         <intent android:action="android.intent.action.VIEW"
             android:data="market://details?id=com.belugamobile.filemanager" />
     </Preference>
     <Preference
-        android:title="Review"
+        android:title="@string/email_label"
         android:icon="@null"
-        android:summary="Give it a five star rating.">
-        <intent android:action="android.intent.action.VIEW"
-            android:data="market://details?id=com.belugamobile.filemanager" />
-    </Preference>
-    <Preference
-        android:title="Email"
-        android:icon="@null"
-        android:summary="Send us email to tell your encountered problems and suggestions or just say hi.">
+        android:summary="@string/send_us_email">
         <intent android:action="android.intent.action.VIEW"
             android:data="mailto:belugamobile@gmail.com" />
     </Preference>
     <Preference
-        android:title="Github"
+        android:title="@string/github_label"
         android:icon="@null"
-        android:summary="Report issue or request feature.">
+        android:summary="@string/report_bug">
         <intent android:action="android.intent.action.VIEW"
             android:data="https://github.com/hufeng03/beluga-issue-tracker" />
     </Preference>

@@ -2,24 +2,30 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference
         android:key="PACKAGE_VERSION_NAME"
-        android:title="Version"
+        android:title="@string/version_label"
         android:icon="@null"
         android:summary="1.0.0">
         <!--intent android:action="android.intent.action.VIEW"
             android:data="market://details?id=com.belugamobile.filemanager" /!-->
     </Preference>
     <Preference
-        android:title="Developer"
+        android:title="@string/website_label"
+        android:icon="@null"
+        android:summary="http://www.belugamobile.com">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="http://www.belugamobile.com" />
+    </Preference>
+    <Preference
+        android:title="@string/developer_label"
         android:icon="@null"
         android:summary="Feng Hu">
         <intent android:action="android.intent.action.VIEW"
             android:data="http://hufeng.info" />
     </Preference>
     <Preference
-        android:title="Website"
+        android:key="TRANSLATION_CONTRIBUTION"
+        android:title="@string/translation_label"
         android:icon="@null"
-        android:summary="http://www.belugamobile.com">
-        <intent android:action="android.intent.action.VIEW"
-            android:data="http://www.belugamobile.com" />
+        android:summary="@string/translation_summary">
     </Preference>
 </PreferenceScreen>

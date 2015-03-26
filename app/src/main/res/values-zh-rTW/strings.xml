@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Beluga</string>
+    <string name="open_drawer">打開</string>
+    <string name="close_drawer">關閉</string>
+    <string name="my_apps">我的應用</string>
+    <string name="my_files">我的文件</string>
+    <string name="help_and_feedback">幫助 &amp; 反饋</string>
+    <string name="pick_file_label">選擇文件</string>
+    <string name="file_manager_label">文件管理</string>
+    <string name="app_manager_label">應用管理</string>
+    <string name="settings_label">設置</string>
+    <string name="about_label">關於</string>
+    <string name="help_label">幫助</string>
+    <string name="search_hint">搜索文件</string>
+    <string name="sort_by_date">修改文件</string>
+    <string name="sort_by_name">文件名稱</string>
+    <string name="sort_by_size">文件大小</string>
+    <string name="sort_by_extension">擴展名</string>
+    <string name="enter_folder_name">輸入目錄名稱:</string>
+    <string name="enter_new_name">輸入文件名稱:</string>
+    <string name="action_menu_back_from_search">停止搜索</string>
+    <!--  String describing the icon used to clear the search field -->
+    <string name="description_clear_search">清除搜索</string>
+    <!-- Query hint displayed inside the search field [CHAR LIMIT=64] -->
+    <string name="hint_searchFile">搜索文件</string>
+    <string name="content_description_options">選項</string>
+
+    <string name="empty_folder">空目錄</string>
+    <string name="single_file">%1$d 文件</string>
+    <string name="multiple_files">%1$d 文件</string>
+    <string name="single_folder">%1$d 目錄</string>
+    <string name="multiple_folders">%1$d 目錄</string>
+    <string name="empty_audio">沒有音頻</string>
+    <string name="empty_image">沒有圖片</string>
+    <string name="empty_video">沒有視頻</string>
+    <string name="empty_zip">沒有壓縮文件</string>
+    <string name="empty_document">沒有文檔</string>
+    <string name="empty_apk">沒有安裝包</string>
+    <string name="empty_file">沒有文件</string>
+    <string name="cancel">取消</string>
+    <string name="category_apk">安裝包</string>
+    <string name="category_document">文檔</string>
+    <string name="category_favorite">收藏</string>
+    <string name="category_audio">音頻</string>
+    <string name="category_picture">圖像</string>
+    <string name="category_download">下載</string>
+    <string name="category_video">視頻</string>
+    <string name="category_zip">壓縮</string>
+    <string name="empty_favorite">沒有收藏文件</string>
+    <string name="empty_download">沒有下載文件</string>
+    <string name="tab_category">分類</string>
+    <string name="tab_device">存儲</string>
+
+    <string name="none_child_file">空目錄</string>
+    <string name="multiple_child_file">%d 文件</string>
+    <string name="single_child_file">1 文件</string>
+    <string name="no_search_string">沒有搜索</string>
+    <string name="click_to_select">點擊文件選擇</string>
+
+    <string name="sort_dialog_title">排序</string>
+    <string name="folder_already_exist">目錄已存在</string>
+    <string name="create_folder_success">創建目錄成功</string>
+    <string name="create_folder_fail">創建目錄失敗</string>
+    <string name="create_folder_dialog_title">創建目錄</string>
+    <string name="detail_dialog_title">詳情</string>
+    <string name="rename_dialog_title">重命名</string>
+    <string name="rename_empty_string">文件名不能為空</string>
+    <string name="rename_same_name_string">文件名已存在</string>
+    <string name="details_content_file"><![CDATA[
+        <b>名稱:</b>&nbsp;&nbsp;%1$s<br/>
+        <b>父目錄:</b>&nbsp;&nbsp;%2$s<br/>
+        <b>大小:</b>&nbsp;&nbsp;%3$s<br/>
+        <b>修改日期:</b>&nbsp;&nbsp;%4$s
+    ]]></string>
+    <string name="details_content_folder"><![CDATA[
+        <b>名稱:</b>&nbsp;&nbsp;%1$s<br/>
+        <b>父目錄:</b>&nbsp;&nbsp;%2$s<br/>
+        <b>內容:</b>&nbsp;&nbsp;%3$s<br/>
+        <b>修改日期:</b>&nbsp;&nbsp;%4$s
+    ]]></string>
+        <string name="details_permission_owner"><![CDATA[
+        <br/><b>權限:</b>&nbsp;&nbsp;%1$s<br/>
+        <b>屬主:</b>&nbsp;&nbsp;%2$s
+    ]]></string>
+    <string name="progress_delete_title">刪除</string>
+    <string name="progress_delete_content">正在刪除文件，請稍後...</string>
+    <string name="progress_paste_title">粘貼</string>
+    <string name="progress_paste_content">正在粘貼文件，請稍後...</string>
+    <string name="progress_favorite_title">收藏</string>
+    <string name="progress_favorite_content">正在收藏文件，請稍後...</string>
+    <string name="progress_undo_favorite_title">取消收藏</string>
+    <string name="progress_undo_favorite_content">正在取消收藏, 請稍後...</string>
+    <string name="progress_rename_title">重命名</string>
+    <string name="progress_rename_content">正在重命名，請稍後...</string>
+    <string name="copy_paste_confirm_title">粘貼</string>
+    <string name="copy_paste_confirm_text">請確認復制粘貼文件到%s?</string>
+    <string name="cut_paste_confirm_title">粘貼</string>
+    <string name="cut_paste_confirm_text">請確認剪切粘貼文件到%s?</string>
+    <string name="delete_confirm_dialog_title">刪除</string>
+    <string name="delete_confirm_text">請確認刪除文件?</string>
+    <string name="extract_archive_confirm_dialog_title">解壓縮</string>
+    <string name="extract_archive_confirm_text">請確認解壓縮文件到%s?</string>
+    <string name="create_archive_confirm_dialog_title">壓縮</string>
+    <string name="create_archive_confirm_text">請確認創建並保存壓縮包在%s?</string>
+    <string name="progress_extract_archive_title">解壓縮</string>
+    <string name="progress_extract_archive_content">正在解壓，請稍後...</string>
+    <string name="extract_archive_success">解壓文件成功</string>
+    <string name="extract_archive_failed">解壓文件失敗</string>
+    <string name="progress_create_archive_title">壓縮</string>
+    <string name="progress_create_archive_content">正在壓縮文件，請稍後...</string>
+    <string name="create_archive_success">創建壓縮文件成功</string>
+    <string name="create_archive_failed">創建壓縮文件失敗</string>
+    <string name="can_not_rename_multiple">無法重命名多個文件</string>
+    <string name="can_not_details_multiple">無法顯示多個文件的詳情</string>
+    <string name="file_copy_finish">復制成功</string>
+    <string name="file_move_finish">剪切成功</string>
+    <string name="file_copy_failed">復制失敗</string>
+    <string name="file_move_failed">剪切失敗</string>
+    <string name="file_favorite_finish">收藏成功</string>
+    <string name="file_favorite_failed">收藏失敗</string>
+    <string name="file_undofavorite_finish">取消收藏成功</string>
+    <string name="file_undofavorite_failed">取消收藏失敗</string>
+    <string name="file_rename_finish">重命名文件成功</string>
+    <string name="file_rename_failed">重命名文件失敗</string>
+    <string name="search_progress_dialog_title">搜索文件</string>
+    <string name="search_progress_dialog_message">正在搜索文件，請稍後...</string>
+    <string name="search_complete">搜索完成</string>
+    <string name="file_delete_finish">刪除成功</string>
+    <string name="file_delete_failed">刪除失敗</string>
+    <string name="changelog_dialog_title">版本信息</string>
+    <string name="version_label">版本</string>
+    <string name="developer_label">開發者</string>
+    <string name="website_label">網站</string>
+    <string name="review_label">好評</string>
+    <string name="email_label">郵件</string>
+    <string name="github_label">Github</string>
+    <string name="help_write_fail_question">無法在SD卡中復制/粘貼/刪除文件</string>
+    <string name="help_write_fail_answer">Google has restricted third party apps to write to secondary external storage device, except in their package-specific directories whereas there is no such restriction in case of some custom ROMs.</string>
+    <string name="send_us_email">給我們發郵件反饋意見或問題，或者打個招呼。</string>
+    <string name="report_bug">提交BUG或者功能需求</string>
+    <string name="good_review_request">給我們5星好評吧</string>
+    <string name="hidden_file_label">隱藏文件</string>
+    <string name="no_media_label">.Nomedia</string>
+    <string name="hidden_file_description">顯示文件名以\'.\'開頭的文件或者文件夾</string>
+    <string name="no_media_description">允許掃描包含.nomeida文件的目標中的多媒體文件</string>
+    <string name="translation_label">翻譯</string>
+    <string name="translation_summary">%1$d語言支持， %2$d翻譯貢獻者</string>
+    <string name="translation_contribution_dialog_title">貢獻者</string>
+    <string name="thanks_to_contributor">感謝我們的翻譯貢獻者</string>
+</resources>

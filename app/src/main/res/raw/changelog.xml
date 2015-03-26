@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="false">
 
+    <changelogversion versionName="1.0.9.1" changeDate="Mar 24, 2013">
+        <changelogtext>[Notice] Root explorer will be in next edition</changelogtext>
+        <changelogtext>Add support for Turkish and Italian languages</changelogtext>
+        <changelogtext>Fix 2 crash bugs</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="1.0.9" changeDate="Mar 21, 2013">
         <changelogtext>Show change log dialog for app upgrade</changelogtext>
         <changelogtext>Fix 5 crash bugs such as apk icon generation</changelogtext>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="menu_app_open">打開</string>
+    <string name="menu_app_market">應用市場</string>
+    <string name="menu_select_ok">確定</string>
+    <string name="menu_up">上一級</string>
+    <string name="menu_create">新建目錄</string>
+    <string name="menu_search">搜索</string>
+    <string name="menu_sort">排序</string>
+    <string name="menu_display">Switch Display</string>
+    <string name="menu_delete">刪除</string>
+    <string name="menu_copy">復制</string>
+    <string name="menu_move">移動</string>
+    <string name="menu_select_all">全選</string>
+    <string name="menu_share">分享</string>
+    <string name="menu_mark_favorite">收藏</string>
+    <string name="menu_remove_favorite">取消收藏</string>
+    <string name="menu_rename">重命名</string>
+    <string name="menu_details">詳情</string>
+    <string name="menu_cut">剪切</string>
+    <string name="menu_zip">壓縮</string>
+    <string name="menu_unzip">解壓縮</string>
+</resources>

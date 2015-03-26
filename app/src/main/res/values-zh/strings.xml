@@ -128,4 +128,24 @@
     <string name="search_complete">搜索完成</string>
     <string name="file_delete_finish">删除成功</string>
     <string name="file_delete_failed">删除失败</string>
+    <string name="changelog_dialog_title">版本信息</string>
+    <string name="version_label">版本</string>
+    <string name="developer_label">开发者</string>
+    <string name="website_label">网站</string>
+    <string name="review_label">好评</string>
+    <string name="email_label">邮件</string>
+    <string name="github_label">Github</string>
+    <string name="help_write_fail_question">无法在SD卡中复制/粘贴/删除文件</string>
+    <string name="help_write_fail_answer">Google has restricted third party apps to write to secondary external storage device, except in their package-specific directories whereas there is no such restriction in case of some custom ROMs.</string>
+    <string name="send_us_email">给我们发邮件反馈意见或问题，或者打个招呼。</string>
+    <string name="report_bug">提交BUG或者功能需求</string>
+    <string name="good_review_request">给我们5星好评吧</string>
+    <string name="hidden_file_label">隐藏文件</string>
+    <string name="no_media_label">.Nomedia</string>
+    <string name="hidden_file_description">显示文件名以\'.\'开头的文件或者文件夹</string>
+    <string name="no_media_description">允许扫描包含.nomeida文件的目标中的多媒体文件</string>
+    <string name="translation_label">翻译</string>
+    <string name="translation_summary">%1$d语言支持， %2$d翻译贡献者</string>
+    <string name="translation_contribution_dialog_title">贡献者</string>
+    <string name="thanks_to_contributor">感谢我们的翻译贡献者</string>
 </resources>

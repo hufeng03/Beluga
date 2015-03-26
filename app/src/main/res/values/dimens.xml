@@ -65,4 +65,5 @@
     <item type="dimen" name="m_entry_text_size_secondary">@dimen/m_text_size_body</item>
     <item type="dimen" name="m_entry_text_size_tertiary">@dimen/m_text_size_caption</item>
     <dimen name="simple_file_list_row_height">64dp</dimen>
+    <dimen name="translator_list_row_height">64dp</dimen>
 </resources>

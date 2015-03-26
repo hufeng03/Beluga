@@ -35,6 +35,9 @@ import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.helper.BelugaSortHelper;
 import com.belugamobile.filemanager.helper.BelugaTimeHelper;
 import com.belugamobile.filemanager.helper.FileCategoryHelper;
+import com.belugamobile.filemanager.translator.Translator;
+import com.belugamobile.filemanager.translator.TranslatorManager;
+import com.belugamobile.filemanager.translator.TranslatorViewHolder;
 import com.belugamobile.filemanager.utils.FileUtil;
 import com.belugamobile.filemanager.utils.MimeUtil;
 
@@ -79,6 +82,7 @@ public class BelugaDialogFragment extends DialogFragment{
     public static final int PROGRESS_DIALOG = 11;
 
     public static final int CHANGE_LOG_DIALOG = 20;
+    public static final int TRANSLATION_CONTRIBUTION_DIALOG = 21;
 
     public static abstract interface OnDialogDoneInterface {
         public abstract void onDialogOK(int dialogId, String folder, BelugaFileEntry... entries);
@@ -98,6 +102,13 @@ public class BelugaDialogFragment extends DialogFragment{
         f.setArguments(data);
 
         return f;
+    }
+
+    public static DialogFragment showTranslationContributionDialog(FragmentActivity activity) {
+        Bundle data = new Bundle();
+        DialogFragment dialog = BelugaDialogFragment.newInstance(TRANSLATION_CONTRIBUTION_DIALOG, data);
+        dialog.show(activity.getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
+        return dialog;
     }
 
     public static DialogFragment showChangeLogDialog(FragmentActivity activity) {
@@ -271,13 +282,16 @@ public class BelugaDialogFragment extends DialogFragment{
         Dialog dialog = null;
 		switch(mDialogId)
 		{
+        case TRANSLATION_CONTRIBUTION_DIALOG: {
+            dialog = buildTranslationContributionDialog();
+            break;
+        }
         case CHANGE_LOG_DIALOG: {
             View view = View.inflate(getActivity(), R.layout.changelog_dialog, null);
             dialog = new AlertDialog.Builder(getActivity())
                     .setTitle(R.string.changelog_dialog_title)
                     .setView(view)
-                    .setPositiveButton(android.R.string.ok,null)
-                    .setCancelable(false)
+                    .setPositiveButton(android.R.string.ok, null)
                     .setCancelable(false)
                     .create();
             break;
@@ -577,6 +591,46 @@ public class BelugaDialogFragment extends DialogFragment{
         if (getDialog() != null && getRetainInstance())
             getDialog().setDismissMessage(null);
         super.onDestroyView();
+    }
+
+    private Dialog buildTranslationContributionDialog() {
+
+        View contents = View.inflate(getActivity(), R.layout.translation_contribution_dialog, null);
+        final RecyclerView list = (RecyclerView)contents.findViewById(R.id.translation_contributor_list);
+        list.setLayoutManager(new LinearLayoutManager(getActivity()));
+        final Translator[] allTranslators = TranslatorManager.getAll();
+        final int content_height = getResources().getDimensionPixelSize(R.dimen.translator_list_row_height)*allTranslators.length;
+        RecyclerView.Adapter adapter = new RecyclerView.Adapter<TranslatorViewHolder>() {
+            @Override
+            public int getItemCount() {
+                return allTranslators.length;
+            }
+
+            @Override
+            public TranslatorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                int height = parent.getHeight();
+                if (height > 0 && height > content_height) {
+                    parent.getLayoutParams().height = content_height;
+                    parent.invalidate();
+                }
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.translator_list_row, parent, false);
+                return new TranslatorViewHolder(view);
+            }
+
+            @Override
+            public void onBindViewHolder(TranslatorViewHolder holder, int position) {
+                holder.bindTranslator(allTranslators[position]);
+            }
+        };
+        list.setAdapter(adapter);
+
+
+        return new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.translation_contribution_dialog_title)
+                .setView(contents)
+                .setPositiveButton(android.R.string.ok, null)
+                .setCancelable(false)
+                .create();
     }
 
     private Dialog buildOperationDialog(String title, String info){

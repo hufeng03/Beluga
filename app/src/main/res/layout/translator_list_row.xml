@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/translator_list_row_height"
+    android:background="@drawable/list_selector">
+
+
+
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="name of the item"
+                android:textColor="@color/file_name_normal"
+                android:textSize="16sp"
+                android:gravity="center_vertical|left"
+                />
+    <TextView
+        android:id="@+id/language"
+        android:layout_toRightOf="@id/icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="name of the item"
+        android:textColor="@color/file_name_normal"
+        android:textSize="16sp"
+        android:gravity="center_vertical|right"
+        />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/list_divider_color"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
