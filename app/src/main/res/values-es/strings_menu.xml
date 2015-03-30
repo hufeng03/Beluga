@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="menu_app_open">Lanzar</string>
+    <string name="menu_app_market">Mercado</string>
+    <string name="menu_select_ok">Abierto</string>
+    <string name="menu_up">Arriba</string>
+    <string name="menu_create">Crear carpeta</string>
+    <string name="menu_search">Buscar Archivos</string>
+    <string name="menu_sort">Ordenar Archivo</string>
+    <string name="menu_display">Cambiar Vista</string>
+    <string name="menu_delete">Eliminar</string>
+    <string name="menu_copy">Copiar</string>
+    <string name="menu_move">Mover</string>
+    <string name="menu_select_all">Selecciona todo</string>
+    <string name="menu_share">Compartir</string>
+    <string name="menu_mark_favorite">Marcar Favorito</string>
+    <string name="menu_remove_favorite">Deshacer Favorito</string>
+    <string name="menu_rename">Renombrar</string>
+    <string name="menu_details">Propiedades</string>
+    <string name="menu_cut">Cortar</string>
+    <string name="menu_zip">Comprimir</string>
+    <string name="menu_unzip">Descomprimir</string>
+</resources>

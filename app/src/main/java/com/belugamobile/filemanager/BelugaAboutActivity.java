@@ -54,7 +54,7 @@ public class BelugaAboutActivity extends BelugaBaseActionBarActivity {
             versionPreference.setOnPreferenceClickListener(this);
 
             Preference translationPreference = findPreference(PreferenceKeys.TRANSLATION_CONTRIBUTION);
-            translationPreference.setSummary(getResources().getString(R.string.translation_summary, 3, 4));
+            translationPreference.setSummary(getResources().getString(R.string.translation_summary, 4, 5));
             translationPreference.setOnPreferenceClickListener(this);
         }
 

@@ -11,8 +11,9 @@ public class TranslatorManager {
         return new Translator[] {
             new Translator("Carlo Friscia", "", "Italiano"),
             new Translator("Ahmet Burak Baraklı","","Türk"),
-            new Translator("Ozan", "", "Türk"),
-            new Translator("赵彬言", "", "中文")
+            new Translator("Ozan Akın", "", "Türk"),
+            new Translator("赵彬言", "", "中文"),
+            new Translator("Freddy Orlando Canche Aban", "", "Español")
         };
     }
 

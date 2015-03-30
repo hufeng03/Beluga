@@ -14,7 +14,7 @@
                 android:layout_height="match_parent"
                 android:text="name of the item"
                 android:textColor="@color/file_name_normal"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:gravity="center_vertical|left"
                 />
     <TextView
@@ -24,7 +24,7 @@
         android:layout_height="match_parent"
         android:text="name of the item"
         android:textColor="@color/file_name_normal"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:gravity="center_vertical|right"
         />
 

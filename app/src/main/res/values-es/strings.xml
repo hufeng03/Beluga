@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Beluga</string>
+    <string name="open_drawer">Abrir Cajon</string>
+    <string name="close_drawer">Cerrar Cajon</string>
+    <string name="my_apps">Mis Aplicaciones</string>
+    <string name="my_files">Mis Archivos</string>
+    <string name="help_and_feedback">Ayuda &amp; Comentarios</string>
+    <string name="pick_file_label">Selecciona Archivo</string>
+    <string name="file_manager_label">Administrador de Archivos</string>
+    <string name="app_manager_label">Administrador de Aplicaciones</string>
+    <string name="settings_label">Configuracion</string>
+    <string name="about_label">Acerca de</string>
+    <string name="help_label">Ayuda</string>
+    <string name="search_hint">Buscar Archivos</string>
+    <string name="sort_by_date">Ultima modificacion</string>
+    <string name="sort_by_name">Nombre de archivo</string>
+    <string name="sort_by_size">Tamaño de archivo</string>
+    <string name="sort_by_extension">Extension de archivo</string>
+    <string name="enter_folder_name">Ingresa nombre de carpeta</string>
+    <string name="enter_new_name">Ingresa nuevo nombre</string>
+    <string name="action_menu_back_from_search">Detener la busqueda</string>
+    <!--  String describing the icon used to clear the search field -->
+    <string name="description_clear_search">Borrar busqueda</string>
+    <!-- Query hint displayed inside the search field [CHAR LIMIT=64] -->
+    <string name="hint_searchFile">Buscar archivo</string>
+    <string name="content_description_options">Opciones</string>
+    <string name="empty_folder">Vacio</string>
+    <string name="single_file">%1$d archivo</string>
+    <string name="multiple_files">%1$d archivos</string>
+    <string name="single_folder">%1$d carpeta</string>
+    <string name="multiple_folders">%1$d carpetas</string>
+    <string name="empty_audio">Sin audio</string>
+    <string name="empty_image">Sin imagenes</string>
+    <string name="empty_video">Sin videos</string>
+    <string name="empty_zip">Sin zip</string>
+    <string name="empty_document">Sin documentos</string>
+    <string name="empty_apk">Sin APK</string>
+    <string name="empty_file">Sin archivos</string>
+    <string name="cancel">Cancelar</string>
+    <string name="category_apk">APK</string>
+    <string name="category_document">Documentos</string>
+    <string name="category_favorite">Favoritos</string>
+    <string name="category_audio">Audio</string>
+    <string name="category_picture">Imagenes</string>
+    <string name="category_download">Descargas</string>
+    <string name="category_video">Videos</string>
+    <string name="category_zip">Zip</string>
+    <string name="empty_favorite">Sin favoritos</string>
+    <string name="empty_download">Sin descargas</string>
+    <string name="tab_category">Categorias</string>
+    <string name="tab_device">Dispositivo</string>
+    <string name="none_child_file">Vacio</string>
+    <string name="multiple_child_file">%d Archivos</string>
+    <string name="single_child_file">1 Archivo</string>
+    <string name="no_search_string">Sin resultados</string>
+    <string name="click_to_select">Click en un archivo para seleccionarlo</string>
+    <string name="sort_dialog_title">Ordenar por</string>
+    <string name="folder_already_exist">La carpeta ya existe</string>
+    <string name="create_folder_success">Carpeta creada exitosamente</string>
+    <string name="create_folder_fail">Fallo la creacion de carpeta</string>
+    <string name="create_folder_dialog_title">Nueva Carpeta</string>
+    <string name="detail_dialog_title">Detalles</string>
+    <string name="rename_dialog_title">Renombrar</string>
+    <string name="rename_empty_string">nombre de archivo vacío no permitido</string>
+    <string name="rename_same_name_string">nombre de archivo existe, por favor cambie</string>
+    <string name="details_content_file"><![CDATA[
+ <b>Nombre:</b>&nbsp;&nbsp;%1$s<br/> 
+ <b>Ubicacion:</b>&nbsp;&nbsp;%2$s<br/> 
+ <b>Tamaño:</b>&nbsp;&nbsp;%3$s<br/> 
+ <b>Modificado:</b>&nbsp;&nbsp;%4$s 
+    ]]></string>
+    <string name="details_content_folder"><![CDATA[
+ <b>Nombre:</b>&nbsp;&nbsp;%1$s<br/> 
+ <b>Ubicacion:</b>&nbsp;&nbsp;%2$s<br/> 
+ <b>Contenidos:</b>&nbsp;&nbsp;%3$s<br/> 
+ <b>Modificado:</b>&nbsp;&nbsp;%4$s 
+    ]]></string>
+    <string name="details_permission_owner"><![CDATA[
+ <br/><b>Permiso:</b>&nbsp;&nbsp;%1$s<br/> 
+ <b>Propietario:</b>&nbsp;&nbsp;%2$s 
+    ]]></string>
+    <string name="progress_delete_title">Eliminar</string>
+    <string name="progress_delete_content">Eliminando archivos, por favor espera...</string>
+    <string name="progress_paste_title">Pegar</string>
+    <string name="progress_paste_content">Pegando archivos, por favor espere...</string>
+    <string name="progress_favorite_title">Favorito</string>
+    <string name="progress_favorite_content">Marcando como favorito, porfavor espere...</string>
+    <string name="progress_undo_favorite_title">Deshacer Favorito</string>
+    <string name="progress_undo_favorite_content">Deshaciendo marcado favorito, por favor espere ...</string>
+    <string name="progress_rename_title">Renombrar</string>
+    <string name="progress_rename_content">Renombrando archivo, porfavor espere...</string>
+    <string name="copy_paste_confirm_title">Pegar</string>
+    <string name="copy_paste_confirm_text">"¿Seguro que quieres copiar y pegar a %s?"</string>
+    <string name="cut_paste_confirm_title">Pegar</string>
+    <string name="cut_paste_confirm_text">"¿Seguro que quieres cortar y pegar a %s?"</string>
+    <string name="delete_confirm_dialog_title">Eliminar</string>
+    <string name="delete_confirm_text">¿Seguro que quieres eliminarlo?</string>
+    <string name="extract_archive_confirm_dialog_title">Extraer</string>
+    <string name="extract_archive_confirm_text">"¿Seguro que quieres extraer el archivo en %s?"</string>
+    <string name="create_archive_confirm_dialog_title">Archivo</string>
+    <string name="create_archive_confirm_text">"¿Seguro que quieres crear y guardar el archivo en %s?"</string>
+    <string name="progress_extract_archive_title">Extrayendo</string>
+    <string name="progress_extract_archive_content">Extrayendo archivos, por favor espere...</string>
+    <string name="extract_archive_success">Archivo extraido exitosamente</string>
+    <string name="extract_archive_failed">Fallo extraccion de archivo</string>
+    <string name="progress_create_archive_title">Archivando</string>
+    <string name="progress_create_archive_content">Comprimiendo archivos, porfavor espere...</string>
+    <string name="create_archive_success">Archivo creado exitosamente</string>
+    <string name="create_archive_failed">Fallo creacion de archivo</string>
+    <string name="can_not_rename_multiple">No se puede renombrar varios archivos simultáneamente.</string>
+    <string name="can_not_details_multiple">No se puede mostrar detalles de múltiples archivos al mismo tiempo.</string>
+    <string name="file_copy_finish">Copiado exitosamente</string>
+    <string name="file_move_finish">Movido exitosamente</string>
+    <string name="file_copy_failed">Fallo copiado</string>
+    <string name="file_move_failed">No se movio archivo</string>
+    <string name="file_favorite_finish">Favorito marcado exitosamente</string>
+    <string name="file_favorite_failed">Fallo marcado de favorito</string>
+    <string name="file_undofavorite_finish">Favorito deshecho exitosamente</string>
+    <string name="file_undofavorite_failed">Fallo deshacer favorito</string>
+    <string name="file_rename_finish">Archivo renombrado exitosamente</string>
+    <string name="file_rename_failed">Fallo renombrado de archivo</string>
+    <string name="search_progress_dialog_title">Buscando</string>
+    <string name="search_progress_dialog_message">Buscando archivo</string>
+    <string name="search_complete">Busqueda completa</string>
+    <string name="file_delete_finish">Eliminado exitosamente</string>
+    <string name="file_delete_failed">Fallo eliminacion</string>
+    <string name="changelog_dialog_title">Lista de cambios</string>
+    <string name="version_label">Version</string>
+    <string name="developer_label">Desarrollador</string>
+    <string name="website_label">Sitio web</string>
+    <string name="review_label">Revision</string>
+    <string name="email_label">Email</string>
+    <string name="github_label">Github</string>
+    <string name="help_write_fail_question">No se puede copiar/crear/borrar archivos en la tarjeta SD</string>
+    <string name="help_write_fail_answer">Google ha restringido aplicaciones de terceros para escribir en el dispositivo de almacenamiento externo secundario, excepto en sus aplicaciones especificas, mientras que no existe esta restricción en el caso de algunas ROMs personalizadas.</string>
+    <string name="send_us_email">Envíenos un email para contar los problemas que encontro en la aplicacion y sugerencias o simplemente saludar.</string>
+    <string name="report_bug">Informar de un problema o solicitar una funcion.</string>
+    <string name="good_review_request">Valoranos con 5 estrellas</string>
+    <string name="hidden_file_label">Archivo oculto</string>
+    <string name="no_media_label">.Nomedia</string>
+    <string name="hidden_file_description">"Mostrar archivos ocultos y directorios que comiencen con \'.\'"</string>
+    <string name="no_media_description">Activar escaneo de directorios especificos en android con un  archivo .nomedia</string>
+    <string name="translation_label">Traduccion</string>
+    <string name="translation_summary">%1$d lenguajes soportados gracias a %2$d contribuyentes</string>
+    <string name="translation_contribution_dialog_title">Contribuyentes</string>
+    <string name="thanks_to_contributor">Gracias a nuestros contribuyentes</string>
+</resources>

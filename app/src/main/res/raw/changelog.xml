@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="false">
 
+    <changelogversion versionName="1.1.0" changeDate="Mar 24, 2013">
+        <changelogtext>Root explorer added for rooted device</changelogtext>
+        <changelogtext>Fix problems in folder pasting</changelogtext>
+        <changelogtext>Add support for Spanish language</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="1.0.9.1" changeDate="Mar 24, 2013">
-        <changelogtext>[Notice] Root explorer will be in next edition</changelogtext>
         <changelogtext>Add support for Turkish and Italian languages</changelogtext>
         <changelogtext>Fix 2 crash bugs</changelogtext>
     </changelogversion>

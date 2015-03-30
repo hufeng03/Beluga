@@ -290,10 +290,10 @@ public class BelugaDialogFragment extends DialogFragment{
         Dialog dialog = null;
 		switch(mDialogId)
 		{
-<<<<<<< HEAD
         case TRANSLATION_CONTRIBUTION_DIALOG: {
             dialog = buildTranslationContributionDialog();
-=======
+            break;
+        }
         case ROOT_FAILURE_DIALOG: {
             View view = View.inflate(getActivity(), R.layout.beluga_root_failure_dialog, null);
             final TextView content = (TextView)view.findViewById(R.id.root_failure_dialog_content);
@@ -305,7 +305,6 @@ public class BelugaDialogFragment extends DialogFragment{
                     .setCancelable(false)
                     .setCancelable(false)
                     .create();
->>>>>>> RootExplorer
             break;
         }
         case CHANGE_LOG_DIALOG: {

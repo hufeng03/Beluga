@@ -92,11 +92,11 @@ public class BelugaRootManager {
         rootSession.addCommand(new String[]{"id", "mount -o remount,rw /"}, 0, new Shell.OnCommandResultListener(){
             @Override
             public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                if (exitCode < 0) {
-                    Toast.makeText(FileManager.getAppContext(), "Error opening root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(FileManager.getAppContext(), "Success opening root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                }
+//                if (exitCode < 0) {
+//                    Toast.makeText(FileManager.getAppContext(), "Error opening root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(FileManager.getAppContext(), "Success opening root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                }
                 for (String line : output) {
                     Log.i(TAG, line);
                 }
@@ -128,11 +128,11 @@ public class BelugaRootManager {
             rootSession.addCommand("ls -a '"+path+"'", 0, new Shell.OnCommandResultListener() {
                 @Override
                 public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                    if (exitCode < 0) {
-                        Toast.makeText(FileManager.getAppContext(), "Error copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(FileManager.getAppContext(), "Success copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    }
+//                    if (exitCode < 0) {
+//                        Toast.makeText(FileManager.getAppContext(), "Error copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(FileManager.getAppContext(), "Success copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    }
                     for (String line : output) {
                         Log.i(TAG, line);
                         result.add(line);
@@ -152,26 +152,18 @@ public class BelugaRootManager {
             rootSession.addCommand("ls -al '"+path+"'", 0, new Shell.OnCommandResultListener() {
                 @Override
                 public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                    if (exitCode < 0) {
-                        Toast.makeText(FileManager.getAppContext(), "Error copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(FileManager.getAppContext(), "Success copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    }
+//                    if (exitCode < 0) {
+//                        Toast.makeText(FileManager.getAppContext(), "Error list in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(FileManager.getAppContext(), "Success copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    }
                     for (String line : output) {
                         Log.i(TAG, line);
                         result.add(line);
-//                        String[] elements = line.split("\\s+");
-//                        StringBuilder builder = new StringBuilder();
-//                        for (String element:elements) {
-//                            builder.append(element).append("|");
-//                        }
-//                        Log.i(TAG, builder.toString());
-
                     }
                 }
             });
             rootSession.waitForIdle();
-            //return result.toArray(new String[result.size()]);
             return result.toArray(new String[result.size()]);
         }
     }
@@ -195,11 +187,11 @@ public class BelugaRootManager {
             rootSession.addCommand(commands, 0, new Shell.OnCommandResultListener() {
                 @Override
                 public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                    if (exitCode < 0) {
-                        Toast.makeText(FileManager.getAppContext(), "Error copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(FileManager.getAppContext(), "Success copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    }
+//                    if (exitCode < 0) {
+//                        Toast.makeText(FileManager.getAppContext(), "Error copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(FileManager.getAppContext(), "Success copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    }
                     for (String line : output) {
                         Log.i(TAG, line);
                     }
@@ -228,11 +220,11 @@ public class BelugaRootManager {
             rootSession.addCommand(commands, 0, new Shell.OnCommandResultListener() {
                 @Override
                 public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                    if (exitCode < 0) {
-                        Toast.makeText(FileManager.getAppContext(), "Error copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(FileManager.getAppContext(), "Success copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    }
+//                    if (exitCode < 0) {
+//                        Toast.makeText(FileManager.getAppContext(), "Error copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(FileManager.getAppContext(), "Success copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    }
                     for (String line : output) {
                         Log.i(TAG, line);
                     }
@@ -261,11 +253,11 @@ public class BelugaRootManager {
             rootSession.addCommand(commands, 0, new Shell.OnCommandResultListener() {
                 @Override
                 public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                    if (exitCode < 0) {
-                        Toast.makeText(FileManager.getAppContext(), "Error copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(FileManager.getAppContext(), "Success copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    }
+//                    if (exitCode < 0) {
+//                        Toast.makeText(FileManager.getAppContext(), "Error copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(FileManager.getAppContext(), "Success copy in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    }
                     for (String line : output) {
                         Log.i(TAG, line);
                     }
@@ -292,11 +284,11 @@ public class BelugaRootManager {
             rootSession.addCommand(commands, 0, new Shell.OnCommandResultListener() {
                 @Override
                 public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                    if (exitCode < 0) {
-                        Toast.makeText(FileManager.getAppContext(), "Error rename in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(FileManager.getAppContext(), "Success rename in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    }
+//                    if (exitCode < 0) {
+//                        Toast.makeText(FileManager.getAppContext(), "Error rename in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(FileManager.getAppContext(), "Success rename in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    }
                     for (String line : output) {
                         Log.i(TAG, line);
                     }
@@ -313,11 +305,11 @@ public class BelugaRootManager {
             rootSession.addCommand(BelugaRootHelper.commandForCreateFolder(path), 0, new Shell.OnCommandResultListener() {
                 @Override
                 public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                    if (exitCode < 0) {
-                        Toast.makeText(FileManager.getAppContext(), "Error mkdir in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(FileManager.getAppContext(), "Success mkdir in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    }
+//                    if (exitCode < 0) {
+//                        Toast.makeText(FileManager.getAppContext(), "Error mkdir in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(FileManager.getAppContext(), "Success mkdir in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    }
                     for (String line : output) {
                         Log.i(TAG, line);
                     }
@@ -338,11 +330,11 @@ public class BelugaRootManager {
             rootSession.addCommand(commands, 0, new Shell.OnCommandResultListener() {
                 @Override
                 public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                    if (exitCode < 0) {
-                        Toast.makeText(FileManager.getAppContext(), "Error deleting in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(FileManager.getAppContext(), "Success deleting in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    }
+//                    if (exitCode < 0) {
+//                        Toast.makeText(FileManager.getAppContext(), "Error deleting in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(FileManager.getAppContext(), "Success deleting in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    }
                     for (String line : output) {
                         Log.i(TAG, line);
                     }
@@ -359,11 +351,11 @@ public class BelugaRootManager {
             rootSession.addCommand(commands, 0, new Shell.OnCommandResultListener() {
                 @Override
                 public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                    if (exitCode < 0) {
-                        Toast.makeText(FileManager.getAppContext(), "Error executing in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(FileManager.getAppContext(), "Success executing in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
-                    }
+//                    if (exitCode < 0) {
+//                        Toast.makeText(FileManager.getAppContext(), "Error executing in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(FileManager.getAppContext(), "Success executing in root shell: exitCode " + exitCode, Toast.LENGTH_SHORT).show();
+//                    }
                     for (String line : output) {
                         Log.i(TAG, line);
                     }
