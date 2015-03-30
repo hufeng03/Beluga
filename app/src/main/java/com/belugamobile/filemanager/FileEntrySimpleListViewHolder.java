@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.helper.BelugaHighlightHelper;
-import com.hufeng.playimage.BelugaLazyLoadImageView;
+import com.belugamobile.playimage.BelugaLazyLoadImageView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

@@ -101,7 +101,7 @@ public class DownloadListLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
                 }
             }
 
-            Collections.sort(entries, BelugaSortHelper.getComparator(getContext(), FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD));
+            Collections.sort(entries, BelugaSortHelper.getComparator(FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD));
         }
         return entries;
     }

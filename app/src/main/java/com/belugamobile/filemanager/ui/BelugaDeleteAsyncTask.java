@@ -55,25 +55,68 @@ public class BelugaDeleteAsyncTask extends BelugaActionAsyncTask {
 
     private boolean deleteFileEntryOneByOne() {
         boolean result = true;
-        List<BelugaFileEntry> failed = new ArrayList<BelugaFileEntry>();
-        for (BelugaFileEntry entry : mFileEntries) {
+        List<BelugaFileEntry> allFailed = new ArrayList<BelugaFileEntry>();
+        List<BelugaFileEntry> originalFailed = new ArrayList<BelugaFileEntry>();
+        for (BelugaFileEntry entry : mOriginalEntries) {
             if (isCancelled()) {
                 mDeleteMediaStoreHelper.updateRecords();
                 return false;
             }
+            if (!deleteEntry(entry, allFailed)) {
+                originalFailed.add(entry);
+            }
+        }
+
+        if (!isCancelled() && originalFailed.size() > 0) {
+            BelugaRootManager.getInstance().deleteAsRoot(originalFailed);
+            BelugaRootManager.getInstance().waitForIdle();
+            result = true;
+            for (BelugaFileEntry entry : allFailed) {
+                if (entry.checkExistance()) {
+                    result = false;
+                } else {
+                    mDeleteMediaStoreHelper.addRecord(entry.path);
+                    BelugaProviderHelper.deleteInBelugaDatabase(mContext, entry.path);
+                    publishActionProgress(entry);
+                }
+            }
+        }
+        mDeleteMediaStoreHelper.updateRecords();
+        return result;
+    }
+
+    private boolean deleteEntry(BelugaFileEntry entry, List<BelugaFileEntry> failed) {
+        if (entry.isDirectory) {
+            BelugaFileEntry[] children = entry.listFiles();
+            if (children != null) {
+                for (BelugaFileEntry child : children) {
+                    if (isCancelled()) {
+                        return false;
+                    }
+                    deleteEntry(child, failed);
+                }
+            }
+            // delete empty folder
             if (entry.delete()) {
                 mDeleteMediaStoreHelper.addRecord(entry.path);
                 BelugaProviderHelper.deleteInBelugaDatabase(mContext, entry.path);
                 publishActionProgress(entry);
+                return true;
             } else {
                 failed.add(entry);
+                return false;
+            }
+        } else {
+            if (entry.delete()) {
+                mDeleteMediaStoreHelper.addRecord(entry.path);
+                BelugaProviderHelper.deleteInBelugaDatabase(mContext, entry.path);
+                publishActionProgress(entry);
+                return true;
+            } else {
+                failed.add(entry);
+                return false;
             }
         }
-        if (failed.size() > 0) {
-            result = BelugaRootManager.getInstance().deleteAsRoot(failed);
-        }
-        mDeleteMediaStoreHelper.updateRecords();
-        return result;
     }
 
 };

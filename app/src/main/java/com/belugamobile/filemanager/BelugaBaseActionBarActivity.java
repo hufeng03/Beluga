@@ -1,11 +1,14 @@
 package com.belugamobile.filemanager;
 
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 
 import com.belugamobile.filemanager.receiver.MountReceiver;
+import com.belugamobile.filemanager.root.BelugaRootManager;
 import com.belugamobile.filemanager.utils.LogUtil;
 
 public abstract class BelugaBaseActionBarActivity extends ActionBarActivity {
@@ -37,6 +40,10 @@ public abstract class BelugaBaseActionBarActivity extends ActionBarActivity {
 
 
         mBelugaMountReceiver = BelugaMountReceiver.registerMountReceiver(this);
+
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PreferenceKeys.ROOT_EXPLORER_ENABLE, false)) {
+            BelugaRootManager.getInstance().init(this);
+        }
 
 	}
 

@@ -15,7 +15,7 @@ import com.belugamobile.filemanager.helper.BelugaTimeHelper;
 import com.belugamobile.filemanager.helper.FileCategoryHelper;
 import com.belugamobile.filemanager.ui.BelugaActionController;
 import com.belugamobile.filemanager.utils.SizeUtil;
-import com.hufeng.playimage.BelugaLazyLoadImageView;
+import com.belugamobile.playimage.BelugaLazyLoadImageView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -58,7 +58,7 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
         this.entry = (BelugaFileEntry)entry;
 //        name.setText(this.entry.getName());
         BelugaHighlightHelper.setTextWithHighlight(name, this.entry.getName(), highlightString);
-        icon.requestDisplayImage(this.entry.path);
+        icon.requestDisplayImage(this.entry.path, this.entry.isDirectory);
         if (this.entry.isDirectory) {
             int childCount = this.entry.childFileCount + this.entry.childFolderCount;
             if (childCount == 0) {

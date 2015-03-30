@@ -1,6 +1,7 @@
 package com.belugamobile.filemanager.ui;
 
 import android.content.Context;
+import android.text.format.Time;
 
 import com.belugamobile.filemanager.R;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
@@ -9,6 +10,9 @@ import com.belugamobile.filemanager.helper.MultiMediaStoreHelper;
 import com.belugamobile.filemanager.root.BelugaRootManager;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Feng Hu on 15-03-01.
@@ -66,25 +70,32 @@ public class BelugaRenameAsyncTask extends BelugaActionAsyncTask {
 
     private boolean renameFileEntry() {
         boolean result = true;
-        BelugaFileEntry entry = mOriginalEntries.get(0);
+        BelugaFileEntry entry = mOriginalEntries.first();
+        List<BelugaFileEntry> allEntries = new ArrayList<BelugaFileEntry>();
+        getAllEntriesRecursively(allEntries, entry);
         File newFile = new File(entry.parentPath, mNewName);
         newFile = checkFileNameAndRename(newFile);
-        if(entry.getFile().renameTo(newFile)) {
+        result = entry.getFile().renameTo(newFile);
+        if (!result) {
+            BelugaRootManager.getInstance().renameFileAsRoot(entry, newFile.getAbsolutePath());
+            BelugaRootManager.getInstance().waitForIdle();
+            result = newFile.exists();
+        }
+        if(result) {
+            //Update MediaStore
             if (entry.isDirectory) {
                 mMediaProviderHelper.updateInMediaStore(entry.path, newFile.getAbsolutePath());
-                for (BelugaFileEntry oldEntry : mFileEntries) {
-                    if (oldEntry.category > 0) {
-                        String newEntryPath = oldEntry.path.replace(entry.path, newFile.getAbsolutePath());
-                        BelugaProviderHelper.updateInBelugaDatabase(mContext, oldEntry.path, newEntryPath);
-                    }
-                }
             } else {
                 mDeleteMediaStoreHelper.addRecord(entry.path);
                 mPasteMediaStoreHelper.addRecord(newFile.getAbsolutePath());
-                BelugaProviderHelper.updateInBelugaDatabase(mContext, entry.path, newFile.getAbsolutePath());
             }
-        } else {
-            result = BelugaRootManager.getInstance().renameFileAsRoot(entry.path, newFile.getAbsolutePath());
+            //Update BelugaStore
+            for (BelugaFileEntry oldEntry : allEntries) {
+                if (oldEntry.category > 0) {
+                    String newEntryPath = oldEntry.path.replace(entry.path, newFile.getAbsolutePath());
+                    BelugaProviderHelper.updateInBelugaDatabase(mContext, oldEntry.path, newEntryPath);
+                }
+            }
         }
         mPasteMediaStoreHelper.updateRecords();
         mDeleteMediaStoreHelper.updateRecords();

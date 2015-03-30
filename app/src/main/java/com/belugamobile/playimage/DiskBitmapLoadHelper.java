@@ -1,4 +1,4 @@
-package com.hufeng.playimage;
+package com.belugamobile.playimage;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

@@ -78,7 +78,7 @@ public class IconLoaderHelper {
             if (i != null) {
                 return i.intValue();
             } else {
-                int type = FileCategoryHelper.getFileCategoryForFile(path);
+                int type = FileCategoryHelper.getFileCategoryForPath(path);
                 int id;
                 switch(type)
                 {

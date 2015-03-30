@@ -68,7 +68,7 @@ public class AppListLoader extends AsyncTaskLoader<List<AppEntry>> {
             }
         }
         // Sort the list.
-        BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(getContext(), FileCategoryHelper.CATEGORY_TYPE_APP);
+        BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(FileCategoryHelper.CATEGORY_TYPE_APP);
         Collections.sort(entries, BelugaSortHelper.getComparator(sorter.field, sorter.order));
 
         // Done!

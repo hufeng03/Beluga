@@ -68,10 +68,10 @@ public class BelugaExtractArchiveAsyncTask extends BelugaActionAsyncTask {
         byte[] buffer = new byte[BUFFER_SIZE];
         boolean createTopFolder = false;
         File dstFolder = new File(mFolderPath);
-        if (dstFolder.listFiles().length > 0 || mFileEntries.size() > 0) {
+        if (dstFolder.listFiles().length > 0 || mOriginalEntries.size() > 0) {
             createTopFolder = true;
         }
-        for (BelugaFileEntry entry : mFileEntries) {
+        for (BelugaFileEntry entry : mOriginalEntries) {
             if(isCancelled()) {
                 return false;
             }

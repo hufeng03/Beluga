@@ -83,7 +83,7 @@ public class BelugaProviderHelper {
     }
 
     public static void updateInBelugaDatabase(Context context, String oldPath, String newPath) {
-        int category = FileCategoryHelper.getFileCategoryForFile(newPath);
+        int category = FileCategoryHelper.getFileCategoryForPath(newPath);
         if (category == 0) {
             //Something unexpected happened
             return;
@@ -145,7 +145,7 @@ public class BelugaProviderHelper {
     }
 
     public static void insertInBelugaDatabase(Context context, String path) {
-        int category = FileCategoryHelper.getFileCategoryForFile(path);
+        int category = FileCategoryHelper.getFileCategoryForPath(path);
         if (category == 0) {
             //Something unexpected happened
             return;
@@ -175,7 +175,7 @@ public class BelugaProviderHelper {
     }
 
     public static void deleteInBelugaDatabase(Context context, String path) {
-        int category = FileCategoryHelper.getFileCategoryForFile(path);
+        int category = FileCategoryHelper.getFileCategoryForPath(path);
         if (category == 0) {
             //Something unexpected happened
             return;

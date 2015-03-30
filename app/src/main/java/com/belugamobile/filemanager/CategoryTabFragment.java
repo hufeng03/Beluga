@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -88,6 +89,15 @@ public class CategoryTabFragment extends FileTabFragment {
 		super.onPause();
         BusProvider.getInstance().unregister(this);
 	}
+
+    @Subscribe
+    public void onTabLongPress(TabLongPressEvent event) {
+        if (getUserVisibleHint() && event != null) {
+            if (event.name.equalsIgnoreCase(getString(R.string.tab_category))) {
+                Toast.makeText(getActivity(), "test_category", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     @Subscribe
     public void onCategorySelected(CategorySelectEvent event) {

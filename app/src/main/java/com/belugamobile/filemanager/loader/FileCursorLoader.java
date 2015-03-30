@@ -61,7 +61,7 @@ public class FileCursorLoader extends CursorLoader {
         }
 
         if (baseUri != null) {
-            BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(context, category);
+            BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(category);
             String sort_constraint = null;
             switch (sorter.field) {
                 case NAME:
@@ -129,7 +129,7 @@ public class FileCursorLoader extends CursorLoader {
     }
 
     private void refreshSortOrder() {
-        BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(getContext(), mCategory);
+        BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(mCategory);
         String sort_constraint = null;
         switch (sorter.field) {
             case NAME:

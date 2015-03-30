@@ -72,7 +72,11 @@ public class BelugaArrayRecyclerAdapter<Entry extends BelugaEntry>
     }
 
     public void add(Entry newEntry, int pos) {
-        mEntries.add(pos, newEntry);
+        if (pos < mEntries.size()) {
+            mEntries.add(pos, newEntry);
+        } else {
+            mEntries.add(newEntry);
+        }
         notifyItemInserted(pos);
     }
 
@@ -85,8 +89,6 @@ public class BelugaArrayRecyclerAdapter<Entry extends BelugaEntry>
     }
 
     public void setData(final List<Entry> entries) {
-//        clear();
-//        addAll(entries);
         mEntries = entries;
         notifyDataSetChanged();
     }

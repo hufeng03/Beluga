@@ -79,6 +79,7 @@ public class BelugaDialogFragment extends DialogFragment{
     public static final int PROGRESS_DIALOG = 11;
 
     public static final int CHANGE_LOG_DIALOG = 20;
+    public static final int ROOT_FAILURE_DIALOG = 21;
 
     public static abstract interface OnDialogDoneInterface {
         public abstract void onDialogOK(int dialogId, String folder, BelugaFileEntry... entries);
@@ -225,6 +226,13 @@ public class BelugaDialogFragment extends DialogFragment{
         return dialog;
 	}
 
+    public static DialogFragment showRootFailureDialog(FragmentActivity activity) {
+        Bundle data = new Bundle();
+        DialogFragment dialog = BelugaDialogFragment.newInstance(ROOT_FAILURE_DIALOG, data);
+        dialog.show(activity.getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
+        return dialog;
+    }
+
 
 
     @Override
@@ -271,6 +279,19 @@ public class BelugaDialogFragment extends DialogFragment{
         Dialog dialog = null;
 		switch(mDialogId)
 		{
+        case ROOT_FAILURE_DIALOG: {
+            View view = View.inflate(getActivity(), R.layout.beluga_root_failure_dialog, null);
+            final TextView content = (TextView)view.findViewById(R.id.root_failure_dialog_content);
+            content.setText(R.string.root_failure_dialog_content);
+            dialog = new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.root_failure_dialog_title)
+                    .setView(view)
+                    .setPositiveButton(android.R.string.ok,null)
+                    .setCancelable(false)
+                    .setCancelable(false)
+                    .create();
+            break;
+        }
         case CHANGE_LOG_DIALOG: {
             View view = View.inflate(getActivity(), R.layout.changelog_dialog, null);
             dialog = new AlertDialog.Builder(getActivity())
@@ -292,7 +313,7 @@ public class BelugaDialogFragment extends DialogFragment{
             if (category == FileCategoryHelper.CATEGORY_TYPE_APK || category == FileCategoryHelper.CATEGORY_TYPE_APP) {
                 sortByExtension.setVisibility(View.GONE);
             }
-            BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(getActivity(), category);
+            BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(category);
             switch (sorter.field) {
                 case DATE:
                     sortByDate.setChecked(true);
@@ -313,19 +334,19 @@ public class BelugaDialogFragment extends DialogFragment{
                 public void onClick(View v) {
                     switch (v.getId()) {
                         case R.id.radio_sort_by_date:
-                            BelugaSortHelper.saveFileSorter(v.getContext(), category,
+                            BelugaSortHelper.saveFileSorter(category,
                                     new BelugaSortHelper.SORTER(BelugaSortHelper.SORT_FIELD.DATE, BelugaSortHelper.SORT_ORDER.DESC));
                             break;
                         case R.id.radio_sort_by_name:
-                            BelugaSortHelper.saveFileSorter(v.getContext(), category,
+                            BelugaSortHelper.saveFileSorter(category,
                                     new BelugaSortHelper.SORTER(BelugaSortHelper.SORT_FIELD.NAME, BelugaSortHelper.SORT_ORDER.ASC));
                             break;
                         case R.id.radio_sort_by_size:
-                            BelugaSortHelper.saveFileSorter(v.getContext(), category,
+                            BelugaSortHelper.saveFileSorter(category,
                                     new BelugaSortHelper.SORTER(BelugaSortHelper.SORT_FIELD.SIZE, BelugaSortHelper.SORT_ORDER.DESC));
                             break;
                         case R.id.radio_sort_by_extension:
-                            BelugaSortHelper.saveFileSorter(v.getContext(), category,
+                            BelugaSortHelper.saveFileSorter(category,
                                     new BelugaSortHelper.SORTER(BelugaSortHelper.SORT_FIELD.EXTENSION, BelugaSortHelper.SORT_ORDER.ASC));
                             break;
                     }

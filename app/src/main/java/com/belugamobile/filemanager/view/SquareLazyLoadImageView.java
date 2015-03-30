@@ -3,7 +3,7 @@ package com.belugamobile.filemanager.view;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.hufeng.playimage.BelugaLazyLoadImageView;
+import com.belugamobile.playimage.BelugaLazyLoadImageView;
 
 /**
  * Created by feng on 14-2-10.

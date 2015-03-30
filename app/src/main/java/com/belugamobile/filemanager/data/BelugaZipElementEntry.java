@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.belugamobile.filemanager.BelugaEntry;
 import com.belugamobile.filemanager.helper.FileCategoryHelper;
+import com.belugamobile.filemanager.utils.MimeUtil;
 
 import java.io.File;
 import java.util.zip.ZipEntry;
@@ -42,10 +43,11 @@ public class BelugaZipElementEntry extends BelugaEntry{
         this.size = size;
         this.time = time;
         this.isDirectory = isDirectory;
+        this.hidden = name.startsWith(".");
+        String extension = MimeUtil.getExtension(this.path);
+        this.category = FileCategoryHelper.getFileCategoryForExtension(extension);
+        this.type = FileCategoryHelper.getFileTypeForExtension(extension);
 
-        category = FileCategoryHelper.getFileCategoryForFile(path);
-        type = FileCategoryHelper.getFileTypeForFile(path);
-        hidden = name.startsWith(".");
     }
 
     @Override

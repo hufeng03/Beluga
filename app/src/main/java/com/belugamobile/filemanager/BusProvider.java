@@ -1,6 +1,5 @@
 package com.belugamobile.filemanager;
 
-import com.hufeng.MainThreadBus;
 import com.squareup.otto.Bus;
 
 /**

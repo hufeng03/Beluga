@@ -129,4 +129,8 @@
     <string name="file_delete_finish">Delete success</string>
     <string name="file_delete_failed">Delete failed</string>
     <string name="changelog_dialog_title">Change Log</string>
+    <string name="progress_create_folder_title">Create Folder</string>
+    <string name="progress_create_folder_content">Creating folder, please wait...</string>
+    <string name="root_failure_dialog_title">Root explorer</string>
+    <string name="root_failure_dialog_content">Beluga has been denied for root permission.\n\nIf your device hasn\'t been rooted, please google how to root it.\n\nOtherwise, please check Root Management App (SuperSU, .ect) and try to grant root permission to Beluga from there.</string>
 </resources>

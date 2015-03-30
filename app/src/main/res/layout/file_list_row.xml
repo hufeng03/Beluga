@@ -5,7 +5,7 @@
     android:background="@drawable/list_selector">
 
     <!--the icon should be 32dp*32dp-->
-    <com.hufeng.playimage.BelugaLazyLoadImageView
+    <com.belugamobile.playimage.BelugaLazyLoadImageView
         android:id="@+id/icon"
         android:layout_width="48dp"
         android:layout_height="48dp"

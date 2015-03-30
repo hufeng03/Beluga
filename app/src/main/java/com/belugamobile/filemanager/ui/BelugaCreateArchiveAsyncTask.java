@@ -67,7 +67,7 @@ public class BelugaCreateArchiveAsyncTask extends BelugaActionAsyncTask {
         File dstFolder = new File(mFolderPath);
         String zipName = null;
         if (mOriginalEntries.size() == 1) {
-            BelugaFileEntry entry = mOriginalEntries.get(0);
+            BelugaFileEntry entry = mOriginalEntries.first();
             zipName = entry.name;
             if (!TextUtils.isEmpty(entry.extension)) {
                 int idx = zipName.lastIndexOf(entry.extension);

@@ -19,7 +19,7 @@ public class SortPreferenceReceiver implements SharedPreferences.OnSharedPrefere
     public SortPreferenceReceiver(Loader loader, int category) {
         mLoader = loader;
         mCategory = category;
-        mSorter = BelugaSortHelper.getFileSorter(loader.getContext(), category);
+        mSorter = BelugaSortHelper.getFileSorter(category);
         mSharedPreference = loader.getContext().getSharedPreferences(BelugaSortHelper.SORT_PREFERENCE_NAME, Context.MODE_PRIVATE);
         mSharedPreference.registerOnSharedPreferenceChangeListener(this);
     }
@@ -30,7 +30,7 @@ public class SortPreferenceReceiver implements SharedPreferences.OnSharedPrefere
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(mLoader.getContext(), mCategory);
+        BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(mCategory);
         if (!sorter.equals(mSorter)) {
             mSorter = sorter;
             mLoader.onContentChanged();

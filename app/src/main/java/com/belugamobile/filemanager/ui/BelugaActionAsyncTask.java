@@ -3,6 +3,7 @@ package com.belugamobile.filemanager.ui;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.belugamobile.filemanager.data.BelugaFileEntry;
@@ -17,7 +18,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * Created by feng on 14-2-10.
@@ -31,9 +35,9 @@ public abstract class BelugaActionAsyncTask extends AsyncTask<BelugaFileEntry, B
     protected String mFolderPath;
     protected MediaStoreHelper mMediaProviderHelper;
 
-    protected List<BelugaFileEntry> mOriginalEntries = new ArrayList<BelugaFileEntry>();
+    protected TreeSet<BelugaFileEntry> mOriginalEntries = new TreeSet<BelugaFileEntry>(new BelugaAsyncTaskEntryComparator());
 
-    protected List<BelugaFileEntry> mFileEntries = new ArrayList<BelugaFileEntry>();
+//    protected List<BelugaFileEntry> mFileEntries = new ArrayList<BelugaFileEntry>();
 
     protected List<BelugaFileEntry> mUnReportedEntries = new ArrayList<BelugaFileEntry>();
 
@@ -72,7 +76,8 @@ public abstract class BelugaActionAsyncTask extends AsyncTask<BelugaFileEntry, B
     @Override
     protected Boolean doInBackground(BelugaFileEntry... params) {
         mOriginalEntries.addAll(Arrays.asList(params));
-        getAllActionFileEntryList(mFileEntries, params);
+//        getAllActionFileEntryList(mFileEntries, params);
+        removeChildEntry();
         mStartOperationTime = System.currentTimeMillis();
         return run();
     }
@@ -109,6 +114,26 @@ public abstract class BelugaActionAsyncTask extends AsyncTask<BelugaFileEntry, B
 
     }
 
+    private void removeChildEntry() {
+        Iterator<BelugaFileEntry> iterator = mOriginalEntries.iterator();
+        String folderPath = null;
+        while (iterator.hasNext()) {
+            BelugaFileEntry entry = iterator.next();
+            if (!TextUtils.isEmpty(folderPath)
+                && entry.path.startsWith(folderPath)) {
+                    // It should be removed
+                iterator.remove();
+                continue;
+            }
+            if (entry.isDirectory) {
+                folderPath = entry.path;
+                if (!folderPath.endsWith("/")) {
+                    folderPath+="/";
+                }
+            }
+        }
+    }
+
     public void executeParallel(BelugaFileEntry... params) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             execute(params);
@@ -117,18 +142,18 @@ public abstract class BelugaActionAsyncTask extends AsyncTask<BelugaFileEntry, B
         }
     }
 
-    protected boolean getAllActionFileEntryList(List<BelugaFileEntry> entryList, BelugaFileEntry... entries) {
+    protected void getAllEntriesRecursively(List<BelugaFileEntry> entryList, BelugaFileEntry... entries) {
         if (entries != null) {
             for (BelugaFileEntry entry : entries) {
                 if (entry.isDirectory) {
-                    getAllActionFileEntryList(entryList, entry.listFiles());
+                    getAllEntriesRecursively(entryList, entry.listFiles());
                 }
                 entryList.add(entry);
             }
         }
         // Sort by name, desc to make sure that child files are always handled before their parent folder
-        Collections.sort(entryList, BelugaSortHelper.getComparator(BelugaSortHelper.SORT_FIELD.IDENTITY, BelugaSortHelper.SORT_ORDER.DESC));
-        return false;
+        // Collections.sort(entryList, BelugaSortHelper.getComparator(BelugaSortHelper.SORT_FIELD.IDENTITY, BelugaSortHelper.SORT_ORDER.DESC));
+        return;
     }
 
 
@@ -205,7 +230,6 @@ public abstract class BelugaActionAsyncTask extends AsyncTask<BelugaFileEntry, B
                 if (out != null) {
                     out.close();
                 }
-                //Tell MediaStore and BelugaProvider
             } catch (IOException ioException) {
                 Log.e(TAG, "copyFile,io exception 2!");
                 ioException.printStackTrace();
@@ -213,8 +237,19 @@ public abstract class BelugaActionAsyncTask extends AsyncTask<BelugaFileEntry, B
             } finally {
                 Log.d(TAG, "copyFile,update 100%.");
             }
+            // If copy is failed, we should delete half-completed dest file
+            if (!ret) {
+                dstFile.delete();
+            }
         }
 
         return ret;
+    }
+}
+
+class BelugaAsyncTaskEntryComparator implements Comparator<BelugaFileEntry> {
+    @Override
+    public int compare(BelugaFileEntry lhs, BelugaFileEntry rhs) {
+        return lhs.getIdentity().compareTo(rhs.getIdentity());
     }
 }

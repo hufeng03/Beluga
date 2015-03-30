@@ -15,7 +15,7 @@ import com.belugamobile.filemanager.R;
 import com.belugamobile.filemanager.helper.BelugaHighlightHelper;
 import com.belugamobile.filemanager.helper.BelugaTimeHelper;
 import com.belugamobile.filemanager.utils.SizeUtil;
-import com.hufeng.playimage.BelugaLazyLoadImageView;
+import com.belugamobile.playimage.BelugaLazyLoadImageView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

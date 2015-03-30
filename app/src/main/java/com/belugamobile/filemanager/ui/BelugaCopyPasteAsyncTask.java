@@ -1,13 +1,25 @@
 package com.belugamobile.filemanager.ui;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.belugamobile.filemanager.R;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.helper.BelugaProviderHelper;
+import com.belugamobile.filemanager.helper.FileNameHelper;
 import com.belugamobile.filemanager.helper.MultiMediaStoreHelper;
+import com.belugamobile.filemanager.root.BelugaRootHelper;
+import com.belugamobile.filemanager.root.BelugaRootManager;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by feng on 14-2-15.
@@ -56,37 +68,122 @@ public class BelugaCopyPasteAsyncTask extends BelugaActionAsyncTask {
     private boolean copyFileEntryOneByOne() {
         boolean result = true;
         byte[] buffer = new byte[BUFFER_SIZE];
-        for(BelugaFileEntry entry : mFileEntries) {
-            if(isCancelled()) {
+        List<BelugaFileEntry> failedCopyEntries = new ArrayList<BelugaFileEntry>();
+        List<String> failedNewPaths = new ArrayList<String>();
+//        List<BelugaFileEntry> originalFailed = new ArrayList<BelugaFileEntry>();
+        Map<BelugaFileEntry, String> originalNewNameMap = new HashMap<BelugaFileEntry, String>();
+
+        String[] names = new File(mFolderPath).list();
+        HashSet<String> existingNames = new HashSet<String>();
+        if (names != null && names.length > 0) {
+            existingNames.addAll(Arrays.asList(names));
+        }
+        for (BelugaFileEntry entry : mOriginalEntries) {
+            String candidateNewName = entry.name;
+            while (TextUtils.isEmpty(candidateNewName) && existingNames.contains(candidateNewName)) {
+                candidateNewName = FileNameHelper.generateNextNewName(candidateNewName);
+            }
+            if (!TextUtils.isEmpty(candidateNewName)) {
+                originalNewNameMap.put(entry, candidateNewName);
+                existingNames.add(candidateNewName);
+            }
+        }
+
+        if (isCancelled()) {
+            return false;
+        }
+
+        for(BelugaFileEntry entry : mOriginalEntries) {
+            if (isCancelled()) {
                 mPasteMediaStoreHelper.updateRecords();
                 return false;
             }
-            String name = entry.name;
-            File newFile = new File(mFolderPath, name);
-            newFile = checkFileNameAndRename(newFile);
-            if (newFile == null) {
+
+            String newName = originalNewNameMap.get(entry);
+
+            if (!copyEntry(entry, new File(mFolderPath, newName), buffer, failedCopyEntries, failedNewPaths)) {
                 result = false;
-            } else {
-                if (entry.isDirectory) {
-                    if (newFile.mkdirs() || newFile.isDirectory()) {
-                        mPasteMediaStoreHelper.addRecord(newFile.getAbsolutePath());
-                        publishActionProgress(entry);
-                    } else {
-                        result = false;
+            }
+        }
+
+        if (!isCancelled() /*&& allFailed.size() > 0*/) {
+//            List<BelugaFileEntry> rootCopyEntries = new ArrayList<BelugaFileEntry>();
+//            List<String> rootNewPaths = new ArrayList<String>();
+//
+//            for (BelugaFileEntry entry : originalFailed) {
+//                String newName = originalNewNameMap.get(entry);
+//                File newFile = new File(mFolderPath, newName);
+//                String newPath = newFile.getAbsolutePath();
+//                if (newFile.exists()) {
+//                    // Some child file failed
+//                    String oldPath = entry.path;
+//                    if (!oldPath.endsWith("/")) {
+//                        oldPath += "/";
+//                    }
+//                    for (BelugaFileEntry child : allFailed) {
+//                        if (child.path.startsWith(oldPath)) {
+//                            rootCopyEntries.add(child);
+//                            rootNewPaths.add(new File(newPath, child.parentPath.substring(oldPath.length(), child.parentPath.length())).getAbsolutePath());
+//                        }
+//                    }
+//                } else {
+//                    rootCopyEntries.add(entry);
+//                    rootNewPaths.add(newPath);
+//                }
+//            }
+            BelugaRootManager.getInstance().copyFileAsRoot(failedCopyEntries, failedNewPaths);
+            BelugaRootManager.getInstance().waitForIdle();
+            int i = 0;
+            result = true;
+            for (String newPath : failedNewPaths) {
+                if (new File(newPath).exists()) {
+                    mPasteMediaStoreHelper.addRecord(newPath);
+                    if (!new File(newPath).isDirectory()) {
+                        BelugaProviderHelper.insertInBelugaDatabase(mContext, newPath);
                     }
+                    publishActionProgress(failedCopyEntries.get(i));
                 } else {
-                    if (copyFile(buffer, new File(entry.path), newFile)) {
-                        mPasteMediaStoreHelper.addRecord(newFile.getAbsolutePath());
-                        BelugaProviderHelper.insertInBelugaDatabase(mContext, newFile.getAbsolutePath());
-                        publishActionProgress(entry);
-                    } else {
-                        result = false;
-                    }
+                    result = false;
                 }
+                i++;
             }
         }
         mPasteMediaStoreHelper.updateRecords();
         return result;
+    }
+
+    private boolean copyEntry(BelugaFileEntry entry, File newFile, byte[] buffer, List<BelugaFileEntry> failedEntries, List<String> failedNewPaths) {
+        if (entry.isDirectory) {
+            BelugaFileEntry[] children = entry.listFiles();
+            // Create a new folder
+            if (newFile.mkdirs()) {
+                // Copy child files
+                for (BelugaFileEntry child : children) {
+                    if (isCancelled()) {
+                        return false;
+                    }
+                    copyEntry(child, new File(newFile.getAbsolutePath(), child.name), buffer, failedEntries, failedNewPaths);
+                }
+            } else {
+                failedEntries.add(entry);
+                failedNewPaths.add(newFile.getAbsolutePath());
+                return false;
+            }
+        } else {
+            // Copy
+            if (copyFile(buffer, entry.getFile(), newFile)) {
+                mPasteMediaStoreHelper.addRecord(newFile.getAbsolutePath());
+                BelugaProviderHelper.insertInBelugaDatabase(mContext, newFile.getAbsolutePath());
+                publishActionProgress(entry);
+                return true;
+            } else {
+                failedEntries.add(entry);
+                failedNewPaths.add(newFile.getAbsolutePath());
+                return false;
+            }
+        }
+
+        return true;
     }
 
 //    public boolean copyFileEntry(FileEntry[] entries, String destFolderPath) {

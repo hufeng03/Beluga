@@ -14,14 +14,22 @@ import com.belugamobile.filemanager.SortPreferenceReceiver;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.helper.BelugaSortHelper;
 import com.belugamobile.filemanager.helper.FileCategoryHelper;
+import com.belugamobile.filemanager.mount.MountPointManager;
 import com.belugamobile.filemanager.provider.DataStructures;
+import com.belugamobile.filemanager.root.BelugaRootManager;
 import com.belugamobile.filemanager.utils.LogUtil;
+import com.belugamobile.filemanager.utils.MimeUtil;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A custom Loader that loads all of the installed applications.
@@ -47,30 +55,108 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
     public List<BelugaFileEntry> loadInBackground() {
         LogUtil.i(LOG_TAG, this.hashCode() + " FileListLoader loadinbackground()");
         List<BelugaFileEntry> entries = new ArrayList<BelugaFileEntry>();
-        if (!TextUtils.isEmpty(mRoot) && new File(mRoot).exists() && new File(mRoot).isDirectory()) {
-            String[] files = new File(mRoot).list();
-            if (files != null) {
-                BelugaFileEntry entry;
-                for (String file : files) {
-                    entry = new BelugaFileEntry(mRoot, file);
-                    if (entry.exist) {
+        if (!TextUtils.isEmpty(mRoot)/* && new File(mRoot).exists() && new File(mRoot).isDirectory()*/) {
+            String[] names = new File(mRoot).list();
+            if (names == null || names.length == 0) {
+                String mountPoints = MountPointManager.getInstance().getRealMountPointPath(mRoot);
+                if (TextUtils.isEmpty(mountPoints)) {
+                    names = BelugaRootManager.getInstance().listSync(mRoot);
+                }
+            }
+            if (names != null) {
+                HashSet<String> failedNames = new HashSet<String>();
+                for (String name : names) {
+                    File file = new File(mRoot, name);
+                    if (file.exists()) {
+                        BelugaFileEntry entry = new BelugaFileEntry(file);
                         if (TextUtils.isEmpty(mSearch) || entry.getName().toLowerCase().contains(mSearch.toLowerCase())) {
                             LogUtil.i(LOG_TAG, "add "+file+"!!!!!!!!!!"+entry);
                             entries.add(entry);
                         }
+                    } else {
+                        failedNames.add(name);
                     }
+                }
+                if (failedNames.size() > 0) {
+                    String[] infos = BelugaRootManager.getInstance().infoListSync(mRoot);
+                    if (infos != null) {
+                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
+                        for (String info : infos) {
+                            String[] elements = info.split("\\s");
+                            if (elements.length >= 6) {
+                                String name;
+                                int size = 0;
+                                Date date = null;
+                                if (elements[0].charAt(0) == 'd') {
+                                    name = elements[elements.length-1];
+                                    try {
+                                        date = format.parse(elements[elements.length-3]+" "+elements[elements.length-2]);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                } else if (elements[0].charAt(0) == 'l') {
+                                    name = elements[elements.length-3];
+                                    try {
+                                        date = format.parse(elements[elements.length - 5] + " " + elements[elements.length - 4]);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    name = elements[elements.length-1];
+                                    int idx = 3;
+                                    while (idx < elements.length-1) {
+                                        try {
+                                            size = Integer.parseInt(elements[idx]);
+                                            break;
+                                        }catch (NumberFormatException e) {
+                                            e.printStackTrace();
+                                        }
+                                        idx++;
+                                    }
+                                    try {
+                                        date = format.parse(elements[elements.length - 3] + " " + elements[elements.length - 2]);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                boolean isDirectory = elements[0].charAt(0) == 'd';
+                                boolean isReadable = elements[0].charAt(1) == 'r';
+                                boolean isWritable = elements[0].charAt(2) == 'w';
+
+                                if (!TextUtils.isEmpty(name) && date != null && failedNames.contains(name)) {
+                                    BelugaFileEntry entry = new BelugaFileEntry();
+                                    entry.parentPath = mRoot;
+                                    entry.name = name;
+                                    entry.path = mRoot + "/" + name;
+                                    entry.hidden = name.startsWith(".");
+                                    entry.exist = true;
+                                    entry.extension = MimeUtil.getExtension(name);
+                                    entry.type = FileCategoryHelper.getFileTypeForExtension(entry.extension);
+                                    entry.category = FileCategoryHelper.getFileCategoryForExtension(entry.extension);
+                                    entry.isDirectory = isDirectory;
+                                    entry.isReadable = isReadable;
+                                    entry.isWritable = isWritable;
+                                    entry.lastModified = date.getTime()/1000;
+                                    entry.size = size;
+                                    entries.add(entry);
+                                }
+                            }
+                        }
+                    }
+                    //entries.addAll()
                 }
             }
         } else if (mDirs != null && mDirs.length > 0) {
-                BelugaFileEntry entry;
-                for (String dir : mDirs) {
-                    entry = new BelugaFileEntry(dir);
-                    if (entry.exist) {
-                        if (TextUtils.isEmpty(mSearch) || entry.getName().toLowerCase().contains(mSearch.toLowerCase())) {
-                            entries.add(entry);
-                        }
+            BelugaFileEntry entry;
+            for (String dir : mDirs) {
+                entry = new BelugaFileEntry(dir);
+                if (entry.exist) {
+                    if (TextUtils.isEmpty(mSearch) || entry.getName().toLowerCase().contains(mSearch.toLowerCase())) {
+                        entries.add(entry);
                     }
                 }
+            }
         }
 
         if (entries.size() > 0) {
@@ -105,7 +191,7 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
                 }
             }
             // Sort the list.
-            Collections.sort(entries, BelugaSortHelper.getComparator(getContext(), FileCategoryHelper.CATEGORY_TYPE_UNKNOW));
+            Collections.sort(entries, BelugaSortHelper.getComparator(FileCategoryHelper.CATEGORY_TYPE_UNKNOW));
         }
         return entries;
     }

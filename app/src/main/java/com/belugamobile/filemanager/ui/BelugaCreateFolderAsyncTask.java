@@ -29,34 +29,34 @@ public class BelugaCreateFolderAsyncTask extends BelugaActionAsyncTask {
 
     @Override
     public String getProgressDialogTitle(Context context) {
-        return context.getString(R.string.progress_delete_title);
+        return context.getString(R.string.progress_create_folder_title);
     }
 
     @Override
     public String getProgressDialogContent(Context context) {
-        return context.getString(R.string.progress_delete_content);
+        return context.getString(R.string.progress_create_folder_content);
     }
 
     @Override
     public String getCompleteToastContent(Context context, boolean rst) {
         int toast_info_id;
         if (rst){
-            toast_info_id =  R.string.file_delete_finish;
+            toast_info_id =  R.string.create_folder_success;
         }
         else
         {
-            toast_info_id = R.string.file_delete_failed;
+            toast_info_id = R.string.create_folder_fail;
         }
         return toast_info_id == 0 ? "" : context.getString(toast_info_id);
     }
 
     private boolean createFolder() {
-        boolean result = true;
-
-        result = new File(mFolderPath).mkdirs();
+        boolean result = new File(mFolderPath).mkdirs();
 
         if (!result) {
             BelugaRootManager.getInstance().createFolderAsRoot(mFolderPath);
+            BelugaRootManager.getInstance().waitForIdle();
+            result = new File(mFolderPath).exists() && new File(mFolderPath).isDirectory();
         }
         return result;
     }
