@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 
+import com.belugamobile.filemanager.root.BelugaRootManager;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
@@ -86,6 +87,8 @@ public class FileManager extends Application {
         }
 
         MountPointManager.getInstance().init(this);
+
+//        BelugaRootManager.getInstance().init(this);
 
         UiCallServiceHelper.getInstance().connectService(this);
 	}
@@ -189,6 +192,5 @@ public class FileManager extends Application {
         }
         return mTrackers.get(trackerId);
     }
-
 
 }

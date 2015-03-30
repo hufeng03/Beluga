@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.belugamobile.filemanager.BelugaSortableInterface;
 import com.belugamobile.filemanager.CategorySelectEvent;
+import com.belugamobile.filemanager.FileManager;
 
 import java.io.File;
 import java.text.Collator;
@@ -60,29 +61,29 @@ public class BelugaSortHelper {
         ASC, DESC;
     }
 
-    public static void saveFileSorter(Context context, int category, SORTER sorter) {
-        SharedPreferences.Editor preferenceEditor = context.getSharedPreferences(SORT_PREFERENCE_NAME, Context.MODE_PRIVATE).edit();
+    public static void saveFileSorter(int category, SORTER sorter) {
+        SharedPreferences.Editor preferenceEditor = FileManager.getAppContext().getSharedPreferences(SORT_PREFERENCE_NAME, Context.MODE_PRIVATE).edit();
         preferenceEditor.putString("sort_field_" + category, sorter.field.toString());
         preferenceEditor.putString("sort_order_" + category, sorter.order.toString());
         preferenceEditor.commit();
     }
     
-    public static SORTER getFileSorter(Context context, int category) {
+    public static SORTER getFileSorter(int category) {
         SORTER defaultSorter = mCategoryDefaultSorter.get(category);
 
         if (defaultSorter == null) {
             defaultSorter = mCategoryDefaultSorter.get(FileCategoryHelper.CATEGORY_TYPE_UNKNOW);
         }
 
-        SharedPreferences preferences = context.getSharedPreferences(SORT_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences preferences = FileManager.getAppContext().getSharedPreferences(SORT_PREFERENCE_NAME, Context.MODE_PRIVATE);
         String sortField = preferences.getString("sort_field_" + category, defaultSorter.field.toString());
         String sortOrder = preferences.getString("sort_order_" + category, defaultSorter.order.toString());
 
         return new SORTER(SORT_FIELD.valueOf(sortField), SORT_ORDER.valueOf(sortOrder));
     }
 
-    public static Comparator<BelugaSortableInterface> getComparator(Context context, int category){
-        SORTER sorter = getFileSorter(context, category);
+    public static Comparator<BelugaSortableInterface> getComparator(int category){
+        SORTER sorter = getFileSorter(category);
         return getComparator(sorter.field, sorter.order);
     }
 

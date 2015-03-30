@@ -157,8 +157,7 @@ public class FileCategoryHelper {
         sExtensionToCategoryTypeMap.put(extension, Integer.valueOf(categoryType));
     }
 
-    public static int getFileTypeForFile(String path) {
-        String extension = MimeUtil.getExtension(path);
+    public static int getFileTypeForExtension(String extension) {
         if (TextUtils.isEmpty(extension)) {
             return 0;
         } else {
@@ -169,8 +168,12 @@ public class FileCategoryHelper {
         }
     }
 
-    public static int getFileCategoryForFile(String path) {
+    public static int getFileCategoryForPath(String path) {
         String extension = MimeUtil.getExtension(path);
+        return getFileCategoryForExtension(extension);
+    }
+
+    public static int getFileCategoryForExtension(String extension) {
         if (TextUtils.isEmpty(extension)) {
             return 0;
         } else {

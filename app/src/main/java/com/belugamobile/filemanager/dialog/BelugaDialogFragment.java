@@ -64,14 +64,14 @@ public class BelugaDialogFragment extends DialogFragment{
 
     public static final String FOLDER_PATH_DATA = "folder";
     public static final String FILE_ARRAY_DATA = "files";
-    public static final String FILE_DATA = "file";
+    public static final String FILE_DATA = "file";          //FileEntry
     public static final String CATEGORY_DATA = "category";
 	
 	public static final int RENAME_DIALOG = 1;
 	public static final int DETAIL_DIALOG = 2;
 	public static final int DELETE_DIALOG = 3;
     public static final int SORT_DIALOG = 4;
-	public static final int NEW_FOLDER_DIALOG = 5;
+	public static final int CREATE_FOLDER_DIALOG = 5;
     public static final int COPY_PASTE_DIALOG = 6;
     public static final int CUT_PASTE_DIALOG = 7;
     public static final int EXTRACT_ARCHIVE_DIALOG = 8;
@@ -83,10 +83,11 @@ public class BelugaDialogFragment extends DialogFragment{
 
     public static final int CHANGE_LOG_DIALOG = 20;
     public static final int TRANSLATION_CONTRIBUTION_DIALOG = 21;
+    public static final int ROOT_FAILURE_DIALOG = 22;
 
     public static abstract interface OnDialogDoneInterface {
         public abstract void onDialogOK(int dialogId, String folder, BelugaFileEntry... entries);
-        public abstract void onDialogCancel(int dialoId, String folder, BelugaFileEntry... entries);
+        public abstract void onDialogCancel(int dialogId, String folder, BelugaFileEntry... entries);
     }
 
     private OnDialogDoneInterface mListener;
@@ -164,7 +165,7 @@ public class BelugaDialogFragment extends DialogFragment{
 	public static DialogFragment showCreateFolderDialog(FragmentActivity activity, String path){
 		Bundle data = new Bundle();
 		data.putString(FOLDER_PATH_DATA, path);
-        DialogFragment dialog = BelugaDialogFragment.newInstance(NEW_FOLDER_DIALOG, data);
+        DialogFragment dialog = BelugaDialogFragment.newInstance(CREATE_FOLDER_DIALOG, data);
         dialog.show(activity.getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
         return dialog;
 	}
@@ -236,6 +237,13 @@ public class BelugaDialogFragment extends DialogFragment{
         return dialog;
 	}
 
+    public static DialogFragment showRootFailureDialog(FragmentActivity activity) {
+        Bundle data = new Bundle();
+        DialogFragment dialog = BelugaDialogFragment.newInstance(ROOT_FAILURE_DIALOG, data);
+        dialog.show(activity.getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
+        return dialog;
+    }
+
 
 
     @Override
@@ -282,8 +290,22 @@ public class BelugaDialogFragment extends DialogFragment{
         Dialog dialog = null;
 		switch(mDialogId)
 		{
+<<<<<<< HEAD
         case TRANSLATION_CONTRIBUTION_DIALOG: {
             dialog = buildTranslationContributionDialog();
+=======
+        case ROOT_FAILURE_DIALOG: {
+            View view = View.inflate(getActivity(), R.layout.beluga_root_failure_dialog, null);
+            final TextView content = (TextView)view.findViewById(R.id.root_failure_dialog_content);
+            content.setText(R.string.root_failure_dialog_content);
+            dialog = new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.root_failure_dialog_title)
+                    .setView(view)
+                    .setPositiveButton(android.R.string.ok,null)
+                    .setCancelable(false)
+                    .setCancelable(false)
+                    .create();
+>>>>>>> RootExplorer
             break;
         }
         case CHANGE_LOG_DIALOG: {
@@ -306,7 +328,7 @@ public class BelugaDialogFragment extends DialogFragment{
             if (category == FileCategoryHelper.CATEGORY_TYPE_APK || category == FileCategoryHelper.CATEGORY_TYPE_APP) {
                 sortByExtension.setVisibility(View.GONE);
             }
-            BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(getActivity(), category);
+            BelugaSortHelper.SORTER sorter = BelugaSortHelper.getFileSorter(category);
             switch (sorter.field) {
                 case DATE:
                     sortByDate.setChecked(true);
@@ -327,19 +349,19 @@ public class BelugaDialogFragment extends DialogFragment{
                 public void onClick(View v) {
                     switch (v.getId()) {
                         case R.id.radio_sort_by_date:
-                            BelugaSortHelper.saveFileSorter(v.getContext(), category,
+                            BelugaSortHelper.saveFileSorter(category,
                                     new BelugaSortHelper.SORTER(BelugaSortHelper.SORT_FIELD.DATE, BelugaSortHelper.SORT_ORDER.DESC));
                             break;
                         case R.id.radio_sort_by_name:
-                            BelugaSortHelper.saveFileSorter(v.getContext(), category,
+                            BelugaSortHelper.saveFileSorter(category,
                                     new BelugaSortHelper.SORTER(BelugaSortHelper.SORT_FIELD.NAME, BelugaSortHelper.SORT_ORDER.ASC));
                             break;
                         case R.id.radio_sort_by_size:
-                            BelugaSortHelper.saveFileSorter(v.getContext(), category,
+                            BelugaSortHelper.saveFileSorter(category,
                                     new BelugaSortHelper.SORTER(BelugaSortHelper.SORT_FIELD.SIZE, BelugaSortHelper.SORT_ORDER.DESC));
                             break;
                         case R.id.radio_sort_by_extension:
-                            BelugaSortHelper.saveFileSorter(v.getContext(), category,
+                            BelugaSortHelper.saveFileSorter(category,
                                     new BelugaSortHelper.SORTER(BelugaSortHelper.SORT_FIELD.EXTENSION, BelugaSortHelper.SORT_ORDER.ASC));
                             break;
                     }
@@ -357,7 +379,7 @@ public class BelugaDialogFragment extends DialogFragment{
                     .create();
             break;
         }
-		case NEW_FOLDER_DIALOG:
+		case CREATE_FOLDER_DIALOG:
 		{
             View contents = View.inflate(getActivity(), R.layout.new_directory_dialog, null);
             final String path = getArguments().getString(FOLDER_PATH_DATA);
@@ -370,17 +392,15 @@ public class BelugaDialogFragment extends DialogFragment{
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                     	String name = edit.getText().toString();
-                    	File file = new File(path, name);
-                    	if(file.exists() && file.isDirectory())
-                    	{
+                    	File folder = new File(path, name);
+                    	if(folder.exists() && folder.isDirectory()) {
                     		Toast.makeText(getActivity(), R.string.folder_already_exist, Toast.LENGTH_SHORT).show();
-                    	}
-                    	else
-                    	{
-                            if (file.mkdirs()) {
-                                Toast.makeText(getActivity(), R.string.create_folder_success, Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getActivity(), R.string.create_folder_fail, Toast.LENGTH_SHORT).show();
+                    	} else {
+                            if (mListener != null) {
+                                mListener.onDialogOK(
+                                        CREATE_FOLDER_DIALOG,
+                                        folder.getAbsolutePath(),
+                                        null);
                             }
                         }
                     }
@@ -502,7 +522,7 @@ public class BelugaDialogFragment extends DialogFragment{
                         } else {
                             if (mListener != null) {
                                 mListener.onDialogOK(
-                                        getArguments().getInt(ARG_DIALOG_ID),
+                                        RENAME_DIALOG,
                                         new_name,
                                         entry);
                             }

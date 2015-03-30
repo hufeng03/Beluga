@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -47,6 +48,15 @@ public class DeviceTabFragment extends FileTabFragment {
     public void onPause() {
         super.onPause();
         BusProvider.getInstance().unregister(this);
+    }
+
+    @Subscribe
+    public void onTabLongPress(TabLongPressEvent event) {
+        if (getUserVisibleHint() && event != null) {
+            if (event.name.equalsIgnoreCase(getString(R.string.tab_device))) {
+                Toast.makeText(getActivity(), "test_device", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Subscribe

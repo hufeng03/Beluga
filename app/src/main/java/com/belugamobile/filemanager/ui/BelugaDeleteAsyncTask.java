@@ -6,6 +6,10 @@ import com.belugamobile.filemanager.R;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.helper.BelugaProviderHelper;
 import com.belugamobile.filemanager.helper.MultiMediaStoreHelper;
+import com.belugamobile.filemanager.root.BelugaRootManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by feng on 14-2-15.
@@ -51,79 +55,68 @@ public class BelugaDeleteAsyncTask extends BelugaActionAsyncTask {
 
     private boolean deleteFileEntryOneByOne() {
         boolean result = true;
-        for (BelugaFileEntry entry : mFileEntries) {
+        List<BelugaFileEntry> allFailed = new ArrayList<BelugaFileEntry>();
+        List<BelugaFileEntry> originalFailed = new ArrayList<BelugaFileEntry>();
+        for (BelugaFileEntry entry : mOriginalEntries) {
             if (isCancelled()) {
                 mDeleteMediaStoreHelper.updateRecords();
                 return false;
             }
-            if (entry.delete()) {
-                mDeleteMediaStoreHelper.addRecord(entry.path);
-                BelugaProviderHelper.deleteInBelugaDatabase(mContext, entry.path);
-                publishActionProgress(entry);
-            } else {
-                result = false;
+            if (!deleteEntry(entry, allFailed)) {
+                originalFailed.add(entry);
+            }
+        }
+
+        if (!isCancelled() && originalFailed.size() > 0) {
+            BelugaRootManager.getInstance().deleteAsRoot(originalFailed);
+            BelugaRootManager.getInstance().waitForIdle();
+            result = true;
+            for (BelugaFileEntry entry : allFailed) {
+                if (entry.checkExistance()) {
+                    result = false;
+                } else {
+                    mDeleteMediaStoreHelper.addRecord(entry.path);
+                    BelugaProviderHelper.deleteInBelugaDatabase(mContext, entry.path);
+                    publishActionProgress(entry);
+                }
             }
         }
         mDeleteMediaStoreHelper.updateRecords();
         return result;
     }
 
-//    private boolean deleteFileEntry(FileEntry... entries) {
-//        boolean result = true;
-//        for(FileEntry entry : entries)
-//        {
-//            if(isCancelled()) {
-//                mDeleteMediaStoreHelper.updateRecords();
-//                return false;
-//            }
-//            if(entry.isDirectory) {
-//                result = deleteFileEntryAsFolder(entry);
-//            } else {
-//                if(!entry.delete()) {
-//                    result = false;
-//                } else {
-//                    mDeleteMediaStoreHelper.addRecord(entry.path);
-//                    publishProgress(entry);
-//                }
-//            }
-//        }
-//        mDeleteMediaStoreHelper.updateRecords();
-//        return result;
-//    }
-//
-//    private boolean deleteFileEntryAsFolder(FileEntry entry) {
-//        boolean result = true;
-//        FileEntry[] children = entry.listFiles(); //取得文件夹里面的子文件
-//        if(children == null || children.length == 0){
-//            result = entry.delete();
-//            if (result)
-//                publishProgress(entry);
-//        } else {
-//            ArrayList<FileEntry> deletedEntries = new ArrayList<FileEntry>();
-//            for(FileEntry child : children){
-//                if(isCancelled())
-//                    return false;
-//                if(child.isDirectory){
-//                    if(!deleteFileEntryAsFolder(child))
-//                        result = false;
-//                }else {
-//                    if(!child.delete())
-//                        result = false;
-//                    else
-//                        deletedEntries.add(child);
-//                }
-//            }
-//            if (result) {
-//                if (!entry.delete()) {
-//                    result = false;
-//                } else {
-//                    deletedEntries.add(entry);
-//                }
-//            }
-//            if (deletedEntries.size() > 0) {
-//                publishProgress(deletedEntries.toArray(new FileEntry[deletedEntries.size()]));
-//            }
-//        }
-//        return result;
-//    }
+    private boolean deleteEntry(BelugaFileEntry entry, List<BelugaFileEntry> failed) {
+        if (entry.isDirectory) {
+            BelugaFileEntry[] children = entry.listFiles();
+            if (children != null) {
+                for (BelugaFileEntry child : children) {
+                    if (isCancelled()) {
+                        return false;
+                    }
+                    deleteEntry(child, failed);
+                }
+            }
+            // delete empty folder
+            if (entry.delete()) {
+                mDeleteMediaStoreHelper.addRecord(entry.path);
+                BelugaProviderHelper.deleteInBelugaDatabase(mContext, entry.path);
+                publishActionProgress(entry);
+                return true;
+            } else {
+                failed.add(entry);
+                return false;
+            }
+        } else {
+            if (entry.delete()) {
+                mDeleteMediaStoreHelper.addRecord(entry.path);
+                BelugaProviderHelper.deleteInBelugaDatabase(mContext, entry.path);
+                publishActionProgress(entry);
+                return true;
+            } else {
+                failed.add(entry);
+                return false;
+            }
+        }
+    }
+
 };

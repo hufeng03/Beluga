@@ -251,7 +251,7 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
                         } else if (child.length() == 0) {
                             continue;
                         } else {
-                            int category = FileCategoryHelper.getFileCategoryForFile(child.getAbsolutePath());
+                            int category = FileCategoryHelper.getFileCategoryForPath(child.getAbsolutePath());
                             String name = child.getAbsolutePath();
                             switch (category) {
                                 case FileCategoryHelper.CATEGORY_TYPE_IMAGE:

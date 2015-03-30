@@ -1,4 +1,4 @@
-package com.hufeng.playimage;
+package com.belugamobile.playimage;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -114,10 +114,9 @@ public class BelugaLazyLoadImageView extends BaseLazyLoadImageView {
         currentUri = entry.path;
     }
 
-    @Override
-    public void requestDisplayImage(String uri) {
+    public void requestDisplayImage(String uri, boolean isDirectory) {
         boolean needToLoad = false;
-        if (new File(uri).isDirectory()) {
+        if (isDirectory) {
             setDefaultResource(R.drawable.ic_type_folder);
             setMimeType(DocumentsContract.Document.MIME_TYPE_DIR);
         } else {
@@ -125,9 +124,9 @@ public class BelugaLazyLoadImageView extends BaseLazyLoadImageView {
             setMimeType(MimeUtil.getMimeType(uri));
             if (!TextUtils.isEmpty(mMimeType) && (
                     mMimeType.startsWith("image/") ||
-                    mMimeType.startsWith("audio/") ||
-                    mMimeType.startsWith("video/") ||
-                    mMimeType.equals("application/vnd.android.package-archive")
+                            mMimeType.startsWith("audio/") ||
+                            mMimeType.startsWith("video/") ||
+                            mMimeType.equals("application/vnd.android.package-archive")
             )) {
                 needToLoad = true;
             }
@@ -139,6 +138,11 @@ public class BelugaLazyLoadImageView extends BaseLazyLoadImageView {
             useDefaultResource();
             currentUri = uri;
         }
+    }
+
+    @Override
+    public void requestDisplayImage(String uri) {
+        requestDisplayImage(uri, new File(uri).isDirectory());
     }
 
     public void setDefaultResource(int defaultResource) {

@@ -100,7 +100,6 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
 
         createViewsAndFragments(savedInstanceState);
 
-
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PreferenceKeys.NEW_VERSION_FIRST_LAUNCH, false)) {
             BelugaDialogFragment.showChangeLogDialog(this);
             PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean(PreferenceKeys.NEW_VERSION_FIRST_LAUNCH, false).commit();

@@ -33,7 +33,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.belugamobile.filemanager.BusProvider;
 import com.belugamobile.filemanager.R;
+import com.belugamobile.filemanager.TabLongPressEvent;
 
 
 /**
@@ -114,22 +116,23 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
 
         @Override
         public boolean onLongClick(View v) {
-            final int[] screenPos = new int[2];
-            getLocationOnScreen(screenPos);
 
-            final Context context = getContext();
-            final int width = getWidth();
-            final int height = getHeight();
-            final int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+            BusProvider.getInstance().post(new TabLongPressEvent(System.currentTimeMillis(), mPager.getAdapter().getPageTitle(mPosition).toString()));
 
-            Toast toast = Toast.makeText(context, mPager.getAdapter().getPageTitle(mPosition),
-                    Toast.LENGTH_SHORT);
-
-            // Show the toast under the tab
-            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL,
-                    (screenPos[0] + width / 2) - screenWidth / 2, screenPos[1] + height);
-
-            toast.show();
+//            final int[] screenPos = new int[2];
+//            getLocationOnScreen(screenPos);
+//            final Context context = getContext();
+//            final int width = getWidth();
+//            final int height = getHeight();
+//            final int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+//            Toast toast = Toast.makeText(context, mPager.getAdapter().getPageTitle(mPosition),
+//                    Toast.LENGTH_SHORT);
+//
+//            // Show the toast under the tab
+//            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL,
+//                    (screenPos[0] + width / 2) - screenWidth / 2, screenPos[1] + height);
+//
+//            toast.show();
             return true;
         }
     }

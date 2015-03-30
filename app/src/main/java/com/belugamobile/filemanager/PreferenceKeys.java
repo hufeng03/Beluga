@@ -11,4 +11,5 @@ public class PreferenceKeys {
     public static final String NEW_VERSION_FIRST_LAUNCH = "NEW_VERSION_FIRST_LAUNCH";
     public static final String FORCE_SCAN_REQUIRED = "FORCE_SCAN_REQUIRED";
     public static final String TRANSLATION_CONTRIBUTION = "TRANSLATION_CONTRIBUTION";
+    public static final String ROOT_EXPLORER_ENABLE = "ROOT_EXPLORER_ENABLE";
 }

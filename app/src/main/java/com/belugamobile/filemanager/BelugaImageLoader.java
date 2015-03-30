@@ -7,7 +7,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.belugamobile.filemanager.utils.LogUtil;
-import com.hufeng.playimage.BaseLazyLoadImageView;
+import com.belugamobile.playimage.BaseLazyLoadImageView;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;

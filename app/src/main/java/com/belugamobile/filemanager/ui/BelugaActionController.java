@@ -20,6 +20,7 @@ import com.belugamobile.filemanager.BelugaActionDelegate;
 import com.belugamobile.filemanager.R;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.dialog.BelugaDialogFragment;
+import com.belugamobile.filemanager.utils.LogUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+
+import eu.chainfire.libsuperuser.Shell;
 
 
 public class BelugaActionController extends Fragment implements ActionMode.Callback,
@@ -181,18 +184,16 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
 
             MenuItem item = menu.findItem(R.id.file_operation_selectall);
             if (item != null) item.setVisible(true);
-
-                if (isSelectedNoneWritable()) {
-                    MenuItem item_delete = menu.findItem(R.id.file_operation_delete);
-                    if (item_delete != null) {
-                        item_delete.setVisible(false);
-                    }
-                    MenuItem item_move = menu.findItem(R.id.file_operation_move);
-                    if (item_move != null) {
-                        item_move.setVisible(false);
-                    }
-                }
-
+//                if (isSelectedNoneWritable()) {
+//                    MenuItem item_delete = menu.findItem(R.id.file_operation_delete);
+//                    if (item_delete != null) {
+//                        item_delete.setVisible(false);
+//                    }
+//                    MenuItem item_move = menu.findItem(R.id.file_operation_move);
+//                    if (item_move != null) {
+//                        item_move.setVisible(false);
+//                    }
+//                }
             if (isSelectedAllFavorite()){
                 MenuItem item1 = menu.findItem(R.id.file_operation_removefavorite);
                 if (item1 != null) item1.setVisible(true);
@@ -350,6 +351,13 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
         }
     }
 
+    public void performCreateFolder(String folder) {
+        if (!TextUtils.isEmpty(folder)) {
+            mActionAsyncTask = new BelugaCreateFolderAsyncTask(getActivity().getApplicationContext(), this, folder);
+            mActionAsyncTask.executeParallel();
+        }
+    }
+
     public void performFavorite(BelugaFileEntry... entries) {
         if (entries.length > 0) {
             mActionAsyncTask = new BelugaFavoriteAsyncTask(getActivity().getApplicationContext(), this);
@@ -485,4 +493,5 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
             }
         }
     }
+
 }

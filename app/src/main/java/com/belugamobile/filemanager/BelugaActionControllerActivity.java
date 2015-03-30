@@ -60,6 +60,9 @@ public abstract class BelugaActionControllerActivity extends BelugaBaseActionCon
     @Override
     public void onDialogOK(int dialogId, String folder, BelugaFileEntry... entries) {
         switch(dialogId) {
+            case BelugaDialogFragment.CREATE_FOLDER_DIALOG:
+                getActionController().performCreateFolder(folder);
+                break;
             case BelugaDialogFragment.RENAME_DIALOG:
                 getActionController().performRename(folder, entries[0]);
                 break;

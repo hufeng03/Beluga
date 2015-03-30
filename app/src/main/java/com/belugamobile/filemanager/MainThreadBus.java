@@ -1,4 +1,4 @@
-package com.hufeng;
+package com.belugamobile.filemanager;
 
 import android.os.Handler;
 import android.os.Looper;

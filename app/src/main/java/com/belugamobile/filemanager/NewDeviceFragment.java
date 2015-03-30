@@ -1,12 +1,16 @@
 package com.belugamobile.filemanager;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,7 +34,7 @@ import butterknife.InjectView;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class NewDeviceFragment extends BelugaRecyclerFragment /*implements LoaderManager.LoaderCallbacks<List<MountPoint>>*/ {
+public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedPreferences.OnSharedPreferenceChangeListener /*implements LoaderManager.LoaderCallbacks<List<MountPoint>>*/ {
 
     public static final String TAG = "NewDeviceFragment";
 
@@ -84,10 +88,20 @@ public class NewDeviceFragment extends BelugaRecyclerFragment /*implements Loade
     }
 
 
-
     private void refreshMountPointList() {
         List<MountPoint> mountPoints = MountPointManager.getInstance().getMountPoints();
-
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(PreferenceKeys.ROOT_EXPLORER_ENABLE, false)) {
+            MountPoint mountPoint = new MountPoint();
+            mountPoint.mDescription = "Root explorer (/)";
+            mountPoint.mPath = "/";
+            mountPoint.mIsMounted = true;
+            mountPoint.mIsExternal = false;
+            mountPoint.mMaxFileSize = 0;
+            Log.d(TAG, "init,description :" + mountPoint.mDescription + ",path : "
+                    + mountPoint.mPath + ",isMounted : " + mountPoint.mIsMounted
+                    + ",isExternal : " + mountPoint.mIsExternal + ", mMaxFileSize: " + mountPoint.mMaxFileSize);
+            mountPoints.add(0, mountPoint);
+        }
         ((BelugaDeviceRecyclerAdapter) getRecyclerAdapter()).setData(mountPoints);
     }
 
@@ -112,6 +126,7 @@ public class NewDeviceFragment extends BelugaRecyclerFragment /*implements Loade
         mBelugaMountReceiver = BelugaMountReceiver.registerMountReceiver(getActivity());
         mMountListener = new DeviceMountListener();
         mBelugaMountReceiver.registerMountListener(mMountListener);
+        PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -119,6 +134,7 @@ public class NewDeviceFragment extends BelugaRecyclerFragment /*implements Loade
         super.onPause();
         mBelugaMountReceiver.unregisterMountListener(mMountListener);
         getActivity().unregisterReceiver(mBelugaMountReceiver);
+        PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
     }
 
 //    @Override
@@ -224,6 +240,13 @@ public class NewDeviceFragment extends BelugaRecyclerFragment /*implements Loade
                 mItems.addAll(entries);
                 notifyItemRangeInserted(count, entries.size());
             }
+        }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (PreferenceKeys.ROOT_EXPLORER_ENABLE.equals(key)) {
+            refreshMountPointList();
         }
     }
 

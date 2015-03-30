@@ -61,20 +61,19 @@ public class BelugaFileEntry extends BelugaEntry {
         this.lastModified = cursor.getLong(DataStructures.FileColumns.DATE_INDEX);
         this.isFavorite = !cursor.isNull(DataStructures.FileColumns.FAVORITE_ID_INDEX);
 
-        this.category = FileCategoryHelper.getFileCategoryForFile(path);
-        this.type = FileCategoryHelper.getFileTypeForFile(path);
+        this.parentPath = this.path.substring(0, this.path.length() - this.name.length()-1);
+        this.hidden = name.startsWith(".");
+        this.extension = MimeUtil.getExtension(path);
+        this.category = FileCategoryHelper.getFileCategoryForExtension(extension);
+        this.type = FileCategoryHelper.getFileTypeForExtension(extension);
+
         File file = new File(this.path);
         this.exist = file.exists();
         if (this.exist) {
             this.isWritable = file.canWrite();
             this.isReadable = file.canRead();
-            this.hidden = file.isHidden();
             this.isDirectory = file.isDirectory();
         }
-        if (!this.isDirectory) {
-            this.extension = MimeUtil.getExtension(path);
-        }
-        this.parentPath = this.path.substring(0, this.path.length() - this.name.length()-1);
     }
 
     public void fillContentValues(ContentValues cv) {
@@ -93,8 +92,9 @@ public class BelugaFileEntry extends BelugaEntry {
         this.name = file.getName();
         this.size = file.length();
         this.lastModified = file.lastModified()/1000;
-        this.category = FileCategoryHelper.getFileCategoryForFile(path);
-        this.type = FileCategoryHelper.getFileTypeForFile(path);
+        this.extension = MimeUtil.getExtension(path);
+        this.category = FileCategoryHelper.getFileCategoryForExtension(extension);
+        this.type = FileCategoryHelper.getFileTypeForExtension(extension);
         this.hidden = file.isHidden();
         this.isDirectory = file.isDirectory();
         this.isWritable = file.canWrite();
@@ -116,8 +116,6 @@ public class BelugaFileEntry extends BelugaEntry {
                     }
                 }
             }
-        } else {
-            this.extension = MimeUtil.getExtension(path);
         }
     }
 

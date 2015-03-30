@@ -448,7 +448,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                         return;
                     }
                     BelugaFileEntry newEntry = new BelugaFileEntry(path);
-                    Comparator<BelugaSortableInterface> comparator = BelugaSortHelper.getComparator(getActivity(), FileCategoryHelper.CATEGORY_TYPE_UNKNOW);
+                    Comparator<BelugaSortableInterface> comparator = BelugaSortHelper.getComparator(FileCategoryHelper.CATEGORY_TYPE_UNKNOW);
                     int pos = 0;
                     for (BelugaFileEntry entry : mAdapter.getAll()) {
                         if (comparator.compare(entry, newEntry) >= 0) {

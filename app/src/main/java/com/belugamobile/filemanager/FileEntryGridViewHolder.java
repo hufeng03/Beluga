@@ -54,7 +54,7 @@ public class FileEntryGridViewHolder extends BelugaEntryViewHolder {
 //        this.name.setText(entry.getName());
         BelugaHighlightHelper.setTextWithHighlight(name, this.entry.getName(), highlightString);
         this.description.setText(BelugaTimeHelper.getDayString(this.entry.getTime()));
-        icon.requestDisplayImage(this.entry.path);
+        icon.requestDisplayImage(this.entry.path, this.entry.isDirectory);
         boolean isChosen = actionController.isEntrySelected(this.entry);
         this.itemView.setActivated(isChosen);
         this.check.setVisibility(isChosen?View.VISIBLE:View.GONE);

@@ -9,6 +9,7 @@ import com.belugamobile.filemanager.data.BelugaZipElementEntry;
 import com.belugamobile.filemanager.helper.BelugaProviderHelper;
 import com.belugamobile.filemanager.helper.MultiMediaStoreHelper;
 import com.belugamobile.filemanager.mount.MountPointManager;
+import com.belugamobile.filemanager.root.BelugaRootManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -67,10 +68,10 @@ public class BelugaExtractArchiveAsyncTask extends BelugaActionAsyncTask {
         byte[] buffer = new byte[BUFFER_SIZE];
         boolean createTopFolder = false;
         File dstFolder = new File(mFolderPath);
-        if (dstFolder.listFiles().length > 0 || mFileEntries.size() > 0) {
+        if (dstFolder.listFiles().length > 0 || mOriginalEntries.size() > 0) {
             createTopFolder = true;
         }
-        for (BelugaFileEntry entry : mFileEntries) {
+        for (BelugaFileEntry entry : mOriginalEntries) {
             if(isCancelled()) {
                 return false;
             }
@@ -84,7 +85,9 @@ public class BelugaExtractArchiveAsyncTask extends BelugaActionAsyncTask {
                 }
                 File newFile = new File(mFolderPath, name);
                 newFile = checkFileNameAndRename(newFile);
-                newFile.mkdirs();
+                if (!newFile.mkdirs()) {
+                    BelugaRootManager.getInstance().createFolderAsRoot(newFile.getAbsolutePath());
+                }
                 dstFolder = newFile;
             }
 

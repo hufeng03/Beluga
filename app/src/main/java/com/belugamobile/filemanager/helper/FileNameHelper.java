@@ -94,4 +94,38 @@ public class FileNameHelper {
         }
         return new File(parentDir, sb.toString());
     }
+
+    public static String generateNextNewName(String name) {
+        String ext = "";
+        int newNumber = 0;
+        int extIndex = name.lastIndexOf(".");
+        if (extIndex != -1) {
+            ext = name.substring(extIndex);
+            name = name.substring(0, extIndex);
+        }
+
+        if (name.endsWith(")")) {
+            int leftBracketIndex = name.lastIndexOf("(");
+            if (leftBracketIndex != -1) {
+                String numeric = name.substring(leftBracketIndex + 1, name.length() - 1);
+                if (numeric.matches("[0-9]+")) {
+                    Log.v(TAG, "Conflict folder name already contains (): " + name
+                            + "thread id: " + Thread.currentThread().getId());
+                    try {
+                        newNumber = Integer.parseInt(numeric);
+                        newNumber++;
+                        name = name.substring(0, leftBracketIndex);
+                    } catch (NumberFormatException e) {
+                        Log.e(TAG, "Fn-findSuffixNumber(): " + e.toString());
+                    }
+                }
+            }
+        }
+        StringBuffer sb = new StringBuffer();
+        sb.append(name).append("(").append(newNumber).append(")").append(ext);
+        if (FileNameHelper.checkFileName(sb.toString()) < 0) {
+            return null;
+        }
+        return sb.toString();
+    }
 }

@@ -148,4 +148,8 @@
     <string name="translation_summary">%1$d languages supported thanks to %2$d contributors</string>
     <string name="translation_contribution_dialog_title">Contributors</string>
     <string name="thanks_to_contributor">Thanks to our contributors</string>
+    <string name="progress_create_folder_title">Create Folder</string>
+    <string name="progress_create_folder_content">Creating folder, please wait...</string>
+    <string name="root_failure_dialog_title">Root explorer</string>
+    <string name="root_failure_dialog_content">Beluga has been denied for root permission.\n\nIf your device hasn\'t been rooted, please google how to root it.\n\nOtherwise, please check Root Management App (SuperSU, .ect) and try to grant root permission to Beluga from there.</string>
 </resources>

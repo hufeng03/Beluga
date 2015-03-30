@@ -64,7 +64,7 @@ public class FavoriteListLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
           }
         }
 
-        Collections.sort(entries, BelugaSortHelper.getComparator(getContext(), FileCategoryHelper.CATEGORY_TYPE_FAVORITE));
+        Collections.sort(entries, BelugaSortHelper.getComparator(FileCategoryHelper.CATEGORY_TYPE_FAVORITE));
 
         return entries;
     }
