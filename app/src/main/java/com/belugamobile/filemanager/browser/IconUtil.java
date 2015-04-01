@@ -21,6 +21,7 @@ import android.util.DisplayMetrics;
 import com.belugamobile.filemanager.FileManager;
 import com.belugamobile.filemanager.helper.FileCategoryHelper;
 import com.belugamobile.filemanager.mp3.Mp3ReadId3v2;
+import com.belugamobile.filemanager.utils.DrawableUtil;
 import com.belugamobile.filemanager.utils.ImageUtil;
 import com.belugamobile.filemanager.utils.LogUtil;
 import com.belugamobile.filemanager.utils.MimeUtil;
@@ -49,8 +50,7 @@ public class IconUtil {
             appInfo.sourceDir = path;
             appInfo.publicSourceDir = path;
             Drawable icon = appInfo.loadIcon(context.getPackageManager());
-            Bitmap bmpIcon = ((BitmapDrawable) icon).getBitmap();
-            return bmpIcon;
+            return DrawableUtil.getBitmapFromDrawable(icon);
         } else {
             return getApkThumbnailByReflection(path);
         }
@@ -125,7 +125,7 @@ public class IconUtil {
             if (info != null) {
                 if (info.icon != 0) {// 图片存在，则读取相关信息
                     Drawable icon = res.getDrawable(info.icon);// 图标
-                    return ((BitmapDrawable) icon).getBitmap();
+                    return DrawableUtil.getBitmapFromDrawable(icon);
                 } else {
                     return null;
                 }

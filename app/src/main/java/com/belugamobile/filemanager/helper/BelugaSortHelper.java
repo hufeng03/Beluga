@@ -76,10 +76,13 @@ public class BelugaSortHelper {
         }
 
         SharedPreferences preferences = FileManager.getAppContext().getSharedPreferences(SORT_PREFERENCE_NAME, Context.MODE_PRIVATE);
-        String sortField = preferences.getString("sort_field_" + category, defaultSorter.field.toString());
-        String sortOrder = preferences.getString("sort_order_" + category, defaultSorter.order.toString());
-
-        return new SORTER(SORT_FIELD.valueOf(sortField), SORT_ORDER.valueOf(sortOrder));
+        if (preferences != null) {
+            String sortField = preferences.getString("sort_field_" + category, defaultSorter.field.toString());
+            String sortOrder = preferences.getString("sort_order_" + category, defaultSorter.order.toString());
+            return new SORTER(SORT_FIELD.valueOf(sortField), SORT_ORDER.valueOf(sortOrder));
+        } else {
+            return defaultSorter;
+        }
     }
 
     public static Comparator<BelugaSortableInterface> getComparator(int category){

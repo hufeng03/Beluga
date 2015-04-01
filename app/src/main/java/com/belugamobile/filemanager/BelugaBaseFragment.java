@@ -128,8 +128,6 @@ public class BelugaBaseFragment extends Fragment{
 	
 	@Override
     public void setMenuVisibility(final boolean visible) {
-//		boolean old_visible = getMenuVisibility();
-//		LogUtil.i(this.getClass().getSimpleName(), "setMenuVisibility "+visible+ ", old="+old_visible);
         if (DEBUG)
             LogUtil.i(((Object)this).getClass().getSimpleName(), "setMenuVisibility "+visible+" "+this.hashCode());
         super.setMenuVisibility(visible);
@@ -142,25 +140,4 @@ public class BelugaBaseFragment extends Fragment{
         super.setUserVisibleHint(isVisibleToUser);
     }
 
-    //	public boolean getMenuVisibility() {
-//		boolean visible = true;
-//		Field field_visible;
-//		try {
-//			field_visible = Fragment.class.getDeclaredField("mMenuVisible");
-//			field_visible.setAccessible(true);
-//			try {
-//				visible = field_visible.getBoolean(this);
-//			} catch (IllegalArgumentException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IllegalAccessException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		} catch (NoSuchFieldException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return visible;
-//	}
 }

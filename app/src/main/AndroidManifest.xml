@@ -100,6 +100,16 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".BelugaTextEditorActivity"
+            android:label="@string/beluga_text_editor_label">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/*" />
+                <data android:mimeType="application/json" />
+            </intent-filter>
+        </activity>
 
         <activity android:name=".app.AppManagerActivity"
             android:icon="@drawable/launcher"

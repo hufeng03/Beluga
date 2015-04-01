@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
@@ -45,7 +46,7 @@ public class BelugaPickActivity extends BelugaActionControllerActivity {
 
         String action = getIntent().getAction();
 
-        if (action.equals(Constant.ACTION_PICK_FILE)) {
+        if (Constant.ACTION_PICK_FILE.equals(action)) {
             String type = getIntent().getType();
             if (type.equals("image/*")) {
                 showFileGrouperPickFragment(FileCategoryHelper.CATEGORY_TYPE_IMAGE);
@@ -64,33 +65,31 @@ public class BelugaPickActivity extends BelugaActionControllerActivity {
             }
             getActionController().setOperationMode(BelugaActionController.OPERATION_MODE.PICK);
         } else {
-            if (action.equals(Constant.ACTION_PICK_FOLDER_TO_COPY_FILE)) {
+            if (Constant.ACTION_PICK_FOLDER_TO_COPY_FILE.equals(action)) {
                 setTitle("Paste");
                 BelugaFileEntry[] entries = BelugaFileEntry.toFileEntries(getIntent().getParcelableArrayExtra(BelugaDialogFragment.FILE_ARRAY_DATA));
                 getActionController().setEntrySelection(true, entries);
                 getActionController().setOperationMode(BelugaActionController.OPERATION_MODE.COPY_PASTE);
                 showFileBrowserPasteFragment();
-            } else if (action.equals(Constant.ACTION_PICK_FOLDER_TO_MOVE_FILE)) {
+            } else if (Constant.ACTION_PICK_FOLDER_TO_MOVE_FILE.equals(action)) {
                 setTitle("Paste");
                 BelugaFileEntry[] entries = BelugaFileEntry.toFileEntries(getIntent().getParcelableArrayExtra(BelugaDialogFragment.FILE_ARRAY_DATA));
                 getActionController().setEntrySelection(true, entries);
                 getActionController().setOperationMode(BelugaActionController.OPERATION_MODE.CUT_PASTE);
                 showFileBrowserPasteFragment();
-            } else if (action.equals(Constant.ACTION_PICK_FOLDER_TO_EXTRACT_ARCHIVE)) {
+            } else if (Constant.ACTION_PICK_FOLDER_TO_EXTRACT_ARCHIVE.equals(action)) {
                 setTitle("Extract");
                 BelugaFileEntry[] entries = BelugaFileEntry.toFileEntries(getIntent().getParcelableArrayExtra(BelugaDialogFragment.FILE_ARRAY_DATA));
                 getActionController().setEntrySelection(true, entries);
                 getActionController().setOperationMode(BelugaActionController.OPERATION_MODE.EXTRACT_ARCHIVE);
                 showFileBrowserPasteFragment();
-            } else if (action.equals(Constant.ACTION_PICK_FOLDER_TO_CREATE_ARCHIVE)) {
+            } else if (Constant.ACTION_PICK_FOLDER_TO_CREATE_ARCHIVE.equals(action)) {
                 setTitle("Archive");
                 BelugaFileEntry[] entries = BelugaFileEntry.toFileEntries(getIntent().getParcelableArrayExtra(BelugaDialogFragment.FILE_ARRAY_DATA));
                 getActionController().setEntrySelection(true, entries);
                 getActionController().setOperationMode(BelugaActionController.OPERATION_MODE.CREATE_ARCHIVE);
                 showFileBrowserPasteFragment();
-            }
-
-            else {
+            } else {
                 getActionController().setOperationMode(BelugaActionController.OPERATION_MODE.PICK);
                 showFileBrowserPickFragment();
             }
@@ -172,12 +171,18 @@ public class BelugaPickActivity extends BelugaActionControllerActivity {
     @Override
     public void invalidate() {
         super.invalidate();
-        mCurrentFragment.refreshUI();
+        if (mCurrentFragment != null) {
+            mCurrentFragment.refreshUI();
+        }
     }
 
     @Override
     public BelugaFileEntry[] getAllEntries() {
-        return mCurrentFragment.getAllFiles();
+        if (mCurrentFragment != null) {
+            return mCurrentFragment.getAllFiles();
+        } else {
+            return null;
+        }
     }
 
 

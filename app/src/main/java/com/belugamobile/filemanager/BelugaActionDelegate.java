@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.belugamobile.filemanager.data.BelugaFileEntry;
@@ -93,18 +94,30 @@ public class BelugaActionDelegate {
             boolean sameMimeTypeFirstPart = true;
             for (BelugaFileEntry entry : entries) {
                 arrayUri.add(Uri.fromFile(new File(entry.path)));
-                if (mimeType == null) {
+                if (TextUtils.isEmpty(mimeType)) {
                     mimeType = MimeUtil.getMimeType(entry.path);
-                    mimeTypeFirstPart = mimeType.split("/")[0];
+                    if (TextUtils.isEmpty(mimeType)) {
+                        sameMimeType = false;
+                        sameMimeTypeFirstPart = false;
+                    } else {
+                        mimeTypeFirstPart = mimeType.split("/")[0];
+                    }
                 } else {
                     if (sameMimeType || sameMimeTypeFirstPart) {
                         String thisMimeType = MimeUtil.getMimeType(entry.path);
+                        String thisMimeTypeFirstPart = null;
+                        if (TextUtils.isEmpty(thisMimeType)) {
+                            sameMimeType = false;
+                            sameMimeTypeFirstPart = false;
+                            continue;
+                        } else {
+                            thisMimeTypeFirstPart = thisMimeType.split("/")[0];
+                        }
                         if (sameMimeType && mimeType.equals(thisMimeType)) {
                             continue;
                         } else {
                             sameMimeType = false;
                         }
-                        String thisMimeTypeFirstPart = MimeUtil.getMimeType(entry.path);
                         if (sameMimeTypeFirstPart && thisMimeTypeFirstPart.equals(mimeTypeFirstPart)) {
                             continue;
                         } else {
@@ -125,7 +138,12 @@ public class BelugaActionDelegate {
             intent.setType(MimeUtil.getMimeType(entries[0].path));
             intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(entries[0].path)));
         }
-        context.startActivity(intent);
+        try {
+            context.startActivity(intent);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, R.string.no_app_to_share, Toast.LENGTH_SHORT).show();;
+        }
     }
 
 }

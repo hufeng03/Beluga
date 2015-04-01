@@ -152,4 +152,7 @@
     <string name="progress_create_folder_content">Creating folder, please wait...</string>
     <string name="root_failure_dialog_title">Root explorer</string>
     <string name="root_failure_dialog_content">Beluga has been denied for root permission.\n\nIf your device hasn\'t been rooted, please google how to root it.\n\nOtherwise, please check Root Management App (SuperSU, .ect) and try to grant root permission to Beluga from there.</string>
+    <string name="no_app_to_share">No app available to share this file.</string>
+    <string name="beluga_text_editor_label">Beluga Text Editor</string>
+    <string name="menu_save">Save</string>
 </resources>

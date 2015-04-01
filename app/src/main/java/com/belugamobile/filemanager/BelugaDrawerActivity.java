@@ -823,8 +823,12 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
 //    }
 
     private boolean isRTL() {
-        final Locale locale = Locale.getDefault();
-        return TextUtils.getLayoutDirectionFromLocale(locale) == View.LAYOUT_DIRECTION_RTL;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            final Locale locale = Locale.getDefault();
+            return TextUtils.getLayoutDirectionFromLocale(locale) == View.LAYOUT_DIRECTION_RTL;
+        } else {
+            return false;
+        }
     }
 
     /**

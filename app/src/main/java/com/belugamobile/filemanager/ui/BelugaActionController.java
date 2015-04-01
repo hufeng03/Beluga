@@ -485,7 +485,7 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
         if (getActivity() != null) {
             DialogFragment fragment = (DialogFragment) (getFragmentManager().findFragmentByTag(BelugaDialogFragment.PROGRESS_DIALOG_FRAGMENT_TAG));
             if (fragment != null) {
-                fragment.dismiss();
+                fragment.dismissAllowingStateLoss();
             }
             final String toastText = mActionAsyncTask.getCompleteToastContent(getActivity(), result);
             if (!TextUtils.isEmpty(toastText)) {

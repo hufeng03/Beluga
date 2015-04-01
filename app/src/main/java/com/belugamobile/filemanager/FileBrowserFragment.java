@@ -238,7 +238,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
             }
 
             String parent = new File(mRootDir).getParent();
-            if (!TextUtils.isEmpty(parent) && new File(parent).canRead()) {
+            if (!TextUtils.isEmpty(parent)/* && new File(parent).canRead()*/) {
                 showDir(parent);
                 return true;
             }
@@ -476,7 +476,9 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                 {
                     BelugaFileEntry oldEntry = msg.getData().getParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY);
                     mAdapter.remove(oldEntry);
-                    getActionController().setEntrySelection(false, oldEntry);
+                    if (getActionController() != null) {
+                        getActionController().setEntrySelection(false, oldEntry);
+                    }
                     setEmptyViewShown(mAdapter.getItemCount() == 0);
                 }
                     break;

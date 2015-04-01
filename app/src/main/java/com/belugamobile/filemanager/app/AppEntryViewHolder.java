@@ -52,7 +52,11 @@ public class AppEntryViewHolder extends BelugaEntryViewHolder {
 //        name.setText(this.entry.getName());
         BelugaHighlightHelper.setTextWithHighlight(name, this.entry.getName(), highlightString);
         icon.setImageDrawable(this.entry.getIcon());
-        status.setText(SizeUtil.normalize(this.entry.apkEntry.size));
+        if (this.entry.apkEntry != null) {
+            status.setText(SizeUtil.normalize(this.entry.apkEntry.size));
+        } else {
+            status.setText("");
+        }
         description.setText(BelugaTimeHelper.getDateString(this.entry.apkEntry.lastModified));
         this.overflow.setTag(this.entry.packageName);
     }
