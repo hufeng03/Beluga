@@ -176,7 +176,6 @@ public class BelugaTextEditorActivity extends BelugaBaseActionBarActivity {
                 protected Boolean doInBackground(Void... params) {
                     //Uri uri = params[0];
 
-                    final StringBuilder content = new StringBuilder();
                     OutputStream fOutStream = null;
                     boolean result = false;
                     try {

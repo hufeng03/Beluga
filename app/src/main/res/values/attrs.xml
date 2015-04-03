@@ -29,4 +29,8 @@
         <attr name="insetForeground" format="reference|color" />
     </declare-styleable>
 
+    <declare-styleable name="BelugaTextView">
+        <attr name="widthMultiple" format="integer"/>
+    </declare-styleable>
+
 </resources>
