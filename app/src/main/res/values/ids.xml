@@ -9,4 +9,5 @@
     <item type="id" name="drawer_item_my_apps" />
     <item type="id" name="drawer_item_my_files" />
     <item type="id" name="category_tag"/>
+    <item type="id" name="drawer_item_text_viewer_settings" />
 </resources>

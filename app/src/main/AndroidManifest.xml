@@ -111,8 +111,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".BelugaTextViewerActivity"
-            android:label="@string/beluga_text_editor_label">
+        <activity android:name=".playtext.TextViewerActivity"
+            android:label="@string/beluga_text_viewer_label">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -121,6 +121,11 @@
                 <data android:mimeType="application/json" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".playtext.TextViewerSettingActivity"
+            android:label="@string/settings_label"
+            android:icon="@drawable/launcher"
+            />
 
         <activity android:name=".app.AppManagerActivity"
             android:icon="@drawable/launcher"

@@ -10,6 +10,7 @@ import android.view.Window;
 
 import com.belugamobile.filemanager.BelugaBaseActionBarActivity;
 import com.belugamobile.filemanager.BelugaNavigationDrawerFragment;
+import com.belugamobile.filemanager.BelugaNavigationDrawerFragment.DrawerItem;
 import com.belugamobile.filemanager.R;
 
 import refactor.com.android.contacts.common.util.ViewUtil;
@@ -39,7 +40,13 @@ public class AppManagerActivity extends BelugaBaseActionBarActivity {
         mNavigationDrawerFragment = (BelugaNavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         final DrawerLayout drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        mNavigationDrawerFragment.setUp(drawerLayout, toolbar, R.id.drawer_item_my_apps);
+        mNavigationDrawerFragment.setUp(drawerLayout, toolbar, new DrawerItem[] {
+                new DrawerItem(R.id.drawer_item_my_files, getResources().getDrawable(R.drawable.ic_files_24dp), getString(R.string.my_files), false),
+                new DrawerItem(R.id.drawer_item_my_apps, getResources().getDrawable(R.drawable.ic_apps_24dp), getString(R.string.my_apps), true),
+                new DrawerItem(R.id.drawer_item_settings, getResources().getDrawable(R.drawable.ic_settings_24dp), getString(R.string.settings_label), false),
+                new DrawerItem(R.id.drawer_item_about, getResources().getDrawable(R.drawable.ic_info_24dp), getString(R.string.about_label), false),
+                new DrawerItem(R.id.drawer_item_help_and_feedback, getResources().getDrawable(R.drawable.ic_help_24dp), getString(R.string.help_and_feedback), false)
+        }, R.id.drawer_item_my_apps);
 
         showAppManagerFragment();
 
