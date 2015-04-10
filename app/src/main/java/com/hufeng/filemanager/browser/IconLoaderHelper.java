@@ -99,10 +99,10 @@ public class IconLoaderHelper {
     public static int getFileIcon(Context context, String path, boolean with_square) {
         if (path.endsWith("/") || new File(path).isDirectory()) {
             if (path.equals("/")) {
-                return with_square?R.drawable.file_icon_phone_square:R.drawable.phone;
+                return with_square?R.drawable.file_icon_phone_square:R.drawable.icon;
             } else if (StorageManager.getInstance(context).isStorage(path)) {
                 if (StorageManager.getInstance(context).isInternalStorage(path)) {
-                    return with_square?R.drawable.file_icon_phone_square:R.drawable.phone;
+                    return with_square?R.drawable.file_icon_phone_square:R.drawable.icon;
                 } else {
                     return with_square?R.drawable.file_icon_sdcard_square:R.drawable.sdcard;
                 }

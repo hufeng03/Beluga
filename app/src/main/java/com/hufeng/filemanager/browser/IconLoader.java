@@ -197,7 +197,7 @@ public class IconLoader implements Callback {
             loaded = true;
             if (StorageManager.getInstance(mContext).isStorage(path)) {
                 if (StorageManager.getInstance(mContext).isInternalStorage(path)) {
-                    view.setImageResource(R.drawable.phone);
+                    view.setImageResource(R.drawable.icon);
                 } else {
                     view.setImageResource(R.drawable.sdcard);
                 }

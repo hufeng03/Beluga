@@ -4,7 +4,7 @@
     <string name="select_file_title">Select File</string>
     <string name="selected">Selected</string>
 	<string name="category">Category</string>
-	<string name="directory">Device</string>	
+	<string name="directory">Projector</string>
 	<string name="directory2">Directory</string>
     <string name="kanbox">KanBox</string>
 	<string name="added_favorite">Added to Favorites</string>
