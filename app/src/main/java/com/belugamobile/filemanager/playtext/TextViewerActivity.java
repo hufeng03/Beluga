@@ -158,7 +158,6 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
 
         @Override
         public int getCount() {
-            Log.i(TAG, "getCount: "+mTotalPage);
             return mTotalPage;
         }
 
@@ -239,7 +238,6 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
     public static class BelugaTextViewerTaskFragment extends Fragment {
 
         private Map<Integer, Long> mTextStartPosForPages = new HashMap<Integer, Long>();
-        private Map<Integer, Long> mTextEndPosForPages = new HashMap<Integer, Long>();
         private Map<Integer, List<String>> mContentForPages = new HashMap<Integer, List<String>>();
         private int mTotalPage;
 
@@ -267,7 +265,6 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
                 mTextHeight = height;
                 Log.i(TAG, "set text size " + mTextWidth + "," + mTextHeight);
                 mTextStartPosForPages.clear();
-                mTextEndPosForPages.clear();
                 mContentForPages.clear();
             }
         }
@@ -332,28 +329,39 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
                 Log.i(TAG, "NEED TO LOAD 3 FROM "+firstPage);
             }
             if (pageNum > 0) {
-                List<String> lines = readLinesForPages(startPage, pageNum);
+                List<String> lines = new ArrayList<String>();
+                List<Long> lineHead = new ArrayList<Long>();
+                List<Long> lineTail = new ArrayList<Long>();
+                readLinesForPages(startPage, pageNum, lines, lineHead, lineTail);
                 int usedLine = 0;
                 int leftLine = lines.size();
                 for (int i=0; i < pageNum; i++) {
                     int number = Math.min(leftLine, mPageLineNum);
+                    if (number <= 0) {
+                        break;
+                    }
                     List<String> linesForPage = lines.subList(usedLine, usedLine+number);
-                    usedLine += number;
-                    leftLine -= number;
                     mContentForPages.put(startPage + i, linesForPage);
                     if (linesForPage.size() > 0) {
                         mTotalPage = Math.max(mTotalPage, startPage + i + 1);
+                        Log.i(TAG, "setPageCount: "+mTotalPage);
+                        mTextStartPosForPages.put(startPage + i, lineHead.get(usedLine));
+                        Log.i(TAG,"save text start pos "+(startPage+i)+","+lineHead.get(usedLine));
+                        if (linesForPage.size() == mPageLineNum) {
+                            mTextStartPosForPages.put(startPage + i + 1, lineTail.get(usedLine+number-1)+1);
+                            Log.i(TAG, "save text start pos " + (startPage + i +1) + "," + (lineTail.get(usedLine+number-1)+1));
+                        }
                     }
+                    usedLine += number;
+                    leftLine -= number;
                     Log.i(TAG, "SAVE PAGE " + (startPage + i) + " "+linesForPage.size()+"/"+lines.size()+" "+(linesForPage.size() == 0? "Empty":linesForPage.get(0)));
                 }
                 ((TextViewerActivity)getActivity()).refreshPages(startPage, pageNum, mTotalPage);
             }
         }
 
-        public List<String> readLinesForPages(int pageStart, int pageCount) {
+        public void readLinesForPages(int pageStart, int pageCount, List<String> lines, List<Long> head, List<Long> tail) {
             char buffer[] = new char[1024];
-            List<String> lines = new ArrayList<String>();
-
             long textPos = 0;
             if (pageStart > 0) {
                 Long posVal = mTextStartPosForPages.get(pageStart);
@@ -362,6 +370,7 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
                     Log.i(TAG, "retrieve text pos "+pageStart+":"+textPos);
                 } else {
                     Log.i(TAG, "bug happens as no text pos for "+pageStart);
+                    return;
                 }
             }
             InputStream fInStream = null;
@@ -376,20 +385,21 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
                 while (lines.size() < mPageLineNum*pageCount) {
                     int count = br.read(buffer, 0, 1024);
                     if (count == 0) {
+                        if (line.length() > 0) {
+                            lines.add(line.toString());
+                            tail.add(textPos + totalCount );
+                            head.add(textPos + totalCount + 1 - line.length());
+                        }
                         break;
                     }
                     float[] chWidths = new float[count];
                     mPaint.getTextWidths(interceptBuffer(buffer, 0, count), chWidths);
                     for (int i = 0; i < count; i++) {
-                        if (line.length() ==0 && lines.size() % mPageLineNum == 0) {
-                            // Mark start pos
-                            int page = pageStart + lines.size() / mPageLineNum;
-                            mTextStartPosForPages.put(page, textPos + totalCount);
-                            Log.i(TAG, "save text start pos "+page+":"+(textPos+totalCount));
-                        }
                         char ch = buffer[i];
                         if (ch == '\n') {
                             lines.add(line.toString());
+                            tail.add(textPos + totalCount );
+                            head.add(textPos + totalCount + 1 - line.length());
                             line.setLength(0);
                             lineWidth = 0;
                             totalCount++;
@@ -397,6 +407,8 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
                             int width = (int) (Math.ceil(chWidths[i]));
                             if (lineWidth + width > mTextWidth) {
                                 lines.add(line.toString());
+                                tail.add(textPos + totalCount );
+                                head.add(textPos + totalCount + 1 - line.length());
                                 line.setLength(0);
                                 i--;
                                 lineWidth = 0;
@@ -406,13 +418,6 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
                                 totalCount++;
                             }
                         }
-                        if (line.length() == 0 && lines.size() % mPageLineNum == 0) {
-                            // Mark end pos
-                            int page = pageStart + lines.size() / mPageLineNum - 1;
-                            mTextEndPosForPages.put(page, textPos + totalCount);
-                            Log.i(TAG, "save text end pos "+page+":"+(textPos+totalCount));
-                        }
-
                         if (lines.size() >= mPageLineNum*pageCount) {
                             break;
                         }
@@ -429,7 +434,6 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
                     }
                 }
             }
-            return lines;
         }
 
         private String interceptBuffer(char[] buffer, int start, int end) {
