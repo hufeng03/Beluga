@@ -43,7 +43,7 @@ public class LocalImageLoadTask extends BaseImageLoadTask {
                     bitmap = IconUtil.getVideoThumbnail(uri);
                     break;
                 case FileUtils.FILE_TYPE_APK:
-                    bitmap = FileUtils.getUninstallAPKIcon(FileManager.getAppContext(), uri);
+                    bitmap = FileUtils.getApkThumbnail(uri);
                     break;
                 default:
                     break;

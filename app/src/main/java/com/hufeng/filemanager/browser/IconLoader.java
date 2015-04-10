@@ -399,7 +399,7 @@ public class IconLoader implements Callback {
 //                        } else {
                     switch (id.mCategory) {
                         case FileUtils.FILE_TYPE_APK:
-                            holder.setImage(FileUtils.getUninstallAPKIcon(mContext, id.mPath));
+                            holder.setImage(FileUtils.getApkThumbnail(id.mPath));
                             break;
                         case FileUtils.FILE_TYPE_AUDIO:
                         case FileUtils.FILE_TYPE_IMAGE:

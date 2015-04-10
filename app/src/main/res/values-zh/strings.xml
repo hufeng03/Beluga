@@ -294,13 +294,13 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="ftp_title">远程管理</string>
 <string name="please_connect_after_started">请在FTP客户端中输入以下地址</string>
 <string name="please_connect_http_after_started">请在浏览器中输入以下地址</string>
-<string name="if_ftp_started">启动以后，可以从电脑远端管理手机文件</string>
-<string name="if_http_started">启动以后，可以从电脑远端管理手机文件</string>
+<string name="if_ftp_started">启动以后，可以从电脑远端管理投影仪文件</string>
+<string name="if_http_started">启动以后，可以从电脑远端管理投影仪文件</string>
 <string name="open_wifi_settings">WIFI设置</string>
 <string name="menu_cloud_rename">重命名</string>
-<string name="menu_cloud_download">下载到手机</string>
+<string name="menu_cloud_download">下载到投影仪</string>
 <string name="menu_cloud_share">分享</string>
-<string name="menu_cloud_delete_local">删除手机文件</string>
+<string name="menu_cloud_delete_local">删除投影仪文件</string>
 <string name="menu_cloud_delete_remote">删除云端文件</string>
 <string name="menu_cloud_detail">文件详情</string>
 <string name="menu_run">运行</string>
@@ -368,7 +368,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="move_from_safe_confirm_dialog_text">确认将<xliff:g id="count">%2$d</xliff:g>个文件移出保险箱，恢复到原有位置? </string>
 <string name="move_from_safe_confirm_dialog_title">保险箱</string>
 <string name="sdcard_volume">"SD卡: <xliff:g id="capacity">%s</xliff:g>(剩余空间<xliff:g id="available">%s</xliff:g>)"</string>
-<string name="phone_data_volume">"手机存储: <xliff:g id="capacity">%s</xliff:g>(剩余空间<xliff:g id="available">%s</xliff:g>)"</string>
+<string name="phone_data_volume">"投影仪存储: <xliff:g id="capacity">%s</xliff:g>(剩余空间<xliff:g id="available">%s</xliff:g>)"</string>
 <string name="sdcard1_volume">"SD卡1: <xliff:g id="capacity">%s</xliff:g>(<xliff:g id="available">%s</xliff:g>)"</string>
 <string name="sdcard2_volume">"SD卡2: <xliff:g id="capacity">%s</xliff:g>(<xliff:g id="available">%s</xliff:g>)"</string>
 <string name="phone_data_available">"剩余容量: "</string>
@@ -416,7 +416,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="category_backup">备份</string>
 <string name="contact_backup">联系人备份</string>
 <string name="sms_backup">短信备份</string>
-<string name="sms_backup_button_text">备份手机短信</string>
+<string name="sms_backup_button_text">备份投影仪短信</string>
 <string name="sms_recover_button_text">导入备份短信</string>
 <string name="sms_backup_history_button_text">查看备份历史</string>
 <string name="contact_backup_button_text">联系人备份</string>
@@ -470,7 +470,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="play_video_title">视频播放</string>
 <string name="music_player_label">音乐播放器</string>
 <string name="video_player_label">视频播放器</string>
-<string name="settings_backup_title">手机备份</string>
+<string name="settings_backup_title">投影仪备份</string>
 <string name="delete_one_history_item">删除了一条备份纪录</string>
 <string name="menu_zip">压缩</string>
 <string name="menu_unzip">解压缩</string>
@@ -552,9 +552,9 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 
 <string name="tool_name_recommend">精品推荐</string>
 <string name="tool_description_recommend">您可能感兴趣的热门免费精品应用</string>
-<string name="tool_description_ftp">创建FTP服务，在电脑上使用资源管理器或者FTP客户端来管理手机文件和多媒体</string>
+<string name="tool_description_ftp">创建FTP服务，在电脑上使用资源管理器或者FTP客户端来管理投影仪文件和多媒体</string>
 <string name="tool_description_smb">SMB description</string>
-<string name="tool_description_http">创建Web服务，在电脑上使用浏览器来管理手机文件和多媒体</string>
+<string name="tool_description_http">创建Web服务，在电脑上使用浏览器来管理投影仪文件和多媒体</string>
 <string name="tool_description_sftp">SFTP description</string>
 <!-- Accessibility description sent when user starts drawing a lock pattern. [CHAR LIMIT=NONE] -->
 <string name="lockscreen_access_pattern_start">Pattern started</string>
@@ -613,10 +613,10 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="kanbox_get_auth_failed">获取授权认证失败</string>
 <string name="kanbox_refresh_token_success">刷新授权令牌成功!</string>
 <string name="kanbox_refresh_file_list_error">刷新文件列表失败!</string>
-<string name="download_kanbox_android_client">下载使用酷盘手机版，送2T空间</string>
+<string name="download_kanbox_android_client">下载使用酷盘投影仪版，送2T空间</string>
 <string name="downloading_kanbox_android_client">"酷盘客户端正在下载: %1$d%%"</string>
 <string name="downloading_kanbox_android_client_wait">"酷盘客户端正在等待下载"</string>
-<string name="install_kanbox_android_client">安装使用酷盘手机版，送2T空间</string>
+<string name="install_kanbox_android_client">安装使用酷盘投影仪版，送2T空间</string>
 <string name="kanbox_uploading_files" formatted="false">正在上传%1$d个文件到酷盘</string>
 <string name="kanbox_uploading_files_with_success_and_failed" formatted="false">正在上传%1$d个文件(%2$d个已失败，%3$d个已成功)</string>
 <string name="kanbox_uploading_files_with_success" formatted="false">正在上传%1$d个文件(%2$d个已成功)</string>
@@ -630,7 +630,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="kanbox_intro_login">登录</string>
 <string name="kanbox_intro_login_with_taobao">淘宝用户无需注册可直接登录</string>
 <string name="kanbox_intro_slogan">阿里巴巴旗下个人云存储</string>
-<string name="kanbox_intro_tip">酷盘中的文件，可以在电脑、手机等不同设备同步</string>
+<string name="kanbox_intro_tip">酷盘中的文件，可以在电脑、投影仪等不同设备同步</string>
 <string name="kanbox_getting_file_list">正在加载...</string>
 <string name="kanbox_getting_file_list_empty">此文件夹为空</string>
 <string name="empty_selected_game">暂无推荐游戏</string>
@@ -677,12 +677,12 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="cannot_move_uploading">%1$s等%2$d个文件正在上传，无法剪切</string>
 <string name="cannot_delete_uploading">%1$s等%2$d个文件正在上传，无法删除</string>
 <string name="external_storage">SD卡</string>
-<string name="internal_storage">手机存储</string>
+<string name="internal_storage">存储</string>
 <string name="file_copy_full">复制失败，存储空间不足</string>
 <string name="file_move_full">移动失败，存储空间不足</string>
 <string name="file_download_full">下载失败，存储空间不足</string>
 <string name="no_app_to_share">没有可以分享的应用</string>
-<string name="no_app_to_view_pdf">手机尚未安装pdf阅读器，请安装后再次尝试打开</string>
+<string name="no_app_to_view_pdf">投影仪尚未安装pdf阅读器，请安装后再次尝试打开</string>
 <string name="dir_not_write_nor_read">当前目录无写入或读取权限</string>
 <string name="dir_not_write">当前目录无写入权限</string>
 <string name="kanbox_error_no_network">无网络连接</string>

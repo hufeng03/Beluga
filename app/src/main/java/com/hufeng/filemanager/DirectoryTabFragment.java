@@ -247,28 +247,28 @@ public class DirectoryTabFragment extends FileTabFragment implements
     }
 
     private void refreshAd(String path) {
-        if (path != null) {
-            boolean can_write = new File(path).canWrite();
-            boolean can_read = new File(path).canRead();
-            if (can_write && Constants.TRY_TO_TEST_WRITE) {
-                if(new File(path, ".test_writable").mkdir()){
-                    new File(path, ".test_writable").delete();
-                } else {
-                    can_write = false;
-                }
-            }
-            if (!can_write && !can_read) {
-                ((TextView)mAdLayout.findViewById(R.id.device_ad_tip)).setText(R.string.dir_not_write_nor_read);
-                mAdLayout.setVisibility(View.VISIBLE);
-            } else if (!can_write) {
-                ((TextView)mAdLayout.findViewById(R.id.device_ad_tip)).setText(R.string.dir_not_write);
-                mAdLayout.setVisibility(View.VISIBLE);
-            } else {
-                mAdLayout.setVisibility(View.GONE);
-            }
-        } else {
+//        if (path != null) {
+//            boolean can_write = new File(path).canWrite();
+//            boolean can_read = new File(path).canRead();
+//            if (can_write && Constants.TRY_TO_TEST_WRITE) {
+//                if(new File(path, ".test_writable").mkdir()){
+//                    new File(path, ".test_writable").delete();
+//                } else {
+//                    can_write = false;
+//                }
+//            }
+//            if (!can_write && !can_read) {
+//                ((TextView)mAdLayout.findViewById(R.id.device_ad_tip)).setText(R.string.dir_not_write_nor_read);
+//                mAdLayout.setVisibility(View.VISIBLE);
+//            } else if (!can_write) {
+//                ((TextView)mAdLayout.findViewById(R.id.device_ad_tip)).setText(R.string.dir_not_write);
+//                mAdLayout.setVisibility(View.VISIBLE);
+//            } else {
+//                mAdLayout.setVisibility(View.GONE);
+//            }
+//        } else {
             mAdLayout.setVisibility(View.GONE);
-        }
+//        }
     }
 
     @Override

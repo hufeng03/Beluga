@@ -294,13 +294,13 @@ or nonexistent.</string>
     <string name="ftp_title">遠程管理</string>
     <string name="please_connect_after_started">請在FTP客戶端中輸入以下地址</string>
     <string name="please_connect_http_after_started">請在瀏覽器中輸入以下地址</string>
-    <string name="if_ftp_started">啟動以後，可以從電腦遠端管理手機文件</string>
-    <string name="if_http_started">啟動以後，可以從電腦遠端管理手機文件</string>
+    <string name="if_ftp_started">啟動以後，可以從電腦遠端管理投影儀文件</string>
+    <string name="if_http_started">啟動以後，可以從電腦遠端管理投影儀文件</string>
     <string name="open_wifi_settings">WIFI設置</string>
     <string name="menu_cloud_rename">重命名</string>
-    <string name="menu_cloud_download">下載到手機</string>
+    <string name="menu_cloud_download">下載到投影儀</string>
     <string name="menu_cloud_share">分享</string>
-    <string name="menu_cloud_delete_local">刪除手機文件</string>
+    <string name="menu_cloud_delete_local">刪除投影儀文件</string>
     <string name="menu_cloud_delete_remote">刪除雲端文件</string>
     <string name="menu_cloud_detail">文件詳情</string>
     <string name="menu_run">運行</string>
@@ -368,7 +368,7 @@ or nonexistent.</string>
     <string name="move_from_safe_confirm_dialog_text">確認將<xliff:g id="count">%2$d</xliff:g>個文件移出保險箱，恢復到原有位置? </string>
     <string name="move_from_safe_confirm_dialog_title">保險箱</string>
     <string name="sdcard_volume">"SD卡: <xliff:g id="capacity">%s</xliff:g>(剩余空間<xliff:g id="available">%s</xliff:g>)"</string>
-    <string name="phone_data_volume">"手機存儲: <xliff:g id="capacity">%s</xliff:g>(剩余空間<xliff:g id="available">%s</xliff:g>)"</string>
+    <string name="phone_data_volume">"投影儀存儲: <xliff:g id="capacity">%s</xliff:g>(剩余空間<xliff:g id="available">%s</xliff:g>)"</string>
     <string name="sdcard1_volume">"SD卡1: <xliff:g id="capacity">%s</xliff:g>(<xliff:g id="available">%s</xliff:g>)"</string>
     <string name="sdcard2_volume">"SD卡2: <xliff:g id="capacity">%s</xliff:g>(<xliff:g id="available">%s</xliff:g>)"</string>
     <string name="phone_data_available">"剩余容量: "</string>
@@ -416,7 +416,7 @@ or nonexistent.</string>
     <string name="category_backup">備份</string>
     <string name="contact_backup">聯系人備份</string>
     <string name="sms_backup">短信備份</string>
-    <string name="sms_backup_button_text">備份手機短信</string>
+    <string name="sms_backup_button_text">備份投影儀短信</string>
     <string name="sms_recover_button_text">導入備份短信</string>
     <string name="sms_backup_history_button_text">查看備份歷史</string>
     <string name="contact_backup_button_text">聯系人備份</string>
@@ -470,7 +470,7 @@ or nonexistent.</string>
     <string name="play_video_title">視頻播放</string>
     <string name="music_player_label">音樂播放器</string>
     <string name="video_player_label">視頻播放器</string>
-    <string name="settings_backup_title">手機備份</string>
+    <string name="settings_backup_title">投影儀備份</string>
     <string name="delete_one_history_item">刪除了壹條備份紀錄</string>
     <string name="menu_zip">壓縮</string>
     <string name="menu_unzip">解壓縮</string>
@@ -552,9 +552,9 @@ or nonexistent.</string>
 
     <string name="tool_name_recommend">精品推薦</string>
     <string name="tool_description_recommend">您可能感興趣的熱門免費精品應用</string>
-    <string name="tool_description_ftp">創建FTP服務，在電腦上使用資源管理器或者FTP客戶端來管理手機文件和多媒體</string>
+    <string name="tool_description_ftp">創建FTP服務，在電腦上使用資源管理器或者FTP客戶端來管理投影儀文件和多媒體</string>
     <string name="tool_description_smb">SMB description</string>
-    <string name="tool_description_http">創建Web服務，在電腦上使用瀏覽器來管理手機文件和多媒體</string>
+    <string name="tool_description_http">創建Web服務，在電腦上使用瀏覽器來管理投影儀文件和多媒體</string>
     <string name="tool_description_sftp">SFTP description</string>
     <!-- Accessibility description sent when user starts drawing a lock pattern. [CHAR LIMIT=NONE] -->
     <string name="lockscreen_access_pattern_start">Pattern started</string>
@@ -613,10 +613,10 @@ or nonexistent.</string>
     <string name="kanbox_get_auth_failed">獲取授權認證失敗</string>
     <string name="kanbox_refresh_token_success">刷新授權令牌成功!</string>
     <string name="kanbox_refresh_file_list_error">刷新文件列表失敗!</string>
-    <string name="download_kanbox_android_client">下載使用酷盤手機版，送2T空間</string>
+    <string name="download_kanbox_android_client">下載使用酷盤投影儀版，送2T空間</string>
     <string name="downloading_kanbox_android_client">"酷盤客戶端正在下載: %1$d%%"</string>
     <string name="downloading_kanbox_android_client_wait">酷盤客戶端正在等待下載</string>
-    <string name="install_kanbox_android_client">安裝使用酷盤手機版，送2T空間</string>
+    <string name="install_kanbox_android_client">安裝使用酷盤投影儀版，送2T空間</string>
     <string name="kanbox_uploading_files" formatted="false">正常上傳%1$d個文件到酷盤</string>
     <string name="kanbox_uploading_files_with_success_and_failed" formatted="false">正在上傳%1$d個文件(%2$d個已失敗，%3$d個已成功)</string>
     <string name="kanbox_uploading_files_with_success" formatted="false">正在上傳%1$d個文件(%2$d個已成功)</string>
@@ -630,7 +630,7 @@ or nonexistent.</string>
     <string name="kanbox_intro_login">登錄</string>
     <string name="kanbox_intro_login_with_taobao">淘寶用戶無需註冊可直接登錄</string>
     <string name="kanbox_intro_slogan">阿裏巴巴旗下個人雲存儲</string>
-    <string name="kanbox_intro_tip">酷盤中的文件，可以在電腦、手機等不同設備同步</string>
+    <string name="kanbox_intro_tip">酷盤中的文件，可以在電腦、投影儀等不同設備同步</string>
     <string name="kanbox_getting_file_list">正在加載...</string>
     <string name="kanbox_getting_file_list_empty">此文件夹为空</string>
     <string name="empty_selected_game">暫無推薦遊戲</string>
@@ -677,12 +677,12 @@ or nonexistent.</string>
     <string name="cannot_move_uploading">%1$s等%2$d個文件正在上傳，無法剪切</string>
     <string name="cannot_delete_uploading">%1$s等%2$d個文件正在上傳，無法删除</string>
     <string name="external_storage">SD卡</string>
-    <string name="internal_storage">手機存儲</string>
+    <string name="internal_storage">存儲</string>
     <string name="file_copy_full">複制失敗，存儲空間不足</string>
     <string name="file_move_full">移動失敗，存儲空間不足</string>
     <string name="file_download_full">下載失敗，存儲空間不足</string>
     <string name="no_app_to_share">沒有可以分享的應用</string>
-    <string name="no_app_to_view_pdf">手機尚未安裝pdf閱讀器，請安裝後再次嘗試打開</string>
+    <string name="no_app_to_view_pdf">投影儀尚未安裝pdf閱讀器，請安裝後再次嘗試打開</string>
     <string name="dir_not_write_nor_read">當前目錄無寫入或讀取權限</string>
     <string name="dir_not_write">當前目錄無寫入權限</string>
     <string name="kanbox_error_no_network">無網絡連接</string>

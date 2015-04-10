@@ -45,7 +45,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
     public static final String ACTION_UPLOAD_FILES = "action_upload_files";
     public static final String ACTION_CANCEL_PASTE_FILES = "action_cancel_paste_files";
 
-	private static final int FRAGMENT_COUNT = 3;
+	private static final int FRAGMENT_COUNT = 2;
     private static final int FRAGMENT_INDEX_SELECTED = -1;
     private static final int FRAGMENT_INDEX_CATEGORY = 0;
     private static final int FRAGMENT_INDEX_DEVICE = 1;
@@ -133,6 +133,9 @@ public class FileManagerTabActivity extends FileOperationActivity{
         } else if ("hosin".equals(Constants.PRODUCT_FLAVOR_NAME)) {
             mTabAdapter.addTab(ftpTab,
                     FtpTabFragment.class, null);
+        } else if ("hongdie".equals(Constants.PRODUCT_FLAVOR_NAME)) {
+//            mTabAdapter.addTab(ftpTab,
+//                    FtpTabFragment.class, null);
         } else {
             if (Constants.SHOW_KANBOX_CATEGORY) {
                 mTabAdapter.addTab(kanboxTab,
@@ -154,7 +157,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
             mAppRate.init();
         }
 
-        if (!"hosin".equals(Constants.PRODUCT_FLAVOR_NAME) && !"google".equals(Constants.PRODUCT_FLAVOR_NAME) ) {
+        if (!"hosin".equals(Constants.PRODUCT_FLAVOR_NAME) && !"hongdie".equals(Constants.PRODUCT_FLAVOR_NAME) && !"google".equals(Constants.PRODUCT_FLAVOR_NAME) ) {
             showChinaTipDialog();
         }
 

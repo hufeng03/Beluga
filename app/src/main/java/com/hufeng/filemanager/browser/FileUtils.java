@@ -9,6 +9,8 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -348,11 +350,25 @@ public class FileUtils {
             appInfo.sourceDir = path;
             appInfo.publicSourceDir = path;
             Drawable icon = appInfo.loadIcon(context.getPackageManager());
-            return DrawableUtil.getBitmapFromDrawable(icon);
+            return getBitmapFromDrawable(icon);
         } else {
             return getApkThumbnailByReflection(path);
         }
     }
+
+
+    public static Bitmap getBitmapFromDrawable(Drawable icon) {
+        if (icon instanceof BitmapDrawable) {
+            return ((BitmapDrawable)icon).getBitmap();
+        } else {
+            Bitmap bitmap = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            icon.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            icon.draw(canvas);
+            return bitmap;
+        }
+    }
+
 
     public static Bitmap getApkThumbnailByReflection(String apkPath) {
         final Context context = FileManager.getAppContext();
@@ -423,7 +439,7 @@ public class FileUtils {
             if (info != null) {
                 if (info.icon != 0) {// 图片存在，则读取相关信息
                     Drawable icon = res.getDrawable(info.icon);// 图标
-                    return DrawableUtil.getBitmapFromDrawable(icon);
+                    return getBitmapFromDrawable(icon);
                 } else {
                     return null;
                 }
