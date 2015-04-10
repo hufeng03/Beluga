@@ -18,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextPaint;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -52,12 +53,11 @@ import refactor.com.android.contacts.common.util.ViewUtil;
  */
 public class TextViewerActivity extends BelugaBaseActionBarActivity {
 
-
     private static final String TAG = "TextViewerActivity";
 
     BelugaTextViewerTaskFragment mTaskFragment;
 
-    BelugaNavigationDrawerFragment mNavigationDrawerFragment;
+//    BelugaNavigationDrawerFragment mNavigationDrawerFragment;
 
     TextViewPager mTextViewPager;
     TextPagerAdapter mTextPagerAdapter;
@@ -65,7 +65,6 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
 
     private Uri mUri;
 
-    private long mTextPos = 0;
     private int mSelectedPage = 0;
     private int mTotalPage = 0;
 
@@ -81,9 +80,12 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.beluga_text_viewer_activity);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_color_dark));
+        }
 
         mUri = getIntent().getData();
 
@@ -95,13 +97,14 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mNavigationDrawerFragment = (BelugaNavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        final DrawerLayout drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        mNavigationDrawerFragment.setUp(drawerLayout, toolbar, new DrawerItem[] {
-                new DrawerItem(R.id.drawer_item_text_viewer_settings, getResources().getDrawable(R.drawable.ic_settings_24dp), getString(R.string.settings_label), true),
-        }, 0);
+//        mNavigationDrawerFragment = (BelugaNavigationDrawerFragment)
+//                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+//        final DrawerLayout drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+//        mNavigationDrawerFragment.setUp(drawerLayout, toolbar, new DrawerItem[] {
+//                new DrawerItem(R.id.drawer_item_text_viewer_settings, getResources().getDrawable(R.drawable.ic_settings_24dp), getString(R.string.settings_label), true),
+//        }, 0);
 
 
         mTextViewPager = (TextViewPager)findViewById(R.id.text_pager);
@@ -120,7 +123,6 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
             mFragmentTransaction.commit();
             mTaskFragment = textViewerTaskFragment;
         } else {
-            mTextPos = savedInstanceState.getLong("TextPos", 0);
             mTaskFragment = (BelugaTextViewerTaskFragment)mFragmentManager.findFragmentByTag("TextViewerTaskFragment");
         }
 
@@ -134,7 +136,7 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
             public void onGlobalLayout() {
                 mViewPagerWidth = mTextViewPager.getWidth();
                 mViewPagerHeight = mTextViewPager.getHeight();
-                mTaskFragment.setTextSize(mSelectedPage, mViewPagerWidth - mPadding * 2, mViewPagerHeight - mPadding * 2);
+                mTaskFragment.setTextSize(mViewPagerWidth - mPadding * 2, mViewPagerHeight - mPadding * 2);
 
                 // Initial start
                 mTaskFragment.loadTriplePagesAsync(mSelectedPage);
@@ -144,18 +146,13 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
         });
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putLong("TextPos", getTextPosForPage(mSelectedPage));
-        super.onSaveInstanceState(outState);
-    }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mNavigationDrawerFragment.getDrawerToggle().syncState();
-    }
+//    @Override
+//    protected void onPostCreate(Bundle savedInstanceState) {
+//        super.onPostCreate(savedInstanceState);
+//        // Sync the toggle state after onRestoreInstanceState has occurred.
+//        mNavigationDrawerFragment.getDrawerToggle().syncState();
+//    }
 
     private class TextPagerAdapter extends PagerAdapter {
 
@@ -199,10 +196,6 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
         return mTaskFragment.getContentFromCache(pos);
     }
 
-    private long getTextPosForPage(int page) {
-        return mTaskFragment.getTextPosForPage(page);
-    }
-
     private class TextPagerChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
@@ -214,7 +207,7 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
         public void onPageSelected(int position) {
             mSelectedPage = position;
             loadContentForSelfAndNeighborPages();
-            Toast.makeText(TextViewerActivity.this, "Page " + (position+1)+"/"+mTotalPage, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(TextViewerActivity.this, "Page " + (position+1)+"/"+mTotalPage, Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -245,7 +238,8 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
 
     public static class BelugaTextViewerTaskFragment extends Fragment {
 
-        private Map<Integer, Long> mTextPosForPages = new HashMap<Integer, Long>();
+        private Map<Integer, Long> mTextStartPosForPages = new HashMap<Integer, Long>();
+        private Map<Integer, Long> mTextEndPosForPages = new HashMap<Integer, Long>();
         private Map<Integer, List<String>> mContentForPages = new HashMap<Integer, List<String>>();
         private int mTotalPage;
 
@@ -267,17 +261,14 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
             return fragment;
         }
 
-        public void setTextSize(int page, int width, int height) {
+        public void setTextSize( int width, int height) {
             if (mTextWidth != width || mTextHeight != height) {
                 mTextWidth = width;
                 mTextHeight = height;
                 Log.i(TAG, "set text size " + mTextWidth + "," + mTextHeight);
-                Long textPos = mTextPosForPages.get(page);
-                mTextPosForPages.clear();
+                mTextStartPosForPages.clear();
+                mTextEndPosForPages.clear();
                 mContentForPages.clear();
-                if (textPos!=null) {
-                    mTextPosForPages.put(page, textPos);
-                }
             }
         }
 
@@ -285,9 +276,6 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
             return mContentForPages.get(page);
         }
 
-        public long getTextPosForPage(int page) {
-            return mTextPosForPages.get(page);
-        }
 
         public void removeContentCache(int position) {
             mContentForPages.remove(position);
@@ -368,10 +356,12 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
 
             long textPos = 0;
             if (pageStart > 0) {
-                Long posVal = mTextPosForPages.get(pageStart);
+                Long posVal = mTextStartPosForPages.get(pageStart);
                 if (posVal != null) {
                     textPos = posVal.longValue();
                     Log.i(TAG, "retrieve text pos "+pageStart+":"+textPos);
+                } else {
+                    Log.i(TAG, "bug happens as no text pos for "+pageStart);
                 }
             }
             InputStream fInStream = null;
@@ -382,22 +372,27 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
                 StringBuffer line = new StringBuffer();
                 int lineWidth = 0;
                 int totalCount = 0;
+
                 while (lines.size() < mPageLineNum*pageCount) {
                     int count = br.read(buffer, 0, 1024);
+                    if (count == 0) {
+                        break;
+                    }
                     float[] chWidths = new float[count];
                     mPaint.getTextWidths(interceptBuffer(buffer, 0, count), chWidths);
                     for (int i = 0; i < count; i++) {
                         if (line.length() ==0 && lines.size() % mPageLineNum == 0) {
-                            // Mark it
+                            // Mark start pos
                             int page = pageStart + lines.size() / mPageLineNum;
-                            mTextPosForPages.put(page, textPos + totalCount);
-                            Log.i(TAG, "save text pos "+page+":"+(textPos+totalCount));
+                            mTextStartPosForPages.put(page, textPos + totalCount);
+                            Log.i(TAG, "save text start pos "+page+":"+(textPos+totalCount));
                         }
                         char ch = buffer[i];
                         if (ch == '\n') {
                             lines.add(line.toString());
                             line.setLength(0);
                             lineWidth = 0;
+                            totalCount++;
                         } else {
                             int width = (int) (Math.ceil(chWidths[i]));
                             if (lineWidth + width > mTextWidth) {
@@ -408,9 +403,16 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
                             } else {
                                 line.append(ch);
                                 lineWidth += width;
+                                totalCount++;
                             }
                         }
-                        totalCount++;
+                        if (line.length() == 0 && lines.size() % mPageLineNum == 0) {
+                            // Mark end pos
+                            int page = pageStart + lines.size() / mPageLineNum - 1;
+                            mTextEndPosForPages.put(page, textPos + totalCount);
+                            Log.i(TAG, "save text end pos "+page+":"+(textPos+totalCount));
+                        }
+
                         if (lines.size() >= mPageLineNum*pageCount) {
                             break;
                         }
@@ -438,5 +440,15 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
             return sBuffer.toString();
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }
