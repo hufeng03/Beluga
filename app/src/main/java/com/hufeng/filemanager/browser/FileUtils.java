@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -239,8 +240,8 @@ public class FileUtils {
 		sFileMap = new HashMap<String, Integer>();
 		
     	Cursor cursor = FileManager.getAppContext().getContentResolver()
-    			.query(MatchColumns.CONTENT_URI, new String[] {
-           MatchColumns.EXTENSION_FIELD, MatchColumns.CATEGORY_FIELD},null, null, null);
+    			.query(MatchColumns.CONTENT_URI, new String[]{
+                        MatchColumns.EXTENSION_FIELD, MatchColumns.CATEGORY_FIELD}, null, null, null);
     	    	
     	if(cursor!=null)
     	{
@@ -339,73 +340,102 @@ public class FileUtils {
         return null;
     }
 
-    public static Bitmap getUninstallAPKIcon(Context context, String apkPath) {
+    public static Bitmap getApkThumbnail(String path) {
+        final Context context = FileManager.getAppContext();
+        PackageInfo packageInfo = context.getPackageManager().getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
+        if (packageInfo != null) {
+            ApplicationInfo appInfo = packageInfo.applicationInfo;
+            appInfo.sourceDir = path;
+            appInfo.publicSourceDir = path;
+            Drawable icon = appInfo.loadIcon(context.getPackageManager());
+            return DrawableUtil.getBitmapFromDrawable(icon);
+        } else {
+            return getApkThumbnailByReflection(path);
+        }
+    }
+
+    public static Bitmap getApkThumbnailByReflection(String apkPath) {
+        final Context context = FileManager.getAppContext();
+        File apkFile = new File(apkPath);
+        if (!apkFile.exists() || !apkPath.toLowerCase().endsWith(".apk")) {
+            return null;
+        }
         String PATH_PackageParser = "android.content.pm.PackageParser";
         String PATH_AssetManager = "android.content.res.AssetManager";
         try {
-            Class pkgParserCls = Class.forName(PATH_PackageParser);
-            Class[] typeArgs = new Class[1];
-            typeArgs[0] = String.class;
-            Constructor pkgParserCt = pkgParserCls.getConstructor(typeArgs);
-            Object[] valueArgs = new Object[1];
-            valueArgs[0] = apkPath;
+            //反射得到pkgParserCls对象并实例化,有参数
+            Class<?> pkgParserCls = Class.forName(PATH_PackageParser);
+            Class<?>[] typeArgs = {String.class};
+            Constructor<?> pkgParserCt = pkgParserCls.getConstructor(typeArgs);
+            Object[] valueArgs = {apkPath};
             Object pkgParser = pkgParserCt.newInstance(valueArgs);
-            LogUtil.d("ANDROID_LAB", "pkgParser:" + pkgParser.toString());
+
+            //从pkgParserCls类得到parsePackage方法
             DisplayMetrics metrics = new DisplayMetrics();
-            metrics.setToDefaults();
-            typeArgs = new Class[4];
-            typeArgs[0] = File.class;
-            typeArgs[1] = String.class;
-            typeArgs[2] = DisplayMetrics.class;
-            typeArgs[3] = Integer.TYPE;
-            Method pkgParser_parsePackageMtd = pkgParserCls.getDeclaredMethod(
-                    "parsePackage", typeArgs);
-            valueArgs = new Object[4];
-            valueArgs[0] = new File(apkPath);
-            valueArgs[1] = apkPath;
-            valueArgs[2] = metrics;
-            valueArgs[3] = 0;
-            Object pkgParserPkg = pkgParser_parsePackageMtd.invoke(pkgParser,
-                    valueArgs);
+            metrics.setToDefaults();//这个是与显示有关的, 这边使用默认
+            typeArgs = new Class<?>[]{File.class, String.class,
+                    DisplayMetrics.class, int.class};
+            Method pkgParser_parsePackageMtd = pkgParserCls.getDeclaredMethod("parsePackage", typeArgs);
+
+            valueArgs = new Object[]{new File(apkPath), apkPath, metrics, 0};
+            //执行pkgParser_parsePackageMtd方法并返回
+            Object pkgParserPkg = pkgParser_parsePackageMtd.invoke(pkgParser, valueArgs);
+            //从返回的对象得到名为"applicationInfo"的字段对象
+            if (pkgParserPkg == null) {
+                return null;
+            }
             Field appInfoFld = pkgParserPkg.getClass().getDeclaredField(
                     "applicationInfo");
+
+            //从对象"pkgParserPkg"得到字段"appInfoFld"的值
+            if (appInfoFld.get(pkgParserPkg) == null) {
+                return null;
+            }
             ApplicationInfo info = (ApplicationInfo) appInfoFld
                     .get(pkgParserPkg);
-            Class assetMagCls = Class.forName(PATH_AssetManager);
-            Constructor assetMagCt = assetMagCls.getConstructor((Class[]) null);
-            Object assetMag = assetMagCt.newInstance((Object[]) null);
+            //反射得到assetMagCls对象并实例化,无参
+            Class<?> assetMagCls = Class.forName(PATH_AssetManager);
+            Object assetMag = assetMagCls.newInstance();
+            //从assetMagCls类得到addAssetPath方法
             typeArgs = new Class[1];
             typeArgs[0] = String.class;
             Method assetMag_addAssetPathMtd = assetMagCls.getDeclaredMethod(
                     "addAssetPath", typeArgs);
             valueArgs = new Object[1];
             valueArgs[0] = apkPath;
+            //执行assetMag_addAssetPathMtd方法
             assetMag_addAssetPathMtd.invoke(assetMag, valueArgs);
-            Resources res = context.getResources();// getResources();
+            //得到Resources对象并实例化,有参数
+            Resources res = context.getResources();
             typeArgs = new Class[3];
             typeArgs[0] = assetMag.getClass();
             typeArgs[1] = res.getDisplayMetrics().getClass();
             typeArgs[2] = res.getConfiguration().getClass();
-            Constructor resCt = Resources.class.getConstructor(typeArgs);
+            Constructor<Resources> resCt = Resources.class
+                    .getConstructor(typeArgs);
             valueArgs = new Object[3];
             valueArgs[0] = assetMag;
             valueArgs[1] = res.getDisplayMetrics();
             valueArgs[2] = res.getConfiguration();
             res = (Resources) resCt.newInstance(valueArgs);
-            CharSequence label = null;
-            if (info.labelRes != 0) {
-                label = res.getText(info.labelRes);
-            }
-            LogUtil.d("ANDROID_LAB", "label=" + label);
-            if (info.icon != 0) {
-                Bitmap icon = BitmapFactory.decodeResource(res, info.icon);
-                return icon;
+            // 读取apk文件的信息
+
+            if (info != null) {
+                if (info.icon != 0) {// 图片存在，则读取相关信息
+                    Drawable icon = res.getDrawable(info.icon);// 图标
+                    return DrawableUtil.getBitmapFromDrawable(icon);
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
             }
         } catch (Exception e) {
-            // e.printStackTrace();
+            e.printStackTrace();
         }
         return null;
     }
+
 
 
     public static Uri getPathFromMediaContent(Context context, Uri contentUri) {
