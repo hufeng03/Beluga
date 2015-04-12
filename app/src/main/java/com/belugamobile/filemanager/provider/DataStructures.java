@@ -5,9 +5,11 @@ package com.belugamobile.filemanager.provider;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import com.belugamobile.filemanager.BuildConfig;
+
 public class DataStructures {
 	
-	public static final String AUTHORITY = "com.belugamobile.filemanager";
+	public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider";
 
 	public static class CategoryColumns implements BaseColumns {
 		

@@ -59,9 +59,6 @@ public abstract class BelugaBaseActionBarActivity extends ActionBarActivity {
 		if (DEBUG)
     		LogUtil.i(((Object)this).getClass().getSimpleName(), "onResume");
 		super.onResume();
-        if (Constants.USE_UMENG) {
-		    UmengDelegate.umengAnalysisResume(this);
-        }
 	}
 
 	@Override
@@ -69,9 +66,6 @@ public abstract class BelugaBaseActionBarActivity extends ActionBarActivity {
 		if (DEBUG)
     		LogUtil.i(((Object)this).getClass().getSimpleName(), "onPause");
 		super.onPause();
-        if (Constants.USE_UMENG) {
-            UmengDelegate.umengAnalysisPause(this);
-        }
 	}
 
     @Override

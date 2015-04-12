@@ -28,9 +28,6 @@ public abstract class FileTabFragment extends BelugaBaseFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		if (Constants.RETAIN_FRAGMENT) {
-			setRetainInstance(true);
-		}
 //		setHasOptionsMenu(true);
 	}
 

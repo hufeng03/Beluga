@@ -162,7 +162,7 @@
  		    android:exported="false"
             android:name=".provider.FileManagerProvider"
             android:process=":scan"
-            android:authorities="com.belugamobile.filemanager" />
+            android:authorities="${applicationId}.provider" />
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

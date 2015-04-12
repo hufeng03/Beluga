@@ -76,6 +76,7 @@ android {
         def doovSigning = signingConfigs.doovConfig
         def belugaSigning = signingConfigs.belugaConfig
     	google {
+            applicationId = 'com.hufeng03.filemanager'
             signingConfig googleSigning
     	}
         doov {
