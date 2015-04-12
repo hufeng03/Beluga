@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <Preference
+    <!--Preference
         android:title="@string/help_write_fail_question"
         android:icon="@null"
         android:summary="@string/help_write_fail_answer">
-    </Preference>
+    </Preference!-->
     <Preference
+        android:key="MARKET_REVIEW_KEY"
         android:title="@string/review_label"
         android:icon="@null"
         android:summary="@string/good_review_request">
-        <intent android:action="android.intent.action.VIEW"
-            android:data="market://details?id=com.belugamobile.filemanager" />
     </Preference>
     <Preference
         android:title="@string/email_label"

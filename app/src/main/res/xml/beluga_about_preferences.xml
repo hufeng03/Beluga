@@ -5,8 +5,6 @@
         android:title="@string/version_label"
         android:icon="@null"
         android:summary="1.0.0">
-        <!--intent android:action="android.intent.action.VIEW"
-            android:data="market://details?id=com.belugamobile.filemanager" /!-->
     </Preference>
     <Preference
         android:title="@string/website_label"

@@ -76,7 +76,7 @@ android {
         def doovSigning = signingConfigs.doovConfig
         def belugaSigning = signingConfigs.belugaConfig
     	google {
-            applicationId = 'com.hufeng03.filemanager'
+            applicationId = 'com.hufeng.filemanager'
             signingConfig googleSigning
     	}
         doov {
@@ -146,7 +146,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     googleCompile fileTree(dir: 'libs', include: '*.jar')
     googleCompile fileTree(dir: 'src/google/libs', include: '*.jar')
-    compile('com.crashlytics.sdk.android:crashlytics:2.2.2@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.2.3@aar') {
         transitive = true;
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">Beluga</string>
+    <string name="app_name">鲸鱼文件管理</string>
     <string name="open_drawer">打開</string>
     <string name="close_drawer">關閉</string>
     <string name="my_apps">我的應用</string>
