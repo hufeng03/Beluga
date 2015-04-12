@@ -12,6 +12,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import com.crashlytics.android.Crashlytics;
 import com.hufeng.filemanager.channel.DoovUtil;
 import com.hufeng.filemanager.provider.DataStructures.MatchColumns;
 import com.hufeng.filemanager.provider.DataStructures.PreferenceColumns;
@@ -19,6 +20,7 @@ import com.hufeng.filemanager.services.UiServiceHelper;
 import com.hufeng.filemanager.utils.LogUtil;
 import com.hufeng.filemanager.utils.OSUtil;
 import com.hufeng.filemanager.utils.PackageUtil;
+import io.fabric.sdk.android.Fabric;
 
 
 public class FileManager extends Application/* implements GalleryApp*/{
@@ -49,6 +51,7 @@ public class FileManager extends Application/* implements GalleryApp*/{
                     .build());
         }
 		super.onCreate();
+		Fabric.with(this, new Crashlytics());
 		
 		mContext = this;
 

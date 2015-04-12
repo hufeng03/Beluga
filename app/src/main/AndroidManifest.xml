@@ -353,12 +353,15 @@
  		
  		<uses-library android:name="android.test.runner" />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="56cebd9e1be125a9a7d298054b39f0fee3cd8ae2" />
     </application>
         
  	<uses-permission android:name="android.permission.RUN_INSTRUMENTATION" />
 
-	<instrumentation android:name="android.test.InstrumentationTestRunner" 
-	    android:targetPackage="com.hufeng.filemanager"
+	<instrumentation android:name="android.test.InstrumentationTestRunner"
+	    android:targetPackage="com.belugamobile.filemanager"
 	    android:label="Test for FileManager"/>
 
 </manifest>
