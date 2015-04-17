@@ -28,8 +28,9 @@ public class CategoryTabFragment extends FileTabFragment {
     private int mCategory;
     private String mFolderPath;
     private String mZipPath;
+    private View mRootView;
 
-    public Fragment mCategoryFragment;
+    public NewCategoryFragment mCategoryFragment;
 
     @Override
 	public void onCreate(Bundle savedInstanceState){
@@ -62,16 +63,20 @@ public class CategoryTabFragment extends FileTabFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		View view = inflater.inflate(R.layout.category_tab_fragment, container, false);
-		return view;
+		mRootView = inflater.inflate(R.layout.category_tab_fragment, container, false);
+		return mRootView;
 	}
 	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-        showSingleCategoryPanel();
+        showCategoryMasterPanel();
+        refreshCategoryDetailPanel();
 	}
-	
+
+
+
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -103,7 +108,7 @@ public class CategoryTabFragment extends FileTabFragment {
     public void onCategorySelected(CategorySelectEvent event) {
         if (getUserVisibleHint() && event != null) {
             mCategory = event.category;
-            showSingleCategoryPanel();
+            refreshCategoryDetailPanel();
         }
     }
 
@@ -111,7 +116,7 @@ public class CategoryTabFragment extends FileTabFragment {
     public void onFolderOpen(FolderOpenEvent event) {
         if (getUserVisibleHint() && event != null) {
             mFolderPath = event.entry.path;
-            toFileBrowser();
+            showFileBrowser();
         }
     }
 
@@ -119,13 +124,14 @@ public class CategoryTabFragment extends FileTabFragment {
     public void onZipView(ZipViewEvent event) {
         if (getUserVisibleHint() && event != null) {
             mZipPath = event.path;
-            toZipBrowser();
+            showZipBrowser();
         }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mRootView = null;
     }
 
     @Override
@@ -143,35 +149,47 @@ public class CategoryTabFragment extends FileTabFragment {
         } else {
             return false;
         }
-        showSingleCategoryPanel();
+        refreshCategoryDetailPanel();
 
         return true;
 	}
 
-    private void toCategoryPanel() {
+    private void showCategoryMasterPanel() {
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
         NewCategoryFragment fragment = (NewCategoryFragment) getChildFragmentManager().findFragmentByTag(NewCategoryFragment.class.getSimpleName());
         if (fragment == null) {
             fragment = new NewCategoryFragment();
-            ft.replace(R.id.fragment_container, fragment, NewCategoryFragment.class.getSimpleName());
+            ft.replace(R.id.first_fragment_container, fragment, NewCategoryFragment.class.getSimpleName());
         } else {
             if (fragment.isDetached()) {
                 ft.attach(fragment);
             }
         }
+
+        if (mCurrentChildFragment != null) {
+            ft.remove(mCurrentChildFragment);
+        }
+
         ft.commit();
         mCategoryFragment = fragment;
-        mCurrentChildFragment = null;
-        mCategory = FileCategoryHelper.CATEGORY_TYPE_UNKNOW;
 
         Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
         t.setScreenName("Category Panel");
         t.send(new HitBuilders.AppViewBuilder().build());
 	}
 
+    private void showEmptyDetail() {
+        final FragmentManager fm = getChildFragmentManager();
+        final FragmentTransaction ft = fm.beginTransaction();
+        if (mCurrentChildFragment != null) {
+            ft.remove(mCurrentChildFragment);
+            ft.commit();
+            mCurrentChildFragment = null;
+        }
+    }
 
-    private void toFileGrouper() {
+    private void showFileGrouper() {
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
         final String tag = "FileGrouper";
@@ -180,20 +198,20 @@ public class CategoryTabFragment extends FileTabFragment {
             fragment = FileGrouperFragment.newCategoryGrouperInstance(mCategory);
             ft.replace(R.id.fragment_container, fragment, tag);
         } else {
+            fragment.setCategory(mCategory);
             if (fragment.isDetached()) {
                 ft.attach(fragment);
             }
         }
         ft.commit();
         mCurrentChildFragment = fragment;
-        mCategoryFragment = null;
 
         Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
         t.setScreenName("File Grouper: "+mCategory);
         t.send(new HitBuilders.AppViewBuilder().build());
     }
 
-    private void toFavoriteList() {
+    private void showFavoriteList() {
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
         final String tag = "FavoriteList";
@@ -209,14 +227,13 @@ public class CategoryTabFragment extends FileTabFragment {
             }
         }
         mCurrentChildFragment = fragment;
-        mCategoryFragment = null;
 
         Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
         t.setScreenName("Favorite List: "+mCategory);
         t.send(new HitBuilders.AppViewBuilder().build());
     }
 
-    private void toDownloadList() {
+    private void showDownloadList() {
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
         final String tag = "DownloadList";
@@ -232,14 +249,13 @@ public class CategoryTabFragment extends FileTabFragment {
             }
         }
         mCurrentChildFragment = fragment;
-        mCategoryFragment = null;
 
         Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
         t.setScreenName("Download List: "+mCategory);
         t.send(new HitBuilders.AppViewBuilder().build());
     }
 
-    private void toFileBrowser() {
+    private void showFileBrowser() {
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
         final String tag = "FileBrowser";
@@ -255,14 +271,13 @@ public class CategoryTabFragment extends FileTabFragment {
             }
         }
         mCurrentChildFragment = fragment;
-        mCategoryFragment = null;
 
         Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
         t.setScreenName("File Browser: "+mCategory);
         t.send(new HitBuilders.AppViewBuilder().build());
     }
 
-    private void toZipBrowser() {
+    private void showZipBrowser() {
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
         final String TAG = "ZipBrowser";
@@ -278,28 +293,27 @@ public class CategoryTabFragment extends FileTabFragment {
             }
         }
         mCurrentChildFragment = fragment;
-        mCategoryFragment = null;
 
         Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
         t.setScreenName("Zip Browser: "+mZipPath);
         t.send(new HitBuilders.AppViewBuilder().build());
     }
 
-    private void showSingleCategoryPanel() {
+    private void refreshCategoryDetailPanel() {
         if (!TextUtils.isEmpty(mZipPath)) {
-            toZipBrowser();
+            showZipBrowser();
         } else if (!TextUtils.isEmpty(mFolderPath)) {
-            toFileBrowser();
+            showFileBrowser();
         } else {
             switch (mCategory) {
                 case FileCategoryHelper.CATEGORY_TYPE_FAVORITE:
-                    toFavoriteList();
+                    showFavoriteList();
                     break;
                 case FileCategoryHelper.CATEGORY_TYPE_DOWNLOAD:
-                    toDownloadList();
+                    showDownloadList();
                     break;
                 case FileCategoryHelper.CATEGORY_TYPE_UNKNOW:
-                    toCategoryPanel();
+                    showEmptyDetail();
                     break;
                 case FileCategoryHelper.CATEGORY_TYPE_AUDIO:
                 case FileCategoryHelper.CATEGORY_TYPE_IMAGE:
@@ -307,18 +321,21 @@ public class CategoryTabFragment extends FileTabFragment {
                 case FileCategoryHelper.CATEGORY_TYPE_APK:
                 case FileCategoryHelper.CATEGORY_TYPE_DOCUMENT:
                 case FileCategoryHelper.CATEGORY_TYPE_ZIP:
-                    toFileGrouper();
+                    showFileGrouper();
                     break;
                 default:
                     break;
             }
+        }
+        if (mCategoryFragment != null) {
+            mCategoryFragment.setSelectedCategory(mCategory);
         }
     }
 
     @Override
     protected void showInitialState() {
         super.showInitialState();
-        toCategoryPanel();
+        showCategoryMasterPanel();
     }
 
     @Override

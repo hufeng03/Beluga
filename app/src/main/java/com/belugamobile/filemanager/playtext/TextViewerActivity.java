@@ -141,7 +141,11 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
                 // Initial start
                 mTaskFragment.loadTriplePagesAsync(mSelectedPage);
                 // Remove listener
-                mTextViewPager.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    mTextViewPager.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                } else {
+                    mTextViewPager.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
             }
         });
     }

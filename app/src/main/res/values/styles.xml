@@ -12,7 +12,7 @@
         <!-- colorAccent is used as the default value for colorControlActivated,
          which is used to tint widgets -->
         <item name="colorAccent">@color/accent_color</item>
-        <!--item name="android:windowBackground">@color/background_primary</item!-->
+        <!--item name="android:windowBackground">@color/red</item!-->
 
         <item name="actionBarStyle">@style/BelugaActionBarStyle</item>
         <!-- Style for the tab bar (for the divider between tabs) -->
@@ -186,18 +186,17 @@
         <item name="android:layout_marginLeft">5.0dip</item>
         <item name="android:layout_marginRight">5.0dip</item>
     </style!-->
-    <style name="CategoryButtonStyle">
+    <!--style name="CategoryButtonStyle">
         <item name="android:clickable">true</item>
         <item name="android:gravity">center</item>
         <item name="android:orientation">vertical</item>
         <item name="android:layout_width">0.0dip</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:layout_weight">1.0</item>
-    </style>
+    </style!-->
     <style name="CategoryButtonIconStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">3.0dip</item>
     </style>
     <style name="CategoryButtonTextStyle">
         <item name="android:textSize">16.0sp</item>

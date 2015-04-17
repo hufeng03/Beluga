@@ -16,7 +16,10 @@
 
 package refactor.com.android.contacts.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,10 +30,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
@@ -49,6 +54,8 @@ import refactor.com.android.contacts.list.BelugaRequest;
  * Adapter for the action bar at the top of the Contacts activity.
  */
 public class ActionBarAdapter implements OnCloseListener {
+
+    private static final String TAG = "ActionBarAdapter";
 
     public interface Listener {
         public abstract class Action {
@@ -327,23 +334,37 @@ public class ActionBarAdapter implements OnCloseListener {
             if (mSearchMode) {
                 addSearchContainer();
                 mSearchContainer.setAlpha(0);
-                mSearchContainer.animate().alpha(1);
+                mSearchContainer.animate().alpha(1).setListener(null);
                 animateTabHeightChange(mMaxPortraitTabHeight, 0);
                 updateDisplayOptions(isIconifiedChanging);
                 mDrawerToggle.setDrawerIndicatorEnabled(false);
             } else {
                 mSearchContainer.setAlpha(1);
                 animateTabHeightChange(0, mMaxPortraitTabHeight);
-                mSearchContainer.animate().alpha(0).withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateDisplayOptionsInner();
-                        updateDisplayOptions(isIconifiedChanging);
-                        addLandscapeViewPagerTabs();
-                        mToolbar.removeView(mSearchContainer);
-                        mDrawerToggle.setDrawerIndicatorEnabled(true);
-                    }
-                });
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    mSearchContainer.animate().alpha(0).setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            updateDisplayOptionsInner();
+                            updateDisplayOptions(isIconifiedChanging);
+                            addLandscapeViewPagerTabs();
+                            mToolbar.removeView(mSearchContainer);
+                            mDrawerToggle.setDrawerIndicatorEnabled(true);
+                        }
+                    });
+                } else {
+                    mSearchContainer.animate().alpha(0).withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateDisplayOptionsInner();
+                            updateDisplayOptions(isIconifiedChanging);
+                            addLandscapeViewPagerTabs();
+                            mToolbar.removeView(mSearchContainer);
+                            mDrawerToggle.setDrawerIndicatorEnabled(true);
+                        }
+                    });
+                }
             }
             return;
         }

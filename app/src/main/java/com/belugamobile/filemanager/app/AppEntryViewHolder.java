@@ -1,5 +1,6 @@
 package com.belugamobile.filemanager.app;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.ContextThemeWrapper;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.belugamobile.filemanager.BelugaEntry;
 import com.belugamobile.filemanager.BelugaEntryViewHolder;
@@ -54,10 +56,11 @@ public class AppEntryViewHolder extends BelugaEntryViewHolder {
         icon.setImageDrawable(this.entry.getIcon());
         if (this.entry.apkEntry != null) {
             status.setText(SizeUtil.normalize(this.entry.apkEntry.size));
+            description.setText(BelugaTimeHelper.getDateString(this.entry.apkEntry.lastModified));
         } else {
             status.setText("");
+            description.setText("");
         }
-        description.setText(BelugaTimeHelper.getDateString(this.entry.apkEntry.lastModified));
         this.overflow.setTag(this.entry.packageName);
     }
 
@@ -126,7 +129,11 @@ public class AppEntryViewHolder extends BelugaEntryViewHolder {
     private void showAppDetailsSettings() {
         Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:" + this.entry.packageName));
-        this.itemView.getContext().startActivity(intent);
+        try {
+            this.itemView.getContext().startActivity(intent);
+        }catch (ActivityNotFoundException e) {
+            Toast.makeText(this.itemView.getContext(), R.string.activity_not_found, Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

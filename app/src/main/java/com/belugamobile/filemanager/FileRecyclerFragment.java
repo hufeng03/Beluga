@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.ui.BelugaActionController;
@@ -57,6 +58,12 @@ public abstract class FileRecyclerFragment extends BelugaRecyclerFragment implem
         setHasOptionsMenu(true);
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getRootView().setBackgroundColor(getResources().getColor(R.color.material_gray_100));
+    }
+
     protected void switchDisplay() {
         int position = getLayoutManager().findFirstVisibleItemPosition();
         mDisplayModeAdapter.switchDisplayMode();
@@ -73,7 +80,7 @@ public abstract class FileRecyclerFragment extends BelugaRecyclerFragment implem
             int height = mRootView.getHeight()-mRecyclerView.getPaddingTop()-mRecyclerView.getPaddingBottom();
 
             int size = (int)Math.sqrt((double)(width*height)/12.0d);
-            int columns = width/size;
+            int columns = (size == 0)? 3 : width/size;
             setLayoutManager(new GridLayoutManager(getActivity(), columns));
             mRecyclerView.setPadding(padding, padding, padding, padding);
         } else {

@@ -202,7 +202,14 @@ public abstract class BelugaRecyclerFragment extends BelugaBaseFragment implemen
 
 
     /**
-     * Get the activity's list view widget.
+     * Get the fragment's root view widget.
+     */
+    public View getRootView() {
+        return mRootView;
+    }
+
+    /**
+     * Get the fragment's list view widget.
      */
     public RecyclerView getRecyclerView() {
         return mRecyclerView;

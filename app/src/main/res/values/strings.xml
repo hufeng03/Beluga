@@ -156,4 +156,5 @@
     <string name="beluga_text_editor_label">Beluga Text Editor</string>
     <string name="menu_save">Save</string>
     <string name="beluga_text_viewer_label">Text Viewer</string>
+    <string name="activity_not_found">Activity not found.</string>
 </resources>

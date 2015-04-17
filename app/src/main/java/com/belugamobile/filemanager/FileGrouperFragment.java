@@ -2,6 +2,7 @@ package com.belugamobile.filemanager;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -73,37 +74,22 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
         }
 	}
 
+    public void setCategory(int category) {
+        if (mCategory != category) {
+            mCategory = category;
+            getArguments().putInt(FILE_GROUPER_ARGUMENT_CATEGORY, mCategory);
+            setEmptyViewShown(false);
+            setRecyclerViewShown(false);
+            getLoaderManager().restartLoader(LOADER_ID, null, this);
+        }
+    }
+
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-        String empty_text;
-        switch(mCategory){
-            case FileCategoryHelper.CATEGORY_TYPE_APK:
-                empty_text = getResources().getString(R.string.empty_apk);
-                break;
-            case FileCategoryHelper.CATEGORY_TYPE_AUDIO:
-                empty_text = getResources().getString(R.string.empty_audio);
-                break;
-            case FileCategoryHelper.CATEGORY_TYPE_IMAGE:
-                empty_text = getResources().getString(R.string.empty_image);
-                break;
-            case FileCategoryHelper.CATEGORY_TYPE_VIDEO:
-                empty_text = getResources().getString(R.string.empty_video);
-                break;
-            case FileCategoryHelper.CATEGORY_TYPE_DOCUMENT:
-                empty_text = getResources().getString(R.string.empty_document);
-                break;
-            case FileCategoryHelper.CATEGORY_TYPE_ZIP:
-                empty_text = getResources().getString(R.string.empty_zip);
-                break;
-            default:
-                empty_text = getResources().getString(R.string.empty_file);
-                break;
-        }
-
-        setEmptyText(empty_text);
+        refreshEmptyText();
 
         mAdapter = new BelugaCursorRecyclerAdapter(getActivity(), null, BelugaDisplayMode.LIST,/*R.layout.file_list_row,*/
                 new BelugaEntryViewHolder.Builder() {
@@ -131,7 +117,11 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
                 public void onGlobalLayout() {
                     if (mRootView.getWidth() > 0 && mRootView.getHeight() > 0) {
                         switchDisplay();
-                        mRootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                            mRootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        } else {
+                            mRootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        }
                     }
                 }
             });
@@ -155,6 +145,36 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+
+    private void refreshEmptyText() {
+        String empty_text;
+        switch(mCategory){
+            case FileCategoryHelper.CATEGORY_TYPE_APK:
+                empty_text = getResources().getString(R.string.empty_apk);
+                break;
+            case FileCategoryHelper.CATEGORY_TYPE_AUDIO:
+                empty_text = getResources().getString(R.string.empty_audio);
+                break;
+            case FileCategoryHelper.CATEGORY_TYPE_IMAGE:
+                empty_text = getResources().getString(R.string.empty_image);
+                break;
+            case FileCategoryHelper.CATEGORY_TYPE_VIDEO:
+                empty_text = getResources().getString(R.string.empty_video);
+                break;
+            case FileCategoryHelper.CATEGORY_TYPE_DOCUMENT:
+                empty_text = getResources().getString(R.string.empty_document);
+                break;
+            case FileCategoryHelper.CATEGORY_TYPE_ZIP:
+                empty_text = getResources().getString(R.string.empty_zip);
+                break;
+            default:
+                empty_text = getResources().getString(R.string.empty_file);
+                break;
+        }
+
+        setEmptyText(empty_text);
     }
 
     @Override

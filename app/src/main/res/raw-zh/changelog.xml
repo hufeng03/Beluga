@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog bulletedList="false">
+    <changelogversion versionName="1.1.6" changeDate="4月16日, 2015">
+        <changelogtext>横屏下双栏显示</changelogtext>
+        <changelogtext>修复5+报错BUG</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="1.1.5" changeDate="4月14日, 2015">
+        <changelogtext>修复部分机型搜索功能自动关闭问题</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="1.1.4" changeDate="4月12日, 2015">
+        <changelogtext>修复4.0系统崩溃问题</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="1.1.3" changeDate="4月12日, 2015">
+        <changelogtext>添加文本阅读功能</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="1.1.2" changeDate="3月31日, 2015">
+        <changelogtext>修复14个可能导致崩溃的BUG</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="1.1.1" changeDate="3月31日, 2015">
+        <changelogtext>修改ROOT浏览问题</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="1.1.0" changeDate="3月30日, 2015">
+        <changelogtext>增加ROOT浏览功能</changelogtext>
+        <changelogtext>修改文件夹复制错误的问题</changelogtext>
+        <changelogtext>增加西班牙语，意大利语，土耳其语支持</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="1.0.9" changeDate="3月21日, 2015">
+        <changelogtext>增加修改记录功能</changelogtext>
+        <changelogtext>修改5个可能引起崩溃的问题</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="1.0.8" changeDate="3月18日, 2015">
+        <changelogtext>假如Fabric, 统计崩溃信息</changelogtext>
+    </changelogversion>
+
+</changelog>

@@ -41,7 +41,6 @@ public class MemoryCache extends LruCache<String, Bitmap> {
         if (LogUtil.DDBG) {
             LogUtil.d(TAG, "MemoryCache size is: " + CACHE_SIZE);
         }
-
     }
 
     public MemoryCache() {
