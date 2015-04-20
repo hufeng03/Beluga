@@ -314,11 +314,11 @@ public class FileBrowserFragment extends FileGridFragment implements LoaderManag
             MenuItem item_search = menu.findItem(R.id.menu_search);
 
             if(item_back != null) {
-                if (mRootDir == null) {
-                    item_back.setVisible(false);
-                } else {
+              //  if (mRootDir != null) {
                     item_back.setVisible(true);
-                }
+              //  } else {
+              //      item_back.setVisible(false);
+              //  }
             }
 
             if (item_search != null) {

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
 
+import com.hufeng.filemanager.Constants;
 import com.hufeng.filemanager.FileManager;
 import com.hufeng.filemanager.root.RootHelper;
 import com.hufeng.filemanager.storage.StorageManager;
@@ -126,15 +127,17 @@ public class UiProvider {
     public static String[] getStorageDirs() {
         String[] files = StorageManager.getInstance(FileManager.getAppContext()).getMountedStorages();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(FileManager.getAppContext());
-        boolean show_root = preferences.getBoolean("SHOW_ROOT_DIR",true);
-        if (RootHelper.isRootedPhone() && show_root) {
-            int len = (files == null ? 0: files.length) + 1;
-            String[] new_files = new String[len];
-            for (int i = 0; i < len-1; i++) {
-                new_files[i] = files[i];
+        if (!Constants.PRODUCT_FLAVOR_NAME.equals("hongdie")) {
+            boolean show_root = preferences.getBoolean("SHOW_ROOT_DIR", true);
+            if (RootHelper.isRootedPhone() && show_root) {
+                int len = (files == null ? 0 : files.length) + 1;
+                String[] new_files = new String[len];
+                for (int i = 0; i < len - 1; i++) {
+                    new_files[i] = files[i];
+                }
+                new_files[len - 1] = "/";
+                files = new_files;
             }
-            new_files[len-1] = "/";
-            files = new_files;
         }
         return files;
     }

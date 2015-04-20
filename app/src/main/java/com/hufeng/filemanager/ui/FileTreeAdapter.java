@@ -1,6 +1,8 @@
 package com.hufeng.filemanager.ui;
 
 import android.app.Activity;
+import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import com.hufeng.filemanager.R;
 import com.hufeng.filemanager.browser.IconLoader;
 import com.hufeng.filemanager.browser.IconLoaderHelper;
+import com.hufeng.filemanager.storage.StorageManager;
 import com.hufeng.filemanager.treeview.AbstractTreeViewAdapter;
 import com.hufeng.filemanager.treeview.TreeNodeInfo;
 import com.hufeng.filemanager.treeview.TreeStateManager;
@@ -47,10 +50,15 @@ public class FileTreeAdapter extends AbstractTreeViewAdapter<String>{
         mIconLoader = IconLoader.getInstance();
 	}
 
-	private String getDescription(final String path) {
+	private String getDescription(final Context context, final String path) {
        // final Integer[] hierarchy = getManager().getHierarchyDescription(id);
        // return "Node " + id + Arrays.asList(hierarchy);
        // String path = mFilePaths[(int)id];
+        String description = StorageManager.getInstance(context).getStorageDescription(path);
+        if (!TextUtils.isEmpty(description)) {
+            return description;
+        }
+
         if (path.endsWith("/")) {
             if (path.length() == 1)
                 return "/";
@@ -80,7 +88,7 @@ public class FileTreeAdapter extends AbstractTreeViewAdapter<String>{
         final MyLazyLoadImageView imageView = (MyLazyLoadImageView) viewLayout
                 .findViewById(R.id.file_tree_item_image);
         String path = treeNodeInfo.getId();
-        descriptionView.setText(getDescription(path));
+        descriptionView.setText(getDescription(view.getContext(), path));
         //levelView.setText(Integer.toString(treeNodeInfo.getLevel()));
 //        mIconLoader.loadIcon(imageView, null, null, path);
         imageView.setDefaultResource(IconLoaderHelper.getFileIcon(view.getContext(), path));
