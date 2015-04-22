@@ -63,7 +63,9 @@ public class DeviceTabFragment extends FileTabFragment {
     public void onDeviceSelected(DeviceSelectEvent event) {
         if (getUserVisibleHint() && event != null) {
             mDevicePath = event.path;
-            showFileBrowserFragment();
+            //showFileBrowserFragment();
+            mZipPath = null;
+            refreshDeviceDetailPanel();
         }
     }
 
@@ -86,7 +88,9 @@ public class DeviceTabFragment extends FileTabFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        showSingleDevicePanel();
+        //showSingleDevicePanel();
+        showDeviceMasterPanel();
+        refreshDeviceDetailPanel();
     }
 	
 
@@ -113,18 +117,23 @@ public class DeviceTabFragment extends FileTabFragment {
     }
 
 
-    private void showSingleDevicePanel() {
+    private void refreshDeviceDetailPanel() {
         if (!TextUtils.isEmpty(mZipPath) && new File(mZipPath).exists()) {
             showZipBrowserFragment();
         } else if (!TextUtils.isEmpty(mDevicePath) && new File(mDevicePath).exists()) {
             showFileBrowserFragment();
         } else {
-            showDevicePanel();
+            //showDeviceMasterPanel();
+            showEmptyDetail();
+        }
+
+        if (mDeviceFragment != null) {
+            mDeviceFragment.setSelectedDevice(mDevicePath);
         }
     }
 
 
-    private void showDevicePanel() {
+    private void showDeviceMasterPanel() {
 
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
@@ -132,7 +141,7 @@ public class DeviceTabFragment extends FileTabFragment {
         NewDeviceFragment fragment = (NewDeviceFragment) getChildFragmentManager().findFragmentByTag(TAG);
         if (fragment == null) {
             fragment = new NewDeviceFragment();
-            ft.replace(R.id.fragment_container, fragment, TAG);
+            ft.replace(R.id.first_fragment_container, fragment, TAG);
             ft.commit();
         } else {
             if (fragment.isDetached()) {
@@ -141,14 +150,21 @@ public class DeviceTabFragment extends FileTabFragment {
             }
         }
         mDeviceFragment = fragment;
-        mCurrentChildFragment = null;
-        mDevicePath = null;
 
         Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
         t.setScreenName("Device Panel");
         t.send(new HitBuilders.AppViewBuilder().build());
     }
 
+    private void showEmptyDetail() {
+        final FragmentManager fm = getChildFragmentManager();
+        final FragmentTransaction ft = fm.beginTransaction();
+        if (mCurrentChildFragment != null) {
+            ft.remove(mCurrentChildFragment);
+            ft.commit();
+            mCurrentChildFragment = null;
+        }
+    }
 
     public void showFileBrowserFragment() {
         final FragmentManager fm = getChildFragmentManager();
@@ -160,13 +176,13 @@ public class DeviceTabFragment extends FileTabFragment {
             ft.replace(R.id.fragment_container, fragment, TAG);
             ft.commit();
         } else {
+            fragment.setDevicePath(mDevicePath);
             if (fragment.isDetached()) {
                 ft.attach(fragment);
                 ft.commit();
             }
         }
         mCurrentChildFragment = fragment;
-        mDeviceFragment = null;
 
         Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
         t.setScreenName("File Browser: "+mDevicePath);
@@ -189,7 +205,6 @@ public class DeviceTabFragment extends FileTabFragment {
             }
         }
         mCurrentChildFragment = fragment;
-        mDeviceFragment = null;
 
         Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
         t.setScreenName("Zip Browser: "+mZipPath);
@@ -208,7 +223,7 @@ public class DeviceTabFragment extends FileTabFragment {
         } else {
             return false;
         }
-        showSingleDevicePanel();
+        refreshDeviceDetailPanel();
 
         return true;
 	}
@@ -216,7 +231,7 @@ public class DeviceTabFragment extends FileTabFragment {
     @Override
     protected void showInitialState() {
         super.showInitialState();
-        showDevicePanel();
+        showDeviceMasterPanel();
     }
 
     @Override

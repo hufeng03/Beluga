@@ -70,6 +70,20 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
 //        return fragment;
 //    }
 
+    public void setDevicePath(String devicePath) {
+        boolean oldEmpty = TextUtils.isEmpty(mRootDir);
+        boolean newEmpty = TextUtils.isEmpty(devicePath);
+        if ((oldEmpty && !newEmpty) || (!oldEmpty && newEmpty) || (!oldEmpty && !newEmpty && !mRootDir.equals(devicePath))) {
+            mRootDir = devicePath;
+            mSelectedPath = null;
+            getArguments().putString(ARGUMENT_BROWSER_ROOT_FOLDER, mRootDir);
+            getArguments().remove(ARGUMENT_BROWSER_LOCATE_FILE);
+            setEmptyViewShown(false);
+            setRecyclerViewShown(false);
+            getLoaderManager().restartLoader(LOADER_ID, null, this);
+        }
+    }
+
 
     @Override
     public void onAttach(Activity activity) {

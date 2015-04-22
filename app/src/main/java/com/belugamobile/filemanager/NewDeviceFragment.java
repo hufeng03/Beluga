@@ -10,6 +10,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,6 +49,8 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedP
 
     private Handler mHandler = new MainThreadHandler();
 
+    private String mSelectedDevicePath;
+
     private class MainThreadHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -85,6 +88,17 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedP
 
     private void doOnSdSwap() {
 
+    }
+
+    public void setSelectedDevice(String devicePath) {
+        boolean oldEmpty = TextUtils.isEmpty(mSelectedDevicePath);
+        boolean newEmpty = TextUtils.isEmpty(devicePath);
+        if ((oldEmpty && !newEmpty) || (!oldEmpty && newEmpty) || (!oldEmpty && !newEmpty && !mSelectedDevicePath.equals(devicePath))) {
+            mSelectedDevicePath = devicePath;
+            if (getRecyclerAdapter() != null) {
+                getRecyclerAdapter().notifyDataSetChanged();
+            }
+        }
     }
 
 
@@ -195,6 +209,7 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedP
                 icon.setImageResource(R.drawable.ic_phone_android);
             }
             name.setText(item.mDescription);
+            this.itemView.setActivated(item.mPath.equals(mSelectedDevicePath));
         }
 
         @Override

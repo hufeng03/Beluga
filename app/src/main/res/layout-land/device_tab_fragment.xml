@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <RelativeLayout
+        android:id="@+id/first_fragment_container"
+        android:layout_width="160dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0"/>
+    <!--View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/gray"
+    /!-->
+
+    <RelativeLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+</LinearLayout>

@@ -108,6 +108,8 @@ public class CategoryTabFragment extends FileTabFragment {
     public void onCategorySelected(CategorySelectEvent event) {
         if (getUserVisibleHint() && event != null) {
             mCategory = event.category;
+            mZipPath = null;
+            mFolderPath = null;
             refreshCategoryDetailPanel();
         }
     }
