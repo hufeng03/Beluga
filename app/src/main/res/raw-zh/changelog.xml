@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="false">
+    <changelogversion versionName="1.1.7" changeDate="4月21日, 2015">
+        <changelogtext>修复横屏下类别无法切换问题</changelogtext>
+        <changelogtext>修复部分报错BUG</changelogtext>
+    </changelogversion>
     <changelogversion versionName="1.1.6" changeDate="4月16日, 2015">
         <changelogtext>横屏下双栏显示</changelogtext>
         <changelogtext>修复5+报错BUG</changelogtext>

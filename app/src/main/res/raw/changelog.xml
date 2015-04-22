@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="false">
 
+    <changelogversion versionName="1.1.7" changeDate="Apr 21, 2015">
+        <changelogtext>Fix switch not working problem</changelogtext>
+        <changelogtext>Fix 3 crash bugs</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="1.1.6" changeDate="Apr 16, 2015">
         <changelogtext>Show two columns in landscape mode</changelogtext>
         <changelogtext>Fix 5+ bugs</changelogtext>
