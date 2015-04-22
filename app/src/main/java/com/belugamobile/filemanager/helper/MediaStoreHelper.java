@@ -150,6 +150,11 @@ public final class MediaStoreHelper {
                 if (mBaseAsyncTask != null) {
                     mBaseAsyncTask.cancel(true);
                 }
+            } catch (RuntimeException e) {
+                Log.e(TAG, "Error, runtime exception!!!");
+                if (mBaseAsyncTask != null) {
+                    mBaseAsyncTask.cancel(true);
+                }
             }
         }
     }

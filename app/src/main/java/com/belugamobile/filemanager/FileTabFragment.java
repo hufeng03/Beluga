@@ -52,7 +52,11 @@ public abstract class FileTabFragment extends BelugaBaseFragment implements
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (mCurrentChildFragment != null) {
-            mCurrentChildFragment.setUserVisibleHint(isVisibleToUser);
+            try {
+                mCurrentChildFragment.setUserVisibleHint(isVisibleToUser);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
     }
 

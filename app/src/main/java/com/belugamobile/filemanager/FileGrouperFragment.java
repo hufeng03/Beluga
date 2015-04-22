@@ -77,6 +77,7 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
     public void setCategory(int category) {
         if (mCategory != category) {
             mCategory = category;
+            refreshEmptyText();
             getArguments().putInt(FILE_GROUPER_ARGUMENT_CATEGORY, mCategory);
             setEmptyViewShown(false);
             setRecyclerViewShown(false);

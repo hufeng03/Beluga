@@ -134,7 +134,12 @@ public class IFileSyncServiceImpl extends IFileSyncService.Stub{
 		ContentValues category_values = new ContentValues();
 		category_values.put(DataStructures.CategoryColumns.SIZE, 0);
 		category_values.put(DataStructures.CategoryColumns.NUMBER, 0);
-		int count = FileManager.getAppContext().getContentResolver().update(DataStructures.CategoryColumns.CONTENT_URI, category_values, null, null);
+		int count = 0;
+        try {
+            count = FileManager.getAppContext().getContentResolver().update(DataStructures.CategoryColumns.CONTENT_URI, category_values, null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 		if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "update category size and number to 0, return "+count);
 		if(count==0)
 		{

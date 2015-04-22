@@ -64,7 +64,7 @@ public class FileManagerProvider extends ContentProvider{
 	private static final int APK_ID = 8;
 	private static final int VIDEOS = 9;
 	private static final int VIDEO_ID = 10;
-	private static final int CATEGORYS = 11;
+	private static final int CATEGORIES = 11;
 	private static final int CATEGORY_ID = 12;
 	private static final int DOCUMENTS = 13;
 	private static final int DOCUMENT_ID = 14;
@@ -73,7 +73,7 @@ public class FileManagerProvider extends ContentProvider{
 	private static final int FAVORITES = 17;
 	private static final int FAVORITE_ID = 18;
 	private static final int PREFERENCES = 19;
-	private static final int MATCHS = 20;
+	private static final int MATCHES = 20;
 //	private static final int PREFERENCE_ID = 20;
     private static final int SELECTED_ID = 21;
     private static final int SELECTEDS = 22;
@@ -95,7 +95,7 @@ public class FileManagerProvider extends ContentProvider{
         URI_MATCHER.addURI(DataStructures.AUTHORITY, VideoColumns.TABLE+"/#", VIDEO_ID);
         URI_MATCHER.addURI(DataStructures.AUTHORITY, ApkColumns.TABLE, APKS);
         URI_MATCHER.addURI(DataStructures.AUTHORITY, ApkColumns.TABLE+"/#", APK_ID); 
-        URI_MATCHER.addURI(DataStructures.AUTHORITY, CategoryColumns.TABLE, CATEGORYS);
+        URI_MATCHER.addURI(DataStructures.AUTHORITY, CategoryColumns.TABLE, CATEGORIES);
         URI_MATCHER.addURI(DataStructures.AUTHORITY, CategoryColumns.TABLE+"/#", CATEGORY_ID); 
         URI_MATCHER.addURI(DataStructures.AUTHORITY, DocumentColumns.TABLE, DOCUMENTS);
         URI_MATCHER.addURI(DataStructures.AUTHORITY, DocumentColumns.TABLE+"/#", DOCUMENT_ID);
@@ -104,7 +104,7 @@ public class FileManagerProvider extends ContentProvider{
         URI_MATCHER.addURI(DataStructures.AUTHORITY, FavoriteColumns.TABLE, FAVORITES);
         URI_MATCHER.addURI(DataStructures.AUTHORITY, FavoriteColumns.TABLE+"/#", FAVORITE_ID);
         URI_MATCHER.addURI(DataStructures.AUTHORITY, PreferenceColumns.TABLE, PREFERENCES);
-        URI_MATCHER.addURI(DataStructures.AUTHORITY, MatchColumns.TABLE, MATCHS);
+        URI_MATCHER.addURI(DataStructures.AUTHORITY, MatchColumns.TABLE, MATCHES);
         URI_MATCHER.addURI(DataStructures.AUTHORITY, DataStructures.SelectedColumns.TABLE, SELECTEDS);
         URI_MATCHER.addURI(DataStructures.AUTHORITY, DataStructures.SelectedColumns.TABLE+"/#", SELECTED_ID);
         URI_MATCHER.addURI(DataStructures.AUTHORITY, DataStructures.CloudBoxColumns.TABLE, CLOUDS);
@@ -560,7 +560,7 @@ public class FileManagerProvider extends ContentProvider{
         	case PREFERENCES:
         		count = db.delete(PreferenceColumns.TABLE, where, whereArgs);
         		break;
-        	case MATCHS:
+        	case MATCHES:
         		count = db.delete(MatchColumns.TABLE, where, whereArgs);
 //        	case PREFERENCE_ID:
 //        		where = "name=" + uri.getPathSegments().get(1)
@@ -581,58 +581,59 @@ public class FileManagerProvider extends ContentProvider{
 
 	@Override
 	public String getType(Uri uri) {
-		// TODO Auto-generated method stub
-		switch(URI_MATCHER.match(uri))
-		{
-		case FILES:
-			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.file";
-		case ID:
-			return "vnd.android.cursor.item/vnd.hufeng.filemanager.file";
-		case IMAGES:
-			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.image";
-		case IMAGE_ID:
-			return "vnd.android.cursor.item/vnd.hufeng.filemanager.image";
-		case AUDIOS:
-			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.audio";
-		case AUDIO_ID:
-			return "vnd.android.cursor.item/vnd.hufeng.filemanager.audio";
-		case VIDEOS:
-			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.video";
-		case VIDEO_ID:
-			return "vnd.android.cursor.item/vnd.hufeng.filemanager.video";
-		case APKS:
-			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.apk";
-		case APK_ID:
-			return "vnd.android.cursor.item/vnd.hufeng.filemanager.apk";
-		case DOCUMENTS:
-			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.document";
-		case DOCUMENT_ID:
-			return "vnd.android.cursor.item/vnd.hufeng.filemanager.document";
-		case ZIPS:
-			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.zip";
-		case ZIP_ID:
-			return "vnd.android.cursor.item/vnd.hufeng.filemanager.zip";
-		case CATEGORYS:
-			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.category";
-		case CATEGORY_ID:
-			return "vnd.android.cursor.item/vnd.hufeng.filemanager.category";
-		case FAVORITES:
-			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.favorite";
-		case FAVORITE_ID:
-			return "vnd.android.cursor.item/vnd.hufeng.filemanager.favorite";
-        case SELECTEDS:
-            return "vnd.android.cursor.dir/vnd.hufeng.filemanager.selected";
-        case SELECTED_ID:
-            return "vnd.android.cursor.item/vnd.hufeng.filemanager.selected";
-        case CLOUDS:
-            return "vnd.android.cursor.dir/vnd.hufeng.filemanager.cloud";
-        case CLOUD_ID:
-            return "vnd.android.cursor.item/vnd.hufeng.filemanager.cloud";
-//		case PREFERENCE_ID:
-//			return "vnd.android.cursor.item/vnd.hufeng.filemanager.preference";
-		default:
-            throw new IllegalArgumentException("Unknown uri " + uri);
-		}
+        return null;
+//		// TODO Auto-generated method stub
+//		switch(URI_MATCHER.match(uri))
+//		{
+//		case FILES:
+//			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.file";
+//		case ID:
+//			return "vnd.android.cursor.item/vnd.hufeng.filemanager.file";
+//		case IMAGES:
+//			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.image";
+//		case IMAGE_ID:
+//			return "vnd.android.cursor.item/vnd.hufeng.filemanager.image";
+//		case AUDIOS:
+//			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.audio";
+//		case AUDIO_ID:
+//			return "vnd.android.cursor.item/vnd.hufeng.filemanager.audio";
+//		case VIDEOS:
+//			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.video";
+//		case VIDEO_ID:
+//			return "vnd.android.cursor.item/vnd.hufeng.filemanager.video";
+//		case APKS:
+//			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.apk";
+//		case APK_ID:
+//			return "vnd.android.cursor.item/vnd.hufeng.filemanager.apk";
+//		case DOCUMENTS:
+//			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.document";
+//		case DOCUMENT_ID:
+//			return "vnd.android.cursor.item/vnd.hufeng.filemanager.document";
+//		case ZIPS:
+//			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.zip";
+//		case ZIP_ID:
+//			return "vnd.android.cursor.item/vnd.hufeng.filemanager.zip";
+//		case CATEGORIES:
+//			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.category";
+//		case CATEGORY_ID:
+//			return "vnd.android.cursor.item/vnd.hufeng.filemanager.category";
+//		case FAVORITES:
+//			return "vnd.android.cursor.dir/vnd.hufeng.filemanager.favorite";
+//		case FAVORITE_ID:
+//			return "vnd.android.cursor.item/vnd.hufeng.filemanager.favorite";
+//        case SELECTEDS:
+//            return "vnd.android.cursor.dir/vnd.hufeng.filemanager.selected";
+//        case SELECTED_ID:
+//            return "vnd.android.cursor.item/vnd.hufeng.filemanager.selected";
+//        case CLOUDS:
+//            return "vnd.android.cursor.dir/vnd.hufeng.filemanager.cloud";
+//        case CLOUD_ID:
+//            return "vnd.android.cursor.item/vnd.hufeng.filemanager.cloud";
+////		case PREFERENCE_ID:
+////			return "vnd.android.cursor.item/vnd.hufeng.filemanager.preference";
+//		default:
+//            throw new IllegalArgumentException("Unknown uri " + uri);
+//		}
 	}
 
 	@Override
@@ -683,7 +684,7 @@ public class FileManagerProvider extends ContentProvider{
                 category = FileCategoryHelper.CATEGORY_TYPE_APK;
 	        	rowId = db.insert(ApkColumns.TABLE, null, values);
 	        	break;
-	        case CATEGORYS:
+	        case CATEGORIES:
 	        	rowId = db.insert(CategoryColumns.TABLE, null, values);
 	        	break;
 	        case DOCUMENTS:
@@ -714,7 +715,7 @@ public class FileManagerProvider extends ContentProvider{
 	        case PREFERENCES:
 	        	db.insert(PreferenceColumns.TABLE, null, values);
 	        	return null;
-	        case MATCHS:
+	        case MATCHES:
 	        	db.insert(MatchColumns.TABLE, null, values);
 	        	return null;
 	        default:
@@ -912,7 +913,7 @@ public class FileManagerProvider extends ContentProvider{
                     orderBy = sortOrder;
                 }
                 break;
-            case CATEGORYS:
+            case CATEGORIES:
             	qb.setTables(CategoryColumns.TABLE);
             	qb.setProjectionMap(mCategoryProjectionMap);
                 if (TextUtils.isEmpty(sortOrder)) {
@@ -968,7 +969,7 @@ public class FileManagerProvider extends ContentProvider{
                     orderBy = sortOrder;
                 }
             	break;
-            case MATCHS:
+            case MATCHES:
             	qb.setTables(MatchColumns.TABLE);
             	qb.setProjectionMap(mMatchProjectionMap);
                 if (TextUtils.isEmpty(sortOrder)) {
@@ -1094,7 +1095,7 @@ public class FileManagerProvider extends ContentProvider{
 	            count = db.update(ZipColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
-	        case CATEGORYS:
+	        case CATEGORIES:
 	            count = db.update(CategoryColumns.TABLE, values, selection,
 	                    selectionArgs);
 	            break;
@@ -1156,7 +1157,7 @@ public class FileManagerProvider extends ContentProvider{
                     insert(PreferenceColumns.CONTENT_URI, values);
                 }
                 break;
-	        case MATCHS:
+	        case MATCHES:
 	        	if (selectionArgs == null) {
                     LogUtil.e(LOG_TAG, "selectinArgs is null");
                     throw new NullPointerException("selectionArgs could not be null ");
@@ -1203,7 +1204,7 @@ public class FileManagerProvider extends ContentProvider{
         	tablename = ApkColumns.TABLE;
         	type = FileCategoryHelper.CATEGORY_TYPE_APK;
         	break;
-        case CATEGORYS:
+        case CATEGORIES:
         	tablename = CategoryColumns.TABLE;
         	break;
         case DOCUMENTS:
