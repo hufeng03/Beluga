@@ -78,6 +78,7 @@ public class FileManagerTabActivity extends FileOperationActivity{
         tv.setText(titleTextId);
         tv.setTextColor(getResources().getColor(R.color.black));
         //set appearance of tab
+        tv.setTextSize(18);
         tv.setGravity(Gravity.CENTER);
         tv.setLayoutParams(new android.view.ViewGroup.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         //Make sure all tabs have the same height
@@ -106,10 +107,10 @@ public class FileManagerTabActivity extends FileOperationActivity{
 
 //        final Tab selectedTab = getSupportActionBar().newTab().setText(
 //                R.string.selected);
-		final ActionBar.Tab categoryTab = mActionBar.newTab().
-                setCustomView(createTab(R.string.category));
         final ActionBar.Tab directoryTab = mActionBar.newTab().
                 setCustomView(createTab(R.string.directory));
+		final ActionBar.Tab categoryTab = mActionBar.newTab().
+                setCustomView(createTab(R.string.category));
         final ActionBar.Tab toolsTab = mActionBar.newTab().
                 setCustomView(createTab(R.string.tools));
         final ActionBar.Tab kanboxTab = mActionBar.newTab().
@@ -124,10 +125,10 @@ public class FileManagerTabActivity extends FileOperationActivity{
 
 //        mTabAdapter.addTab(selectedTab,
 //                SelectedFragment.class, null);
+        mTabAdapter.addTab(directoryTab,
+                DirectoryTabFragment.class, null);
         mTabAdapter.addTab(categoryTab,
         		CategoryTabFragment.class, null);
-        mTabAdapter.addTab(directoryTab,
-        		DirectoryTabFragment.class, null);
         if ("doov".equals(Constants.PRODUCT_FLAVOR_NAME)) {
 
         } else if ("hosin".equals(Constants.PRODUCT_FLAVOR_NAME)) {
@@ -449,16 +450,16 @@ public class FileManagerTabActivity extends FileOperationActivity{
 			//if(mReSelect){
 				int position = tab.getPosition();
             	if(position==FRAGMENT_INDEX_CATEGORY){
-            		CategoryTabFragment fragment = ((CategoryTabFragment)getFragment(position));
-            		if(fragment!=null) {
-            			fragment.showCategoryPanel();
-            		}
+                    DirectoryTabFragment fragment = ((DirectoryTabFragment)getFragment(position));
+                    if(fragment!=null) {
+                        fragment.showBrowserRoot();
+                    }
             	}
             	else if(position==FRAGMENT_INDEX_DEVICE){
-            		DirectoryTabFragment fragment = ((DirectoryTabFragment)getFragment(position));
-            		if(fragment!=null) {
-            			fragment.showBrowserRoot();
-            		}
+                    CategoryTabFragment fragment = ((CategoryTabFragment)getFragment(position));
+                    if(fragment!=null) {
+                        fragment.showCategoryPanel();
+                    }
             	}
                 else if(position==FRAGMENT_INDEX_TOOLS) {
                     Fragment fragment = getFragment(position);

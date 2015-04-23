@@ -4,7 +4,7 @@
     <string name="select_file_title">选择文件</string>
     <string name="selected">必备</string>
 	<string name="category">分类</string>
-	<string name="directory">投影仪</string>
+	<string name="directory">投影</string>
 	<string name="directory2">文件夹</string>
     <string name="kanbox">酷盘</string>
 	<string name="added_favorite">收藏</string>
@@ -677,7 +677,7 @@ changed later by pressing the <b>Setup</b> button.</string> -->
 <string name="cannot_move_uploading">%1$s等%2$d个文件正在上传，无法剪切</string>
 <string name="cannot_delete_uploading">%1$s等%2$d个文件正在上传，无法删除</string>
 <string name="external_storage">SD卡</string>
-<string name="internal_storage">存储</string>
+<string name="internal_storage">本机文件</string>
 <string name="file_copy_full">复制失败，存储空间不足</string>
 <string name="file_move_full">移动失败，存储空间不足</string>
 <string name="file_download_full">下载失败，存储空间不足</string>

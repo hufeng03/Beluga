@@ -88,16 +88,16 @@
     <style name="CategoryButtonIconStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">3.0dip</item>
+        <item name="android:layout_marginBottom">0dip</item>
     </style>
     <style name="CategoryButtonTextStyle">
-        <item name="android:textSize">16.0sp</item>
+        <item name="android:textSize">18.0sp</item>
         <item name="android:textColor">@color/category_button_text_color</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
     <style name="CategoryButtonCountTextStyle">
-        <item name="android:textSize">12.0sp</item>
+        <item name="android:textSize">14.0sp</item>
         <item name="android:textColor">@color/category_button_count_text_color</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -138,13 +138,13 @@
         <item name="android:layout_marginBottom">5.0dip</item>
     </style>
     <style name="InformationTextStyle">
-        <item name="android:textSize">12.0dip</item>
+        <item name="android:textSize">14.0dip</item>
         <item name="android:textColor">#ff222222</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
     <style name="CategoryLegendStyle">
-        <item name="android:textSize">10.0dip</item>
+        <item name="android:textSize">14.0dip</item>
         <item name="android:textColor">#ff222222</item>
         <item name="android:gravity">left</item>
         <item name="android:layout_width">0.0dip</item>

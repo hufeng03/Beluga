@@ -119,7 +119,7 @@ public class TreeFragment extends BaseFragment {
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         lv.setSelector(new ColorDrawable(Color.TRANSPARENT));
-
+        root.setBackgroundResource(R.color.white_gray);
         return root;
     }
 

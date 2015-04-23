@@ -15,130 +15,130 @@
                 <LinearLayout android:layout_gravity="center" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0">
                     <LinearLayout android:id="@+id/category_music" android:background="@drawable/category_button_left" style="@style/CategoryButtonStyle">
                         <ImageView android:src="@drawable/file_category_icon_audio" style="@style/CategoryButtonIconStyle" />
-						<LinearLayout
+						<!--LinearLayout
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
-							>
+							!-->
                         	<TextView android:text="@string/category_music" style="@style/CategoryButtonTextStyle" />
                         	<TextView android:id="@+id/category_music_count" style="@style/CategoryButtonCountTextStyle" />
-						</LinearLayout>
+						<!--/LinearLayout!-->
                     </LinearLayout>
                     <LinearLayout android:id="@+id/category_video" android:background="@drawable/category_button_middle" style="@style/CategoryButtonStyle">
                         <ImageView android:src="@drawable/file_category_icon_video" style="@style/CategoryButtonIconStyle" />
-						<LinearLayout
+						<!--LinearLayout
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
-							>
+							!-->
                         	<TextView android:text="@string/category_video" style="@style/CategoryButtonTextStyle" />
                         	<TextView android:id="@+id/category_video_count" style="@style/CategoryButtonCountTextStyle" />
-						</LinearLayout>
+						<!--/LinearLayout!-->
                     </LinearLayout>
                     <LinearLayout android:id="@+id/category_picture" android:background="@drawable/category_button_right" style="@style/CategoryButtonStyle">
                         <ImageView android:src="@drawable/file_category_icon_image" style="@style/CategoryButtonIconStyle" />
-						<LinearLayout
+						<!--LinearLayout
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
-							>
+							!-->
                         	<TextView android:text="@string/category_picture" style="@style/CategoryButtonTextStyle" />
                         	<TextView android:id="@+id/category_picture_count" style="@style/CategoryButtonCountTextStyle" />
-						</LinearLayout>
+						<!--/LinearLayout!-->
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout android:layout_gravity="center" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0">
                   	<LinearLayout android:id="@+id/category_document" android:background="@drawable/category_button_left" style="@style/CategoryButtonStyle">
                         <ImageView android:src="@drawable/file_category_icon_document" style="@style/CategoryButtonIconStyle" />
-						<LinearLayout
+						<!--LinearLayout
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
-							>
+							!-->
                         	<TextView android:text="@string/category_document" style="@style/CategoryButtonTextStyle" />
                         	<TextView android:id="@+id/category_document_count" style="@style/CategoryButtonCountTextStyle" />
-						</LinearLayout>
+						<!--/LinearLayout!-->
                     </LinearLayout>
                     <LinearLayout android:id="@+id/category_apk" android:background="@drawable/category_button_middle" style="@style/CategoryButtonStyle">
                         <ImageView android:src="@drawable/file_category_icon_apk" style="@style/CategoryButtonIconStyle" />
-						<LinearLayout
+						<!--LinearLayout
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
-							>
+							!-->
                         	<TextView android:text="@string/category_apk" style="@style/CategoryButtonTextStyle" />
                         	<TextView android:id="@+id/category_apk_count" style="@style/CategoryButtonCountTextStyle" />
-						</LinearLayout>
+						<!--/LinearLayout!-->
                     </LinearLayout>
                     <LinearLayout android:id="@+id/category_zip" android:background="@drawable/category_button_right" style="@style/CategoryButtonStyle">
                         <ImageView android:id="@+id/category_zip_icon" android:src="@drawable/file_category_icon_zip" style="@style/CategoryButtonIconStyle" />
-						<LinearLayout
+						<!--LinearLayout
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
-							>
+							!-->
                         	<TextView android:id="@+id/category_zip_name" android:text="@string/category_zip" style="@style/CategoryButtonTextStyle" />
                         	<TextView android:id="@+id/category_zip_count" style="@style/CategoryButtonCountTextStyle" />
-						</LinearLayout>
+						<!--/LinearLayout!-->
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout android:id="@+id/category_others_panel" android:layout_gravity="center" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0">
                     <LinearLayout android:id="@+id/category_download" android:background="@drawable/category_button_left" style="@style/CategoryButtonStyle">
                         <ImageView android:src="@drawable/file_category_icon_download" style="@style/CategoryButtonIconStyle" />
-						<LinearLayout
+						<!--LinearLayout
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
-							>
+							!-->
                         	<TextView android:text="@string/category_download" style="@style/CategoryButtonTextStyle" />
                         	<TextView android:id="@+id/category_download_count" style="@style/CategoryButtonCountTextStyle" />
-						</LinearLayout>
+						<!--/LinearLayout!-->
                     </LinearLayout>
                     <LinearLayout android:id="@+id/category_favorite" android:background="@drawable/category_button_middle" style="@style/CategoryButtonStyle">
                         <ImageView android:src="@drawable/file_category_icon_favorite" style="@style/CategoryButtonIconStyle" />
-                        <LinearLayout
+                        <!--LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            >
+                            !-->
                             <TextView android:text="@string/category_favorite" style="@style/CategoryButtonTextStyle" />
                             <TextView android:id="@+id/category_favorite_count" style="@style/CategoryButtonCountTextStyle" />
-                        </LinearLayout>
+                        <!--/LinearLayout!-->
                     </LinearLayout>
                     <LinearLayout android:id="@+id/category_app" android:background="@drawable/category_button_right" style="@style/CategoryButtonStyle">
                         <ImageView android:id="@+id/category_app_icon" android:src="@drawable/file_category_icon_app" style="@style/CategoryButtonIconStyle" />
-                        <LinearLayout
+                        <!--LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                >
+                                !-->
                             <TextView android:id="@+id/category_app_name" android:text="@string/category_app" style="@style/CategoryButtonTextStyle" />
                             <TextView android:id="@+id/category_app_count" style="@style/CategoryButtonCountTextStyle" />
-                        </LinearLayout>
+                        <!--/LinearLayout!-->
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout android:visibility="gone" android:id="@+id/category_selected_panel" android:layout_gravity="center" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0">
                     <LinearLayout android:id="@+id/category_selected_game" android:background="@drawable/category_button_left" style="@style/CategoryButtonStyle">
                         <ImageView android:id="@+id/category_selected_game_icon" android:src="@drawable/file_category_icon_selected_game" style="@style/CategoryButtonIconStyle" />
-                        <LinearLayout
+                        <!--LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            >
+                            !-->
                             <TextView android:id="@+id/category_selected_game_name" android:text="@string/category_selected_game" style="@style/CategoryButtonTextStyle" />
                             <TextView android:id="@+id/category_selected_game_count" style="@style/CategoryButtonCountTextStyle" />
-                        </LinearLayout>
+                        <!--/LinearLayout!-->
                     </LinearLayout>
                     <LinearLayout android:id="@+id/category_selected_app" android:background="@drawable/category_button_middle" style="@style/CategoryButtonStyle">
                         <ImageView android:id="@+id/category_selected_app_icon" android:src="@drawable/file_category_icon_selected_app" style="@style/CategoryButtonIconStyle" />
-                        <LinearLayout
+                        <!--LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            >
+                            !-->
                             <TextView android:id="@+id/category_selected_app_name" android:text="@string/category_selected_app" style="@style/CategoryButtonTextStyle" />
                             <TextView android:id="@+id/category_selected_app_count" style="@style/CategoryButtonCountTextStyle" />
-                        </LinearLayout>
+                        <!--/LinearLayout!-->
                     </LinearLayout>
                     <LinearLayout android:id="@+id/category_selected_doc"  android:background="@drawable/category_button_right" style="@style/CategoryButtonStyle">
                         <ImageView android:id="@+id/category_selected_doc_icon" android:src="@drawable/file_category_icon_selected_ebook" style="@style/CategoryButtonIconStyle" />
-                        <LinearLayout
+                        <!--LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            >
+                            !-->
                             <TextView android:id="@+id/category_selected_doc_name" android:text="@string/category_selected_doc" style="@style/CategoryButtonTextStyle" />
                             <TextView android:id="@+id/category_selected_doc_count" style="@style/CategoryButtonCountTextStyle" />
-                        </LinearLayout>
+                        <!--/LinearLayout!-->
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -165,6 +165,8 @@
 	                android:layout_width="fill_parent"
 	                android:layout_weight="1.0" 
 	                android:layout_height="0.0dip"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
                     >
                    	<LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="20.0px" android:layout_marginBottom="5.0dip" android:layout_marginTop="5.0dip" android:gravity="center" android:layout_weight="1.0">
 	                	<TextView android:id="@+id/category_legend_music" android:drawableLeft="@drawable/legend_music" style="@style/CategoryLegendStyle" android:text="@string/category_music"/>

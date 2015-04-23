@@ -35,13 +35,18 @@ public class DirectoryViewGroup extends ViewGroup{
 		int orientation =
 				getResources().getConfiguration().orientation;
 		if(Configuration.ORIENTATION_LANDSCAPE == orientation){
+			int newWidthSize = heightSize;
+			if (heightSize  > widthSize/3) {
+				newWidthSize = widthSize/3;
+			}
+//			int newWidthSize = 50;
 		    tree.measure(
-		    		MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY),
+		    		MeasureSpec.makeMeasureSpec(newWidthSize, MeasureSpec.EXACTLY),
 		    		MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY));
 		    
 		    list.measure(
-		    		MeasureSpec.makeMeasureSpec(widthSize-heightSize, MeasureSpec.EXACTLY),
-		    		MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY));  
+					MeasureSpec.makeMeasureSpec(widthSize - newWidthSize, MeasureSpec.EXACTLY),
+					MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY));
 		}else if(Configuration.ORIENTATION_PORTRAIT == orientation){
 		    list.measure(
 		    		MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY),
@@ -74,8 +79,8 @@ public class DirectoryViewGroup extends ViewGroup{
 		int orientation =
 				getResources().getConfiguration().orientation;
 		if(Configuration.ORIENTATION_LANDSCAPE == orientation){
-			tree.layout(l, t, l+(b-t), b);
-			list.layout(l+(b-t)+1, t, r, b);
+			tree.layout(l, t, l+tree.getMeasuredWidth(), b);
+			list.layout(l+tree.getMeasuredWidth(), t, r, b);
 		}else if(Configuration.ORIENTATION_PORTRAIT == orientation){
 			list.layout(l, t, r, b);
 			tree.layout(0, 0, 0, 0);
