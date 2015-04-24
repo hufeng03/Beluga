@@ -26,7 +26,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         tools:replace="android:name,android:icon"
         android:name=".FileManager"
-        android:icon="@drawable/launcher"
+        android:icon="@mipmap/launcher"
         android:label="@string/app_name"
         android:theme="@style/BelugaTheme">
         <activity
@@ -43,7 +43,7 @@
             <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
         </activity>
         <activity android:name=".BelugaPickActivity"
-            android:icon="@drawable/launcher"
+            android:icon="@mipmap/launcher"
             android:label="@string/pick_file_label">
             <intent-filter>
                 <action android:name="beluga.action.COPY_FILE" />
@@ -100,7 +100,7 @@
             </intent-filter>
         </activity>
 
-        <!--activity android:name=".BelugaTextEditorActivity"
+        <activity android:name=".BelugaTextEditorActivity"
             android:label="@string/beluga_text_editor_label">
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />
@@ -109,7 +109,7 @@
                 <data android:mimeType="text/*" />
                 <data android:mimeType="application/json" />
             </intent-filter>
-        </activity!-->
+        </activity>
 
         <activity android:name=".playtext.TextViewerActivity"
             android:label="@string/beluga_text_viewer_label">
@@ -128,7 +128,7 @@
             /!-->
 
         <activity android:name=".app.AppManagerActivity"
-            android:icon="@drawable/launcher"
+            android:icon="@mipmap/launcher"
             android:label="@string/app_manager_label">
         </activity>
 

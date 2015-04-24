@@ -1,6 +1,7 @@
 package com.belugamobile.filemanager;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.dialog.BelugaDialogFragment;
 import com.belugamobile.filemanager.intent.Constant;
+import com.belugamobile.filemanager.playtext.TextViewerActivity;
 import com.belugamobile.filemanager.utils.MimeUtil;
 
 import java.io.File;
@@ -71,6 +73,7 @@ public class BelugaActionDelegate {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(new File(entry.path)), MimeUtil.getMimeType(entry.path));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setComponent(new ComponentName(BuildConfig.APPLICATION_ID, TextViewerActivity.class.getCanonicalName()));
         try {
             context.startActivity(intent);
         } catch (Exception e) {

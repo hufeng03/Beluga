@@ -148,5 +148,7 @@
     <string name="translation_summary">%1$d语言支持， %2$d翻译贡献者</string>
     <string name="translation_contribution_dialog_title">贡献者</string>
     <string name="thanks_to_contributor">感谢我们的翻译贡献者</string>
+    <string name="menu_save">保存</string>
+    <string name="menu_edit">编辑</string>
     <string name="activity_not_found">没有找到Activity</string>
 </resources>

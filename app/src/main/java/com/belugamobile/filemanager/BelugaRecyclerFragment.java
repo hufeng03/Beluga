@@ -234,7 +234,9 @@ public abstract class BelugaRecyclerFragment extends BelugaBaseFragment implemen
     }
 
     public void setEmptyViewShown(boolean shown) {
-        mEmpty.setVisibility(shown?View.VISIBLE:View.GONE);
+        if (mEmpty != null) {
+            mEmpty.setVisibility(shown ? View.VISIBLE : View.GONE);
+        }
     }
 
     /**

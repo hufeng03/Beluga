@@ -78,9 +78,11 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
             mSelectedPath = null;
             getArguments().putString(ARGUMENT_BROWSER_ROOT_FOLDER, mRootDir);
             getArguments().remove(ARGUMENT_BROWSER_LOCATE_FILE);
-            setEmptyViewShown(false);
-            setRecyclerViewShown(false);
-            getLoaderManager().restartLoader(LOADER_ID, null, this);
+            if (isResumed()) {
+                setEmptyViewShown(false);
+                setRecyclerViewShown(false);
+                getLoaderManager().restartLoader(LOADER_ID, null, this);
+            }
         }
     }
 

@@ -761,6 +761,7 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
                     fragment.setUserVisibleHint(true);
                 }
                 mCurrentPrimaryItem = fragment;
+                supportInvalidateOptionsMenu();
             }
         }
 

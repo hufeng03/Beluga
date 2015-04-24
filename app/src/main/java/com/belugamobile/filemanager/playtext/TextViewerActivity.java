@@ -1,6 +1,7 @@
 package com.belugamobile.filemanager.playtext;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,6 +19,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextPaint;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,7 @@ import android.widget.Toast;
 
 import com.belugamobile.filemanager.BelugaBaseActionBarActivity;
 import com.belugamobile.filemanager.BelugaNavigationDrawerFragment;
+import com.belugamobile.filemanager.BelugaTextEditorActivity;
 import com.belugamobile.filemanager.FileManager;
 import com.belugamobile.filemanager.PreferenceKeys;
 import com.belugamobile.filemanager.R;
@@ -56,8 +59,6 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
     private static final String TAG = "TextViewerActivity";
 
     BelugaTextViewerTaskFragment mTaskFragment;
-
-//    BelugaNavigationDrawerFragment mNavigationDrawerFragment;
 
     TextViewPager mTextViewPager;
     TextPagerAdapter mTextPagerAdapter;
@@ -151,7 +152,9 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
     }
 
 
-//    @Override
+
+
+    //    @Override
 //    protected void onPostCreate(Bundle savedInstanceState) {
 //        super.onPostCreate(savedInstanceState);
 //        // Sync the toggle state after onRestoreInstanceState has occurred.
@@ -449,9 +452,23 @@ public class TextViewerActivity extends BelugaBaseActionBarActivity {
         }
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.text_viewer_fragment_menu, menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else if (item.getItemId() == R.id.menu_edit) {
+            Intent intent = new Intent(this, BelugaTextEditorActivity.class);
+            intent.setData(mUri);
+            startActivity(intent);
             finish();
             return true;
         }

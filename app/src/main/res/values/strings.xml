@@ -155,6 +155,7 @@
     <string name="no_app_to_share">No app available to share this file.</string>
     <string name="beluga_text_editor_label">Beluga Text Editor</string>
     <string name="menu_save">Save</string>
+    <string name="menu_edit">Edit</string>
     <string name="beluga_text_viewer_label">Text Viewer</string>
     <string name="activity_not_found">Activity not found.</string>
 </resources>
