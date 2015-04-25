@@ -73,7 +73,7 @@ public class BelugaActionDelegate {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(new File(entry.path)), MimeUtil.getMimeType(entry.path));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setComponent(new ComponentName(BuildConfig.APPLICATION_ID, TextViewerActivity.class.getCanonicalName()));
+//        intent.setComponent(new ComponentName(BuildConfig.APPLICATION_ID, TextViewerActivity.class.getCanonicalName()));
         try {
             context.startActivity(intent);
         } catch (Exception e) {
