@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 
+import com.belugamobile.filemanager.BelugaFolderObserver;
 import com.belugamobile.filemanager.SortPreferenceReceiver;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.helper.BelugaSortHelper;
@@ -39,18 +40,17 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
     private static final String LOG_TAG = FileBrowserLoader.class.getSimpleName();
 
     private String mFolder;
-//    private String[] mFolders;
     private List<BelugaFileEntry> mFiles;
     private String mSearch;
     private boolean mShowChildFolders;
 
     SortPreferenceReceiver mSortObserver;
+    BelugaFolderObserver mFolderObserver;
 
 
     public FileBrowserLoader(Context context, String folder, /*String[] folders,*/ boolean showChildFolders) {
         super(context);
         mFolder = folder;
-//        mFolders = folders;
         mShowChildFolders = showChildFolders;
     }
 
@@ -155,17 +155,6 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
                 }
             }
         }
-//        else if (mFolders != null && mFolders.length > 0) {
-//            BelugaFileEntry entry;
-//            for (String dir : mFolders) {
-//                entry = new BelugaFileEntry(dir);
-//                if (entry.exist) {
-//                    if (TextUtils.isEmpty(mSearch) || entry.getName().toLowerCase().contains(mSearch.toLowerCase())) {
-//                        entries.add(entry);
-//                    }
-//                }
-//            }
-//        }
 
         if (entries.size() > 0) {
             // Retrieve favorite status from database

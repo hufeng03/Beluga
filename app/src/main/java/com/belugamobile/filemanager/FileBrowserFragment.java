@@ -415,21 +415,21 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case 0:
+                case BelugaFolderObserver.MESSAGE_TYPE_FILE_DISAPPEAR:
                 {
                     String path = msg.getData().getString(BelugaFolderObserver.HANDLER_MESSAGE_FILE_PATH_KEY);
                     if (TextUtils.isEmpty(path) || new File(path).exists()) {
                         return;
                     }
                     BelugaFileEntry oldEntry = new BelugaFileEntry(path);
-                    Message newMessage = mUIThreadHandler.obtainMessage(0);
+                    Message newMessage = mUIThreadHandler.obtainMessage(BelugaFolderObserver.MESSAGE_TYPE_FILE_DISAPPEAR);
                     Bundle data = new Bundle();
                     data.putParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY, oldEntry);
                     newMessage.setData(data);
                     newMessage.sendToTarget();
                 }
                     break;
-                case 1:
+                case BelugaFolderObserver.MESSAGE_TYPE_FILE_APPEAR:
                 {
                     String path = msg.getData().getString(BelugaFolderObserver.HANDLER_MESSAGE_FILE_PATH_KEY);
                     if (TextUtils.isEmpty(path) || !new File(path).exists()) {
@@ -444,7 +444,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                         }
                         pos++;
                     }
-                    Message newMessage = mUIThreadHandler.obtainMessage(1);
+                    Message newMessage = mUIThreadHandler.obtainMessage(BelugaFolderObserver.MESSAGE_TYPE_FILE_APPEAR);
                     Bundle data = new Bundle();
                     data.putParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY, newEntry);
                     data.putInt(HANDLER_MESSAGE_POSITION_KEY, pos);
@@ -460,7 +460,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case 0:
+                case BelugaFolderObserver.MESSAGE_TYPE_FILE_DISAPPEAR:
                 {
                     BelugaFileEntry oldEntry = msg.getData().getParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY);
                     mAdapter.remove(oldEntry);
@@ -470,7 +470,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                     setEmptyViewShown(mAdapter.getItemCount() == 0);
                 }
                     break;
-                case 1:
+                case BelugaFolderObserver.MESSAGE_TYPE_FILE_APPEAR:
                 {
                     BelugaFileEntry newEntry = msg.getData().getParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY);
                     int pos = msg.getData().getInt(HANDLER_MESSAGE_POSITION_KEY, 0);

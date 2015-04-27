@@ -55,7 +55,7 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
                 return;
             }
             switch (msg.what) {
-                case 0:
+                case BelugaFolderObserver.MESSAGE_TYPE_FILE_DISAPPEAR:
                 {
                     String path = msg.getData().getString(BelugaFolderObserver.HANDLER_MESSAGE_FILE_PATH_KEY);
                     if (TextUtils.isEmpty(path) || new File(path).exists()) {
@@ -64,7 +64,7 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
                     BelugaProviderHelper.deleteInBelugaDatabase(mContext, path);
                 }
                 break;
-                case 1:
+                case BelugaFolderObserver.MESSAGE_TYPE_FILE_APPEAR:
                 {
                     String path = msg.getData().getString(BelugaFolderObserver.HANDLER_MESSAGE_FILE_PATH_KEY);
                     if (TextUtils.isEmpty(path) || !new File(path).exists()) {

@@ -23,6 +23,9 @@ public final class BelugaFolderObserver extends FileObserver {
 
     private long mSendMessageDelay = 0;
 
+    public static final int MESSAGE_TYPE_FILE_DISAPPEAR = 0;
+    public static final int MESSAGE_TYPE_FILE_APPEAR = 1;
+
     private String mFolderPath;
     private Handler mObserverHandler;
     public BelugaFolderObserver(String path, Handler handler) {
@@ -57,7 +60,7 @@ public final class BelugaFolderObserver extends FileObserver {
         }
 
         if (delete || moved_from) {
-            Message message = mObserverHandler.obtainMessage(0);
+            Message message = mObserverHandler.obtainMessage(MESSAGE_TYPE_FILE_DISAPPEAR);
             Bundle data = new Bundle();
             data.putString(HANDLER_MESSAGE_FILE_PATH_KEY, new File(mFolderPath, name).getAbsolutePath());
             message.setData(data);
@@ -65,7 +68,7 @@ public final class BelugaFolderObserver extends FileObserver {
         }
 
         if (create || moved_to) {
-            Message message = mObserverHandler.obtainMessage(1);
+            Message message = mObserverHandler.obtainMessage(MESSAGE_TYPE_FILE_APPEAR);
             Bundle data = new Bundle();
             data.putString(HANDLER_MESSAGE_FILE_PATH_KEY, new File(mFolderPath, name).getAbsolutePath());
             message.setData(data);
