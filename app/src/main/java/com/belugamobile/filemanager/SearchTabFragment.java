@@ -86,19 +86,11 @@ public class SearchTabFragment extends FileTabFragment {
 
     private void showSingleSearchPanel() {
 //        if (!TextUtils.isEmpty(mZipPath)) {
-//            showZipBrowserFragment();
+//            showZipBrowse();
 //        } else {
             showFileSearchFragment();
 //        }
     }
-
-//    @Subscribe
-//    public void onZipView(ZipViewEvent event) {
-//        if (getUserVisibleHint() && event != null) {
-//            mZipPath = event.path;
-//            showZipBrowserFragment();
-//        }
-//    }
 
     public void showFileSearchFragment() {
         final FragmentManager fm = getChildFragmentManager();
@@ -123,7 +115,7 @@ public class SearchTabFragment extends FileTabFragment {
         t.send(new HitBuilders.AppViewBuilder().build());
     }
 
-//    public void showZipBrowserFragment() {
+//    public void showZipBrowser() {
 //        final FragmentManager fm = getChildFragmentManager();
 //        final FragmentTransaction ft = fm.beginTransaction();
 //        final String TAG = "ZipBrowserFragment";

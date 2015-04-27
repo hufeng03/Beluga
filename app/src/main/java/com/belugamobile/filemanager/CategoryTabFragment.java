@@ -1,7 +1,6 @@
 package com.belugamobile.filemanager;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -23,12 +22,9 @@ public class CategoryTabFragment extends FileTabFragment {
 	private static final String CATEGORY = "category";
     private static final String FOLDER_PATH = "folder_path";
     private static final String ZIP_FILE_PATH = "zip_file_path";
-    private static final String FAVORITE_SELECTED = "favorite_selected";
-    private static final String DOWNLOAD_SELECTED = "download_selected";
     private int mCategory;
     private String mFolderPath;
     private String mZipPath;
-    private View mRootView;
 
     public NewCategoryFragment mCategoryFragment;
 
@@ -62,20 +58,15 @@ public class CategoryTabFragment extends FileTabFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
-		mRootView = inflater.inflate(R.layout.category_tab_fragment, container, false);
-		return mRootView;
+		return inflater.inflate(R.layout.category_tab_fragment, container, false);
 	}
 	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-        showCategoryMasterPanel();
-        refreshCategoryDetailPanel();
+        mCategoryFragment = (NewCategoryFragment)getChildFragmentManager().findFragmentById(R.id.category_fragment);
+        refreshCategoryDetailPane();
 	}
-
-
-
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -110,7 +101,7 @@ public class CategoryTabFragment extends FileTabFragment {
             mCategory = event.category;
             mZipPath = null;
             mFolderPath = null;
-            refreshCategoryDetailPanel();
+            refreshCategoryDetailPane();
         }
     }
 
@@ -123,17 +114,11 @@ public class CategoryTabFragment extends FileTabFragment {
     }
 
     @Subscribe
-    public void onZipView(ZipViewEvent event) {
+    public void onZipView(ZipSelectEvent event) {
         if (getUserVisibleHint() && event != null) {
             mZipPath = event.path;
             showZipBrowser();
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mRootView = null;
     }
 
     @Override
@@ -151,35 +136,11 @@ public class CategoryTabFragment extends FileTabFragment {
         } else {
             return false;
         }
-        refreshCategoryDetailPanel();
+        refreshCategoryDetailPane();
 
         return true;
 	}
 
-    private void showCategoryMasterPanel() {
-        final FragmentManager fm = getChildFragmentManager();
-        final FragmentTransaction ft = fm.beginTransaction();
-        NewCategoryFragment fragment = (NewCategoryFragment) getChildFragmentManager().findFragmentByTag(NewCategoryFragment.class.getSimpleName());
-        if (fragment == null) {
-            fragment = new NewCategoryFragment();
-            ft.replace(R.id.first_fragment_container, fragment, NewCategoryFragment.class.getSimpleName());
-        } else {
-            if (fragment.isDetached()) {
-                ft.attach(fragment);
-            }
-        }
-
-        if (mCurrentChildFragment != null) {
-            ft.remove(mCurrentChildFragment);
-        }
-
-        ft.commit();
-        mCategoryFragment = fragment;
-
-        Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
-        t.setScreenName("Category Panel");
-        t.send(new HitBuilders.AppViewBuilder().build());
-	}
 
     private void showEmptyDetail() {
         final FragmentManager fm = getChildFragmentManager();
@@ -301,7 +262,7 @@ public class CategoryTabFragment extends FileTabFragment {
         t.send(new HitBuilders.AppViewBuilder().build());
     }
 
-    private void refreshCategoryDetailPanel() {
+    private void refreshCategoryDetailPane() {
         if (!TextUtils.isEmpty(mZipPath)) {
             showZipBrowser();
         } else if (!TextUtils.isEmpty(mFolderPath)) {
@@ -337,7 +298,10 @@ public class CategoryTabFragment extends FileTabFragment {
     @Override
     protected void showInitialState() {
         super.showInitialState();
-        showCategoryMasterPanel();
+        mZipPath = null;
+        mFolderPath  = null;
+        mCategory = FileCategoryHelper.CATEGORY_TYPE_UNKNOW;
+        refreshCategoryDetailPane();
     }
 
     @Override

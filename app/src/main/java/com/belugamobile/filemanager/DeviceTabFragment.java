@@ -14,29 +14,60 @@ import com.google.android.gms.analytics.Tracker;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.squareup.otto.Subscribe;
 
-import java.io.File;
-
 
 public class DeviceTabFragment extends FileTabFragment {
 
     private static final String LOG_TAG = "DirectoryTabFragment";
 
-    private String mDevicePath;
     private NewDeviceFragment mDeviceFragment;
 
+    private String mDevicePath;
+    private String mFolderPath;
     private String mZipPath;
 
-    private static final String DEVICE_TAB_ROOT_DIR = "device_tab_root_dir";
+    private static final String DEVICE_PATH = "device_tab_root_dir";
     private static final String ZIP_FILE_PATH = "zip_file_path";
+    private static final String FOLDER_PATH = "folder_path";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            mDevicePath = savedInstanceState.getString(DEVICE_TAB_ROOT_DIR);
+            mDevicePath = savedInstanceState.getString(DEVICE_PATH);
+            mFolderPath = savedInstanceState.getString(FOLDER_PATH);
             mZipPath = savedInstanceState.getString(ZIP_FILE_PATH);
         }
 	}
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.device_tab_fragment, container, false);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mDeviceFragment = (NewDeviceFragment)getChildFragmentManager().findFragmentById(R.id.device_fragment);
+        refreshDeviceDetailPane();
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (!TextUtils.isEmpty(mDevicePath)) {
+            outState.putString(DEVICE_PATH, mDevicePath);
+        }
+        if (!TextUtils.isEmpty(mFolderPath)) {
+            outState.putString(FOLDER_PATH, mFolderPath);
+        }
+        if (!TextUtils.isEmpty(mZipPath)) {
+            outState.putString(ZIP_FILE_PATH, mZipPath);
+        }
+    }
 
     @Override
     public void onResume() {
@@ -59,101 +90,61 @@ public class DeviceTabFragment extends FileTabFragment {
         }
     }
 
+
     @Subscribe
-    public void onDeviceSelected(DeviceSelectEvent event) {
+    public void onDeviceSeleted(DeviceSelectEvent event) {
         if (getUserVisibleHint() && event != null) {
             mDevicePath = event.path;
-            //showFileBrowserFragment();
+            mFolderPath = event.path;
             mZipPath = null;
-            refreshDeviceDetailPanel();
+            refreshDeviceDetailPane();
         }
     }
 
     @Subscribe
-    public void onZipView(ZipViewEvent event) {
+    public void onFolderSelected(FolderSelectEvent event) {
+        if (getUserVisibleHint() && event != null) {
+            if (!event.root.equals(mDevicePath)) {
+                mDevicePath = event.root;
+            }
+            mZipPath = null;
+            mFolderPath = event.path;
+            refreshDeviceDetailPane();
+        }
+    }
+
+    @Subscribe
+    public void onZipSelected(ZipSelectEvent event) {
         if (getUserVisibleHint() && event != null) {
             mZipPath = event.path;
-            showZipBrowserFragment();
+            showZipBrowser();
         }
     }
 
-    @Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.device_tab_fragment, container, false);
-        return view;
-	}
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        //showSingleDevicePanel();
-        showDeviceMasterPanel();
-        refreshDeviceDetailPanel();
-    }
-	
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-	}
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (!TextUtils.isEmpty(mDevicePath)) {
-            outState.putString(DEVICE_TAB_ROOT_DIR, mDevicePath);
+    @Subscribe
+    public void onFolderShown(FolderShowEvent event) {
+        if (getUserVisibleHint() && event != null) {
+            if (!event.root.equals(mDevicePath)) {
+                mDevicePath = event.root;
+            }
+            mZipPath = null;
+            mFolderPath = event.path;
+            mDeviceFragment.setSelectedDeviceAndFolder(mDevicePath, mFolderPath);
         }
+    }
+
+
+    private void refreshDeviceDetailPane() {
         if (!TextUtils.isEmpty(mZipPath)) {
-            outState.putString(ZIP_FILE_PATH, mZipPath);
-        }
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-
-    private void refreshDeviceDetailPanel() {
-        if (!TextUtils.isEmpty(mZipPath) && new File(mZipPath).exists()) {
-            showZipBrowserFragment();
-        } else if (!TextUtils.isEmpty(mDevicePath) && new File(mDevicePath).exists()) {
-            showFileBrowserFragment();
+            showZipBrowser();
+        } else if (!TextUtils.isEmpty(mDevicePath) || !TextUtils.isEmpty(mFolderPath)) {
+            showFileBrowser();
         } else {
-            //showDeviceMasterPanel();
             showEmptyDetail();
         }
-
         if (mDeviceFragment != null) {
-            mDeviceFragment.setSelectedDevice(mDevicePath);
+            mDeviceFragment.setSelectedDeviceAndFolder(mDevicePath, mFolderPath);
         }
-    }
-
-
-    private void showDeviceMasterPanel() {
-
-        final FragmentManager fm = getChildFragmentManager();
-        final FragmentTransaction ft = fm.beginTransaction();
-        final String TAG = "DeviceFragment";
-        NewDeviceFragment fragment = (NewDeviceFragment) getChildFragmentManager().findFragmentByTag(TAG);
-        if (fragment == null) {
-            fragment = new NewDeviceFragment();
-            ft.replace(R.id.first_fragment_container, fragment, TAG);
-            ft.commit();
-        } else {
-            if (fragment.isDetached()) {
-                ft.attach(fragment);
-                ft.commit();
-            }
-        }
-        mDeviceFragment = fragment;
-
-        Tracker t = ((FileManager)getActivity().getApplication()).getTracker(FileManager.TrackerName.APP_TRACKER);
-        t.setScreenName("Device Panel");
-        t.send(new HitBuilders.AppViewBuilder().build());
     }
 
     private void showEmptyDetail() {
@@ -166,17 +157,17 @@ public class DeviceTabFragment extends FileTabFragment {
         }
     }
 
-    public void showFileBrowserFragment() {
+    public void showFileBrowser() {
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
         final String TAG = "FileBrowserFragment";
         FileBrowserFragment fragment = (FileBrowserFragment) fm.findFragmentByTag(TAG);
         if (fragment == null) {
-            fragment = FileBrowserFragment.newRootFolderBrowser(mDevicePath, mZipPath);
+            fragment = FileBrowserFragment.newRootFolderBrowser(mDevicePath, mFolderPath);
             ft.replace(R.id.fragment_container, fragment, TAG);
             ft.commit();
         } else {
-            fragment.setDevicePath(mDevicePath);
+            fragment.setRootAndCurrentFolder(mDevicePath, mFolderPath);
             if (fragment.isDetached()) {
                 ft.attach(fragment);
                 ft.commit();
@@ -189,7 +180,7 @@ public class DeviceTabFragment extends FileTabFragment {
         t.send(new HitBuilders.AppViewBuilder().build());
     }
 
-    public void showZipBrowserFragment() {
+    public void showZipBrowser() {
         final FragmentManager fm = getChildFragmentManager();
         final FragmentTransaction ft = fm.beginTransaction();
         final String TAG = "ZipBrowserFragment";
@@ -218,12 +209,13 @@ public class DeviceTabFragment extends FileTabFragment {
         }
         if (!TextUtils.isEmpty(mZipPath)) {
             mZipPath = null;
-        } else if (!TextUtils.isEmpty(mDevicePath)) {
+        } else if (!TextUtils.isEmpty(mDevicePath) || !TextUtils.isEmpty(mFolderPath)) {
             mDevicePath = null;
+            mFolderPath = null;
         } else {
             return false;
         }
-        refreshDeviceDetailPanel();
+        refreshDeviceDetailPane();
 
         return true;
 	}
@@ -231,7 +223,10 @@ public class DeviceTabFragment extends FileTabFragment {
     @Override
     protected void showInitialState() {
         super.showInitialState();
-        showDeviceMasterPanel();
+        mZipPath = null;
+        mDevicePath = null;
+        mFolderPath = null;
+        refreshDeviceDetailPane();
     }
 
     @Override

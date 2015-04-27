@@ -155,7 +155,7 @@ public class FileSearchFragment extends FileRecyclerFragment implements
             //TODO: switch to show child folder
             BusProvider.getInstance().post(new FolderOpenEvent(System.currentTimeMillis(), belugaFileEntry));
         } else if (belugaFileEntry.type == FileCategoryHelper.FILE_TYPE_ZIP) {
-            BusProvider.getInstance().post(new ZipViewEvent(System.currentTimeMillis(), ((BelugaFileEntry) entry).path));
+            BusProvider.getInstance().post(new ZipSelectEvent(System.currentTimeMillis(), ((BelugaFileEntry) entry).path));
         } else {
             BelugaActionDelegate.view(view.getContext(), belugaFileEntry);
         }

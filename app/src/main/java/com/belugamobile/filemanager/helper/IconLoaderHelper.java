@@ -57,18 +57,18 @@ public class IconLoaderHelper {
 
 
     public static int getFileIcon(Context context, String path) {
-        if (path.endsWith("/") || new File(path).isDirectory()) {
-            if (path.equals("/")) {
-                return R.drawable.ic_sd_storage;
-            } else if (MountPointManager.getInstance().isExternalMountPath(path)) {
-                return R.drawable.ic_sd_storage;
-            } else if (MountPointManager.getInstance().isInternalMountPath(path)) {
-                return R.drawable.ic_sd_storage;
-            }
-            else {
-                return R.drawable.ic_sd_storage;
-            }
-        } else {
+//        if (path.endsWith("/") || new File(path).isDirectory()) {
+//            if (path.equals("/")) {
+//                return R.drawable.ic_sd_storage;
+//            } else if (MountPointManager.getInstance().isExternalMountPath(path)) {
+//                return R.drawable.ic_sd_storage;
+//            } else if (MountPointManager.getInstance().isInternalMountPath(path)) {
+//                return R.drawable.ic_sd_storage;
+//            }
+//            else {
+//                return R.drawable.ic_sd_storage;
+//            }
+//        } else {
             String ext = MimeUtil.getExtension(path);
             if(TextUtils.isEmpty(ext))
             {
@@ -105,7 +105,7 @@ public class IconLoaderHelper {
                 }
                 return id;
             }
-        }
+//        }
     }
 
 }

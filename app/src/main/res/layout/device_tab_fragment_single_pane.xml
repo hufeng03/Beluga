@@ -5,10 +5,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <RelativeLayout
-        android:id="@+id/first_fragment_container"
+    <fragment
+        android:id="@+id/device_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:name="com.belugamobile.filemanager.NewDeviceFragment"/>
 
     <FrameLayout
             android:id="@+id/fragment_container"

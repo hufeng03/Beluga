@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="category_tab_fragment" type="layout">@layout/category_tab_fragment_dual_panes</item>
+    <item name="category_item_layout" type="layout">@layout/category_grid_item_dual_panes</item>
+    <bool name="has_dual_category_panes">true</bool>
+    <item name="device_tab_fragment" type="layout">@layout/device_tab_fragment_dual_panes</item>
+    <item name="device_item_layout" type="layout">@layout/device_item_layout_dual_panes</item>
+    <bool name="has_dual_device_panes">false</bool>
+</resources>

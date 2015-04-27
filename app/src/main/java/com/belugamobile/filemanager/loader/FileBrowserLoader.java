@@ -38,47 +38,52 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
 
     private static final String LOG_TAG = FileBrowserLoader.class.getSimpleName();
 
-    private String mRoot;
-    private String[] mDirs;
+    private String mFolder;
+//    private String[] mFolders;
     private List<BelugaFileEntry> mFiles;
     private String mSearch;
+    private boolean mShowChildFolders;
 
     SortPreferenceReceiver mSortObserver;
 
-    public FileBrowserLoader(Context context, String root, String[] dirs) {
+
+    public FileBrowserLoader(Context context, String folder, /*String[] folders,*/ boolean showChildFolders) {
         super(context);
-        mRoot = root;
-        mDirs = dirs;
+        mFolder = folder;
+//        mFolders = folders;
+        mShowChildFolders = showChildFolders;
     }
 
     @Override
     public List<BelugaFileEntry> loadInBackground() {
         LogUtil.i(LOG_TAG, this.hashCode() + " FileListLoader loadinbackground()");
         List<BelugaFileEntry> entries = new ArrayList<BelugaFileEntry>();
-        if (!TextUtils.isEmpty(mRoot)/* && new File(mRoot).exists() && new File(mRoot).isDirectory()*/) {
-            String[] names = new File(mRoot).list();
+        if (!TextUtils.isEmpty(mFolder)/* && new File(mRoot).exists() && new File(mRoot).isDirectory()*/) {
+            String[] names = new File(mFolder).list();
             if (names == null || names.length == 0) {
-                String mountPoints = MountPointManager.getInstance().getRealMountPointPath(mRoot);
+                String mountPoints = MountPointManager.getInstance().getRealMountPointPath(mFolder);
                 if (TextUtils.isEmpty(mountPoints)) {
-                    names = BelugaRootManager.getInstance().listSync(mRoot);
+                    names = BelugaRootManager.getInstance().listSync(mFolder);
                 }
             }
             if (names != null) {
                 HashSet<String> failedNames = new HashSet<String>();
                 for (String name : names) {
-                    File file = new File(mRoot, name);
+                    File file = new File(mFolder, name);
                     if (file.exists()) {
                         BelugaFileEntry entry = new BelugaFileEntry(file);
-                        if (TextUtils.isEmpty(mSearch) || entry.getName().toLowerCase().contains(mSearch.toLowerCase())) {
-                            LogUtil.i(LOG_TAG, "add "+file+"!!!!!!!!!!"+entry);
-                            entries.add(entry);
+                        if (mShowChildFolders || !entry.isDirectory) {
+                            if (TextUtils.isEmpty(mSearch) || entry.getName().toLowerCase().contains(mSearch.toLowerCase())) {
+                                LogUtil.i(LOG_TAG, "add " + file + "!!!!!!!!!!" + entry);
+                                entries.add(entry);
+                            }
                         }
                     } else {
                         failedNames.add(name);
                     }
                 }
                 if (failedNames.size() > 0) {
-                    String[] infos = BelugaRootManager.getInstance().infoListSync(mRoot);
+                    String[] infos = BelugaRootManager.getInstance().infoListSync(mFolder);
                     if (infos != null) {
                         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
                         for (String info : infos) {
@@ -88,13 +93,15 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
                                 int size = 0;
                                 Date date = null;
                                 if (elements[0].charAt(0) == 'd') {
+                                    if (!mShowChildFolders) {
+                                        continue;
+                                    }
                                     name = elements[elements.length-1];
                                     try {
                                         date = format.parse(elements[elements.length-3]+" "+elements[elements.length-2]);
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
-
                                 } else if (elements[0].charAt(0) == 'l') {
                                     name = elements[elements.length-3];
                                     try {
@@ -126,9 +133,9 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
 
                                 if (!TextUtils.isEmpty(name) && date != null && failedNames.contains(name)) {
                                     BelugaFileEntry entry = new BelugaFileEntry();
-                                    entry.parentPath = mRoot;
+                                    entry.parentPath = mFolder;
                                     entry.name = name;
-                                    entry.path = mRoot + "/" + name;
+                                    entry.path = mFolder + "/" + name;
                                     entry.hidden = name.startsWith(".");
                                     entry.exist = true;
                                     entry.extension = MimeUtil.getExtension(name);
@@ -147,17 +154,18 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
                     //entries.addAll()
                 }
             }
-        } else if (mDirs != null && mDirs.length > 0) {
-            BelugaFileEntry entry;
-            for (String dir : mDirs) {
-                entry = new BelugaFileEntry(dir);
-                if (entry.exist) {
-                    if (TextUtils.isEmpty(mSearch) || entry.getName().toLowerCase().contains(mSearch.toLowerCase())) {
-                        entries.add(entry);
-                    }
-                }
-            }
         }
+//        else if (mFolders != null && mFolders.length > 0) {
+//            BelugaFileEntry entry;
+//            for (String dir : mFolders) {
+//                entry = new BelugaFileEntry(dir);
+//                if (entry.exist) {
+//                    if (TextUtils.isEmpty(mSearch) || entry.getName().toLowerCase().contains(mSearch.toLowerCase())) {
+//                        entries.add(entry);
+//                    }
+//                }
+//            }
+//        }
 
         if (entries.size() > 0) {
             // Retrieve favorite status from database

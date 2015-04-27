@@ -5,16 +5,11 @@
     android:layout_height="fill_parent"
     android:orientation="horizontal" >
 
-    <RelativeLayout
-        android:id="@+id/first_fragment_container"
-        android:layout_width="160dp"
+    <fragment
+        android:id="@+id/category_fragment"
+        android:layout_width="400dp"
         android:layout_height="match_parent"
-        android:layout_weight="0"/>
-    <!--View
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:background="@color/gray"
-    /!-->
+        android:name="com.belugamobile.filemanager.NewCategoryFragment"/>
 
     <RelativeLayout
         android:id="@+id/fragment_container"

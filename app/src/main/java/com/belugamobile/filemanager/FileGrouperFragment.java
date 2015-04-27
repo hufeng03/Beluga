@@ -265,7 +265,7 @@ public class FileGrouperFragment extends FileRecyclerFragment implements
         if (belugaFileEntry.isDirectory) {
             BusProvider.getInstance().post(new FolderOpenEvent(System.currentTimeMillis(), belugaFileEntry));
         } else if (belugaFileEntry.type == FileCategoryHelper.FILE_TYPE_ZIP) {
-            BusProvider.getInstance().post(new ZipViewEvent(System.currentTimeMillis(), belugaFileEntry.path));
+            BusProvider.getInstance().post(new ZipSelectEvent(System.currentTimeMillis(), belugaFileEntry.path));
         } else {
             BelugaActionDelegate.view(view.getContext(), belugaFileEntry);
         }

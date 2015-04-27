@@ -84,8 +84,6 @@ public class BelugaDrawerActivity extends BelugaActionControllerActivity impleme
     }
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);

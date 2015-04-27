@@ -158,4 +158,5 @@
     <string name="menu_edit">Edit</string>
     <string name="beluga_text_viewer_label">Text Viewer</string>
     <string name="activity_not_found">Activity not found.</string>
+    <string name="empty_file_in_folder">No File\n\n%s</string>
 </resources>

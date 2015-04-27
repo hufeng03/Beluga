@@ -242,7 +242,7 @@ public class NewCategoryFragment extends BelugaRecyclerFragment/* implements Loa
         @Override
         public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             Log.i(TAG, "onCreateViewHolder "+parent.getWidth()+","+parent.getHeight());
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_grid_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_item_layout, parent, false);
             if (mGridItemSize[0] != 0) {
                 view.setMinimumWidth(mGridItemSize[0]);
             }
@@ -273,25 +273,33 @@ public class NewCategoryFragment extends BelugaRecyclerFragment/* implements Loa
     }
 
     private void calculateViewHolderSize() {
-        int width = mRootView.getWidth()-mRecyclerView.getPaddingLeft()-mRecyclerView.getPaddingRight();
-        int height = mRootView.getHeight()-mRecyclerView.getPaddingTop()-mRecyclerView.getPaddingBottom();
-        if (width <= 200 * getResources().getDisplayMetrics().density) {
-            mGridItemSize[0] = width;
-            mGridItemSize[1] = 0;
-            setLayoutManager(new GridLayoutManager(mRecyclerView.getContext(), 1));
-            setRecyclerAdapter(new BelugaCategoryRecyclerAdapter());
-            setRecyclerViewShown(true);
+        int width = mRootView.getWidth() - mRecyclerView.getPaddingLeft() - mRecyclerView.getPaddingRight();
+        int height = mRootView.getHeight() - mRecyclerView.getPaddingTop() - mRecyclerView.getPaddingBottom();
+        int rows, columns;
+        if (width <= 320 * getResources().getDisplayMetrics().density) {
+            columns = 1;
+            rows = mCategoryItems.length;
         } else {
             final int count = mCategoryItems.length;
-            final int size = (int) Math.sqrt((double) (width * height) / (double) count);
-            final int columns = width % size == 0 ? width / size : width / size + 1;
-            final int rows = count % columns == 0 ? count / columns : count / columns + 1;
-            mGridItemSize[0] = width / columns;
-            mGridItemSize[1] = height / rows;
+            final int square_length = (int) Math.sqrt((double) (width * height) / (double) count);
+            rows = (height % square_length == 0) ? height / square_length : height / square_length + 1;
+            columns = (width % square_length == 0) ? width / square_length : width / square_length + 1;
 
-            setLayoutManager(new GridLayoutManager(mRecyclerView.getContext(), columns));
-            setRecyclerAdapter(new BelugaCategoryRecyclerAdapter());
-            setRecyclerViewShown(true);
+
+            if (rows * columns != count) {
+                if (getResources().getBoolean(R.bool.has_dual_category_panes)) {
+                    columns = count%rows == 0 ? count/rows : count/rows+1;
+                } else {
+                    rows = count%columns == 0 ? count/columns : count/columns+1;
+                }
+            }
         }
+
+        mGridItemSize[0] = width / columns;
+        mGridItemSize[1] = height / rows;
+        setLayoutManager(new GridLayoutManager(mRecyclerView.getContext(), columns));
+        setRecyclerAdapter(new BelugaCategoryRecyclerAdapter());
+        setRecyclerViewShown(true);
+
     }
 }

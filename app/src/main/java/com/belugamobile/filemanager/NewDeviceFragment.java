@@ -1,8 +1,6 @@
 package com.belugamobile.filemanager;
 
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -13,16 +11,14 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import com.belugamobile.filemanager.mount.MountPoint;
-import com.belugamobile.filemanager.mount.MountPointManager;
+import com.belugamobile.filemanager.data.BelugaTreeFolderEntry;
+import com.belugamobile.filemanager.loader.FolderTreeLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +31,12 @@ import butterknife.InjectView;
  * <p/>
  * TODO: Add a class header comment.
  */
-public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedPreferences.OnSharedPreferenceChangeListener /*implements LoaderManager.LoaderCallbacks<List<MountPoint>>*/ {
+public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedPreferences.OnSharedPreferenceChangeListener,
+        LoaderManager.LoaderCallbacks<List<BelugaTreeFolderEntry>> {
 
     public static final String TAG = "NewDeviceFragment";
+
+    private static final int LOADER_ID = 1;
 
     BelugaMountReceiver mBelugaMountReceiver;
     DeviceMountListener mMountListener;
@@ -49,7 +48,16 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedP
 
     private Handler mHandler = new MainThreadHandler();
 
-    private String mSelectedDevicePath;
+    private String mSelectedDevice;
+    private String mSelectedFolder;
+    private boolean mSelectedCollapse;
+
+    BelugaFolderTreeRecyclerAdapter mAdapter;
+
+    public static NewDeviceFragment newInstance(String device) {
+        NewDeviceFragment fragment = new NewDeviceFragment();
+        return fragment;
+    }
 
     private class MainThreadHandler extends Handler {
         @Override
@@ -90,33 +98,41 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedP
 
     }
 
-    public void setSelectedDevice(String devicePath) {
-        boolean oldEmpty = TextUtils.isEmpty(mSelectedDevicePath);
-        boolean newEmpty = TextUtils.isEmpty(devicePath);
-        if ((oldEmpty && !newEmpty) || (!oldEmpty && newEmpty) || (!oldEmpty && !newEmpty && !mSelectedDevicePath.equals(devicePath))) {
-            mSelectedDevicePath = devicePath;
-            if (getRecyclerAdapter() != null) {
-                getRecyclerAdapter().notifyDataSetChanged();
-            }
+    public void setSelectedDeviceAndFolder(String device, String folder) {
+        boolean oldEmpty = TextUtils.isEmpty(mSelectedDevice);
+        boolean newEmpty = TextUtils.isEmpty(device);
+        if ((oldEmpty && !newEmpty) || (!oldEmpty && newEmpty) || (!oldEmpty && !newEmpty && !mSelectedDevice.equals(device))) {
+            mSelectedDevice = device;
+        }
+        if (!TextUtils.isEmpty(folder)) {
+            mSelectedFolder = folder;
+        } else {
+            mSelectedFolder = null;
+        }
+
+        if (isResumed()) {
+            getLoaderManager().restartLoader(LOADER_ID, null, this);
+        } else {
+
         }
     }
 
 
     private void refreshMountPointList() {
-        List<MountPoint> mountPoints = MountPointManager.getInstance().getMountPoints();
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(PreferenceKeys.ROOT_EXPLORER_ENABLE, false)) {
-            MountPoint mountPoint = new MountPoint();
-            mountPoint.mDescription = "Root explorer (/)";
-            mountPoint.mPath = "/";
-            mountPoint.mIsMounted = true;
-            mountPoint.mIsExternal = false;
-            mountPoint.mMaxFileSize = 0;
-            Log.d(TAG, "init,description :" + mountPoint.mDescription + ",path : "
-                    + mountPoint.mPath + ",isMounted : " + mountPoint.mIsMounted
-                    + ",isExternal : " + mountPoint.mIsExternal + ", mMaxFileSize: " + mountPoint.mMaxFileSize);
-            mountPoints.add(0, mountPoint);
-        }
-        ((BelugaDeviceRecyclerAdapter) getRecyclerAdapter()).setData(mountPoints);
+//        List<MountPoint> mountPoints = MountPointManager.getInstance().getMountPoints();
+//        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(PreferenceKeys.ROOT_EXPLORER_ENABLE, false)) {
+//            MountPoint mountPoint = new MountPoint();
+//            mountPoint.mDescription = "Root explorer (/)";
+//            mountPoint.mPath = "/";
+//            mountPoint.mIsMounted = true;
+//            mountPoint.mIsExternal = false;
+//            mountPoint.mMaxFileSize = 0;
+//            Log.d(TAG, "init,description :" + mountPoint.mDescription + ",path : "
+//                    + mountPoint.mPath + ",isMounted : " + mountPoint.mIsMounted
+//                    + ",isExternal : " + mountPoint.mIsExternal + ", mMaxFileSize: " + mountPoint.mMaxFileSize);
+//            mountPoints.add(0, mountPoint);
+//        }
+//        ((BelugaFolderTreeRecyclerAdapter) getRecyclerAdapter()).setData(mountPoints);
     }
 
     @Override
@@ -126,10 +142,16 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedP
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        setRecyclerAdapter(new BelugaDeviceRecyclerAdapter());
+        mAdapter = new BelugaFolderTreeRecyclerAdapter();
+        setRecyclerAdapter(mAdapter);
         setRecyclerViewShown(true);
     }
 
@@ -151,111 +173,126 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedP
         PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
     }
 
-//    @Override
-//    public void onLoadFinished(Loader<List<MountPoint>> loader, List<MountPoint> data) {
-//        int internalCount = 0;
-//        int externalCount = 0;
-//
-//        List<DeviceItem> items = new ArrayList<DeviceItem>();
-//
-//        for (MountPoint unit: data) {
-//            String path = unit.path;
-//            String name;
-//            if (unit.) {
-//                externalCount++;
-//                name = getResources().getString(R.string.external_storage)
-//                        + (externalCount > 1 ? " "+externalCount : "");
-//            } else {
-//                internalCount++;
-//                name = getResources().getString(R.string.internal_storage)
-//                        + (internalCount > 1 ? " "+internalCount : "");
-//            }
-//            Drawable icon = getResources().getDrawable(
-//                    unit.isRemovable()?R.drawable.ic_action_sd_card:R.drawable.ic_action_phone_android);
-//            items.add(new DeviceItem(icon, name, path));
-//        }
-//
-//        ((BelugaDeviceRecyclerAdapter) getRecyclerAdapter()).addAll(items);
-//    }
-//
-//    @Override
-//    public void onLoaderReset(Loader<List<MountPoint>> loader) {
-//
-//    }
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.device_fragment_menu, menu);
-//    }
 
-    public class DeviceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    @Override
+    public Loader<List<BelugaTreeFolderEntry>> onCreateLoader(int arg0, Bundle arg1) {
+        Log.i(TAG, "onCreateLoader");
+        if(arg0 ==  LOADER_ID) {
+            return new FolderTreeLoader(getActivity(), mSelectedDevice, mSelectedFolder, mSelectedCollapse);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<BelugaTreeFolderEntry>> loader, List<BelugaTreeFolderEntry> folderTreeEntries) {
+
+        mAdapter.setData(folderTreeEntries);
+        setRecyclerViewShown(true);
+        setEmptyViewShown(folderTreeEntries.size()==0);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<BelugaTreeFolderEntry>> loader) {
+
+    }
+
+    public class TreeFolderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @InjectView(R.id.icon)
         ImageView icon;
         @InjectView(R.id.name)
         TextView name;
+        @InjectView(R.id.expand)
+        ImageView expand;
 
-        private MountPoint item;
+        private BelugaTreeFolderEntry item;
 
-        public DeviceViewHolder(View itemView) {
+        public TreeFolderViewHolder(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
             itemView.setOnClickListener(this);
         }
 
-        public void bindDeviceItem(MountPoint item) {
+        public void bindTreeFolderEntry(BelugaTreeFolderEntry item) {
             this.item = item;
-            if (item.mIsExternal) {
-                icon.setImageResource(R.drawable.ic_sd_storage);
+            icon.setImageResource(item.icon);
+//            if (item.mIsExternal) {
+//                icon.setImageResource(R.drawable.ic_sd_storage);
+//            } else {
+//                icon.setImageResource(R.drawable.ic_phone_android);
+//            }
+            name.setText(item.name);
+            if (!item.expandable) {
+                expand.setVisibility(View.INVISIBLE);
             } else {
-                icon.setImageResource(R.drawable.ic_phone_android);
+                expand.setVisibility(View.VISIBLE);
+                if (item.expanded) {
+                    expand.setImageResource(R.drawable.ic_tree_collapse);
+                } else {
+                    expand.setImageResource(R.drawable.ic_tree_expand);
+                }
             }
-            name.setText(item.mDescription);
-            this.itemView.setActivated(item.mPath.equals(mSelectedDevicePath));
+            this.itemView.setActivated(item.path.equals(mSelectedFolder));
+            this.expand.setPadding((int)(24.0*getResources().getDisplayMetrics().density*((float)item.depth)),0,0,0);
         }
 
         @Override
         public void onClick(View v) {
-            BusProvider.getInstance().post(new DeviceSelectEvent(System.currentTimeMillis(), item.mPath));
+            if (this.item.expanded && this.item.expanded) {
+                // Todo: do something to collapse this node
+                mSelectedCollapse = true;
+            } else {
+                mSelectedCollapse = false;
+            }
+            // else {
+                if (this.item.isRoot) {
+                    BusProvider.getInstance().post(new DeviceSelectEvent(System.currentTimeMillis(), item.path));
+                } else {
+                    BusProvider.getInstance().post(new FolderSelectEvent(System.currentTimeMillis(), item.path, item.root));
+                }
+                setSelectedDeviceAndFolder(item.root, item.path);
+            //}
         }
     }
 
-    private class BelugaDeviceRecyclerAdapter extends RecyclerView.Adapter<DeviceViewHolder> {
+    private class BelugaFolderTreeRecyclerAdapter extends RecyclerView.Adapter<TreeFolderViewHolder> {
 
-        List<MountPoint> mItems = new ArrayList<MountPoint>();
+        List<BelugaTreeFolderEntry> mFolders = new ArrayList<BelugaTreeFolderEntry>();
 
         @Override
-        public DeviceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_list_item, parent, false);
-            return new DeviceViewHolder(view);
+        public TreeFolderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_item_layout, parent, false);
+            return new TreeFolderViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(DeviceViewHolder holder, int position) {
-            holder.bindDeviceItem(mItems.get(position));
+        public void onBindViewHolder(TreeFolderViewHolder holder, int position) {
+            holder.bindTreeFolderEntry(mFolders.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return mItems.size();
+            return mFolders.size();
         }
 
-        public void setData(final List<MountPoint> entries) {
-            clear();
-            addAll(entries);
+        public void setData(final List<BelugaTreeFolderEntry> entries) {
+            mFolders = entries;
+            notifyDataSetChanged();
         }
 
-        public void clear() {
-            int count = getItemCount();
-            mItems.clear();
-            notifyItemRangeRemoved(0, count);
-        }
-
-        public void addAll(final List<MountPoint> entries) {
-            if (entries != null && entries.size() > 0) {
-                int count = getItemCount();
-                mItems.addAll(entries);
-                notifyItemRangeInserted(count, entries.size());
-            }
-        }
+//        public void clear() {
+//            int count = getItemCount();
+//            mItems.clear();
+//            notifyItemRangeRemoved(0, count);
+//        }
+//
+//        public void addAll(final List<MountPoint> entries) {
+//            if (entries != null && entries.size() > 0) {
+//                int count = getItemCount();
+//                mItems.addAll(entries);
+//                notifyItemRangeInserted(count, entries.size());
+//            }
+//        }
     }
 
     @Override
