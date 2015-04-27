@@ -20,7 +20,6 @@ import com.belugamobile.filemanager.BelugaActionDelegate;
 import com.belugamobile.filemanager.R;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.dialog.BelugaDialogFragment;
-import com.belugamobile.filemanager.utils.LogUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,8 +27,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-
-import eu.chainfire.libsuperuser.Shell;
 
 
 public class BelugaActionController extends Fragment implements ActionMode.Callback,
@@ -271,7 +268,6 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
             data.putString(FILE_OPERATION_MODE_ARGUMENT, mode.toString());
         }
     }
-
 
     public boolean isEntrySelected(BelugaFileEntry entry) {
         return mOperationPaths.contains(entry);

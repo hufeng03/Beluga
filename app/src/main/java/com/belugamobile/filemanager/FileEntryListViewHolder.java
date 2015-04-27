@@ -98,7 +98,11 @@ public class FileEntryListViewHolder extends BelugaEntryViewHolder{
                 actionController.toggleEntrySelection(entry);
                 break;
             default:
-                this.listener.onEntryClickedToOpen(v, entry);
+                if (actionController.isActionModeShowing()) {
+                    actionController.toggleEntrySelection(entry);
+                } else {
+                    this.listener.onEntryClickedToOpen(v, entry);
+                }
                 break;
         }
     }

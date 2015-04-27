@@ -6,6 +6,8 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.belugamobile.filemanager.BelugaEntry;
+import com.belugamobile.filemanager.BelugaSortableInterface;
 import com.belugamobile.filemanager.PreferenceKeys;
 import com.belugamobile.filemanager.app.InterestingConfigChanges;
 import com.belugamobile.filemanager.data.BelugaTreeFolderEntry;
@@ -21,6 +23,7 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -118,7 +121,7 @@ public class FolderTreeLoader extends AsyncTaskLoader<List<BelugaTreeFolderEntry
                                     }
                                 }
                             }
-                            path = path + "/" + pathSegment;
+                            path = FolderUtil.concatenateDirAndName(path,  pathSegment);
 //                        }
                     }
                     if (mExpand) {
@@ -139,7 +142,16 @@ public class FolderTreeLoader extends AsyncTaskLoader<List<BelugaTreeFolderEntry
                 folderEntries.add(entry);
             }
         }
-        Collections.sort(folderEntries, BelugaSortHelper.getComparator(BelugaSortHelper.SORT_FIELD.IDENTITY, BelugaSortHelper.SORT_ORDER.ASC));
+        Collections.sort(folderEntries, new Comparator<BelugaTreeFolderEntry>() {
+            @Override
+            public int compare(BelugaTreeFolderEntry lhs, BelugaTreeFolderEntry rhs) {
+                if (lhs.root.equals(rhs.root)) {
+                    return lhs.getIdentity().compareTo(rhs.getIdentity());
+                } else {
+                    return lhs.root.compareTo(rhs.root);
+                }
+            }
+        });
         return folderEntries;
     }
 

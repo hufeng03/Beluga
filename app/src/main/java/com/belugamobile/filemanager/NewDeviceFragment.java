@@ -54,10 +54,6 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedP
 
     BelugaFolderTreeRecyclerAdapter mAdapter;
 
-    public static NewDeviceFragment newInstance(String device) {
-        NewDeviceFragment fragment = new NewDeviceFragment();
-        return fragment;
-    }
 
     private class MainThreadHandler extends Handler {
         @Override
@@ -81,17 +77,17 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedP
 
     private void doOnMounted(String mountPointPath) {
         // TODO: handle only files in mountPointPath
-        refreshMountPointList();
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     private void doOnEjected(String ejectdPointPath) {
         // TODO: handle only files in mountPointPath
-        refreshMountPointList();
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     private void doOnUnMounted(String unmountedPointPath) {
         // TODO: handle only files in mountPointPath
-        refreshMountPointList();
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     private void doOnSdSwap() {
@@ -118,7 +114,7 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedP
     }
 
 
-    private void refreshMountPointList() {
+//    private void refreshMountPointList() {
 //        List<MountPoint> mountPoints = MountPointManager.getInstance().getMountPoints();
 //        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(PreferenceKeys.ROOT_EXPLORER_ENABLE, false)) {
 //            MountPoint mountPoint = new MountPoint();
@@ -133,7 +129,7 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedP
 //            mountPoints.add(0, mountPoint);
 //        }
 //        ((BelugaFolderTreeRecyclerAdapter) getRecyclerAdapter()).setData(mountPoints);
-    }
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -158,7 +154,7 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedP
     @Override
     public void onResume() {
         super.onResume();
-        refreshMountPointList();
+//        refreshMountPointList();
         mBelugaMountReceiver = BelugaMountReceiver.registerMountReceiver(getActivity());
         mMountListener = new DeviceMountListener();
         mBelugaMountReceiver.registerMountListener(mMountListener);
@@ -298,7 +294,8 @@ public class NewDeviceFragment extends BelugaRecyclerFragment implements SharedP
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (PreferenceKeys.ROOT_EXPLORER_ENABLE.equals(key)) {
-            refreshMountPointList();
+//            refreshMountPointList();
+            getLoaderManager().restartLoader(LOADER_ID, null, this);
         }
     }
 

@@ -44,11 +44,6 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
 
     public static final String ARGUMENT_BROWSER_ROOT_FOLDER = "browser_root_folder";
     public static final String ARGUMENT_BROWSER_CURRENT_FOLDER = "browser_current_folder";
-//    public static final String ARGUMENT_BROWSER_ROOT_FILE_LIST = "browser_root_file_list";
-
-//    private static final String SAVE_INSTANCE_KEY_CURRENT_FOLDER = "currentFolder";
-
-//    private boolean mShowChildFolders = false;
 
     public static FileBrowserFragment newRootFolderBrowser(String rootFolder, String currentFolder) {
         if (TextUtils.isEmpty(rootFolder)) {
@@ -459,7 +454,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                     break;
             }
         }
-    };
+    }
 
     private Handler mUIThreadHandler = new Handler() {
         @Override

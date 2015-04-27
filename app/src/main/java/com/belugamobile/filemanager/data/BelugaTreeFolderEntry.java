@@ -2,6 +2,7 @@ package com.belugamobile.filemanager.data;
 
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
+import android.util.Log;
 
 import com.belugamobile.filemanager.BelugaEntry;
 import com.belugamobile.filemanager.R;
@@ -15,6 +16,8 @@ import java.io.FileFilter;
  * Created by Feng on 2015-04-22.
  */
 public class BelugaTreeFolderEntry extends BelugaEntry {
+
+    private static final String TAG = "BelugaTreeFolderEntry";
 
     public int icon;
     public String path;
@@ -43,16 +46,18 @@ public class BelugaTreeFolderEntry extends BelugaEntry {
     }
 
     public BelugaTreeFolderEntry(String dir, String name, String root, int depth, boolean expanded) {
+        Log.i(TAG, "dir = " + dir + ", name=" + name);
         this.icon = R.drawable.ic_type_folder;
         this.name = name;
         this.path = FolderUtil.concatenateDirAndName(dir, name);
         this.expanded = expanded;
-        this.expandable = new File(dir, name).listFiles(new FileFilter() {
+        File[] childFolders = new File(dir, name).listFiles(new FileFilter() {
             @Override
             public boolean accept(File pathname) {
                 return pathname.isDirectory();
             }
-        }).length > 0;
+        });
+        this.expandable = childFolders != null && childFolders.length > 0;
         this.isRoot = false;
         this.root = root;
         this.parent = dir;
