@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="hide_settings_menu" type="bool">true</item>
+</resources>

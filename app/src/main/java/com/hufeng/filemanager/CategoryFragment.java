@@ -481,6 +481,12 @@ public class CategoryFragment extends BaseFragment implements OnClickListener,
 				completeRefresh();
 			}
 		}
+
+		MenuItem settingsItem = menu.findItem(R.id.menu_settings);
+		if (settingsItem != null) {
+			settingsItem.setVisible(!getResources().getBoolean(R.bool.hide_settings_menu));
+		}
+
 	}
 	
 	@Override
