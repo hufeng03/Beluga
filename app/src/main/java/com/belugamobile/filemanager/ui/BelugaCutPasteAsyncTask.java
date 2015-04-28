@@ -26,6 +26,8 @@ public class BelugaCutPasteAsyncTask extends BelugaActionAsyncTask {
 
     private static final String TAG = "BelugaCutPasteTask";
 
+    public BelugaActionType mType = BelugaActionType.CUT_PASTE;
+
     MultiMediaStoreHelper.PasteMediaStoreHelper mPasteMediaStoreHelper;
     MultiMediaStoreHelper.DeleteMediaStoreHelper mDeleteMediaStoreHelper;
 

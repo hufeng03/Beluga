@@ -25,6 +25,8 @@ public class BelugaCreateArchiveAsyncTask extends BelugaActionAsyncTask {
 
     private static final String TAG = "BelugaCutPasteTask";
 
+    public BelugaActionType mType = BelugaActionType.CUT_PASTE;
+
     MultiMediaStoreHelper.PasteMediaStoreHelper mPasteMediaStoreHelper;
 
     public BelugaCreateArchiveAsyncTask(Context context, BelugaActionAsyncTaskCallbackDelegate bac, String folder) {

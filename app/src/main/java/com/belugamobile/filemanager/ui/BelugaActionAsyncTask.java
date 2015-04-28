@@ -28,7 +28,22 @@ import java.util.TreeSet;
  */
 public abstract class BelugaActionAsyncTask extends AsyncTask<BelugaFileEntry, BelugaFileEntry, Boolean> {
 
+    public enum BelugaActionType {
+        COPY_PASTE,
+        CUT_PASTE,
+        DELETE,
+        RENAME,
+        CREATE_FOLDER,
+        CREATE_ARCHIVE,
+        EXTRACT_ARCHIVE,
+        FAVORITE,
+        UNDO_FAVORITE,
+        SEARCH,
+    }
+
     private static final String TAG = "BelugaActionAsyncTask";
+
+    public BelugaActionType mType;
 
     protected Context mContext;
     public BelugaActionAsyncTaskCallbackDelegate mCallbackDelegate;

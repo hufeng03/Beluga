@@ -269,6 +269,16 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
         }
     }
 
+    // TODO: implement this
+    public boolean isFolderWholeSelected(String path) {
+        for (BelugaFileEntry entry : mOperationPaths) {
+            if (entry.isDirectory && entry.path.startsWith(path)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isEntrySelected(BelugaFileEntry entry) {
         return mOperationPaths.contains(entry);
     }
@@ -457,6 +467,13 @@ public class BelugaActionController extends Fragment implements ActionMode.Callb
     @Override
     public void onAsyncTaskProgressUpdated(BelugaFileEntry... entries) {
         final int oldLeftSize = getFileSelectedSize();
+
+        for (BelugaFileEntry entry : entries) {
+            if (mOperationPaths.contains(entry)) {
+                //TODO: Tell UI to refresh
+            }
+        }
+
         mOperationPaths.removeAll(Arrays.asList(entries));
         final int newLeftSize = getFileSelectedSize();
         if (oldLeftSize - newLeftSize > 0) {

@@ -37,7 +37,7 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
         mContext = context;
     }
 
-    private MonitorTask mMonitorTask;
+    private MonitorStartTask mMonitorStartTask;
 
     private HandlerThread mObserverHandlerThread;
     private ObserverHandler mObserverHandler;
@@ -51,7 +51,7 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
         @Override
         public void handleMessage(Message msg) {
             // If we are still initializing monitor folder, observer event is ignored
-            if (mMonitorTask != null) {
+            if (mMonitorStartTask != null) {
                 return;
             }
             switch (msg.what) {
@@ -75,14 +75,14 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
                 break;
             }
         }
-    };
+    }
 
     public void onCreate() {
         // create handler thread
         mObserverHandlerThread = new HandlerThread("BelugaFolderObserver");
         mObserverHandlerThread.start();
         mObserverHandler = new ObserverHandler(mObserverHandlerThread.getLooper());
-        initMonitorFolders();
+        startToMonitorFolders();
     }
 
     public void onDestroy() {
@@ -98,19 +98,20 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
             Iterator<BelugaFolderObserver> iterator = mPersistentFolderObservers.values().iterator();
             while (iterator.hasNext()) {
                 iterator.next().stopWatching();
+                iterator.remove();
             }
             mPersistentFolderObservers.clear();
         }
     }
 
-    public void initMonitorFolders() {
+    public void startToMonitorFolders() {
         // Cancel already started task
-        if (mMonitorTask != null) {
-            mMonitorTask.cancel(false);
-            mMonitorTask = null;
+        if (mMonitorStartTask != null) {
+            mMonitorStartTask.cancel(false);
+            mMonitorStartTask = null;
         }
-        mMonitorTask = new MonitorTask();
-        mMonitorTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mMonitorStartTask = new MonitorStartTask();
+        mMonitorStartTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -130,7 +131,7 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
     public void clearMonitor() throws RemoteException {
     }
 
-    private class MonitorTask extends AsyncTask<Void,Void,HashMap<String, BelugaFolderObserver>> {
+    private class MonitorStartTask extends AsyncTask<Void,Void,HashMap<String, BelugaFolderObserver>> {
 
         @Override
         protected HashMap<String, BelugaFolderObserver> doInBackground(Void... params) {
@@ -181,6 +182,7 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
                 Iterator<BelugaFolderObserver> iterator = observers.values().iterator();
                 while(iterator.hasNext()) {
                     iterator.next().stopWatching();
+                    iterator.remove();
                 }
             }
             return observers;
@@ -188,7 +190,7 @@ public class IFolderMonitorServiceImpl extends IFolderMonitorService.Stub {
 
         @Override
         protected void onPostExecute(HashMap<String, BelugaFolderObserver> observers) {
-            mMonitorTask = null;
+            mMonitorStartTask = null;
             clearPersistentObservers();
             mPersistentFolderObservers = observers;
         }

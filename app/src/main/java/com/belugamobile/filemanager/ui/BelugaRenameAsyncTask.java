@@ -22,6 +22,9 @@ import java.util.concurrent.TimeUnit;
 public class BelugaRenameAsyncTask extends BelugaActionAsyncTask {
 
     private static final String TAG = "BelugaCopyPasteTask";
+
+    public BelugaActionType mType = BelugaActionType.RENAME;
+
     MultiMediaStoreHelper.PasteMediaStoreHelper mPasteMediaStoreHelper;
     MultiMediaStoreHelper.DeleteMediaStoreHelper mDeleteMediaStoreHelper;
 

@@ -13,6 +13,8 @@ import com.belugamobile.filemanager.helper.BelugaProviderHelper;
  */
 public class BelugaFavoriteAsyncTask extends BelugaActionAsyncTask {
 
+    public BelugaActionType mType = BelugaActionType.FAVORITE;
+
     public BelugaFavoriteAsyncTask(Context context, BelugaActionAsyncTaskCallbackDelegate bac) {
         super(context, bac);
     }

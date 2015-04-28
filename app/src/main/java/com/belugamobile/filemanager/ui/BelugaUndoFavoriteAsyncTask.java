@@ -12,6 +12,9 @@ import com.belugamobile.filemanager.helper.BelugaProviderHelper;
  * TODO: Add a class header comment.
  */
 public class BelugaUndoFavoriteAsyncTask extends BelugaActionAsyncTask {
+
+    public BelugaActionType mType = BelugaActionType.UNDO_FAVORITE;
+
     public BelugaUndoFavoriteAsyncTask(Context context, BelugaActionAsyncTask.BelugaActionAsyncTaskCallbackDelegate bac) {
         super(context, bac);
     }

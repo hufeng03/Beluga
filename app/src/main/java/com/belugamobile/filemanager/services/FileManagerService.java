@@ -48,17 +48,17 @@ public class FileManagerService extends Service{
 
     private void doOnMounted(String mountPointPath) {
         // TODO: handle only files in mountPointPath
-        mFolderMonitorServiceImpl.initMonitorFolders();
+        mFolderMonitorServiceImpl.startToMonitorFolders();
     }
 
     private void doOnEjected(String ejectdPointPath) {
         // TODO: handle only files in mountPointPath
-        mFolderMonitorServiceImpl.initMonitorFolders();
+        mFolderMonitorServiceImpl.startToMonitorFolders();
     }
 
     private void doOnUnMounted(String unmountedPointPath) {
         // TODO: handle only files in mountPointPath
-        mFolderMonitorServiceImpl.initMonitorFolders();
+        mFolderMonitorServiceImpl.startToMonitorFolders();
     }
 
     private void doOnSdSwap() {

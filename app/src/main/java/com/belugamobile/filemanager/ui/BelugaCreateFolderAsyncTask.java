@@ -2,6 +2,8 @@ package com.belugamobile.filemanager.ui;
 
 import android.content.Context;
 
+import com.belugamobile.filemanager.BusProvider;
+import com.belugamobile.filemanager.FolderCreateEvent;
 import com.belugamobile.filemanager.R;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.helper.BelugaProviderHelper;
@@ -17,6 +19,8 @@ import java.util.List;
  */
 public class BelugaCreateFolderAsyncTask extends BelugaActionAsyncTask {
 
+    public BelugaActionType mType = BelugaActionType.CREATE_FOLDER;
+
     public BelugaCreateFolderAsyncTask(Context context, BelugaActionAsyncTaskCallbackDelegate bac, String folder) {
         super(context, bac, folder);
     }
@@ -24,6 +28,9 @@ public class BelugaCreateFolderAsyncTask extends BelugaActionAsyncTask {
     @Override
     public boolean run() {
         boolean result = createFolder();
+        if (result) {
+            BusProvider.getInstance().post(new FolderCreateEvent(System.currentTimeMillis(), mFolderPath));
+        }
         return result;
     }
 

@@ -115,4 +115,8 @@ public class BelugaArrayRecyclerAdapter<Entry extends BelugaEntry>
         return mEntries.toArray(new BelugaFileEntry[mEntries.size()]);
     }
 
+    public boolean contains(BelugaFileEntry entry) {
+        return mEntries.contains(entry);
+    }
+
 }

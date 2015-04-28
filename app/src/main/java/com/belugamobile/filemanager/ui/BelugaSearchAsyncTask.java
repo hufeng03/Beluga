@@ -21,6 +21,8 @@ public class BelugaSearchAsyncTask extends BelugaActionAsyncTask {
     public String mSearchString;
     ContentResolver mContentResolver;
 
+    public BelugaActionType mType = BelugaActionType.SEARCH;
+
     public BelugaSearchAsyncTask(Context context, BelugaActionAsyncTaskCallbackDelegate actionController, String searchString) {
         super(context, actionController);
         mSearchString = searchString;

@@ -3,8 +3,6 @@ package com.belugamobile.filemanager;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -23,6 +21,7 @@ import com.belugamobile.filemanager.helper.FileCategoryHelper;
 import com.belugamobile.filemanager.loader.FileBrowserLoader;
 import com.belugamobile.filemanager.dialog.BelugaDialogFragment;
 import com.belugamobile.filemanager.ui.BelugaActionController;
+import com.squareup.otto.Subscribe;
 
 import java.io.File;
 import java.util.Comparator;
@@ -163,11 +162,13 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
     @Override
     public void onResume() {
         super.onResume();
+        BusProvider.getInstance().register(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        BusProvider.getInstance().unregister(this);
     }
 
     @Override
@@ -195,15 +196,15 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
     protected void onCreate() {
         BelugaActionController.OPERATION_MODE operationMode = getActionController().getOperationMode();
         if (operationMode == BelugaActionController.OPERATION_MODE.COPY_PASTE) {
-            BelugaDialogFragment.showCopyPasteDialog(getActivity(), mRootFolder, getActionController().getAllActionFiles());
+            BelugaDialogFragment.showCopyPasteDialog(getActivity(), mCurrentFolder, getActionController().getAllActionFiles());
         } else if (operationMode == BelugaActionController.OPERATION_MODE.CUT_PASTE) {
-            BelugaDialogFragment.showCutPasteDialog(getActivity(), mRootFolder, getActionController().getAllActionFiles());
+            BelugaDialogFragment.showCutPasteDialog(getActivity(), mCurrentFolder, getActionController().getAllActionFiles());
         } else if (operationMode == BelugaActionController.OPERATION_MODE.EXTRACT_ARCHIVE) {
-            BelugaDialogFragment.showExtractArchiveDialog(getActivity(), mRootFolder, getActionController().getAllActionFiles());
+            BelugaDialogFragment.showExtractArchiveDialog(getActivity(), mCurrentFolder, getActionController().getAllActionFiles());
         } else if (operationMode == BelugaActionController.OPERATION_MODE.CREATE_ARCHIVE) {
-            BelugaDialogFragment.showCreateArchiveDialog(getActivity(), mRootFolder, getActionController().getAllActionFiles());
+            BelugaDialogFragment.showCreateArchiveDialog(getActivity(), mCurrentFolder, getActionController().getAllActionFiles());
         } else {
-            BelugaDialogFragment.showCreateFolderDialog(getActivity(), mRootFolder);
+            BelugaDialogFragment.showCreateFolderDialog(getActivity(), mCurrentFolder);
         }
     }
 
@@ -291,7 +292,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
                 getActivity().onBackPressed();
                 return true;
             case R.id.menu_create:
-                BelugaDialogFragment.showCreateFolderDialog(getActivity(), mRootFolder);
+                BelugaDialogFragment.showCreateFolderDialog(getActivity(), mCurrentFolder);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -326,7 +327,6 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
 	public Loader<List<BelugaFileEntry>> onCreateLoader(int arg0, Bundle arg1) {
         Log.i(TAG, "onCreateLoader");
         if(arg0 ==  LOADER_ID) {
-//            String[] initFiles = getArguments().getStringArray(ARGUMENT_BROWSER_ROOT_FILE_LIST);
             return new FileBrowserLoader(getActivity(), mCurrentFolder, true);
         } else {
             return null;
@@ -351,13 +351,13 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
             }
         }
 
-        if (!TextUtils.isEmpty(mCurrentFolder)) {
-            mObserverHandlerThread = new HandlerThread("BelugaFolderObserver");
-            mObserverHandlerThread.start();
-            mObserverHandler = new ObserverHandler(mObserverHandlerThread.getLooper());
-            mFolderObserver = new BelugaFolderObserver(mCurrentFolder, mObserverHandler, 500);
-            mFolderObserver.startWatching();
-        }
+//        if (!TextUtils.isEmpty(mCurrentFolder)) {
+//            mObserverHandlerThread = new HandlerThread("BelugaFolderObserver");
+//            mObserverHandlerThread.start();
+//            mObserverHandler = new ObserverHandler(mObserverHandlerThread.getLooper());
+//            mFolderObserver = new BelugaFolderObserver(mCurrentFolder, mObserverHandler, 500);
+//            mFolderObserver.startWatching();
+//        }
 
         mAdapter.setData(arg1);
         //TODO: recover this
@@ -375,16 +375,16 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
         Log.i(TAG, "onCreateReset");
         mAdapter.clear();
 
-        if (mFolderObserver != null) {
-            mFolderObserver.stopWatching();
-            mFolderObserver = null;
-        }
-
-        if (mObserverHandlerThread != null) {
-            mObserverHandlerThread.quit();
-            mObserverHandlerThread = null;
-            mObserverHandler = null;
-        }
+//        if (mFolderObserver != null) {
+//            mFolderObserver.stopWatching();
+//            mFolderObserver = null;
+//        }
+//
+//        if (mObserverHandlerThread != null) {
+//            mObserverHandlerThread.quit();
+//            mObserverHandlerThread = null;
+//            mObserverHandler = null;
+//        }
 	}
 
     @Override
@@ -400,62 +400,99 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
         }
     }
 
-    private HandlerThread mObserverHandlerThread;
-    private BelugaFolderObserver mFolderObserver;
-    private ObserverHandler mObserverHandler;
-    private static final String HANDLER_MESSAGE_FILE_ENTRY_KEY = "fileEntry";
-    private static final String HANDLER_MESSAGE_POSITION_KEY = "position";
+    @Subscribe
+    public void onFolderCreated(FolderCreateEvent event) {
+        if (event.path.startsWith(mCurrentFolder)) {
+            BelugaFileEntry newEntry = new BelugaFileEntry(event.path);
+            Comparator<BelugaSortableInterface> comparator = BelugaSortHelper.getComparator(FileCategoryHelper.CATEGORY_TYPE_UNKNOW);
 
-    private class ObserverHandler extends Handler {
-
-        public ObserverHandler(Looper looper) {
-            super(looper);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case BelugaFolderObserver.MESSAGE_TYPE_FILE_DISAPPEAR:
-                {
-                    String path = msg.getData().getString(BelugaFolderObserver.HANDLER_MESSAGE_FILE_PATH_KEY);
-                    if (TextUtils.isEmpty(path) || new File(path).exists()) {
-                        return;
+            if (!mAdapter.contains(newEntry)) {
+                int pos = 0;
+                for (BelugaFileEntry entry : mAdapter.getAll()) {
+                    if (comparator.compare(entry, newEntry) >= 0) {
+                        break;
                     }
-                    BelugaFileEntry oldEntry = new BelugaFileEntry(path);
-                    Message newMessage = mUIThreadHandler.obtainMessage(BelugaFolderObserver.MESSAGE_TYPE_FILE_DISAPPEAR);
-                    Bundle data = new Bundle();
-                    data.putParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY, oldEntry);
-                    newMessage.setData(data);
-                    newMessage.sendToTarget();
+                    pos++;
                 }
-                    break;
-                case BelugaFolderObserver.MESSAGE_TYPE_FILE_APPEAR:
-                {
-                    String path = msg.getData().getString(BelugaFolderObserver.HANDLER_MESSAGE_FILE_PATH_KEY);
-                    if (TextUtils.isEmpty(path) || !new File(path).exists()) {
-                        return;
-                    }
-                    BelugaFileEntry newEntry = new BelugaFileEntry(path);
-                    Comparator<BelugaSortableInterface> comparator = BelugaSortHelper.getComparator(FileCategoryHelper.CATEGORY_TYPE_UNKNOW);
-                    int pos = 0;
-                    for (BelugaFileEntry entry : mAdapter.getAll()) {
-                        if (comparator.compare(entry, newEntry) >= 0) {
-                            break;
-                        }
-                        pos++;
-                    }
-                    Message newMessage = mUIThreadHandler.obtainMessage(BelugaFolderObserver.MESSAGE_TYPE_FILE_APPEAR);
-                    Bundle data = new Bundle();
-                    data.putParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY, newEntry);
-                    data.putInt(HANDLER_MESSAGE_POSITION_KEY, pos);
-                    newMessage.setData(data);
-                    newMessage.sendToTarget();
-                }
-                    break;
+                Log.i(TAG, "add folder in " + pos + " : " + newEntry.path);
+                getLayoutManager().scrollToPosition(pos);
+                mAdapter.add(newEntry, pos);
+                setEmptyViewShown(mAdapter.getItemCount() == 0);
             }
         }
     }
 
+    @Subscribe
+    public void onFolderDeleted(FolderDeleteEvent event) {
+        if (event.path.startsWith(mCurrentFolder)) {
+            BelugaFileEntry oldEntry = new BelugaFileEntry(event.path);
+
+            if (mAdapter.contains(oldEntry)) {
+                mAdapter.remove(oldEntry);
+                if (getActionController() != null) {
+                    getActionController().setEntrySelection(false, oldEntry);
+                }
+                setEmptyViewShown(mAdapter.getItemCount() == 0);
+            }
+        }
+    }
+
+//    private HandlerThread mObserverHandlerThread;
+//    private BelugaFolderObserver mFolderObserver;
+//    private ObserverHandler mObserverHandler;
+    private static final String HANDLER_MESSAGE_FILE_ENTRY_KEY = "fileEntry";
+    private static final String HANDLER_MESSAGE_POSITION_KEY = "position";
+//
+//    private class ObserverHandler extends Handler {
+//
+//        public ObserverHandler(Looper looper) {
+//            super(looper);
+//        }
+//
+//        @Override
+//        public void handleMessage(Message msg) {
+//            switch (msg.what) {
+//                case BelugaFolderObserver.MESSAGE_TYPE_FILE_DISAPPEAR:
+//                {
+//                    String path = msg.getData().getString(BelugaFolderObserver.HANDLER_MESSAGE_FILE_PATH_KEY);
+//                    if (TextUtils.isEmpty(path) || new File(path).exists()) {
+//                        return;
+//                    }
+//                    BelugaFileEntry oldEntry = new BelugaFileEntry(path);
+//                    Message newMessage = mUIThreadHandler.obtainMessage(BelugaFolderObserver.MESSAGE_TYPE_FILE_DISAPPEAR);
+//                    Bundle data = new Bundle();
+//                    data.putParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY, oldEntry);
+//                    newMessage.setData(data);
+//                    newMessage.sendToTarget();
+//                }
+//                    break;
+//                case BelugaFolderObserver.MESSAGE_TYPE_FILE_APPEAR:
+//                {
+//                    String path = msg.getData().getString(BelugaFolderObserver.HANDLER_MESSAGE_FILE_PATH_KEY);
+//                    if (TextUtils.isEmpty(path) || !new File(path).exists()) {
+//                        return;
+//                    }
+//                    BelugaFileEntry newEntry = new BelugaFileEntry(path);
+//                    Comparator<BelugaSortableInterface> comparator = BelugaSortHelper.getComparator(FileCategoryHelper.CATEGORY_TYPE_UNKNOW);
+//                    int pos = 0;
+//                    for (BelugaFileEntry entry : mAdapter.getAll()) {
+//                        if (comparator.compare(entry, newEntry) >= 0) {
+//                            break;
+//                        }
+//                        pos++;
+//                    }
+//                    Message newMessage = mUIThreadHandler.obtainMessage(BelugaFolderObserver.MESSAGE_TYPE_FILE_APPEAR);
+//                    Bundle data = new Bundle();
+//                    data.putParcelable(HANDLER_MESSAGE_FILE_ENTRY_KEY, newEntry);
+//                    data.putInt(HANDLER_MESSAGE_POSITION_KEY, pos);
+//                    newMessage.setData(data);
+//                    newMessage.sendToTarget();
+//                }
+//                    break;
+//            }
+//        }
+//    }
+//
     private Handler mUIThreadHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

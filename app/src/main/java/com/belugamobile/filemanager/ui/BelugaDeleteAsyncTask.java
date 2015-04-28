@@ -2,6 +2,8 @@ package com.belugamobile.filemanager.ui;
 
 import android.content.Context;
 
+import com.belugamobile.filemanager.BusProvider;
+import com.belugamobile.filemanager.FolderDeleteEvent;
 import com.belugamobile.filemanager.R;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.helper.BelugaProviderHelper;
@@ -15,6 +17,8 @@ import java.util.List;
  * Created by feng on 14-2-15.
  */
 public class BelugaDeleteAsyncTask extends BelugaActionAsyncTask {
+
+    public BelugaActionType mType = BelugaActionType.DELETE;
 
     MultiMediaStoreHelper.DeleteMediaStoreHelper mDeleteMediaStoreHelper;
 
@@ -76,6 +80,7 @@ public class BelugaDeleteAsyncTask extends BelugaActionAsyncTask {
                     result = false;
                 } else {
                     mDeleteMediaStoreHelper.addRecord(entry.path);
+                    BusProvider.getInstance().post(new FolderDeleteEvent(System.currentTimeMillis(), entry.path));
                     BelugaProviderHelper.deleteInBelugaDatabase(mContext, entry.path);
                     publishActionProgress(entry);
                 }
@@ -99,6 +104,7 @@ public class BelugaDeleteAsyncTask extends BelugaActionAsyncTask {
             // delete empty folder
             if (entry.delete()) {
                 mDeleteMediaStoreHelper.addRecord(entry.path);
+                BusProvider.getInstance().post(new FolderDeleteEvent(System.currentTimeMillis(), entry.path));
                 BelugaProviderHelper.deleteInBelugaDatabase(mContext, entry.path);
                 publishActionProgress(entry);
                 return true;
@@ -109,6 +115,7 @@ public class BelugaDeleteAsyncTask extends BelugaActionAsyncTask {
         } else {
             if (entry.delete()) {
                 mDeleteMediaStoreHelper.addRecord(entry.path);
+                BusProvider.getInstance().post(new FolderDeleteEvent(System.currentTimeMillis(), entry.path));
                 BelugaProviderHelper.deleteInBelugaDatabase(mContext, entry.path);
                 publishActionProgress(entry);
                 return true;
@@ -118,5 +125,4 @@ public class BelugaDeleteAsyncTask extends BelugaActionAsyncTask {
             }
         }
     }
-
-};
+}

@@ -146,7 +146,16 @@ public class FolderTreeLoader extends AsyncTaskLoader<List<BelugaTreeFolderEntry
             @Override
             public int compare(BelugaTreeFolderEntry lhs, BelugaTreeFolderEntry rhs) {
                 if (lhs.root.equals(rhs.root)) {
-                    return lhs.getIdentity().compareTo(rhs.getIdentity());
+                    String l_identify = lhs.getIdentity();
+                    String r_identify = rhs.getIdentity();
+
+                    if (l_identify.startsWith(".") && !r_identify.startsWith(".")) {
+                        return -1;
+                    } else if (!l_identify.startsWith(".") && r_identify.startsWith(".")) {
+                        return 1;
+                    } else {
+                        return l_identify.compareTo(r_identify);
+                    }
                 } else {
                     return lhs.root.compareTo(rhs.root);
                 }

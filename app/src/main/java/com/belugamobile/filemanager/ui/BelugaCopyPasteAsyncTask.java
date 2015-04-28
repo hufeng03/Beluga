@@ -27,6 +27,9 @@ import java.util.Map;
 public class BelugaCopyPasteAsyncTask extends BelugaActionAsyncTask {
 
     private static final String TAG = "BelugaCopyPasteTask";
+
+    public BelugaActionType mType = BelugaActionType.COPY_PASTE;
+
     MultiMediaStoreHelper.PasteMediaStoreHelper mPasteMediaStoreHelper;
 
     public BelugaCopyPasteAsyncTask(Context context, BelugaActionAsyncTaskCallbackDelegate bac, String folder) {
@@ -164,6 +167,7 @@ public class BelugaCopyPasteAsyncTask extends BelugaActionAsyncTask {
                     }
                     copyEntry(child, new File(newFile.getAbsolutePath(), child.name), buffer, failedEntries, failedNewPaths);
                 }
+                publishActionProgress(entry);
             } else {
                 failedEntries.add(entry);
                 failedNewPaths.add(newFile.getAbsolutePath());
