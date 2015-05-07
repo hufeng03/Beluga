@@ -7,10 +7,13 @@ package com.belugamobile.filemanager.loader;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 
 import com.belugamobile.filemanager.BelugaFolderObserver;
+import com.belugamobile.filemanager.DisplayHiddenPreferenceReceiver;
+import com.belugamobile.filemanager.PreferenceKeys;
 import com.belugamobile.filemanager.SortPreferenceReceiver;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.helper.BelugaSortHelper;
@@ -39,17 +42,19 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
 
     private static final String LOG_TAG = FileBrowserLoader.class.getSimpleName();
 
+    private Context mContext;
+
     private String mFolder;
     private List<BelugaFileEntry> mFiles;
-    private String mSearch;
     private boolean mShowChildFolders;
 
     SortPreferenceReceiver mSortObserver;
-    BelugaFolderObserver mFolderObserver;
+    DisplayHiddenPreferenceReceiver mDisplayHiddenObserver;
 
 
     public FileBrowserLoader(Context context, String folder, /*String[] folders,*/ boolean showChildFolders) {
         super(context);
+        mContext = context;
         mFolder = folder;
         mShowChildFolders = showChildFolders;
     }
@@ -57,6 +62,9 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
     @Override
     public List<BelugaFileEntry> loadInBackground() {
         LogUtil.i(LOG_TAG, this.hashCode() + " FileListLoader loadinbackground()");
+
+        boolean displayHidden = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(PreferenceKeys.DISPLAY_HIDDEN_ENABLE, false);
+
         List<BelugaFileEntry> entries = new ArrayList<BelugaFileEntry>();
         if (!TextUtils.isEmpty(mFolder)/* && new File(mRoot).exists() && new File(mRoot).isDirectory()*/) {
             String[] names = new File(mFolder).list();
@@ -69,17 +77,16 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
             if (names != null) {
                 HashSet<String> failedNames = new HashSet<String>();
                 for (String name : names) {
-                    File file = new File(mFolder, name);
-                    if (file.exists()) {
-                        BelugaFileEntry entry = new BelugaFileEntry(file);
-                        if (mShowChildFolders || !entry.isDirectory) {
-                            if (TextUtils.isEmpty(mSearch) || entry.getName().toLowerCase().contains(mSearch.toLowerCase())) {
-                                LogUtil.i(LOG_TAG, "add " + file + "!!!!!!!!!!" + entry);
+                    if (!name.startsWith(".") || displayHidden) {
+                        File file = new File(mFolder, name);
+                        if (file.exists()) {
+                            BelugaFileEntry entry = new BelugaFileEntry(file);
+                            if (mShowChildFolders || !entry.isDirectory) {
                                 entries.add(entry);
                             }
+                        } else {
+                            failedNames.add(name);
                         }
-                    } else {
-                        failedNames.add(name);
                     }
                 }
                 if (failedNames.size() > 0) {
@@ -229,6 +236,10 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
             mSortObserver = new SortPreferenceReceiver(this, FileCategoryHelper.CATEGORY_TYPE_UNKNOW);
         }
 
+        if (mDisplayHiddenObserver == null) {
+            mDisplayHiddenObserver = new DisplayHiddenPreferenceReceiver(this);
+        }
+
         if(takeContentChanged() || mFiles == null) {
             forceLoad();
         }
@@ -256,6 +267,10 @@ public class FileBrowserLoader extends AsyncTaskLoader<List<BelugaFileEntry>> {
         if (mSortObserver != null) {
             mSortObserver.dismiss(getContext());
             mSortObserver = null;
+        }
+        if (mDisplayHiddenObserver != null) {
+            mDisplayHiddenObserver.dismiss(getContext());
+            mDisplayHiddenObserver = null;
         }
 
     }

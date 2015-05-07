@@ -6,7 +6,7 @@
         android:icon="@null"
         android:summary="Display a root explorer portal in Device tab for rooted device" />
     <CheckBoxPreference
-        android:key="scan_hidden"
+        android:key="DISPLAY_HIDDEN_ENABLE"
         android:title="@string/hidden_file_label"
         android:icon="@null"
         android:summary="@string/hidden_file_description" />

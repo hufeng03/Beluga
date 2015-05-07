@@ -8,7 +8,9 @@ import android.util.Log;
 
 import com.belugamobile.filemanager.BelugaEntry;
 import com.belugamobile.filemanager.BelugaSortableInterface;
+import com.belugamobile.filemanager.DisplayHiddenPreferenceReceiver;
 import com.belugamobile.filemanager.PreferenceKeys;
+import com.belugamobile.filemanager.RootExplorerPreferenceReceiver;
 import com.belugamobile.filemanager.app.InterestingConfigChanges;
 import com.belugamobile.filemanager.data.BelugaTreeFolderEntry;
 import com.belugamobile.filemanager.helper.BelugaSortHelper;
@@ -43,6 +45,9 @@ public class FolderTreeLoader extends AsyncTaskLoader<List<BelugaTreeFolderEntry
 
     List<BelugaTreeFolderEntry> mFolders;
 
+    DisplayHiddenPreferenceReceiver mDisplayHiddenObserver;
+    RootExplorerPreferenceReceiver mRootExplorerObserver;
+
     // Please make sure that (folder) start with (device)
     public FolderTreeLoader(Context context, String device, String folder, boolean collapse) {
         super(context);
@@ -69,6 +74,8 @@ public class FolderTreeLoader extends AsyncTaskLoader<List<BelugaTreeFolderEntry
             mountPoints.add(0, mountPoint);
         }
 
+        boolean displayHidden = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(PreferenceKeys.DISPLAY_HIDDEN_ENABLE, false);
+
         List<BelugaTreeFolderEntry> folderEntries = new ArrayList<>();
         for (MountPoint mountPoint : mountPoints) {
 
@@ -79,9 +86,11 @@ public class FolderTreeLoader extends AsyncTaskLoader<List<BelugaTreeFolderEntry
                     if (mExpand) {
                         String[] names = FolderUtil.list(mDevice);
                         for (String name : names) {
-                            if (new File(mDevice, name).isDirectory()) {
-                                BelugaTreeFolderEntry newEntry = new BelugaTreeFolderEntry(mDevice, name, mDevice, 1, false);
-                                folderEntries.add(newEntry);
+                            if (!name.startsWith(".") || displayHidden) {
+                                if (new File(mDevice, name).isDirectory()) {
+                                    BelugaTreeFolderEntry newEntry = new BelugaTreeFolderEntry(mDevice, name, mDevice, 1, false);
+                                    folderEntries.add(newEntry);
+                                }
                             }
                         }
                     }
@@ -116,8 +125,10 @@ public class FolderTreeLoader extends AsyncTaskLoader<List<BelugaTreeFolderEntry
                                             folderEntries.add(newEntry);
                                         }
                                     } else {
-                                        BelugaTreeFolderEntry newEntry = new BelugaTreeFolderEntry(path, name, mDevice, depth, false);
-                                        folderEntries.add(newEntry);
+                                        if (!name.startsWith(".") || displayHidden) {
+                                            BelugaTreeFolderEntry newEntry = new BelugaTreeFolderEntry(path, name, mDevice, depth, false);
+                                            folderEntries.add(newEntry);
+                                        }
                                     }
                                 }
                             }
@@ -129,8 +140,10 @@ public class FolderTreeLoader extends AsyncTaskLoader<List<BelugaTreeFolderEntry
                         String[] names = FolderUtil.list(path);
                         for (String name : names) {
                             if (new File(path, name).isDirectory()) {
-                                BelugaTreeFolderEntry newEntry = new BelugaTreeFolderEntry(path, name, mDevice, depth, false);
-                                folderEntries.add(newEntry);
+                                if (!name.startsWith(".") || displayHidden) {
+                                    BelugaTreeFolderEntry newEntry = new BelugaTreeFolderEntry(path, name, mDevice, depth, false);
+                                    folderEntries.add(newEntry);
+                                }
                             }
                         }
                     }
@@ -146,16 +159,7 @@ public class FolderTreeLoader extends AsyncTaskLoader<List<BelugaTreeFolderEntry
             @Override
             public int compare(BelugaTreeFolderEntry lhs, BelugaTreeFolderEntry rhs) {
                 if (lhs.root.equals(rhs.root)) {
-                    String l_identify = lhs.getIdentity();
-                    String r_identify = rhs.getIdentity();
-
-                    if (l_identify.startsWith(".") && !r_identify.startsWith(".")) {
-                        return -1;
-                    } else if (!l_identify.startsWith(".") && r_identify.startsWith(".")) {
-                        return 1;
-                    } else {
-                        return l_identify.compareTo(r_identify);
-                    }
+                    return lhs.getIdentity().compareTo(rhs.getIdentity());
                 } else {
                     return lhs.root.compareTo(rhs.root);
                 }
@@ -198,9 +202,13 @@ public class FolderTreeLoader extends AsyncTaskLoader<List<BelugaTreeFolderEntry
         }
 
         // Start watching for changes in the app data.
-//        if (mSortObserver == null) {
-//            mSortObserver = new SortPreferenceReceiver(this, FileCategoryHelper.CATEGORY_TYPE_UNKNOW);
-//        }
+        if (mDisplayHiddenObserver == null) {
+            mDisplayHiddenObserver = new DisplayHiddenPreferenceReceiver(this);
+        }
+
+        if (mRootExplorerObserver == null) {
+            mRootExplorerObserver = new RootExplorerPreferenceReceiver(this);
+        }
 
         if(takeContentChanged() || mFolders == null) {
             forceLoad();
@@ -223,10 +231,15 @@ public class FolderTreeLoader extends AsyncTaskLoader<List<BelugaTreeFolderEntry
         }
 
         // Stop monitoring for changes.
-//        if (mSortObserver != null) {
-//            mSortObserver.dismiss(getContext());
-//            mSortObserver = null;
-//        }
+        if (mDisplayHiddenObserver != null) {
+            mDisplayHiddenObserver.dismiss(getContext());
+            mDisplayHiddenObserver = null;
+        }
+
+        if (mRootExplorerObserver != null) {
+            mRootExplorerObserver.dismiss(getContext());
+            mRootExplorerObserver = null;
+        }
     }
 
     @Override

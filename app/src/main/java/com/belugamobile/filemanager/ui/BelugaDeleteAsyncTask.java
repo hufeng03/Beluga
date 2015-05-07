@@ -3,7 +3,7 @@ package com.belugamobile.filemanager.ui;
 import android.content.Context;
 
 import com.belugamobile.filemanager.BusProvider;
-import com.belugamobile.filemanager.FolderDeleteEvent;
+import com.belugamobile.filemanager.FileDeleteEvent;
 import com.belugamobile.filemanager.R;
 import com.belugamobile.filemanager.data.BelugaFileEntry;
 import com.belugamobile.filemanager.helper.BelugaProviderHelper;
@@ -80,7 +80,7 @@ public class BelugaDeleteAsyncTask extends BelugaActionAsyncTask {
                     result = false;
                 } else {
                     mDeleteMediaStoreHelper.addRecord(entry.path);
-                    BusProvider.getInstance().post(new FolderDeleteEvent(System.currentTimeMillis(), entry.path));
+                    BusProvider.getInstance().post(new FileDeleteEvent(System.currentTimeMillis(), entry.path));
                     BelugaProviderHelper.deleteInBelugaDatabase(mContext, entry.path);
                     publishActionProgress(entry);
                 }
@@ -104,7 +104,7 @@ public class BelugaDeleteAsyncTask extends BelugaActionAsyncTask {
             // delete empty folder
             if (entry.delete()) {
                 mDeleteMediaStoreHelper.addRecord(entry.path);
-                BusProvider.getInstance().post(new FolderDeleteEvent(System.currentTimeMillis(), entry.path));
+                BusProvider.getInstance().post(new FileDeleteEvent(System.currentTimeMillis(), entry.path));
                 BelugaProviderHelper.deleteInBelugaDatabase(mContext, entry.path);
                 publishActionProgress(entry);
                 return true;
@@ -115,7 +115,7 @@ public class BelugaDeleteAsyncTask extends BelugaActionAsyncTask {
         } else {
             if (entry.delete()) {
                 mDeleteMediaStoreHelper.addRecord(entry.path);
-                BusProvider.getInstance().post(new FolderDeleteEvent(System.currentTimeMillis(), entry.path));
+                BusProvider.getInstance().post(new FileDeleteEvent(System.currentTimeMillis(), entry.path));
                 BelugaProviderHelper.deleteInBelugaDatabase(mContext, entry.path);
                 publishActionProgress(entry);
                 return true;

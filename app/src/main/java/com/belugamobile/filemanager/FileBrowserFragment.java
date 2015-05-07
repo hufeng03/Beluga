@@ -401,7 +401,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
     }
 
     @Subscribe
-    public void onFolderCreated(FolderCreateEvent event) {
+    public void onFolderCreated(FileCreateEvent event) {
         if (event.path.startsWith(mCurrentFolder)) {
             BelugaFileEntry newEntry = new BelugaFileEntry(event.path);
             Comparator<BelugaSortableInterface> comparator = BelugaSortHelper.getComparator(FileCategoryHelper.CATEGORY_TYPE_UNKNOW);
@@ -423,7 +423,7 @@ public class FileBrowserFragment extends FileRecyclerFragment implements LoaderM
     }
 
     @Subscribe
-    public void onFolderDeleted(FolderDeleteEvent event) {
+    public void onFolderDeleted(FileDeleteEvent event) {
         if (event.path.startsWith(mCurrentFolder)) {
             BelugaFileEntry oldEntry = new BelugaFileEntry(event.path);
 
