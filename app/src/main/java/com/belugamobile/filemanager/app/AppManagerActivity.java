@@ -55,6 +55,8 @@ public class AppManagerActivity extends BelugaBaseActionBarActivity {
             ViewUtil.addRectangularOutlineProvider(findViewById(R.id.toolbar_parent), getResources());
         }
 
+//        mNavigationDrawerFragment.getDrawerToggle().setDrawerIndicatorEnabled(false);
+
     }
 
     @Override

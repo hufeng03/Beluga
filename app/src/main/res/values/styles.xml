@@ -26,7 +26,7 @@
         <!--item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb</item!-->
         <item name="android:textColorPrimary">@color/primary_text_color</item>
         <item name="android:textColorSecondary">@color/secondary_text_color</item>
-        <item name="android:icon">@android:color/transparent</item>
+        <!--item name="android:icon">@android:color/transparent</item!-->
         <!--item name="android:listViewStyle">@style/ListViewStyle</item!-->
 
 

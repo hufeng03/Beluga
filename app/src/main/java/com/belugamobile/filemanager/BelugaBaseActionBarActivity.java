@@ -6,12 +6,13 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.belugamobile.filemanager.receiver.MountReceiver;
 import com.belugamobile.filemanager.root.BelugaRootManager;
 import com.belugamobile.filemanager.utils.LogUtil;
 
-public abstract class BelugaBaseActionBarActivity extends ActionBarActivity {
+public abstract class BelugaBaseActionBarActivity extends AppCompatActivity {
 
     private static final boolean DEBUG = BuildConfig.DEBUG;
 
