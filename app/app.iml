@@ -127,5 +127,6 @@
     <orderEntry type="library" exported="" name="play-services-base-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-22.1.1" level="project" />
     <orderEntry type="library" exported="" name="answers-1.1.2" level="project" />
+    <orderEntry type="module" module-name="AndroidAsync" exported="" />
   </component>
 </module>

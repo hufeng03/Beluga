@@ -17,6 +17,7 @@ public class FileManagerService extends Service{
 	private IBinder mBinder = null;
 	private IFileSyncServiceImpl mFileSyncServiceImpl = null;
     private IFolderMonitorServiceImpl mFolderMonitorServiceImpl = null;
+    private IWebServiceImpl mWebServiceImpl = null;
     private BelugaMountReceiver mBelugaMountReceiver;
     private ServiceMountListener mMountListener;
 
@@ -76,6 +77,8 @@ public class FileManagerService extends Service{
 		mFileSyncServiceImpl.onCreate();
         mFolderMonitorServiceImpl = new IFolderMonitorServiceImpl(this.getApplicationContext());
         mFolderMonitorServiceImpl.onCreate();
+        mWebServiceImpl = new IWebServiceImpl(this.getApplicationContext());
+        mWebServiceImpl.onCreate();
 
         mBelugaMountReceiver = BelugaMountReceiver.registerMountReceiver(this);
         mMountListener = new ServiceMountListener();
@@ -93,9 +96,12 @@ public class FileManagerService extends Service{
 
         mFileSyncServiceImpl.onDestroy();
         mFolderMonitorServiceImpl.onDestroy();
+        mWebServiceImpl.onDestroy();
 
         mFileSyncServiceImpl = null;
         mFolderMonitorServiceImpl = null;
+        mWebServiceImpl = null;
+
         mMountListener = null;
         mBelugaMountReceiver = null;
 	}
@@ -140,6 +146,11 @@ public class FileManagerService extends Service{
         @Override
         public IBinder getFolderMonitorService() throws RemoteException {
             return mFileSyncServiceImpl.asBinder();
+        }
+
+        @Override
+        public IBinder getWebService() throws RemoteException {
+            return mWebServiceImpl.asBinder();
         }
     }
 

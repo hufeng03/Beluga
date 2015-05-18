@@ -5,6 +5,7 @@
     <string name="close_drawer">Close Drawer</string>
     <string name="my_apps">My Apps</string>
     <string name="my_files">My Files</string>
+    <string name="my_servers">My Servers</string>
     <string name="help_and_feedback">Help &amp; Feedback</string>
     <string name="pick_file_label">Select File</string>
     <string name="file_manager_label">File Manager</string>
@@ -159,4 +160,7 @@
     <string name="beluga_text_viewer_label">Text Viewer</string>
     <string name="activity_not_found">Activity not found.</string>
     <string name="empty_file_in_folder">No File\n\n%s</string>
+    <string name="web_server_label">Web Server</string>
+    <string name="web_server_start">Start Server</string>
+    <string name="web_server_stop">Stop Server</string>
 </resources>

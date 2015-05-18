@@ -181,6 +181,13 @@ public class BelugaNavigationDrawerFragment extends Fragment{
                             getActivity().finish();
                         }
                         break;
+                    case R.id.drawer_item_my_servers:
+                        if (!(getActivity() instanceof WebServerActivity)) {
+                            startActivity(new Intent(getActivity(), WebServerActivity.class));
+                            getActivity().overridePendingTransition(0,0);
+                            getActivity().finish();
+                        }
+                        break;
                     case R.id.drawer_item_settings:
                         startActivity(new Intent(getActivity(), BelugaSettingActivity.class));
                         break;

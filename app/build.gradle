@@ -149,4 +149,5 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.2.3@aar') {
         transitive = true;
     }
+    compile project(':AndroidAsync')
 }

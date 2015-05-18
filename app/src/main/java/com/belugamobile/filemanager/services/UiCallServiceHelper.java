@@ -47,6 +47,14 @@ public class UiCallServiceHelper implements ServiceConnection {
         return getIFileObserverServiceWrapper().isScanning();
     }
 
+    public void startWebServer() {
+        getIWebServiceWrapper().startServer();
+    }
+
+    public void stopWebServer() {
+        getIWebServiceWrapper().stopServer();
+    }
+
 //    public boolean isMonitoring (String path) {
 //        return getIFolderMonitorServiceWrapper().isMonitoring(path);
 //    }
@@ -111,5 +119,18 @@ public class UiCallServiceHelper implements ServiceConnection {
         return new IFolderMonitorServiceWrapper(null);
     }
 
+    private IWebServiceWrapper getIWebServiceWrapper() {
+        if (mIFileManagerService == null)
+            return new IWebServiceWrapper(null);
+        try {
+            IBinder binder = mIFileManagerService.getWebService();
+            IWebService service = IWebService.Stub.asInterface(binder);
+            IWebServiceWrapper wrapper = new IWebServiceWrapper(service);
+            return wrapper;
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return new IWebServiceWrapper(null);
+    }
 
 }

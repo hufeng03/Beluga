@@ -42,7 +42,8 @@ public class AppManagerActivity extends BelugaBaseActionBarActivity {
         final DrawerLayout drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mNavigationDrawerFragment.setUp(drawerLayout, toolbar, new DrawerItem[] {
                 new DrawerItem(R.id.drawer_item_my_files, getResources().getDrawable(R.drawable.ic_files_24dp), getString(R.string.my_files), false),
-                new DrawerItem(R.id.drawer_item_my_apps, getResources().getDrawable(R.drawable.ic_apps_24dp), getString(R.string.my_apps), true),
+                new DrawerItem(R.id.drawer_item_my_apps, getResources().getDrawable(R.drawable.ic_apps_24dp), getString(R.string.my_apps), false),
+                new DrawerItem(R.id.drawer_item_my_servers, getResources().getDrawable(R.drawable.ic_apps_24dp), getString(R.string.my_servers), true),
                 new DrawerItem(R.id.drawer_item_settings, getResources().getDrawable(R.drawable.ic_settings_24dp), getString(R.string.settings_label), false),
                 new DrawerItem(R.id.drawer_item_about, getResources().getDrawable(R.drawable.ic_info_24dp), getString(R.string.about_label), false),
                 new DrawerItem(R.id.drawer_item_help_and_feedback, getResources().getDrawable(R.drawable.ic_help_24dp), getString(R.string.help_and_feedback), false)
@@ -55,7 +56,6 @@ public class AppManagerActivity extends BelugaBaseActionBarActivity {
             ViewUtil.addRectangularOutlineProvider(findViewById(R.id.toolbar_parent), getResources());
         }
 
-//        mNavigationDrawerFragment.getDrawerToggle().setDrawerIndicatorEnabled(false);
 
     }
 
