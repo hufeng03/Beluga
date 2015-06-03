@@ -152,7 +152,7 @@ public class FileUtils {
     private static HashMap<String, Integer> sFileMap = null;
     
     public static void initFileMap(){
-		String first_open = FileManager.getPreference("filemanager_first_open", "1");
+		String first_open = FileManager.getPreference(FileManager.FILEMANAGER_FIRST_OPEN, "1");
 		
 		if("1".equals(first_open))
 		{
@@ -172,6 +172,7 @@ public class FileUtils {
 	        FileManager.setCategoryMatch(".wmv", FileUtils.FILE_TYPE_VIDEO);
 	        FileManager.setCategoryMatch(".xv", FileUtils.FILE_TYPE_VIDEO);
             FileManager.setCategoryMatch(".flv", FileUtils.FILE_TYPE_VIDEO);
+            FileManager.setCategoryMatch(".mkv", FileUtils.FILE_TYPE_VIDEO);
 
 	        FileManager.setCategoryMatch(".m3u", FileUtils.FILE_TYPE_AUDIO);
 	        FileManager.setCategoryMatch(".m4a", FileUtils.FILE_TYPE_AUDIO);

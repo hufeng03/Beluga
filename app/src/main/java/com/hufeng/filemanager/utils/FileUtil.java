@@ -46,7 +46,7 @@ public class FileUtil {
         else if(end.equals("3gp")||end.equals("mp4") || end.equals("avi") || end.equals("asf") ||
         		end.equals("m4u") || end.equals("m4v") || end.equals("mov") || end.equals("mpe") ||
         		end.equals("mpeg") || end.equals("mpg") || end.equals("mpg4") || end.equals("rmvb") || 
-        		end.equals("wmv") || end.equals("xv") || end.equals("rm")
+        		end.equals("wmv") || end.equals("xv") || end.equals("rm") || end.equals("mkv")
         		)
         {
             type = "video/*";

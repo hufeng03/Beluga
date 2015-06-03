@@ -47,8 +47,8 @@ public class FileManagerTabActivity extends FileOperationActivity{
 
 	private static final int FRAGMENT_COUNT = 2;
     private static final int FRAGMENT_INDEX_SELECTED = -1;
-    private static final int FRAGMENT_INDEX_CATEGORY = 0;
-    private static final int FRAGMENT_INDEX_DEVICE = 1;
+    private static final int FRAGMENT_INDEX_CATEGORY = 1;
+    private static final int FRAGMENT_INDEX_DEVICE = 0;
     private static final int FRAGMENT_INDEX_TOOLS = 2;
     private static final int FRAGMENT_INDEX_CLOUD = 2;
     private static final int FRAGMENT_INDEX_SEARCH = 2;

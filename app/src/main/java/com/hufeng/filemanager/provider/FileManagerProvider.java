@@ -289,7 +289,7 @@ public class FileManagerProvider extends ContentProvider{
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			// TODO Auto-generated method stub
-			if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "execute create sqls ...start");
+//			if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "execute create sqls ...start");
 			db.execSQL(FileColumns.SQL.CREATE);
 			db.execSQL(ImageColumns.SQL.CREATE);
 			db.execSQL(AudioColumns.SQL.CREATE);
@@ -303,7 +303,7 @@ public class FileManagerProvider extends ContentProvider{
 			db.execSQL(MatchColumns.SQL.CREATE);
             db.execSQL(SelectedColumns.SQL.CREATE);
             db.execSQL(CloudBoxColumns.SQL.CREATE);
-			if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "execute create sqls ...end");
+//			if(LogUtil.IDBG) LogUtil.i(LOG_TAG, "execute create sqls ...end");
 		}
 
 		@Override
@@ -633,7 +633,7 @@ public class FileManagerProvider extends ContentProvider{
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-        LogUtil.i(LOG_TAG, "insert " + uri + " " + values);
+//        LogUtil.i(LOG_TAG, "insert " + uri + " " + values);
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         long rowId = 0;
         String tablename = null;
